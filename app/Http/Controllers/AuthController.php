@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -31,33 +32,29 @@ class AuthController extends Controller
 		}*/
 
 		//
-		public function login(Request $request) {
-			/*if (!Auth::attempt($request->only('email', 'password'))) {
-				return response(['message' => 'Unauthorized'], 401);
-			}
-
-			$user = User::where('email', $request['email'])->firstOrFail();
-
-			$token = $user->createToken('auth_token')->plainTextToken;
-
-			return response(['message' => 'Hi,'.$user->name,
-											'access_token' => $token,
-											'token_type' => 'Bearer',
-											'user' => $user
-							]);*/
+		public function login() {
       return view('auth.login');
 		}
 
     //
     public function validateUser(Request $request)
     {
-      echo "validando";
+			//validar datos
+			$credenciales = $request->only(['email', 'password']);
+			if(Auth::attempt($credenciales, true)) {
+				echo 'bingo...';
+			}
+			else {
+				return redirect(route('login'));
+			}
     }
-/*
-		//
-		public function logout() {
-			auth()->user()->tokens()->delete();
 
-			return response(['message' => 'you have logged']);
-		} */
+		//
+		public function logout(Request $request) {
+			Auth::logout();
+			$request->session()->invalidate();
+			$request->session()->regenerateToken();
+
+			return redirect(route('login'));
+		}
 }
