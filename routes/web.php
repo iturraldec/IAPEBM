@@ -16,14 +16,8 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('login', [AuthController::class, 'login'])->name('login');
+Route::get('login', [AuthController::class, 'login'])->name('login')->middleware('guest');
 Route::post('login', [AuthController::class, 'validateUser']);
 
  
 Route::resource('users', UserController::class);
-
-Auth::routes();

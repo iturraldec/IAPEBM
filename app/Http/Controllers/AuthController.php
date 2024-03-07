@@ -39,13 +39,23 @@ class AuthController extends Controller
     //
     public function validateUser(Request $request)
     {
-			//validar datos
+			$validator = $request->validate([
+				'email' 		=> 'required|string|email|max:255',
+				'password' 	=> 'required|string|min:8',
+			]);
+
+			if (!$validator) {
+				return redirect(route('login'));
+			}
+
 			$credenciales = $request->only(['email', 'password']);
-			if(Auth::attempt($credenciales, true)) {
-				echo 'bingo...';
+			$remember = request()->filled('remember');
+			if(Auth::attempt($credenciales, $remember)) {
+				request()->session()->regenerate();
+				return redirect('home');
 			}
 			else {
-				return redirect(route('login'));
+				return redirect('login')->with('errorCredentials', 'Email o clave incorrectas!');
 			}
     }
 
