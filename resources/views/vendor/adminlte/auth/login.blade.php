@@ -22,18 +22,18 @@
     <form action="{{ $login_url }}" method="post">
         @csrf
 
-        {{-- Email field --}}
+        {{-- Dcoument Number field --}}
         <div class="input-group mb-3">
-            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                   value="{{ old('email') }}" placeholder="{{ __('adminlte::adminlte.email') }}" autofocus>
+            <input type="text" name="document" class="form-control @error('document') is-invalid @enderror"
+                   value="{{ old('document') }}" placeholder="Documento de Identificacion" autofocus>
 
             <div class="input-group-append">
                 <div class="input-group-text">
-                    <span class="fas fa-envelope {{ config('adminlte.classes_auth_icon', '') }}"></span>
+                    <span class="fas fa-id-card {{ config('adminlte.classes_auth_icon', '') }}"></span>
                 </div>
             </div>
 
-            @error('email')
+            @error('document')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
@@ -58,19 +58,23 @@
             @enderror
         </div>
 
-        {{-- recordar mi sesion --}}
-        <input type="checkbox" name="remember">
-        Recuerda mi sesion
-        <br>
-
-        {{-- Login field --}}
         <div class="row">
-            <div class="col">
-                <button type=submit class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
-                    <span class="fas fa-sign-in-alt"></span>
-                    {{ __('adminlte::adminlte.sign_in') }}
-                </button>
+            {{-- recordar mi sesion --}}
+            <div class="col-8">
+                <div class="icheck-primary">
+                <input type="checkbox" name="remember">
+                <label for="remember">
+                    Recuerda mi sesión
+                </label>
+                </div>
             </div>
+            <!-- /.col -->
+            
+            {{-- enviar datos --}}
+            <div class="col-4">
+              <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </div>
+            <!-- /.col -->
         </div>
 
     </form>

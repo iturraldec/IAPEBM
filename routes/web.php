@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('login', [AuthController::class, 'login'])->name('login')->middleware('guest');
-Route::post('login', [AuthController::class, 'validateUser']);
+Route::get('/', [AuthController::class, 'index']);
+Route::post('login', [AuthController::class, 'login']);
 
- 
+Route::get('home', [HomeController::class, 'index'])->name('home')->middleware('auth');
 Route::resource('users', UserController::class);

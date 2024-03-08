@@ -41,9 +41,10 @@ class DatabaseSeeder extends Seeder
 
         // creo el administrador de usuarios
         $user = User::create([
-            'name' => 'Jean Pier',
-            'email' => 'jeanpier@gmail.com',
-            'password' => Hash::make('12345678')
+            'name'              => 'Jean Pier',
+            'document_number'   => '12345678',
+            'email'             => 'jeanpier@gmail.com',
+            'password'          => Hash::make('12345678')
         ]);
 
         // le asigno el rol de administrador de usuarios
