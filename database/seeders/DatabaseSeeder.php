@@ -4,14 +4,14 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
-
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
-
+//
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'users.delete']);
 
         // create roles and assign created permissions
-        $role = Role::create(['name' => 'Administrador de Usuarios']);
+        $role = Role::create(['name' => 'Administrador']);
         $role->givePermissionTo(Permission::all());
 
         // creo el administrador de usuarios
@@ -48,7 +48,25 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // le asigno el rol de administrador de usuarios
-        $user->assignRole('Administrador de Usuarios');
+        $user->assignRole('Administrador');
+        
+        // permisos de prueba
+        for($i = 1; $i <= 10; $i++) {
+            $permissions = new Permission;
+
+            $permissions->name = Str::random(50);
+            $permissions->guard_name = 'web';
+            $permissions->save();
+        }
+
+        // roles de prueba
+        for($i = 1; $i <= 10; $i++) {
+            $roles = new Role;
+
+            $roles->name = Str::random(50);
+            $roles->guard_name = 'web';
+            $roles->save();
+        }
 
         // usuarios de prueba
         User::factory(10)->create();
