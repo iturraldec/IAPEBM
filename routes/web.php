@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
@@ -22,5 +23,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth')->group(function(){
   Route::get('home', [HomeController::class, 'index']);
   Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+  Route::resource('permissions', PermissionController::class);
+  Route::get('permissions\load-data', [PermissionController::class, 'loadData'])->name('permissions.load-data');
   Route::resource('users', UserController::class);
 });

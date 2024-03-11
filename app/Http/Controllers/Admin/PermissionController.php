@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
@@ -12,15 +13,11 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        //
+      return view('auth.permissions.index');
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function loadData()
     {
-        //
+        return datatables()->of(Permission::orderBy('name')->get())->toJson();
     }
 
     /**
@@ -28,7 +25,21 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+		$mensaje = array();
+        $state = 200;
+        if(Permission::firstWhere('name', $data['name'])) {
+			$mensaje['success'] = false;
+			$mensaje['msg'] = 'El Permiso ya existe!';
+            $state = 400;
+		}
+		else {
+			Permission::Create($data);
+			$mensaje['success'] = true;
+			$mensaje['msg'] = 'Permiso creado!';
+		}
+
+        return response($mensaje, $state);
     }
 
     /**
