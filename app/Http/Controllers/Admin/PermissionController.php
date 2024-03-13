@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Symfony\Component\HttpFoundation\Response ;
 
 class PermissionController extends Controller
 {
@@ -25,21 +26,15 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-		$mensaje = array();
-        $state = 200;
-        if(Permission::firstWhere('name', $data['name'])) {
-			$mensaje['success'] = false;
-			$mensaje['msg'] = 'El Permiso ya existe!';
-            $state = 400;
-		}
-		else {
-			Permission::Create($data);
-			$mensaje['success'] = true;
-			$mensaje['msg'] = 'Permiso creado!';
-		}
+        $validator = $request->validate([
+            'name' => 'required|string|max:255|unique:permissions'
+        ]);
 
-        return response($mensaje, $state);
+        Permission::Create($request->all());
+        $mensaje['success'] = true;
+        $mensaje['msg'] = 'Permiso creado!';
+
+        return response($mensaje, Response::HTTP_CREATED);
     }
 
     /**
@@ -69,8 +64,11 @@ class PermissionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Permission $permission)
     {
-        //
+        $permission->delete();
+		$data['success'] = true;
+		$data['message'] = 'Permiso elminado.';
+		return response($data, 200);
     }
 }

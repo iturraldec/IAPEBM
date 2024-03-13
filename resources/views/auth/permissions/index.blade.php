@@ -43,6 +43,8 @@
 @endsection
 
 @section('js')
+  <script type="text/javascript" src="{{ asset('assets/js/libreria.js') }}"></script>
+
   <script>
     $(document).ready(function () {
       // datatable
@@ -67,30 +69,46 @@
       $("#btn_agregar").click(function() {
         let name = $("#input_name").val();
 
-        /* if (lib_isEmpty(nombre)) {
-          lib_ShowMensaje("Debes especificar el Estado del Reclamo.", "error");
-          return;
-        } */
-
         $.ajax({
           headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
           url: "{{ route('permissions.store') }}",
           type: 'POST',
           data: {"name" : name},
-          dataType:'json',
-          success: function(resp){
-            if (! resp.success) {
-              //lib_ShowMensaje(resp.msg, 'error');
-              alert("algo fallo");
-            }
-            else {
-              $("#input_name").val("");
-              datatable.ajax.reload();
-              //lib_ShowMensaje(resp.msg);
-              alert("recargado...");
-            }
-          }
+          dataType:'json'
+        })
+        .done(function(resp){
+          $("#input_name").val("");
+          datatable.ajax.reload();
+          lib_ShowMensaje('Permiso agregado...');
+        })
+        .fail(function(resp){
+          lib_ShowMensaje(resp.responseJSON.message, 'error');
         });
+      });
+
+      // boton eliminar
+      $("#dt-permissions tbody").on("click",".eliminar",function() {
+		    let data = datatable.row($(this).parents()).data();
+
+        lib_Confirmar("Seguro de ELIMINAR el Permiso Nro. " + data.id + "?")
+        .then((result) => {
+          if (result.isConfirmed) {
+            let ruta = "{{ route('permissions.destroy', ['permission' => 'valor']) }}";
+
+            ruta = ruta.replace('valor', data.id);
+            
+            $.ajax({
+              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+              url: ruta,
+              type: 'DELETE',
+              dataType:'json',
+              success: function(resp){
+                datatable.ajax.reload();
+                lib_ShowMensaje(resp.message);
+              }
+            });
+          }
+        })
       });
     });
   </script>
