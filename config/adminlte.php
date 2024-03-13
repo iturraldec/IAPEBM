@@ -306,7 +306,7 @@ return [
         ],
         [
             'text'    => 'Roles',
-            'url'   => '#'
+            'route'     => 'roles.index'
         ],
         [
             'text'    => 'Usuarios',

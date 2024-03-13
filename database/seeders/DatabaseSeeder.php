@@ -29,12 +29,6 @@ class DatabaseSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // create permissions
-        Permission::create(['name' => 'users.index']);
-        Permission::create(['name' => 'users.create']);
-        Permission::create(['name' => 'users.update']);
-        Permission::create(['name' => 'users.delete']);
-
         // create roles and assign created permissions
         $role = Role::create(['name' => 'Administrador']);
         $role->givePermissionTo(Permission::all());

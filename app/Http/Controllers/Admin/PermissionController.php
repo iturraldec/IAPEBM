@@ -16,6 +16,8 @@ class PermissionController extends Controller
     {
       return view('auth.permissions.index');
     }
+
+    //
     public function loadData()
     {
         return datatables()->of(Permission::orderBy('name')->get())->toJson();

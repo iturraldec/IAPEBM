@@ -2,7 +2,6 @@
 <div class="modal fade" id="modalForm" 
     data-backdrop="static" 
     data-keyboard="false"
-    data-id=""
     tabindex="-1" 
     aria-labelledby="staticBackdropLabel" 
     aria-hidden="true"
@@ -17,11 +16,11 @@
       </div>
       <div class="modal-body form-group">					
         <label for="input_permission">Permiso</label>
-        <input type="text" id="input_permission" class="form-control" placeholder="Ingresa nuevo Permiso">
+        <input type="text" id="input_permission" class="form-control" data-id="" placeholder="Ingresa nuevo Permiso">
       </div>
       <div class="modal-footer">
         <button type="button" id="btn-update" class="btn btn-danger" data-dismiss="modal">Grabar</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Salir</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
       </div>
     </div>
   </div>
