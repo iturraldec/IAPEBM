@@ -38,27 +38,20 @@ class PermissionController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Permission $permission)
     {
-        //
+        $validator = $request->validate([
+            'name' => 'required|string|max:255|unique:permissions'
+        ]);
+
+        $permission->name = $request->name;
+		$permission->save();
+		$data['success'] = true;
+		$data['message'] = 'Permiso actualizado.';
+
+		return response($data, Response::HTTP_OK);
     }
 
     /**
@@ -69,6 +62,6 @@ class PermissionController extends Controller
         $permission->delete();
 		$data['success'] = true;
 		$data['message'] = 'Permiso elminado.';
-		return response($data, 200);
+		return response($data, Response::HTTP_NO_CONTENT);
     }
 }

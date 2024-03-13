@@ -40,6 +40,9 @@
       </div>
     </div>
   </div>
+
+  @include('auth.permissions.edit')
+
 @endsection
 
 @section('js')
@@ -86,7 +89,39 @@
         });
       });
 
-      // boton eliminar
+      // boton editar permiso
+      $("#dt-permissions tbody").on("click", ".editar", function() {
+        let data = datatable.row($(this).parents()).data();
+        
+        $("#modalForm").data("id", data.id);
+        $("#input_permission").val(data.name);
+      });
+
+      // boton actualizar
+      $("#btn-update").click(function(){
+        let id = $("#modalForm").data("id");
+        let name = $("#input_permission").val();
+        let ruta = "{{ route('permissions.update', ['permission' => 'valor']) }}";
+
+        ruta = ruta.replace('valor', id);
+
+        $.ajax({
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          url: ruta,
+          type: 'PUT',
+          data: {"name" : name},
+          dataType:'json'
+        })
+        .done(function(resp){
+          datatable.ajax.reload();
+          lib_ShowMensaje('Permiso modificado...');
+        })
+        .fail(function(resp){
+          lib_ShowMensaje(resp.responseJSON.message, 'error');
+        });
+      });
+
+      // boton eliminar permiso
       $("#dt-permissions tbody").on("click",".eliminar",function() {
 		    let data = datatable.row($(this).parents()).data();
 
