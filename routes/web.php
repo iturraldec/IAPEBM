@@ -32,5 +32,6 @@ Route::middleware('auth')->group(function(){
   Route::resource('roles', RoleController::class);
   Route::get('roles/{role}/load-permissions', [RoleController::class, 'loadPermissions'])->name('roles.load-permissions');
   
+  Route::get('users/load-data', [UserController::class, 'loadData'])->name('users.load-data');
   Route::resource('users', UserController::class);
 });

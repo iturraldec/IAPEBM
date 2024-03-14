@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -36,7 +38,14 @@ class UserController extends Controller
      */
     public function index()
     {
-        echo "listado de usuarios...";
+        $roles = Role::all();
+        return view('auth.users.index', compact('roles'));
+    }
+
+    //
+    public function loadData()
+    {
+        return datatables()->of(User::orderBy('name')->get())->toJson();
     }
 
     /**

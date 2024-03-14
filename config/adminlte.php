@@ -306,16 +306,16 @@ return [
         ],
         [
             'text'    => 'Roles',
-            'route'     => 'roles.index'
+            'route'   => 'roles.index'
         ],
         [
             'text'    => 'Usuarios',
             'icon'    => 'fas fa-users',
             'submenu' => [
                 [
-                    'text' => 'Listado',
-                    'url'  => '#',
-                    'icon' => 'fas fa-table',
+                    'text'  => 'Listado',
+                    'route' => 'users.index',
+                    'icon'  => 'fas fa-table',
                 ],
                 [
                     'text' => 'Cambio de clave',
