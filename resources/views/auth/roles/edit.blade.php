@@ -1,10 +1,11 @@
 <!-- agregar/editar rol -->
 <form id="form-rol">
+  <input type="hidden" id="input-id" name="id">
+
   <div class="modal fade" 
       id="modalForm" 
       data-backdrop="static" 
       data-keyboard="false"
-      data-id=""
       tabindex="-1" 
       aria-labelledby="staticBackdropLabel" 
       aria-hidden="true"
@@ -23,9 +24,9 @@
             <input type="text" id="input-name" name="name" class="form-control">
           </div>
 
-          <div class="row border border-dark mt-2">
+          <div class="row mt-2">
             <div class="col">
-              <label class="mt-2">Seleccione Permisos a asignarle</label>
+              <label class="form-control mt-2">Seleccione los Permisos a asignarle</label>
               @foreach ($permissions as $permission)
                 <p><input type="checkbox" name="permissions[]" value="{{ $permission->name }}"> {{ $permission->name }}</p>
               @endforeach

@@ -34,7 +34,7 @@ class RoleController extends Controller
           'name' => 'required|string|max:255|unique:roles'
       ]);
 
-      $role = Role::Create($request->all());
+      $role = Role::Create($request->only('name'));
       $role->syncPermissions($request->permissions);
       $mensaje['success'] = true;
       $mensaje['message'] = 'Rol creado!';

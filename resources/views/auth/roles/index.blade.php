@@ -63,14 +63,11 @@
 
       // boton agregar
       $("#btn-agregar").click(function() {
-        $("#modalForm").data("id", "");
         $("#modalTitle").html("Agregar Rol");
+        $("#input-id").val("");
         $("#input-name").val("");
         $("#input-name").attr("placeholder", "Ingrese nuevo Rol");
         clean_permissions();
-
-        // cargo los permisos del rol
-        
         $('#modalForm').modal('show');
       });
 
@@ -89,28 +86,11 @@
         event.preventDefault();
 
         let formData = $(this).serializeArray();
-        let id = $('#modalForm').data('id');
 
         $('#modalForm').modal('hide');
 
-        if (id === "") {
-          let _url = "{{ route('roles.store') }}";
-          let _type = 'POST';
-
-          $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            url: _url,
-            type: _type,
-            data: formData,
-           dataType:'json'
-          })
-          .done(function(resp){
-            datatable.ajax.reload();
-            lib_ShowMensaje('Rol agregado...');
-          })
-          .fail(function(resp){
-            lib_ShowMensaje(resp.responseJSON.message, 'error');
-          });
+        if (formData[0].value === "") { // agregar rol
+          grabar_datos("{{ route('roles.store') }}", 'POST', formData);
         }
       });
 
@@ -138,6 +118,24 @@
         });
       });
 
+      // funcion para grabar los datos al agregar/modificar
+      function grabar_datos(_url, _type, _data) {
+        $.ajax({
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          url: _url,
+          type: _type,
+          data: _data,
+          dataType:'json'
+        })
+        .done(function(resp){
+          datatable.ajax.reload();
+          lib_ShowMensaje(resp.message);
+        })
+        .fail(function(resp){
+          lib_ShowMensaje(resp.responseJSON.message, 'error');
+        });
+      }
+      
       // boton eliminar permiso
       $("#dt-permissions tbody").on("click",".eliminar",function() {
 		    let data = datatable.row($(this).parents()).data();
