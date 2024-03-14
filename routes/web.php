@@ -25,11 +25,12 @@ Route::middleware('auth')->group(function(){
   Route::get('home', [HomeController::class, 'index']);
   Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
+  Route::get('permissions/load-data', [PermissionController::class, 'loadData'])->name('permissions.load-data');
   Route::resource('permissions', PermissionController::class);
-  Route::get('permissions\load-data', [PermissionController::class, 'loadData'])->name('permissions.load-data');
   
+  Route::get('roles/load-data', [RoleController::class, 'loadData'])->name('roles.load-data');
   Route::resource('roles', RoleController::class);
-  Route::get('roles\load-data', [RoleController::class, 'loadData'])->name('roles.load-data');
+  Route::get('roles/{role}/load-permissions', [RoleController::class, 'loadPermissions'])->name('roles.load-permissions');
   
   Route::resource('users', UserController::class);
 });

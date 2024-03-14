@@ -25,6 +25,14 @@ class RoleController extends Controller
         return datatables()->of(Role::orderBy('name')->get())->toJson();
     }
 
+    //
+    public function loadPermissions(Role $role)
+    {
+        $data['state'] = true;
+        $data['data'] = $role->permissions;
+        return response($data, 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -53,8 +61,9 @@ class RoleController extends Controller
 
         $role->name = $request->name;
         $role->save();
+        $role->syncPermissions($request->permissions);
         $data['success'] = true;
-        $data['message'] = 'Permiso actualizado.';
+        $data['message'] = 'Rol actualizado.';
 
         return response($data, Response::HTTP_OK);
     }
@@ -66,7 +75,7 @@ class RoleController extends Controller
     {
         $role->delete();
         $data['success'] = true;
-        $data['message'] = 'Permiso elminado.';
+        $data['message'] = 'Role elminado.';
         return response($data, Response::HTTP_NO_CONTENT);
     }
 }
