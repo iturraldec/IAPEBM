@@ -7,33 +7,11 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response ;
+use Illuminate\Support\Facades\Hash;
 
+//
 class UserController extends Controller
 {
-    /*  //
-    public function register(Request $request) {
-			$validator = Validator::make($request->all(),[
-				'name' => 'required|string|max:255',
-				'email' => 'required|string|email|max:255|unique:users',
-				'password' => 'required|string|min:8',
-			]);
-
-			if ($validator->fails()) {
-				return response($validator->errors());
-			}
-
-			$user = User::create([
-				'name' => $request->name,
-				'email' => $request->email,
-				'password' => Hash::make($request->password)
-			]);
-
-			$token = $user->createToken('auth_token')->plainTextToken;
-
-			return response(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer']);
-		}*/
-
-	
     /**
      * Display a listing of the resource.
      */
@@ -50,19 +28,28 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        echo "crear usuarios...";
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $validator = $request->validate([
+            'document'  => 'required|string|max:15',
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|string|email|max:255|unique:users'
+        ]);
+
+        $user = User::create([
+            'document_number'   => $request->document,
+            'name'              => $request->name,
+            'email'             => $request->email,
+            'password'          => Hash::make('password')
+        ]);
+        $user->syncRoles($request->roles);
+
+        $data['status'] = true;
+        $data['message'] = 'Usuario creado.';
+        $data['data'] = $user;
+        return response($data, Response::HTTP_CREATED);
     }
 
     /**
@@ -71,14 +58,6 @@ class UserController extends Controller
     public function show(string $id)
     {
         //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        echo "editar usuarios...";
     }
 
     /**

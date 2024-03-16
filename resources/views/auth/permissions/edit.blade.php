@@ -1,7 +1,6 @@
 <!-- editar permiso -->
 <div class="modal fade" id="modalForm" 
-    data-backdrop="static" 
-    data-keyboard="false"
+    data-backdrop="static"
     tabindex="-1" 
     aria-labelledby="staticBackdropLabel" 
     aria-hidden="true"

@@ -54,24 +54,28 @@
       });
 
       // Agregar botón personalizado
-      var customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Rol</button>';
+      var customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Usuario</button>';
       
-      $('#dt-roles_wrapper .dataTables_length').append(customButton);
+      $('#dt-users_wrapper .dataTables_length').append(customButton);
 
-      // limpiar el array de permisos
-      function clean_permissions() {
-        $('input[name="permissions[]"]').each(function() {
+      // limpiar el array de roles
+      function clean_roles() {
+        $('input[name="roles[]"]').each(function() {
           $(this).prop('checked', false);
         });
       }
 
-      // boton agregar rol
+      // boton agregar usuario
       $("#btn-agregar").click(function() {
-        $("#modalTitle").html("Agregar Rol");
-        $("#input-id").val("");
-        $("#input-name").val("");
-        $("#input-name").attr("placeholder", "Ingrese nuevo Rol");
-        clean_permissions();
+        $("#modalTitle").html("Agregar Usuario");
+        $("#idInput").val("");
+        $("#documentInput").val("");
+        $("#documentInput").attr("placeholder", "Ingrese cédula de identidad del usuario");
+        $("#nameInput").val("");
+        $("#nameInput").attr("placeholder", "Ingrese nombre de usuario");
+        $("#emailInput").val("");
+        $("#emailInput").attr("placeholder", "Ingrese el correo del usuario");
+        clean_roles();
         $('#modalForm').modal('show');
       });
 
@@ -103,7 +107,7 @@
       });
 
       // boton grabar agregar/modificar
-      $('#form-rol').submit(function(event) {
+      $('#form-user').submit(function(event) {
         event.preventDefault();
 
         let formData = $(this).serializeArray();
@@ -111,7 +115,7 @@
         $('#modalForm').modal('hide');
 
         if (formData[0].value === "") { // agregar rol
-          grabar_datos("{{ route('roles.store') }}", 'POST', formData);
+          grabar_datos("{{ route('users.store') }}", 'POST', formData);
         }
         else {                          // editar rol
           let ruta = "{{ route('roles.update', ['role' => 'valor']) }}";

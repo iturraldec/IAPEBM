@@ -4,8 +4,7 @@
 
   <div class="modal fade" 
       id="modalForm" 
-      data-backdrop="static" 
-      data-keyboard="false"
+      data-backdrop="static"
       tabindex="-1" 
       aria-labelledby="staticBackdropLabel" 
       aria-hidden="true"
@@ -25,7 +24,7 @@
           </div>
 
           <div class="row mt-2">
-            <div class="col">
+            <div class="col form-group">
               <label class="form-control mt-2">Seleccione los Permisos a asignarle</label>
               @foreach ($permissions as $permission)
                 <p><input type="checkbox" name="permissions[]" value="{{ $permission->name }}"> {{ $permission->name }}</p>

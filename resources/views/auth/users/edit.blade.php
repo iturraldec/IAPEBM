@@ -1,11 +1,10 @@
-<!-- agregar/editar rol -->
+<!-- agregar/editar usuario -->
 <form id="form-user">
-  <input type="hidden" id="input-id" name="id">
+  <input type="hidden" id="idInput" name="id">
 
   <div class="modal fade" 
       id="modalForm" 
-      data-backdrop="static" 
-      data-keyboard="false"
+      data-backdrop="static"
       tabindex="-1" 
       aria-labelledby="staticBackdropLabel" 
       aria-hidden="true"
@@ -20,13 +19,24 @@
         </div>
 
         <div class="modal-body">
-          <div>
-            <input type="text" id="input-name" name="name" class="form-control">
+          <div class="form-group">
+            <label for="documentInput">Documento de Identificación</label>
+            <input type="text" id="documentInput" name="document" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="nameInput">Nombre del usuario</label>
+            <input type="text" id="nameInput" name="name" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="emailInput">Correo del usuario</label>
+            <input type="text" id="emailInput" name="email" class="form-control">
           </div>
 
           <div class="row mt-2">
-            <div class="col">
-              <label class="form-control mt-2">Seleccione los Roles a asignarle</label>
+            <div class="col form-group">
+              <label for="roles[]" class="mt-2">Seleccione los Roles a asignarle</label>
               @foreach ($roles as $rol)
                 <p><input type="checkbox" name="roles[]" value="{{ $rol->name }}"> {{ $rol->name }}</p>
               @endforeach
