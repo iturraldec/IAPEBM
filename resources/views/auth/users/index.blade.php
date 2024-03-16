@@ -139,14 +139,14 @@
         });
       }
       
-      // boton eliminar rol
-      $("#dt-roles tbody").on("click",".eliminar",function() {
+      // boton eliminar usuario
+      $("#dt-users tbody").on("click",".eliminar",function() {
 		    let data = datatable.row($(this).parents()).data();
 
-        lib_Confirmar("Seguro de ELIMINAR el Rol Nro. " + data.id + "?")
+        lib_Confirmar("Seguro de ELIMINAR el Usuario: " + data.name + "?")
         .then((result) => {
           if (result.isConfirmed) {
-            let ruta = "{{ route('roles.destroy', ['role' => 'valor']) }}";
+            let ruta = "{{ route('users.destroy', ['user' => 'valor']) }}";
 
             ruta = ruta.replace('valor', data.id);
             
@@ -157,7 +157,7 @@
               dataType:'json',
               success: function(resp){
                 datatable.ajax.reload();
-                lib_ShowMensaje("Rol eliminado.");
+                lib_ShowMensaje("Usuario eliminado.");
               }
             });
           }

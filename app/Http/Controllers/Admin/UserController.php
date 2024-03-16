@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
+use Symfony\Component\HttpFoundation\Response ;
 
 class UserController extends Controller
 {
@@ -91,8 +92,12 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        echo "eliminar usuario...";
+        $user->delete();
+		$data['success'] = true;
+		$data['message'] = 'Usuario elminado.';
+
+		return response($data, Response::HTTP_NO_CONTENT);
     }
 }
