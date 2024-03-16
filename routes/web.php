@@ -34,4 +34,5 @@ Route::middleware('auth')->group(function(){
   
   Route::get('users/load-data', [UserController::class, 'loadData'])->name('users.load-data');
   Route::resource('users', UserController::class);
+  Route::get('users/{user}/load-roles', [UserController::class, 'loadRoles'])->name('users.load-roles');
 });

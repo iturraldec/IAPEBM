@@ -79,27 +79,30 @@
         $('#modalForm').modal('show');
       });
 
-      // boton editar rol
-      $("#dt-roles tbody").on("click", ".editar", function() {
+      // boton editar usario
+      $("#dt-users tbody").on("click", ".editar", function() {
         let data = datatable.row($(this).parents()).data();
-        let ruta = "{{ route('roles.load-permissions', ['role' => 'valor']) }}";
+        let ruta = "{{ route('users.load-roles', ['user' => ':valor']) }}";
 
-        ruta = ruta.replace('valor', data.id);
-        $("#modalTitle").html("Modificar Rol");
-        $("#input-id").val(data.id);
-        $("#input-name").val(data.name);
-        $("#input-name").attr('placeholder', 'Modificar Rol');
-        clean_permissions();
+        ruta = ruta.replace(':valor', data.id);
+        $("#modalTitle").html("Modificar Usuario");
+        $("#idInput").val(data.id);
+        $("#documentInput").val(data.document_number);
+        $("#nameInput").val(data.name);
+        $("#nameInput").attr('placeholder', 'Modificar Usuario');
+        $("#emailInput").val(data.email);
+        $("#emailInput").attr('placeholder', 'Correo del Usuario');
+        clean_roles();
 
-        // cargo los permisos del rol
+        // cargo los roles del usuario y activo los correspondientes
         $.ajax({
           headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
           url: ruta,
           dataType:'json'
         })
         .done(function(resp){
-          resp.data.forEach(permiso => {
-            $(`input[name="permissions[]"][value="${permiso.name}"]`).prop('checked', true);
+          resp.data.forEach(role => {
+            $(`input[name="roles[]"][value="${role.name}"]`).prop('checked', true);
           });
         });
 
@@ -111,16 +114,17 @@
         event.preventDefault();
 
         let formData = $(this).serializeArray();
+        let idInput = $("#idInput").val();
 
         $('#modalForm').modal('hide');
-
-        if (formData[0].value === "") { // agregar rol
+        if (idInput === "") { // agregar usuario
           grabar_datos("{{ route('users.store') }}", 'POST', formData);
         }
-        else {                          // editar rol
-          let ruta = "{{ route('roles.update', ['role' => 'valor']) }}";
+        else {                            // editar usario
+          let ruta = "{{ route('users.update', ['user' => 'valor']) }}";
 
-          ruta = ruta.replace('valor', $("#input-id").val());
+          ruta = ruta.replace('valor', idInput);
+          console.log(ruta);
           grabar_datos(ruta, 'PUT', formData);
         }
       });

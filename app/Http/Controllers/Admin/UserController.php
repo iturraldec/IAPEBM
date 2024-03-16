@@ -27,19 +27,27 @@ class UserController extends Controller
         return datatables()->of(User::orderBy('name')->get())->toJson();
     }
 
+    //
+    public function loadRoles(User $user)
+    {
+        $data['state'] = true;
+        $data['data'] = $user->roles;
+        return response($data, 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
         $validator = $request->validate([
-            'document'  => 'required|string|max:15',
+            'document_number'  => 'required|string|max:15|unique:users',
             'name'      => 'required|string|max:255',
             'email'     => 'required|string|email|max:255|unique:users'
         ]);
 
         $user = User::create([
-            'document_number'   => $request->document,
+            'document_number'   => $request->document_number,
             'name'              => $request->name,
             'email'             => $request->email,
             'password'          => Hash::make('password')
@@ -53,19 +61,26 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $validator = $request->validate([
+            'document_number'   => 'required|string|max:15',
+            'name'              => 'required|string|max:255',
+            'email'             => 'required|string|email|max:255'
+        ]);
+
+        $user->document_number  = $request->document_number;
+        $user->name             = $request->name;
+        $user->email            = $request->email;
+        $user->save();
+        $user->syncRoles($request->roles);
+        $data['success'] = true;
+        $data['message'] = 'Usuario actualizado.';
+        $data['data'] = $user;
+
+        return response($data, Response::HTTP_OK);
     }
 
     /**
