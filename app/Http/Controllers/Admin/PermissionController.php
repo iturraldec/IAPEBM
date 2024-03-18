@@ -14,13 +14,12 @@ class PermissionController extends Controller
      */
     public function index()
     {
-      return view('auth.permissions.index');
-    }
-
-    //
-    public function loadData()
-    {
-        return datatables()->of(Permission::orderBy('name')->get())->toJson();
+        if(request()->ajax()) {
+            return datatables()->of(Permission::orderBy('name')->get())->toJson();
+        }
+        else {
+            return view('admin.permissions.index');
+        }
     }
 
     /**

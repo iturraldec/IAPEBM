@@ -7,15 +7,6 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-   	//
-		public function index() {
-			if(Auth::check()) {
-				return view('home');
-			}
-
-      return view('auth.login');
-		}
-
     //
     public function login(Request $request)
     {
@@ -36,7 +27,7 @@ class AuthController extends Controller
 			$remember = $request->filled('remember');
 
 			if(Auth::attempt($credenciales, $remember)) {
-				request()->session()->regenerate();
+				$request->session()->regenerate();
 
 				return redirect()->intended('home')->withSuccess('Logueado Correctamente');
 			}

@@ -1,21 +1,19 @@
 @extends('adminlte::page')
 
-@section('title', 'Listado de Usuarios')
+@section('title', 'Listado de Roles.')
 
 @section('content_header')
-  <h1>Listado de Usuarios</h1>
+  <h1>Listado de Roles</h1>
 @endsection
 
 @section('content')
   <div class="row justify-content-center">
     <div class="col-8">
-      <table id="dt-users" class="table table-hover border border-dark">
+      <table id="dt-roles" class="table table-hover border border-dark">
         <thead class="thead-dark text-center">
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">C.I.</th>
+            <th scope="col" class="col-sm-1">ID</th>
             <th scope="col">Nombre</th>
-            <th scope="col">Correo</th>
             <th scope="col" class="col-sm-2">Acción</th>
           </tr>
         </thead>
@@ -26,7 +24,7 @@
     </div>
   </div>
 
-  @include('auth.users.edit')
+  @include('admin.roles.edit')
 
 @endsection
 
@@ -34,13 +32,11 @@
   <script>
     $(document).ready(function () {
       // datatable
-      let datatable = $('#dt-users').DataTable({
-          "ajax": "{{ route('users.load-data') }}",
+      let datatable = $('#dt-roles').DataTable({
+          "ajax": "{{ route('admin.roles.index') }}",
           "columns": [
-            {"data": "id", visible: false},
-            {"data": "document_number", orderable: false},
+            {"data": "id", "orderable": false},
             {"data": "name"},
-            {"data": "email", orderable: false},
             {"data":null,
             "render": function ( data, type, row, meta ) {
                     let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>';
@@ -54,55 +50,48 @@
       });
 
       // Agregar botón personalizado
-      var customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Usuario</button>';
+      var customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Rol</button>';
       
-      $('#dt-users_wrapper .dataTables_length').append(customButton);
+      $('#dt-roles_wrapper .dataTables_length').append(customButton);
 
-      // limpiar el array de roles
-      function clean_roles() {
-        $('input[name="roles[]"]').each(function() {
+      // limpiar el array de permisos
+      function clean_permissions() {
+        $('input[name="permissions[]"]').each(function() {
           $(this).prop('checked', false);
         });
       }
 
-      // boton agregar usuario
+      // boton agregar rol
       $("#btn-agregar").click(function() {
-        $("#modalTitle").html("Agregar Usuario");
-        $("#idInput").val("");
-        $("#documentInput").val("");
-        $("#documentInput").attr("placeholder", "Ingrese cédula de identidad del usuario");
-        $("#nameInput").val("");
-        $("#nameInput").attr("placeholder", "Ingrese nombre de usuario");
-        $("#emailInput").val("");
-        $("#emailInput").attr("placeholder", "Ingrese el correo del usuario");
-        clean_roles();
+        $("#modalTitle").html("Agregar Rol");
+        $("#input-id").val("");
+        $("#input-name").val("");
+        $("#input-name").attr("placeholder", "Ingrese nuevo Rol");
+        clean_permissions();
         $('#modalForm').modal('show');
       });
 
-      // boton editar usario
-      $("#dt-users tbody").on("click", ".editar", function() {
+      // boton editar rol
+      $("#dt-roles tbody").on("click", ".editar", function() {
         let data = datatable.row($(this).parents()).data();
-        let ruta = "{{ route('users.load-roles', ['user' => ':valor']) }}";
+        let ruta = "{{ route('admin.roles.load-permissions', ['role' => 'valor']) }}";
 
-        ruta = ruta.replace(':valor', data.id);
-        $("#modalTitle").html("Modificar Usuario");
-        $("#idInput").val(data.id);
-        $("#documentInput").val(data.document_number);
-        $("#nameInput").val(data.name);
-        $("#nameInput").attr('placeholder', 'Modificar Usuario');
-        $("#emailInput").val(data.email);
-        $("#emailInput").attr('placeholder', 'Correo del Usuario');
-        clean_roles();
+        ruta = ruta.replace('valor', data.id);
+        $("#modalTitle").html("Modificar Rol");
+        $("#input-id").val(data.id);
+        $("#input-name").val(data.name);
+        $("#input-name").attr('placeholder', 'Modificar Rol');
+        clean_permissions();
 
-        // cargo los roles del usuario y activo los correspondientes
+        // cargo los permisos del rol
         $.ajax({
           headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
           url: ruta,
           dataType:'json'
         })
         .done(function(resp){
-          resp.data.forEach(role => {
-            $(`input[name="roles[]"][value="${role.name}"]`).prop('checked', true);
+          resp.data.forEach(permiso => {
+            $(`input[name="permissions[]"][value="${permiso.name}"]`).prop('checked', true);
           });
         });
 
@@ -110,21 +99,20 @@
       });
 
       // boton grabar agregar/modificar
-      $('#form-user').submit(function(event) {
+      $('#form-rol').submit(function(event) {
         event.preventDefault();
 
         let formData = $(this).serializeArray();
-        let idInput = $("#idInput").val();
 
         $('#modalForm').modal('hide');
-        if (idInput === "") { // agregar usuario
-          grabar_datos("{{ route('users.store') }}", 'POST', formData);
-        }
-        else {                            // editar usario
-          let ruta = "{{ route('users.update', ['user' => 'valor']) }}";
 
-          ruta = ruta.replace('valor', idInput);
-          console.log(ruta);
+        if (formData[0].value === "") { // agregar rol
+          grabar_datos("{{ route('admin.roles.store') }}", 'POST', formData);
+        }
+        else {                          // editar rol
+          let ruta = "{{ route('admin.roles.update', ['role' => 'valor']) }}";
+
+          ruta = ruta.replace('valor', $("#input-id").val());
           grabar_datos(ruta, 'PUT', formData);
         }
       });
@@ -147,14 +135,14 @@
         });
       }
       
-      // boton eliminar usuario
-      $("#dt-users tbody").on("click",".eliminar",function() {
+      // boton eliminar rol
+      $("#dt-roles tbody").on("click",".eliminar",function() {
 		    let data = datatable.row($(this).parents()).data();
 
-        lib_Confirmar("Seguro de ELIMINAR el Usuario: " + data.name + "?")
+        lib_Confirmar("Seguro de ELIMINAR el Rol Nro. " + data.id + "?")
         .then((result) => {
           if (result.isConfirmed) {
-            let ruta = "{{ route('users.destroy', ['user' => 'valor']) }}";
+            let ruta = "{{ route('admin.roles.destroy', ['role' => 'valor']) }}";
 
             ruta = ruta.replace('valor', data.id);
             
@@ -165,7 +153,7 @@
               dataType:'json',
               success: function(resp){
                 datatable.ajax.reload();
-                lib_ShowMensaje("Usuario eliminado.");
+                lib_ShowMensaje("Rol eliminado.");
               }
             });
           }

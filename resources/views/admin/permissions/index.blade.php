@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Listado de Permisos')
+@section('title', 'Listado de Permisos.')
 
 @section('content_header')
   <h1>Listado de Permisos</h1>
@@ -41,7 +41,7 @@
     </div>
   </div>
 
-  @include('auth.permissions.edit')
+  @include('admin.permissions.edit')
 
 @endsection
 
@@ -50,7 +50,7 @@
     $(document).ready(function () {
       // datatable
       let datatable = $('#dt-permissions').DataTable({
-          "ajax": "{{ route('permissions.load-data') }}",
+          "ajax": "{{ route('admin.permissions.index') }}",
           "columns": [
             {"data": "id", "orderable": false},
             {"data": "name"},
@@ -72,7 +72,7 @@
 
         $.ajax({
           headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-          url: "{{ route('permissions.store') }}",
+          url: "{{ route('admin.permissions.store') }}",
           type: 'POST',
           data: {"name" : name},
           dataType:'json'
@@ -99,7 +99,7 @@
       $("#btn-update").click(function(){
         let id = $("#input_permission").data("id");
         let name = $("#input_permission").val();
-        let ruta = "{{ route('permissions.update', ['permission' => 'valor']) }}";
+        let ruta = "{{ route('admin.permissions.update', ['permission' => 'valor']) }}";
 
         ruta = ruta.replace('valor', id);
 
@@ -126,7 +126,7 @@
         lib_Confirmar("Seguro de ELIMINAR el Permiso Nro. " + data.id + "?")
         .then((result) => {
           if (result.isConfirmed) {
-            let ruta = "{{ route('permissions.destroy', ['permission' => 'valor']) }}";
+            let ruta = "{{ route('admin.permissions.destroy', ['permission' => 'valor']) }}";
 
             ruta = ruta.replace('valor', data.id);
             

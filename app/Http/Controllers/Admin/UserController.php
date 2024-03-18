@@ -17,14 +17,14 @@ class UserController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
-        return view('auth.users.index', compact('roles'));
-    }
+        if(request()->ajax()) {
+            return datatables()->of(User::orderBy('name')->get())->toJson();
+        }
+        else {
+            $roles = Role::all();
 
-    //
-    public function loadData()
-    {
-        return datatables()->of(User::orderBy('name')->get())->toJson();
+            return view('admin.users.index', compact('roles'));
+        }
     }
 
     //
@@ -93,5 +93,11 @@ class UserController extends Controller
 		$data['message'] = 'Usuario elminado.';
 
 		return response($data, Response::HTTP_NO_CONTENT);
+    }
+
+    //
+    public function passwordReset()
+    {
+        return view('auth.passwords.reset');
     }
 }

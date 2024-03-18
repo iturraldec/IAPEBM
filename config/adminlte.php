@@ -252,13 +252,11 @@ return [
     |
     */
 
-    'use_route_url' => false,
+    'use_route_url' => true,
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'register_url' => 'register',
-    'password_reset_url' => 'password/reset',
-    'password_email_url' => 'password/email',
+    'password_reset_url' => 'users.password.reset',
     'profile_url' => false,
 
     /*
@@ -298,15 +296,12 @@ return [
 
         // Sidebar items:
         [
-            'header' => 'Autenticación y Autorización',
-        ],
-        [
             'text'    => 'Permisos',
-            'route'   => 'permissions.index',
+            'route'   => 'admin.permissions.index',
         ],
         [
             'text'    => 'Roles',
-            'route'   => 'roles.index'
+            'route'   => 'admin.roles.index'
         ],
         [
             'text'    => 'Usuarios',
@@ -314,13 +309,13 @@ return [
             'submenu' => [
                 [
                     'text'  => 'Listado',
-                    'route' => 'users.index',
+                    'route' => 'admin.users.index',
                     'icon'  => 'fas fa-table',
                 ],
                 [
-                    'text' => 'Cambio de clave',
-                    'url'  => '#',
-                    'icon' => 'fas fa-fw fa-lock',
+                    'text'   => 'Cambio de clave',
+                    'route'  => 'users.password.reset',
+                    'icon'   => 'fas fa-fw fa-lock',
                 ],
             ],
         ],

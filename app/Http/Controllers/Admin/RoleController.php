@@ -15,14 +15,14 @@ class RoleController extends Controller
      */
     public function index()
     {
-      $permissions = Permission::all();
-      return view('auth.roles.index', compact('permissions'));
-    }
+        if(request()->ajax()) {
+            return datatables()->of(Role::orderBy('name')->get())->toJson();
+        }
+        else {
+            $permissions = Permission::all();
 
-    //
-    public function loadData()
-    {
-        return datatables()->of(Role::orderBy('name')->get())->toJson();
+            return view('admin.roles.index', compact('permissions'));
+        }
     }
 
     //
