@@ -107,8 +107,20 @@ class UserController extends Controller
     }
 
     //
-    public function passwordReset()
+    public function passwordChange()
     {
-        return view('auth.passwords.reset');
+        return view('auth.passwords.change');
+    }
+
+    //
+    public function passwordUpdate(Request $request)
+    {
+        $user = User::find(auth()->user()->id);
+        $user->password = Hash::make($request->pwd);
+        $user->save();
+        $data['status'] = true;
+        $data['message'] = 'Clave actualizada.';
+
+        return response($data, 200);
     }
 }

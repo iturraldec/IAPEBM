@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Resetear clave de usuario')
+@section('title', 'Cambio de clave de usuario')
 
 @section('content_header')
-  <h1>Resetear clave de usuario.</h1>
+  <h1>Cambio de clave de usuario.</h1>
 @endsection
 
 @section('content')
@@ -11,24 +11,24 @@
     <div class="col-6">
       <div class="card card-dark">
         <div class="card-header">
-          <h3 class="card-title">Resetear clave de usuario</h3>
+          <h3 class="card-title">Cambio de clave de usuario</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
         <div class="card-body">
           <div class="form-group">
-            <label for="inputDocument">Documento de identificación</label>
+            <label for="inputPwd1">Nueva clave</label>
             <input type="password" class="form-control" id="inputPwd1" placeholder="Ingrese nueva clave">
           </div>
-
           <div class="form-group">
-            <input type="button" class="form-control" id="inputSearch">
+            <label for="inputPwd2">Repita nueva clave</label>
+            <input type="password" class="form-control" id="inputPwd2" placeholder="Ingrese nuevamente la clave">
           </div>
         </div>
         <!-- /.card-body -->
 
         <div class="card-footer">
-          <button id="btnChange" class="btn btn-danger">Resetear</button>
+          <button id="btnChange" class="btn btn-danger">Cambiar</button>
         </div>
       </div>
     </div>

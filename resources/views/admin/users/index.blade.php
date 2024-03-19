@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Listado de Usuarios.')
+@section('title', 'Listado de Usuarios')
 
 @section('content_header')
-  <h1>Listado de Usuarios</h1>
+  <h1>Listado de Usuarios.</h1>
 @endsection
 
 @section('content')
@@ -124,7 +124,6 @@
           let ruta = "{{ route('admin.users.update', ['user' => 'valor']) }}";
 
           ruta = ruta.replace('valor', idInput);
-          console.log(ruta);
           grabar_datos(ruta, 'PUT', formData);
         }
       });

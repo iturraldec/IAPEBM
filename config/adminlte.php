@@ -314,8 +314,12 @@ return [
                 ],
                 [
                     'text'   => 'Cambio de clave',
-                    'route'  => 'users.password.reset',
+                    'route'  => 'users.password.change',
                     'icon'   => 'fas fa-fw fa-lock',
+                ],
+                [
+                    'text'   => 'Resetear clave',
+                    'route'  => 'admin.users.password.reset'
                 ],
             ],
         ],

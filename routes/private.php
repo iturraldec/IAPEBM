@@ -8,5 +8,5 @@ use App\Http\Controllers\AuthController;
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('users/password/reset', [UserController::class, 'passwordReset'])->name('users.password.reset');
-Route::post('users/password/reset', [UserController::class, 'passwordChange']);
+Route::get('users/password/change', [UserController::class, 'passwordChange'])->name('users.password.change');
+Route::post('users/password/update', [UserController::class, 'passwordUpdate'])->name('users.password.update');
