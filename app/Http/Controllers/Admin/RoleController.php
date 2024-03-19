@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Symfony\Component\HttpFoundation\Response ;
+use Illuminate\Validation\Rule;
 
 class RoleController extends Controller
 {
@@ -55,8 +56,13 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        $validator = $request->validate([
-            'name' => 'required|string|max:255|unique:permissions'
+        $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('roles')->ignore($role->id),
+            ]
         ]);
 
         $role->name = $request->name;

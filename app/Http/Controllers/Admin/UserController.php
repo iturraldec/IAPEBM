@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response ;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 //
 class UserController extends Controller
@@ -65,10 +66,20 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $validator = $request->validate([
-            'document_number'   => 'required|string|max:15',
-            'name'              => 'required|string|max:255',
-            'email'             => 'required|string|email|max:255'
+        $request->validate([
+            'document_number' => [
+                'required',
+                'string',
+                'max:15',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'name'  => 'required|string|max:255',
+            'email' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ]
         ]);
 
         $user->document_number  = $request->document_number;

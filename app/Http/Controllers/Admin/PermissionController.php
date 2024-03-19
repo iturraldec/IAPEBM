@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Symfony\Component\HttpFoundation\Response ;
+use Illuminate\Validation\Rule;
 
 class PermissionController extends Controller
 {
@@ -43,14 +44,19 @@ class PermissionController extends Controller
      */
     public function update(Request $request, Permission $permission)
     {
-        $validator = $request->validate([
-            'name' => 'required|string|max:255|unique:permissions'
+        $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('permissions')->ignore($permission->id),
+            ]
         ]);
 
         $permission->name = $request->name;
 		$permission->save();
 		$data['success'] = true;
-		$data['message'] = 'Permiso actualizado.';
+		$data['message'] = 'Permiso actualizado......';
 
 		return response($data, Response::HTTP_OK);
     }
