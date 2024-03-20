@@ -107,19 +107,47 @@ class UserController extends Controller
     }
 
     //
-    public function passwordChange()
+    public function passwordChange(Request $request)
     {
-        return view('auth.passwords.change');
+        if($request->isMethod('get')) {
+            return view('auth.passwords.change');
+        }
+        else {
+            $user = User::find(auth()->user()->id);
+            $user->password = Hash::make($request->password);
+            $user->save();
+            $data['status'] = true;
+            $data['message'] = 'Clave actualizada.';
+
+            return response($data, 200);
+        }
     }
 
     //
-    public function passwordUpdate(Request $request)
+    public function passwordReset(Request $request)
     {
-        $user = User::find(auth()->user()->id);
-        $user->password = Hash::make($request->pwd);
-        $user->save();
+        if($request->isMethod('get')) {
+            return view('auth.passwords.reset');
+        }
+        else {
+            $user = User::find($request->input('id'));
+            $user->password = Hash::make('password');
+            $user->save();
+            $data['status'] = true;
+            $data['message'] = 'Clave reseteada.';
+            $data['data'] = $user;
+
+            return response($data, 200);
+        }
+    }
+
+    //
+    public function getByDocument(string $document)
+    {
+        $user = User::where('document_number', $document)->first();
         $data['status'] = true;
-        $data['message'] = 'Clave actualizada.';
+        $data['message'] = 'Usuario.';
+        $data['data'] = $user;
 
         return response($data, 200);
     }

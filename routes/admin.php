@@ -21,4 +21,5 @@ Route::resource('users', UserController::class)->names('admin.users')
   ->only(['index', 'store', 'update', 'destroy'])
   ->names('admin.users');;
 Route::get('users/{user}/load-roles', [UserController::class, 'loadRoles'])->name('admin.users.load-roles');
-Route::view('users/password/reset', 'auth.passwords.reset')->name('admin.users.password.reset');
+Route::match(['get', 'post'], 'users/password/reset', [UserController::class, 'passwordReset'])->name('admin.users.password.reset');
+Route::get('users/{document}/getByDocument', [UserController::class, 'getByDocument'])->name('admin.users.getByDocument');

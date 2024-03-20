@@ -43,9 +43,9 @@
 
         $.ajax({
           headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-          url: "{{ route('users.password.update') }}",
+          url: "{{ route('users.password.change') }}",
           type: 'POST',
-          data: {'pwd': clave},
+          data: {'password': clave},
           dataType:'json'
         })
         .done(function(resp){

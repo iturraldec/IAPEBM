@@ -16,19 +16,21 @@
         <!-- /.card-header -->
         <!-- form start -->
         <div class="card-body">
-          <div class="form-group">
-            <label for="inputDocument">Documento de identificación</label>
-            <input type="password" class="form-control" id="inputPwd1" placeholder="Ingrese nueva clave">
+          <div class="input-group">
+            <input type="text" id="inputDocument" class="form-control form-control-lg" placeholder="Inserte Número de Cédula">
+            <div class="input-group-append">
+                <button id="btnSearch" class="btn btn-lg btn-default">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
           </div>
 
-          <div class="form-group">
-            <input type="button" class="form-control" id="inputSearch">
-          </div>
+          <label id="lblName" class="h4 mt-2">Usuario?</label>
         </div>
         <!-- /.card-body -->
 
         <div class="card-footer">
-          <button id="btnChange" class="btn btn-danger">Resetear</button>
+          <button id="btnReset" class="btn btn-danger">Resetear</button>
         </div>
       </div>
     </div>
@@ -38,22 +40,41 @@
 @section('js')
   <script>
     $(document).ready(function () {
-      $("#btnChange").click(function() {
-        let clave = $("#inputPwd1").val();
+      let user_id = 0;
 
-        $.ajax({
-          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-          url: "{{ route('users.password.update') }}",
-          type: 'POST',
-          data: {'pwd': clave},
-          dataType:'json'
+      //
+      $("#btnSearch").click(function() {
+        let ruta = "{{ route('admin.users.getByDocument', ['document' => ':valor']) }}";
+
+        ruta = ruta.replace(':valor', $("#inputDocument").val());
+        fetch(ruta)
+        .then(response => response.json())
+        .then(json => {
+          $("#lblName").text("Usuario: " + json.data.name);
+          user_id = json.data.id;
         })
-        .done(function(resp){
-          lib_ShowMensaje(resp.message);
-        })
-        .fail(function(resp){
-          lib_ShowMensaje(resp.responseJSON.message, 'error');
-        });
+      });
+
+      //
+      $("#btnReset").click(function() {
+        if(user_id == 0) {
+          alert("Debe seleccionar un usuario.");
+        }
+        else {
+          $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            url: "{{ route('admin.users.password.reset') }}",
+            type: 'POST',
+            data: {'id': user_id},
+            dataType:'json'
+          })
+          .done(function(resp){
+            lib_ShowMensaje(resp.message);
+          })
+          .fail(function(resp){
+            lib_ShowMensaje(resp.responseJSON.message, 'error');
+          });
+        }
       });
     });
   </script>
