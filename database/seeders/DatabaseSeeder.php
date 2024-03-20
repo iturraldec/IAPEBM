@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Permission;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\People;
 
 //
 class DatabaseSeeder extends Seeder
@@ -64,5 +65,15 @@ class DatabaseSeeder extends Seeder
 
         // usuarios de prueba
         User::factory(10)->create();
+
+        // personas
+        for($i = 1; $i <= 10; $i++) {
+            $people = new People;
+
+            $people->identification_number = fake()->randomNumber(8, true);
+            $people->first_name = fake()->firstName();
+            $people->last_name = fake()->lastName();
+            $people->save();
+        }
     }
 }
