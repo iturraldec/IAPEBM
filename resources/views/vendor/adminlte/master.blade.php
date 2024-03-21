@@ -89,7 +89,7 @@
     @else
         <script src="{{ mix(config('adminlte.laravel_mix_js_path', 'js/app.js')) }}"></script>
     @endif
-    
+
     <script type="text/javascript" src="{{ asset('assets/js/libreria.js') }}"></script>
 
     {{-- Extra Configured Plugins Scripts --}}

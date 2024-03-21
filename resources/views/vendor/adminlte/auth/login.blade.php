@@ -17,9 +17,9 @@
 @section('auth_body')
     @if(session('errorCredentials'))
         <h6>{{session('errorCredentials')}}</h6>
-    @endif   
+    @endif
 
-    <form action="{{ $login_url }}" method="post">
+    <form id="loginForm" action="{{ $login_url }}" method="post">
         @csrf
 
         {{-- Dcoument Number field --}}
@@ -58,27 +58,25 @@
             @enderror
         </div>
 
+        {{-- Login field --}}
         <div class="row">
-            {{-- recordar mi sesion --}}
-            <div class="col-8">
-                <div class="icheck-primary">
-                <input type="checkbox" name="remember">
-                <label for="remember">
-                    Recuerda mi sesión
-                </label>
+            <div class="col-7">
+                <div class="icheck-primary" title="{{ __('adminlte::adminlte.remember_me_hint') }}">
+                    <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+
+                    <label for="remember">
+                        {{ __('adminlte::adminlte.remember_me') }}
+                    </label>
                 </div>
             </div>
-            <!-- /.col -->
-            
-            {{-- enviar datos --}}
-            <div class="col-4">
-              <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+
+            <div class="col-5">
+                <button type=submit class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
+                    <span class="fas fa-sign-in-alt"></span>
+                    {{ __('adminlte::adminlte.sign_in') }}
+                </button>
             </div>
-            <!-- /.col -->
         </div>
 
     </form>
-@stop
-
-@section('auth_footer')
 @stop

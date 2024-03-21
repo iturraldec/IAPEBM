@@ -99,7 +99,10 @@ return [
     | Preloader Animation
     |--------------------------------------------------------------------------
     |
-    | Here you can change the preloader animation configuration.
+    | Here you can change the preloader animation configuration. Currently, two
+    | modes are supported: 'fullscreen' for a fullscreen preloader animation
+    | and 'cwrapper' to attach the preloader animation into the content-wrapper
+    | element and avoid overlapping it with the sidebars and the top navbar.
     |
     | For detailed instructions you can look the preloader section here:
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
@@ -107,7 +110,8 @@ return [
     */
 
     'preloader' => [
-        'enabled' => true,
+        'enabled' => false,
+        'mode' => 'fullscreen',
         'img' => [
             'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
             'alt' => 'AdminLTE Preloader Image',
@@ -256,7 +260,7 @@ return [
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'password_reset_url' => 'users.password.reset',
+    'password_reset_url' => 'password/reset',
     'profile_url' => false,
 
     /*
@@ -325,6 +329,7 @@ return [
         ],
     ],
 
+
     /*
     |--------------------------------------------------------------------------
     | Menu Filters
@@ -380,17 +385,17 @@ return [
                 ],
             ],
         ],
-        'jQuery Validation' => [
+        'jqueryValidation' => [
             'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => 'vendor/jquery-validation/jquery.validate.min.js',
                 ],
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => 'vendor/jquery-validation/additional-methods.min.js',
                 ],
             ],
