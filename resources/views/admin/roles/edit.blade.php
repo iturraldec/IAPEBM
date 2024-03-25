@@ -1,5 +1,5 @@
 <!-- agregar/editar rol -->
-<form id="form-rol">
+<form id="rolForm">
   <input type="hidden" id="input-id" name="id">
 
   <div class="modal fade" 
@@ -19,7 +19,7 @@
         </div>
 
         <div class="modal-body">
-          <div>
+          <div class="form-group">
             <input type="text" id="input-name" name="name" class="form-control">
           </div>
 

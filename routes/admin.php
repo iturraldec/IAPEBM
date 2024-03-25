@@ -14,7 +14,6 @@ Route::resource('permissions', PermissionController::class)
 Route::resource('roles', RoleController::class)
   ->only(['index', 'store', 'update', 'destroy'])
   ->names('admin.roles');
-Route::get('roles/{role}/load-permissions', [RoleController::class, 'loadPermissions'])->name('admin.roles.load-permissions');
 
 //
 Route::resource('users', UserController::class)->names('admin.users')

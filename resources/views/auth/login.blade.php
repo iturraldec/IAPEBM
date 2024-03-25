@@ -16,11 +16,11 @@ $(document).ready(function () {
     },
     messages: {
       document: {
-        required: "Por favor ingresa el número de documento de identificación",
+        required: "Debes ingresar el número de documento de identificación",
         minlength: "Debe tener al menos 7 dígitos",
       },
       password: {
-        required: "Por favor ingresa el password",
+        required: "Debes ingresar el password",
         minlength: "Debe tener al menos 5 dígitos"
       },
     },

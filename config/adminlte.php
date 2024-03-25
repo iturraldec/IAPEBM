@@ -14,8 +14,8 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
-    'title_prefix' => '',
+    'title' => 'Login',
+    'title_prefix' => 'IAPEBM-',
     'title_postfix' => '',
 
     /*
@@ -260,7 +260,6 @@ return [
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'password_reset_url' => 'password/reset',
     'profile_url' => false,
 
     /*
@@ -407,6 +406,16 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'vendor/sweetalert2/sweetalert2.all.min.js',
+                ],
+            ],
+        ],
+        'icheck-bootstrap' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/icheck-bootstrap/icheck-bootstrap.min.css',
                 ],
             ],
         ],

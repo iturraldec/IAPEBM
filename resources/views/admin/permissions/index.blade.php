@@ -10,17 +10,17 @@
 @section('content')
   <div class="row justify-content-center">
     <div class="col-8">
-      <div class="row form-group mb-3">
-        <div class="col-10">
-          <input type="text" id="input_name" class="form-control" placeholder="Ingresa nuevo Permiso">
+      <form id="permissionForm">
+        <div class="row mb-3">
+          <div class="input-group col-10">
+            <input type="text" id="inputPermission" name="permission" class="form-control" placeholder="Ingresa nuevo Permiso">
+          </div>
+          
+          <div class="form-group col-2">
+            <button type="submit" class="form-control btn btn-primary">Agregar</button>
+          </div>
         </div>
-        
-        <div class="col-2">
-          <button type="button" id="btn_agregar" class="form-control btn btn-primary">
-            Agregar
-          </button>
-        </div>
-      </div>
+      </form>
       
       <div class="row">
         <div class="col">
@@ -48,6 +48,52 @@
 @section('js')
   <script>
     $(document).ready(function () {
+      // validacion de form para agregar
+      $('#permissionForm').validate({
+        submitHandler: function () {
+          let _data = {
+            'name' : $("#inputPermission").val()
+          };
+
+          $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            url: "{{ route('admin.permissions.store') }}",
+            type: 'POST',
+            data: _data,
+            dataType:'json'
+          })
+          .done(function(resp){
+            $("#inputPermission").val("");
+            datatable.ajax.reload();
+            lib_ShowMensaje('Permiso agregado...');
+          })
+          .fail(function(resp){
+            lib_ShowMensaje(resp.responseJSON.message, 'error');
+          })
+        },
+        rules: {
+          permission: {
+            required: true
+          },
+        },
+        messages: {
+          permission: {
+            required: "Debes ingresar la definición del permiso."
+          },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.input-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        }
+      });
+
       // datatable
       let datatable = $('#dt-permissions').DataTable({
           "ajax": "{{ route('admin.permissions.index') }}",
@@ -66,27 +112,6 @@
           ]
       });
 
-      // boton agregar un permiso
-      $("#btn_agregar").click(function() {
-        let name = $("#input_name").val();
-
-        $.ajax({
-          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-          url: "{{ route('admin.permissions.store') }}",
-          type: 'POST',
-          data: {"name" : name},
-          dataType:'json'
-        })
-        .done(function(resp){
-          $("#input_name").val("");
-          datatable.ajax.reload();
-          lib_ShowMensaje('Permiso agregado...');
-        })
-        .fail(function(resp){
-          lib_ShowMensaje(resp.responseJSON.message, 'error');
-        });
-      });
-
       // boton editar permiso
       $("#dt-permissions tbody").on("click", ".editar", function() {
         let data = datatable.row($(this).parents()).data();
@@ -95,28 +120,53 @@
         $("#input_permission").val(data.name);
       });
 
-      // boton actualizar
-      $("#btn-update").click(function(){
-        let id = $("#input_permission").data("id");
-        let name = $("#input_permission").val();
-        let ruta = "{{ route('admin.permissions.update', ['permission' => 'valor']) }}";
+      // validacion de form para editar
+      $('#editForm').validate({
+        submitHandler: function () {
+          let id = $("#input_permission").data("id");
+          let ruta = "{{ route('admin.permissions.update', ['permission' => 'valor']) }}";
+          let _data = {
+            'name' : $("#input_permission").val()
+          };
 
-        ruta = ruta.replace('valor', id);
-
-        $.ajax({
-          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-          url: ruta,
-          type: 'PUT',
-          data: {"name" : name},
-          dataType:'json'
-        })
-        .done(function(resp){
-          datatable.ajax.reload();
-          lib_ShowMensaje('Permiso modificado...');
-        })
-        .fail(function(resp){
-          lib_ShowMensaje(resp.responseJSON.message, 'error');
-        });
+          ruta = ruta.replace('valor', id);
+          $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            url: ruta,
+            type: 'PUT',
+            data: _data,
+            dataType:'json'
+          })
+          .done(function(resp){
+            $("#modalForm").modal('hide');
+            datatable.ajax.reload();
+            lib_ShowMensaje('Permiso modificado...');
+          })
+          .fail(function(resp){
+            lib_ShowMensaje(resp.responseJSON.message, 'error');
+          })
+        },
+        rules: {
+          input_permission: {
+            required: true
+          },
+        },
+        messages: {
+          input_permission: {
+            required: "Debes ingresar el nombre del permiso."
+          },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        }
       });
 
       // boton eliminar permiso

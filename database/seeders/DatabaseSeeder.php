@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
         for($i = 1; $i <= 10; $i++) {
             $permissions = new Permission;
 
-            $permissions->name = Str::random(50);
+            $permissions->name = Str::random(20);
             $permissions->guard_name = 'web';
             $permissions->save();
         }
@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
         for($i = 1; $i <= 10; $i++) {
             $roles = new Role;
 
-            $roles->name = Str::random(50);
+            $roles->name = Str::random(20);
             $roles->guard_name = 'web';
             $roles->save();
         }

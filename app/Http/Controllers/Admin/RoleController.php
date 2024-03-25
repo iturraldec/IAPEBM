@@ -17,21 +17,13 @@ class RoleController extends Controller
     public function index()
     {
         if(request()->ajax()) {
-            return datatables()->of(Role::orderBy('name')->get())->toJson();
+            return datatables()->of(Role::orderBy('name')->with('permissions')->get())->toJson();
         }
         else {
             $permissions = Permission::all();
 
             return view('admin.roles.index', compact('permissions'));
         }
-    }
-
-    //
-    public function loadPermissions(Role $role)
-    {
-        $data['state'] = true;
-        $data['data'] = $role->permissions;
-        return response($data, 200);
     }
 
     /**

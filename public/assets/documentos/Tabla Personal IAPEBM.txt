@@ -1,0 +1,65 @@
+  cedula_id character varying(15) NOT NULL, --> Cedula
+  codigo_isnt character varying(10), ---------> Codigo Institucional
+  nom_ape character varying(100), ------------> Nombre y Apellido
+  sexo character varying(5),
+  lugar_nac character varying(50), -----------> Lugar de Nacimiento
+  jerarquia_ofc_last integer, ----------------> Rango Anterior
+  jerarquiaa_ofc integer, --------------------> Rango a Ascender
+  codigo_cargo integer, ----------------------> Codigo del Cargo
+  fecha_nac character varying(15),
+  fecha_ing character varying(15), -----------> Fecha de Ingreso
+  tlf_movil character varying(15),
+  tlf_resi character varying(15),
+  condicion_usr integer, ---------------------> Condicion del Usuario (Activo, En Reposo)
+  cod_tipoemp integer, -----------------------> Tipo de Empleado
+  est_civil_usr character varying(25), -------> Estado Civil
+  zona_postal_usr integer DEFAULT 0, ---------> Zona Postal
+  cod_car_pol character varying(15), ---------> Codigo Carnet Policial
+  cod_car_patr character varying(15), --------> Codigo Carnet Patria
+  codigo_ub character varying(10), -----------> Codigo Ubicacion
+  correo_usr character varying(60), ----------> Correo
+  ult_direcc character varying(200),----------> Ultima Direccion
+  rif_usr character varying(20), -------------> RIF del Usuario
+  licen_usr character varying(5), ------------> Licencia de Conducir
+  gradolicen_usr character varying(30), ------> Grado Licencia de Conducir
+  grupo_sang_usr character varying(10), ------> Grupo Sanguineo
+  codigo_cargo_func integer, -----------------> Codigo Cargo
+  curso_usr character varying(50), -----------> Curso del Funcionario (Año de su graduación)
+  escuela_usr character varying(50), ---------> Donde estudio (UNES)
+  fecha_grad_usr date, -----------------------> Fecha de Graduacion
+  ausente character varying(5),
+
+/* INFORMACION FISIONOMICA */
+
+  estatura_usr character varying(10),
+  color_tez_usr character varying(10),
+  cabello_usr character varying(30),
+  cara_usr character varying(10),
+  frente_usr character varying(10),
+  cejas_usr character varying(12),
+  ojos_usr character varying(10),
+  nariz_usr character varying(10),
+  boca_usr character varying(10),
+  labios_usr character varying(10),
+  barba_usr character varying(5),
+  bigote_usr character varying(5),
+  contextura_usr character varying(10),
+  dentadura_usr character varying(10),
+  peso_usr character varying(5),
+  senales_part_usr character varying(50), --------> Señales Particulares (Tatuajes, cicatrices, etc.)
+  deportes_usr character varying(80), ------------> Deportes que Prectica
+  religion_usr character varying(20),
+  manodom_usr character varying(15), -------------> Mano Dominante
+  enferdiscp_usr character varying(90), ----------> Enfermedades o Discapacidades
+  lentes_usr character varying(5),
+  talla_camisa_usr character varying(12),
+  talla_calzado_usr character varying(12),
+  talla_pantalon_usr character varying(12),
+  talla_gorra_usr character varying(12),
+
+  ruta_imagen1 character varying(60),
+  ruta_imagen2 character varying(60),
+  ruta_imagen3 character varying(60),
+  ruta_imagen4 character varying(60),
+  ruta_folder character varying(10),
+
