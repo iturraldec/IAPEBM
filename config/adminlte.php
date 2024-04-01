@@ -326,6 +326,10 @@ return [
                 ],
             ],
         ],
+        [
+            'text'    => 'Cargos',
+            'route'   => 'cargos.index'
+        ],
     ],
 
 
