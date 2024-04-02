@@ -23,12 +23,13 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedSmallInteger('ccp_location_id');
             $table->string('code', 20)->unique();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->decimal('latitude', 9, 6);
             $table->decimal('length', 9, 6);
             $table->timestamps();
 
             $table->foreign('ccp_location_id')->references('id')->on('ccp_locations');
+            $table->unique(['ccp_location_id', 'name']);
         });
     }
 
