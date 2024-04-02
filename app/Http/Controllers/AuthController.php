@@ -20,8 +20,8 @@ class AuthController extends Controller
 			}
 
 			$credenciales = [
-				'document_number' => $request->document,
-				'password' 				=> $request->password
+				'code' 			=> $request->document,
+				'password'	=> $request->password
 			];
 
 			$remember = $request->filled('remember');

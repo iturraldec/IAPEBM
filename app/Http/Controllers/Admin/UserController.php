@@ -42,16 +42,16 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = $request->validate([
-            'document_number'  => 'required|string|max:15|unique:users',
-            'name'      => 'required|string|max:255',
-            'email'     => 'required|string|email|max:255|unique:users'
+            'code'  => 'required|string|max:15|unique:users',
+            'name'  => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users'
         ]);
 
         $user = User::create([
-            'document_number'   => $request->document_number,
-            'name'              => $request->name,
-            'email'             => $request->email,
-            'password'          => Hash::make('password')
+            'code'      => $request->document_number,
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'password'  => Hash::make('password')
         ]);
         $user->syncRoles($request->roles);
 
@@ -67,7 +67,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'document_number' => [
+            'code' => [
                 'required',
                 'string',
                 'max:15',
@@ -82,9 +82,9 @@ class UserController extends Controller
             ]
         ]);
 
-        $user->document_number  = $request->document_number;
-        $user->name             = $request->name;
-        $user->email            = $request->email;
+        $user->code     = $request->code;
+        $user->name     = $request->name;
+        $user->email    = $request->email;
         $user->save();
         $user->syncRoles($request->roles);
         $data['success'] = true;
@@ -144,7 +144,7 @@ class UserController extends Controller
     //
     public function getByDocument(string $document)
     {
-        $user = User::where('document_number', $document)->first();
+        $user = User::where('code', $document)->first();
         $data['status'] = true;
         $data['message'] = 'Usuario.';
         $data['data'] = $user;

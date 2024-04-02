@@ -11,11 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ccps', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 20)->unique();
-            $table->string('name', 255)->unique();
+        //
+        Schema::create('ccp_locations', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('name')->unique();
             $table->timestamps();
+        });
+
+        //
+        Schema::create('ccps', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedSmallInteger('ccp_location_id');
+            $table->string('code', 20)->unique();
+            $table->string('name')->unique();
+            $table->decimal('latitude', 9, 6);
+            $table->decimal('length', 9, 6);
+            $table->timestamps();
+
+            $table->foreign('ccp_location_id')->references('id')->on('ccp_locations');
         });
     }
 
@@ -24,6 +37,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('ccp_locations');
         Schema::dropIfExists('ccps');
     }
 };

@@ -21,7 +21,7 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="documentInput">Documento de Identificación</label>
-            <input type="text" id="documentInput" name="document_number" class="form-control">
+            <input type="text" id="documentInput" name="code" class="form-control">
           </div>
 
           <div class="form-group">

@@ -38,7 +38,7 @@
           "ajax": "{{ route('admin.users.index') }}",
           "columns": [
             {"data": "id", visible: false},
-            {"data": "document_number", orderable: false},
+            {"data": "code", orderable: false},
             {"data": "name"},
             {"data": "email", orderable: false},
             {"data":null,
@@ -87,7 +87,7 @@
         ruta = ruta.replace(':valor', data.id);
         $("#modalTitle").html("Modificar Usuario");
         $("#idInput").val(data.id);
-        $("#documentInput").val(data.document_number);
+        $("#documentInput").val(data.code);
         $("#nameInput").val(data.name);
         $("#nameInput").attr('placeholder', 'Modificar Usuario');
         $("#emailInput").val(data.email);
