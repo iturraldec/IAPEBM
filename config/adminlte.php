@@ -327,12 +327,22 @@ return [
             ],
         ],
         [
-            'text'    => 'Cargos',
-            'route'   => 'cargos.index'
-        ],
-        [
-            'text'    => 'Rangos',
-            'route'   => 'rangos.index'
+            'text'  => 'Empleados',
+            'icon'  => 'fas fa-users',
+            'submenu'   => [
+                [
+                    'text'    => 'Cargos',
+                    'route'   => 'cargos.index'
+                ],
+                [
+                    'text'    => 'Rangos',
+                    'route'   => 'rangos.index'
+                ],
+                [
+                    'text'    => 'Condiciones',
+                    'route'   => 'employee-status.index'
+                ],
+            ]
         ],
     ],
 

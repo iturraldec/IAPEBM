@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CargoController;
 use App\Http\Controllers\RangoController;
+use App\Http\Controllers\EmployeeStatusController;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -21,3 +22,7 @@ Route::resource('cargos', CargoController::class)
 Route::resource('rangos', RangoController::class)
   ->only(['index', 'store', 'update', 'destroy'])
   ->names('rangos');
+
+Route::resource('employee-status', EmployeeStatusController::class)
+  ->only(['index', 'store', 'update', 'destroy'])
+  ->names('employee-status');

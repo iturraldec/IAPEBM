@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cargo;
+use App\Models\EmployeeStatus;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
 
-//
-class CargoController extends Controller
+class EmployeeStatusController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,10 +15,10 @@ class CargoController extends Controller
     public function index()
     {
       if(request()->ajax()) {
-        return datatables()->of(Cargo::orderBy('name')->get())->toJson();
+        return datatables()->of(EmployeeStatus::orderBy('name')->get())->toJson();
       }
       else {
-        return view('cargos.index');
+        return view('employee-status.index');
       }
     }
 
@@ -29,12 +28,12 @@ class CargoController extends Controller
     public function store(Request $request)
     {
       $validator = $request->validate([
-        'name' => 'required|string|max:200|unique:cargos'
+        'name' => 'required|string|max:255|unique:employee_status'
       ]);
 
-      Cargo::Create($request->all());
+      EmployeeStatus::Create($request->all());
       $mensaje['success'] = true;
-      $mensaje['msg'] = 'Cargo creado!';
+      $mensaje['msg'] = 'Condición creada!';
 
       return response($mensaje, Response::HTTP_CREATED);
     }
@@ -42,21 +41,21 @@ class CargoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Cargo $cargo)
+    public function update(Request $request, EmployeeStatus $employeeStatus)
     {
       $request->validate([
         'name' => [
             'required',
             'string',
-            'max:200',
-            Rule::unique('cargos')->ignore($cargo->id),
+            'max:255',
+            Rule::unique('employee_status')->ignore($employeeStatus->id),
         ]
       ]);
 
-      $cargo->name = $request->name;
-      $cargo->save();
+      $employeeStatus->name = $request->name;
+      $employeeStatus->save();
       $data['success'] = true;
-      $data['message'] = 'Cargo actualizado......';
+      $data['message'] = 'Condición actualizada......';
 
       return response($data, Response::HTTP_OK);
     }
@@ -64,11 +63,11 @@ class CargoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Cargo $cargo)
+    public function destroy(EmployeeStatus $employeeStatus)
     {
-      $cargo->delete();
+      $employeeStatus->delete();
       $data['success'] = true;
-      $data['message'] = 'Cargo elminado.';
+      $data['message'] = 'Condición elminada.';
       return response($data, Response::HTTP_NO_CONTENT);
     }
 }
