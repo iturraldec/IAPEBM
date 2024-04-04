@@ -32,6 +32,9 @@
 @section('js')
   <script>
     $(document).ready(function () {
+      // mascara  de 'input_permission' (editar)
+      $("#input-name").inputmask({regex:"[A-Za-z\\s]+"});
+
       // datatable
       let datatable = $('#dt-roles').DataTable({
           "ajax": "{{ route('admin.roles.index') }}",

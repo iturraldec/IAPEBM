@@ -48,6 +48,12 @@
 @section('js')
   <script>
     $(document).ready(function () {
+      // mascara  de 'inputPermission' (agregar)
+      $("#inputPermission").inputmask({regex:"[A-Za-z\\s]+"});
+
+      // mascara  de 'input_permission' (editar)
+      $("#input_permission").inputmask({regex:"[A-Za-z\\s]+"});
+
       // validacion de form para agregar
       $('#permissionForm').validate({
         submitHandler: function () {

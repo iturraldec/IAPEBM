@@ -33,6 +33,12 @@
 @section('js')
   <script>
     $(document).ready(function () {
+      // mascara de cedula del usuario
+      $("#documentInput").inputmask({regex:"\\d+"})
+      
+      // mascara del nombre del usuario
+      $("#nameInput").inputmask({regex:"[A-Za-z]+"})
+
       // datatable
       let datatable = $('#dt-users').DataTable({
           "ajax": "{{ route('admin.users.index') }}",

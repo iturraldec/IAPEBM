@@ -31,6 +31,9 @@
 @section('js')
 <script>
   $(document).ready(function () {
+    // macara del cargo
+    $("#inputRango").inputmask({regex:"[A-Za-z\\s]+"})
+
     // datatable
     let datatable = $('#dt-rangos').DataTable({
         "ajax": "{{ route('rangos.index') }}",

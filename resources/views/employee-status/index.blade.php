@@ -31,6 +31,9 @@
 @section('js')
 <script>
   $(document).ready(function () {
+    // macara del cargo
+    $("#inputCondicion").inputmask({regex:"[A-Za-z\\s]+"})
+
     // datatable
     let datatable = $('#dt-employee-status').DataTable({
         "ajax": "{{ route('employee-status.index') }}",

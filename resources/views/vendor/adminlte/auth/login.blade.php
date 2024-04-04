@@ -24,7 +24,7 @@
 
         {{-- Dcoument Number field --}}
         <div class="input-group mb-3">
-            <input type="text" name="document" class="form-control @error('document') is-invalid @enderror"
+            <input type="text" id="document" name="document" class="form-control @error('document') is-invalid @enderror"
                    value="{{ old('document') }}" placeholder="Documento de Identificacion" autofocus>
 
             <div class="input-group-append">

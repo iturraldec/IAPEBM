@@ -3,6 +3,10 @@
 @section('js')
 <script>
 $(document).ready(function () {
+  // masacara de 'document'
+  $('#document').inputmask({ regex: "\\d+" });
+
+  // validacion del formulario
   $('#loginForm').validate({
     rules: {
       document: {
