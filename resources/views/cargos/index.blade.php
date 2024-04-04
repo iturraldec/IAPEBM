@@ -37,6 +37,8 @@
     // datatable
     let datatable = $('#dt-cargos').DataTable({
         "ajax": "{{ route('cargos.index') }}",
+        processing: true,
+        serverSide: true,
         "columns": [
           {"data": "id", "orderable": false},
           {"data": "name"},
