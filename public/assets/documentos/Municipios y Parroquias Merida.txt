@@ -1,0 +1,153 @@
+Municipio Alberto Adriani
+Parroquia Presidente Betancourt (El Vigía)
+Parroquia Presidente Páez (El Vigía)
+Parroquia Presidente Rómulo Gallegos (El Vigía)
+Parroquia Gabriel Picón González (La Palmita)
+Parroquia Héctor Amable Mora (Mucujepe)
+Parroquia José Nucete Sardi (Los Naranjos)
+Parroquia Pulido Méndez (La Blanca)
+
+
+Municipio Antonio Pinto Salinas
+Parroquia Santa Cruz de Mora
+Parroquia Mesa Bolívar (Mesa Bolívar)
+Parroquia Mesa de Las Palmas (Mesa de Las Palmas)
+
+
+Municipio Andrés Bello
+Parroquia La Azulita
+
+
+Municipio Aricagua
+Parroquia Aricagua (Aricagua)
+Parroquia San Antonio (Campo Elías)
+
+
+Municipio Arzobispo Chacón
+Parroquia Canaguá
+Parroquia Capurí (Capurí)
+Parroquia Chacantá (Chacantá)
+Parroquia El Molino (El Molino)
+Parroquia Guaimaral (El Viento)
+Parroquia Mucutuy (Mucutuy)
+Parroquia Mucuchachí (Mucuchachí)
+
+
+Municipio Campo Elías
+Parroquia Fernández Peña (Ejido)
+Parroquia Matriz (Ejido)
+Parroquia Montalbán (Ejido)
+Parroquia Acequias
+Parroquia Jají
+Parroquia La Mesa (La Mesa)
+Parroquia San José del Sur (San José)
+
+
+Municipio Caracciolo Parra Olmedo
+Parroquia Tucaní (Tucaní)
+Parroquia Florencio Ramírez (El Pinar)
+
+
+Municipio Cardenal Quintero
+Parroquia Santo Domingo
+Parroquia Las Piedras (Las Piedras)
+
+
+Municipio Guaraque
+Parroquia Guaraque (Guaraque)
+Parroquia Mesa de Quintero (Mesa de Quintero)
+Parroquia Río Negro (Río Negro)
+
+
+Municipio Julio César Salas
+Parroquia Arapuey (Arapuey)
+Parroquia Palmira (San José de Palmira)
+
+
+Municipio Justo Briceño
+Parroquia San Cristóbal de Torondoy (San Cristóbal de Torondoy)
+Parroquia Torondoy
+
+
+Municipio Libertador
+Parroquia Antonio Spinetti Dini (Mérida)
+Parroquia Arias (Mérida)
+Parroquia Caracciolo Parra Pérez (Mérida)
+Parroquia Domingo Peña (Mérida)
+Parroquia El Llano (Mérida)
+Parroquia Gonzalo Picón Febres (Mérida)
+Parroquia Jacinto Plaza (Mérida)
+Parroquia Juan Rodríguez Suárez (Mérida)
+Parroquia Lasso de la Vega (Mérida)
+Parroquia Mariano Picón Salas (Mérida)
+Parroquia Milla (Mérida)
+Parroquia Osuna Rodríguez (Mérida)
+Parroquia Sagrario (Mérida)
+Parroquia El Morro
+Parroquia Los Nevados
+
+
+Municipio Miranda
+Parroquia Andrés Eloy Blanco
+Parroquia La Venta (La Venta)
+Parroquia Piñango
+Parroquia Timotes
+
+
+Municipio Obispo Ramos de Lora
+Parroquia Eloy Paredes (Guayabones)
+Parroquia San Rafael de Alcázar (San Rafael de Alcázar)
+Parroquia Santa Elena de Arenales
+
+
+Municipio Padre Noguera
+Parroquia Santa María de Caparo (Santa María de Caparo)
+
+
+Municipio Pueblo Llano
+Parroquia Pueblo Llano
+
+
+Municipio Rangel
+Parroquia Cacute (Cacute)
+Parroquia La Toma (La Toma)
+Parroquia Mucuchíes
+Parroquia Mucurubá (Mucurubá)
+Parroquia San Rafael
+
+
+Municipio Rivas Dávila
+Parroquia Gerónimo Maldonado
+Parroquia Bailadores
+
+
+Municipio Santos Marquina
+Parroquia Tabay
+
+
+Municipio Sucre
+Parroquia Chiguará
+Parroquia Estánques (Estánques)
+Parroquia Lagunillas
+Parroquia La Trampa (La Trampa)
+Parroquia Pueblo Nuevo del Sur (Pueblo Nuevo del Sur)
+Parroquia San Juan
+
+
+Municipio Tovar
+Parroquia El Amparo (Tovar)
+Parroquia El Llano (Tovar)
+Parroquia San Francisco (Tovar)
+Parroquia Tovar (Tovar)
+
+
+Municipio Tulio Febres Cordero
+Parroquia Independencia (Palmarito)
+Parroquia María de la Concepción Palacios Blanco (Las Virtudes)
+Parroquia Nueva Bolivia
+Parroquia Santa Apolonia
+
+
+Municipio Zea
+Parroquia Caño El Tigre (Caño Tigre)
+Parroquia Zea

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->smallIncrements('id');
             $table->string('name', 200)->unique();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

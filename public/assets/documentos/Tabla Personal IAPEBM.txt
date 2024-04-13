@@ -1,32 +1,32 @@
-  cedula_id character varying(15) NOT NULL, --> Cedula
-  codigo_isnt character varying(10), ---------> Codigo Institucional
-  nom_ape character varying(100), ------------> Nombre y Apellido
-  sexo character varying(5),
-  lugar_nac character varying(50), -----------> Lugar de Nacimiento
-  jerarquia_ofc_last integer, ----------------> Rango Anterior
-  jerarquiaa_ofc integer, --------------------> Rango a Ascender
+  cedula_id character varying(15) NOT NULL, --> Cedula                    (personas)
+  codigo_isnt character varying(10), ---------> Codigo Institucional      (funcionarios)
+  nom_ape character varying(100), ------------> Nombre y Apellido         (personas)
+  sexo character varying(5),                                              (personas)
+  lugar_nac character varying(50), -----------> Lugar de Nacimiento       (personas)
+  jerarquia_ofc_last integer, ----------------> Rango Anterior-POLICIA
+  jerarquiaa_ofc integer, --------------------> Rango a Actual-POLICIA
   codigo_cargo integer, ----------------------> Codigo del Cargo
-  fecha_nac character varying(15),
+  fecha_nac character varying(15),                                        (personas)
   fecha_ing character varying(15), -----------> Fecha de Ingreso
-  tlf_movil character varying(15),
-  tlf_resi character varying(15),
+  tlf_movil character varying(15),                                        (personas)
+  tlf_resi character varying(15),                                         (personas)
   condicion_usr integer, ---------------------> Condicion del Usuario (Activo, En Reposo)
-  cod_tipoemp integer, -----------------------> Tipo de Empleado
-  est_civil_usr character varying(25), -------> Estado Civil
+  cod_tipoemp integer, -----------------------> Tipo de Empleado (codigo empleados.txt)
+  est_civil_usr character varying(25), -------> Estado Civil              (personas)
   zona_postal_usr integer DEFAULT 0, ---------> Zona Postal
   cod_car_pol character varying(15), ---------> Codigo Carnet Policial
   cod_car_patr character varying(15), --------> Codigo Carnet Patria
   codigo_ub character varying(10), -----------> Codigo Ubicacion
-  correo_usr character varying(60), ----------> Correo
-  ult_direcc character varying(200),----------> Ultima Direccion
-  rif_usr character varying(20), -------------> RIF del Usuario
+  correo_usr character varying(60), ----------> Correo                    (personas)
+  ult_direcc character varying(200),----------> Ultima Direccion          (personas)
+  rif_usr character varying(20), -------------> RIF del Usuario           (personas)
   licen_usr character varying(5), ------------> Licencia de Conducir
   gradolicen_usr character varying(30), ------> Grado Licencia de Conducir
   grupo_sang_usr character varying(10), ------> Grupo Sanguineo
   codigo_cargo_func integer, -----------------> Codigo Cargo
-  curso_usr character varying(50), -----------> Curso del Funcionario (Año de su graduación)
-  escuela_usr character varying(50), ---------> Donde estudio (UNES)
-  fecha_grad_usr date, -----------------------> Fecha de Graduacion
+  curso_usr character varying(50), -----------> Curso del Funcionario (Año de su graduación)-POLICIA
+  escuela_usr character varying(50), ---------> Donde estudio (UNES)-POLICIA
+  fecha_grad_usr date, -----------------------> Fecha de Graduacion-POLICIA
   ausente character varying(5),
 
 /* INFORMACION FISIONOMICA */

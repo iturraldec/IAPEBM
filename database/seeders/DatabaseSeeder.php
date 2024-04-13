@@ -70,9 +70,12 @@ class DatabaseSeeder extends Seeder
         for($i = 1; $i <= 10; $i++) {
             $people = new People;
 
-            $people->identification_number = fake()->randomNumber(8, true);
-            $people->first_name = fake()->firstName();
-            $people->last_name = fake()->lastName();
+            $people->cedula = fake()->randomNumber(8, true);
+            $people->nombre = fake()->firstName().' '.fake()->lastName();
+            $people->sexo = 'M';
+            $people->fecha_nacimiento = fake()->date();
+            $people->lugar_nacimiento = fake()->streetAddress;
+            $people->direccion = fake()->streetAddress;
             $people->save();
         }
     }

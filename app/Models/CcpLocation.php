@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Rango extends Model
+class CcpLocation extends Model
 {
     use SoftDeletes;
 
     //
-    protected $table = 'rangos';
+    protected $table = 'ccp_locations';
 
     //
     protected $fillable = ['name'];

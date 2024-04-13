@@ -11,11 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cargos', function (Blueprint $table) {
-            $table->smallIncrements('id');
-            $table->string('name', 200)->unique();
+        Schema::create('phones', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedSmallInteger('phone_type_id')->nullable();
+            $table->string('number');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('phone_type_id')
+                ->references('id')
+                ->on('phone_types')
+                ->nullOnDelete();
         });
     }
 
@@ -24,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cargos');
+        Schema::dropIfExists('phones');
     }
 };

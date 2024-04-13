@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
         Schema::create('ccp_locations', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name')->unique();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         //
@@ -27,9 +27,13 @@ return new class extends Migration
             $table->decimal('latitude', 9, 6);
             $table->decimal('length', 9, 6);
             $table->timestamps();
+            $table->softDeletes();
+            $table->unique(['code', 'name']);
 
-            $table->foreign('ccp_location_id')->references('id')->on('ccp_locations');
-            $table->unique(['ccp_location_id', 'name']);
+            $table->foreign('ccp_location_id')
+                ->references('id')
+                ->on('ccp_locations')
+                ->nullOnDelete();
         });
     }
 
