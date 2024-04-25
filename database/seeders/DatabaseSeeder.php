@@ -10,7 +10,7 @@ use Spatie\Permission\Models\Permission;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Models\People;
+use Illuminate\Support\Facades\DB;
 
 //
 class DatabaseSeeder extends Seeder
@@ -66,17 +66,38 @@ class DatabaseSeeder extends Seeder
         // usuarios de prueba
         User::factory(10)->create();
 
-        // personas
-        for($i = 1; $i <= 10; $i++) {
-            $people = new People;
+        // tipo de sangre
+        DB::table('blood_types')->insert([
+            ['name' => 'A+'],
+            ['name' => 'A-'],
+            ['name' => 'B+'],
+            ['name' => 'B-'],
+            ['name' => 'AB+'],
+            ['name' => 'AB-'],
+            ['name' => 'O+'],
+            ['name' => 'O-'],
+        ]);
+        
+        // tipo de telefonos
+        DB::table('phone_types')->insert([
+            ['name' => 'Celular'],
+            ['name' => 'Casa'],
+            ['name' => 'Institucional'],
+        ]);
 
-            $people->cedula = fake()->randomNumber(8, true);
-            $people->nombre = fake()->firstName().' '.fake()->lastName();
-            $people->sexo = 'M';
-            $people->fecha_nacimiento = fake()->date();
-            $people->lugar_nacimiento = fake()->streetAddress;
-            $people->direccion = fake()->streetAddress;
-            $people->save();
-        }
+        // tipo de direcciones
+        DB::table('address_types')->insert([
+            ['name' => 'Residencia'],
+            ['name' => 'Padre/Madre'],
+        ]);
+
+        // estado civil
+        DB::table('civil_status')->insert([
+            ['name' => 'Soltero(a)'],
+            ['name' => 'Casado(a)'],
+            ['name' => 'Divorsiado(a)'],
+            ['name' => 'Viudo(a)'],
+            ['name' => 'Unio Estable de Hecho'],
+        ]);
     }
 }

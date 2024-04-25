@@ -11,6 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
+        //
+        //
         Schema::create('ccp_locations', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name')->unique();

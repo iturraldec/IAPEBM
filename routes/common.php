@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use Maatwebsite\Excel\Facades\Excel;
+
+Route::get('fromExcel', function(){
+  Excel::import(new App\Imports\DemoImport, 'assets/documentos/administrativos.csv');
+  //Excel::import(new App\Imports\DemoImport, public_path('assets/documentos/administrativos_prueba.csv'));
+});
 
 Route::get('/psp', function (){
   $partidas[] = array(

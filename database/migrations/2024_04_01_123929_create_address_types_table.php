@@ -11,17 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('phones', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedSmallInteger('phone_type_id')->nullable();
-            $table->string('number');
+        Schema::create('address_types', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('name');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('phone_type_id')
-                ->references('id')
-                ->on('phone_types')
-                ->nullOnDelete();
         });
     }
 
@@ -30,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('phones');
+        Schema::dropIfExists('address_types');
     }
 };

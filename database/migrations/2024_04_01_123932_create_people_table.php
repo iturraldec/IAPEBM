@@ -15,22 +15,19 @@ return new class extends Migration
         Schema::create('people', function (Blueprint $table) {
             $table->increments('id');
             $table->string('cedula',15)->nullable()->unique();
-            $table->string('nombre', 200);
-            $table->char('sexo', 1);
-            $table->date('fecha_nacimiento');
-            $table->text('lugar_nacimiento');
-            $table->text('direccion');
+            $table->string('name', 200);
+            $table->char('sex', 1);
+            $table->date('birthday')->nullable();
+            $table->text('place_of_birth');
+            $table->string('email')->nullable();
+            $table->unsignedTinyInteger('civil_status_id')->nullable();
+            $table->unsignedTinyInteger('blood_type_id')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
-        });
 
-        //
-        Schema::create('person_phone', function (Blueprint $table) {
-            $table->unsignedInteger('person_id');
-            $table->unsignedInteger('phone_id');
-
-            $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');
-            $table->foreign('phone_id')->references('id')->on('phones')->onDelete('cascade');
+            $table->foreign('civil_status_id')->references('id')->on('civil_status')->nullOnDelete();
+            $table->foreign('blood_type_id')->references('id')->on('blood_types')->nullOnDelete();
         });
     }
 
