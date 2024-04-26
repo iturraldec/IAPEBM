@@ -4,12 +4,28 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Maatwebsite\Excel\Facades\Excel;
 
-Route::get('fromExcel', function(){
-  Excel::import(new App\Imports\DemoImport, 'assets/documentos/administrativos.csv');
-  //Excel::import(new App\Imports\DemoImport, public_path('assets/documentos/administrativos_prueba.csv'));
+Route::get('loadFromExcel', function() {
+  echo 'cargos...<br>';
+  Excel::import(new App\Imports\CargosImport, 'assets/documentos/Cargos.csv');
+
+  echo 'empleados: condiciones...<br>';
+  Excel::import(new App\Imports\CondicionesImport, 'assets/documentos/Condiciones.csv');
+
+  echo 'empleados:tipos...<br>';
+  Excel::import(new App\Imports\TiposImport, 'assets/documentos/tipos_empleados.csv');
+
+  echo 'empleados administrativos...<br>';
+  Excel::import(new App\Imports\AdminImport, 'assets/documentos/administrativos.csv');
+
+  echo 'carga de datos finalizada!';
 });
 
-Route::get('/psp', function (){
+//
+Route::view('/', 'auth.login');
+Route::post('login', [AuthController::class, 'login'])->name('login');
+
+///////////////////////////////////////////////////////////////////////////////////
+/* Route::get('/psp', function (){
   $partidas[] = array(
     'codigo' => '4.00.00.00.00',
     'nombre' => 'EGRESOS',
@@ -124,11 +140,6 @@ Route::get('/psp', function (){
 });
 
 //
-Route::view('/', 'auth.login');
-Route::post('login', [AuthController::class, 'login'])->name('login');
-
-
-//
 function generarCadenas($cadena) {
   $cadenas = array();
     
@@ -142,4 +153,4 @@ function generarCadenas($cadena) {
     }
     
     return $cadenas;
-}
+} */

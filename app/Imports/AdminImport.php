@@ -6,7 +6,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\DB;
 
-class DemoImport implements ToCollection, WithHeadingRow
+class AdminImport implements ToCollection, WithHeadingRow
 {
     public function collection(Collection $rows)
     {
@@ -65,7 +65,7 @@ class DemoImport implements ToCollection, WithHeadingRow
                 ]);
             }
 
-            echo "$person_id<br>";
+            echo "id persona: $person_id<br>";
         }
     }
 }
