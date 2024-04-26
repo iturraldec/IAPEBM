@@ -12,7 +12,7 @@ class CondicionesImport implements ToCollection, WithHeadingRow
     {
         foreach ($rows as $row) 
         {   
-          DB::table('empleado_condiciones')->insert(['name' => $row[1]]);
+          DB::table('employee_condiciones')->insert(['name' => $row[1]]);
         }
     }
 }

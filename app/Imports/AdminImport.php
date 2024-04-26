@@ -65,7 +65,27 @@ class AdminImport implements ToCollection, WithHeadingRow
                 ]);
             }
 
-            echo "id persona: $person_id<br>";
+            // empleados administrativos
+            $employee_cargo_id = DB::table('employee_cargos')->where('id', $row['codigo_cargo'])->value('id');
+            //$employee_condicion_id = DB::table('employee_condiciones')->where('id', $row['???'])->value('id');
+            $employee_tipo_id = DB::table('employee_tipos')->where('id', $row['cod_tipoemp'])->value('id');
+            $record = [
+                'person_id' => $person_id,
+                'grupo_id' => 1,            // administrativo
+                'codigo'    => $row['codigo_inst'],
+                'fecha_ingreso' => date('Y-m-d', strtotime($row['fecha_ing'])),
+                'employee_cargo_id' => $employee_cargo_id,
+                //'employee_condicion_id' => $employee_condicion_id,
+                'employee_tipo_id' => $employee_tipo_id,
+                'rif' => $row['rif_usr'],
+                'rif' => $row['rif_usr'],
+                'religion' => $row['religion_usr'],
+                'deporte' => $row['deportes_usr'],
+                'is_licencia' => ($row['licen_usr'] == 'NO') ? false : true,
+                'licencia_grado' => $row['gradolicen_usr'],
+            ];
+            
+            $empleado_id = DB::table('employees')->insertGetId($record);
         }
     }
 }
