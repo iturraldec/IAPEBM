@@ -23,6 +23,7 @@
                   class="form-control @error('input_permission') is-invalid @enderror" 
                   data-id="" 
                   placeholder="Ingresa nuevo Permiso"
+                  onkeyup="this.value = this.value.toUpperCase();"
             >
           </div>
         </div>

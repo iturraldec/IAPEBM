@@ -8,7 +8,7 @@
 
 @section('content')
   <div class="row">
-    <div class="col">
+    <div class="col-10 mx-auto">
       <table id="dt-roles" class="table table-hover border border-dark">
         <thead class="thead-dark text-center">
           <tr>
@@ -32,7 +32,7 @@
 @section('js')
   <script>
     $(document).ready(function () {
-      // mascara  de 'input_permission' (editar)
+      // mascara 
       $("#input-name").inputmask({regex:"[A-Za-z\\s]+"});
 
       // datatable

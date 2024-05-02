@@ -20,18 +20,28 @@
 
         <div class="modal-body">
           <div class="form-group">
-            <label for="documentInput">Documento de Identificación</label>
+            <label for="documentInput">Documento de Cédula</label>
             <input type="text" id="documentInput" name="code" class="form-control">
           </div>
 
           <div class="form-group">
             <label for="nameInput">Nombre del usuario</label>
-            <input type="text" id="nameInput" name="name" class="form-control">
+            <input type="text" 
+                  id="nameInput" 
+                  name="name" 
+                  class="form-control"
+                  onkeyup="this.value = this.value.toUpperCase();"
+            >
           </div>
 
           <div class="form-group">
             <label for="emailInput">Correo del usuario</label>
-            <input type="text" id="emailInput" name="email" class="form-control">
+            <input type="text" 
+                  id="emailInput" 
+                  name="email" 
+                  class="form-control"
+                  onkeyup="this.value = this.value.toLowerCase();"
+            >
           </div>
 
           <div class="row mt-2">

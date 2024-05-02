@@ -7,21 +7,19 @@
 @endsection
 
 @section('content')
-  <div class="row justify-content-center">
-    <div class="col-8">
-      <table id="dt-rangos" class="table table-hover border border-dark">
-        <thead class="thead-dark text-center">
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Nombre</th>
-            <th scope="col" class="col-sm-2">Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-  
-        </tbody>
-      </table>
-    </div>
+  <div class="col-8 mx-auto">
+    <table id="dt-rangos" class="table table-hover border border-dark">
+      <thead class="thead-dark text-center">
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Nombre</th>
+          <th scope="col" class="col-sm-2">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
   </div>
 
 @include('rangos.edit')

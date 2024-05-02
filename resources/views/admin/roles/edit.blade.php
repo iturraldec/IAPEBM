@@ -20,7 +20,12 @@
 
         <div class="modal-body">
           <div class="form-group">
-            <input type="text" id="input-name" name="name" class="form-control">
+            <input type="text" 
+                  id="input-name" 
+                  name="name" 
+                  class="form-control"
+                  onkeyup="this.value = this.value.toUpperCase();"
+            >
           </div>
 
           <div class="row mt-2">

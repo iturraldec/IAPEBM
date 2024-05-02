@@ -19,21 +19,13 @@ class UserController extends Controller
     public function index()
     {
         if(request()->ajax()) {
-            return datatables()->of(User::orderBy('name')->get())->toJson();
+            return datatables()->of(User::orderBy('name')->with('roles')->get())->toJson();
         }
         else {
             $roles = Role::all();
 
             return view('admin.users.index', compact('roles'));
         }
-    }
-
-    //
-    public function loadRoles(User $user)
-    {
-        $data['state'] = true;
-        $data['data'] = $user->roles;
-        return response($data, 200);
     }
 
     /**
@@ -48,7 +40,7 @@ class UserController extends Controller
         ]);
 
         $user = User::create([
-            'code'      => $request->document_number,
+            'code'      => $request->code,
             'name'      => $request->name,
             'email'     => $request->email,
             'password'  => Hash::make('password')

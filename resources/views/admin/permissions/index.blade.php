@@ -8,35 +8,39 @@
 
 
 @section('content')
-  <div class="row justify-content-center">
-    <div class="col-8">
-      <form id="permissionForm">
-        <div class="row mb-3">
-          <div class="input-group col-10">
-            <input type="text" id="inputPermission" name="permission" class="form-control" placeholder="Ingresa nuevo Permiso">
-          </div>
-          
-          <div class="form-group col-2">
-            <button type="submit" class="form-control btn btn-primary">Agregar</button>
-          </div>
+  <div class="col-8 mx-auto">
+    <form id="permissionForm">
+      <div class="row mb-3">
+        <div class="input-group col-10">
+          <input type="text" 
+                id="inputPermission" 
+                name="permission" 
+                class="form-control" 
+                placeholder="Ingresa nuevo Permiso"
+                onkeyup="this.value = this.value.toUpperCase();"
+          >
         </div>
-      </form>
-      
-      <div class="row">
-        <div class="col">
-          <table id="dt-permissions" class="table table-hover border border-dark">
-            <thead class="thead-dark text-center">
-              <tr>
-                <th scope="col" class="col-sm-1">ID</th>
-                <th scope="col">Nombre</th>
-                <th scope="col" class="col-sm-2">Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-      
-            </tbody>
-          </table>
+        
+        <div class="form-group col-2">
+          <button type="submit" class="form-control btn btn-primary">Agregar</button>
         </div>
+      </div>
+    </form>
+    
+    <div class="row">
+      <div class="col">
+        <table id="dt-permissions" class="table table-hover border border-dark">
+          <thead class="thead-dark text-center">
+            <tr>
+              <th scope="col" class="col-sm-1">ID</th>
+              <th scope="col">Nombre</th>
+              <th scope="col" class="col-sm-2">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+    
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

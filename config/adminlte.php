@@ -342,6 +342,14 @@ return [
                     'text'    => 'Condiciones',
                     'route'   => 'employee-status.index'
                 ],
+                [
+                    'text'    => 'Administrativos',
+                    'route'   => 'employees.index'
+                ],
+                [
+                    'text'    => 'Funcionarios',
+                    'route'   => 'employee-status.index'
+                ],
             ]
         ],
     ],

@@ -7,23 +7,22 @@
 @endsection
 
 @section('content')
-  <div class="row justify-content-center">
-    <div class="col-8">
-      <table id="dt-users" class="table table-hover border border-dark">
-        <thead class="thead-dark text-center">
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">C.I.</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Correo</th>
-            <th scope="col" class="col-sm-2">Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-  
-        </tbody>
-      </table>
-    </div>
+  <div class="col-8 mx-auto">
+    <table id="dt-users" class="table table-hover border border-dark">
+      <thead class="thead-dark text-center">
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">C.I.</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Correo</th>
+          <th scope="col">Roles</th>
+          <th scope="col" class="col-sm-2">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
   </div>
 
   @include('admin.users.edit')
@@ -47,6 +46,16 @@
             {"data": "code", orderable: false},
             {"data": "name"},
             {"data": "email", orderable: false},
+            {"data": null,
+             "render": function(data, type, row, meta) {
+              let badge = '';
+
+              row.roles.forEach(roles => badge += `<span class="badge badge-info m-1">${roles.name}</span>`);
+                
+              return badge;
+             },
+             "orderable": false
+            },
             {"data":null,
             "render": function ( data, type, row, meta ) {
                     let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>';
@@ -71,6 +80,61 @@
         });
       }
 
+      // validacion de form
+      $('#form-user').validate({
+        submitHandler: function (form) {
+          let formData = $(form).serializeArray();
+          let inputId = $("#idInput").val();
+
+          if (inputId === "") { // agregar usuario
+            grabar_datos("{{ route('admin.users.store') }}", 'POST', formData);
+          }
+          else {                          // editar rol
+            let ruta = "{{ route('admin.users.update', ['user' => 'valor']) }}";
+
+            ruta = ruta.replace('valor', inputId);
+            grabar_datos(ruta, 'PUT', formData);
+          };
+
+          $('#modalForm').modal('hide');
+        },
+        rules: {
+          code: {
+            required: true
+          },
+          name: {
+            required: true
+          },
+          email: {
+            required: true,
+            email: true
+          }
+        },
+        messages: {
+          code: {
+            required: "Debes ingresar el número de cédula del usuario."
+          },
+          name: {
+            required: "Debes ingresar el nombre del usuario."
+          },
+          email: {
+            required: "Debes ingresar el correo electrónico del usuario.",
+            email: "Por favor ingresa un correo electrónico valido."
+          },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        }
+      });
+
       // boton agregar usuario
       $("#btn-agregar").click(function() {
         $("#modalTitle").html("Agregar Usuario");
@@ -79,6 +143,7 @@
         $("#documentInput").attr("placeholder", "Ingrese cédula de identidad del usuario");
         $("#nameInput").val("");
         $("#nameInput").attr("placeholder", "Ingrese nombre de usuario");
+        $("#documentInput").attr("readonly", false);
         $("#emailInput").val("");
         $("#emailInput").attr("placeholder", "Ingrese el correo del usuario");
         clean_roles();
@@ -88,50 +153,21 @@
       // boton editar usario
       $("#dt-users tbody").on("click", ".editar", function() {
         let data = datatable.row($(this).parents()).data();
-        let ruta = "{{ route('admin.users.load-roles', ['user' => ':valor']) }}";
-
-        ruta = ruta.replace(':valor', data.id);
+        
         $("#modalTitle").html("Modificar Usuario");
         $("#idInput").val(data.id);
         $("#documentInput").val(data.code);
+        $("#documentInput").attr("readonly", true);
         $("#nameInput").val(data.name);
         $("#nameInput").attr('placeholder', 'Modificar Usuario');
         $("#emailInput").val(data.email);
         $("#emailInput").attr('placeholder', 'Correo del Usuario');
-        clean_roles();
 
-        // cargo los roles del usuario y activo los correspondientes
-        $.ajax({
-          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-          url: ruta,
-          dataType:'json'
-        })
-        .done(function(resp){
-          resp.data.forEach(role => {
-            $(`input[name="roles[]"][value="${role.name}"]`).prop('checked', true);
-          });
-        });
+        // roles del usuario
+        clean_roles();
+        data.roles.forEach(role => $(`input[name="roles[]"][value="${role.name}"]`).prop('checked', true));
 
         $('#modalForm').modal('show');
-      });
-
-      // boton grabar agregar/modificar
-      $('#form-user').submit(function(event) {
-        event.preventDefault();
-
-        let formData = $(this).serializeArray();
-        let idInput = $("#idInput").val();
-
-        $('#modalForm').modal('hide');
-        if (idInput === "") { // agregar usuario
-          grabar_datos("{{ route('admin.users.store') }}", 'POST', formData);
-        }
-        else {                            // editar usario
-          let ruta = "{{ route('admin.users.update', ['user' => 'valor']) }}";
-
-          ruta = ruta.replace('valor', idInput);
-          grabar_datos(ruta, 'PUT', formData);
-        }
       });
 
       // funcion para grabar los datos al agregar/modificar
