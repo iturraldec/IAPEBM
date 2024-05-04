@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Phone;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\People;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Employee extends Model
 {
@@ -17,8 +20,8 @@ class Employee extends Model
     ];
 
     //
-    public function people()
+    public function person() : BelongsTo
     {
-        return $this->hasOne(People::class,'id', 'person_id') ;
+        return $this->belongsTo(People::class);
     }
 }

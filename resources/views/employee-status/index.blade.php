@@ -35,27 +35,27 @@
     $("#inputCondicion").inputmask({regex:"[A-Za-z\\s]+"})
 
     // datatable
+    let customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Condición</button>';
     let datatable = $('#dt-employee-status').DataTable({
+        "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
         "ajax": "{{ route('employee-status.index') }}",
         "columns": [
           {"data": "id", "orderable": false},
           {"data": "name"},
           {"data":null,
-          "render": function ( data, type, row, meta ) {
+           "className" : "dt-body-center",  
+           "render": function ( data, type, row, meta ) {
                   let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>';
                   let btn_eliminar = '<button class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
                   
                   return  btn_editar + btn_eliminar;
                 },
-          "orderable": false
+           "orderable": false
           }
         ]
     });
 
-    // Agregar botón personalizado
-    var customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Condición</button>';
-    
-    $('#dt-employee-status_wrapper .dataTables_length').append(customButton);
+    $("#dt-add-button").html(customButton);
 
     // boton agregar condicion
     $("#btn-agregar").click(function() {

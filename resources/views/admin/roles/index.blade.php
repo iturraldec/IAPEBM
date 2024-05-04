@@ -36,37 +36,37 @@
       $("#input-name").inputmask({regex:"[A-Za-z\\s]+"});
 
       // datatable
+      let customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Rol</button>';
       let datatable = $('#dt-roles').DataTable({
+          "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
           "ajax": "{{ route('admin.roles.index') }}",
           "columns": [
             {"data": "id", "orderable": false},
             {"data": "name"},
             {"data": null,
              "render": function(data, type, row, meta) {
-              let badge = '';
+                let badge = '';
 
-              row.permissions.forEach(permission => badge += `<span class="badge badge-info m-1">${permission.name}</span>`);
+                row.permissions.forEach(permission => badge += `<span class="badge badge-info m-1">${permission.name}</span>`);
                 
-              return badge;
+                return badge;
              },
              "orderable": false
             },
             {"data":null,
-            "render": function ( data, type, row, meta ) {
+             "className" : "dt-body-center",  
+             "render": function ( data, type, row, meta ) {
                     let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>';
                     let btn_eliminar = '<button class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
                     
                     return  btn_editar + btn_eliminar;
                   },
-            "orderable": false
+             "orderable": false
             }
           ]
       });
 
-      // Agregar botón personalizado a datatable
-      var customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Rol</button>';
-      
-      $('#dt-roles_wrapper .dataTables_length').append(customButton);
+      $("#dt-add-button").html(customButton);
 
       // validacion de form
       $('#rolForm').validate({

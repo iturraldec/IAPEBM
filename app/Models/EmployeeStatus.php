@@ -10,7 +10,7 @@ class EmployeeStatus extends Model
   use SoftDeletes;
 
   //
-  protected $table = 'employee_status';
+  protected $table = 'employee_condiciones';
 
   //
   protected $fillable = ['name'];

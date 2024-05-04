@@ -50,7 +50,8 @@ function lib_Confirmar(titulo) {
        icon: 'question',
        title: titulo,
        showCancelButton: true,
-       confirmButtonText: `Si`,
-       cancelButtonText: `No`,
+       confirmButtonText: 'Si',
+       confirmButtonColor: '#FF0000',
+       cancelButtonText: 'No',
      })
 }

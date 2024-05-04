@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Employee;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade;
 
-class EmployeeController extends Controller
+//
+class EmployeeAdmController extends EmpleadoController
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +15,7 @@ class EmployeeController extends Controller
     public function index()
     {
       if(request()->ajax()) {
-        return datatables()->of(Employee::where('grupo_id', 1)->with('people')->get())->toJson();
+        return $this->getToDataTable(1);
       }
       else {
         return view('employee-adm.index');
@@ -21,11 +23,13 @@ class EmployeeController extends Controller
     }
 
     //
-    public function getById(Employee $employee)
+    public function show(int $employees_adm)
     {
-      $empleado = $employee->people->phones;
+      $data = parent::getById($employees_adm);
 
-      return response()->json($empleado);
+      $pdf = Facade\Pdf::loadView('employee-adm.view', compact('data'));
+      
+      return $pdf->stream("empleado-".$data->cedula);
     }
 
     /**

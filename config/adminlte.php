@@ -344,7 +344,7 @@ return [
                 ],
                 [
                     'text'    => 'Administrativos',
-                    'route'   => 'employees.index'
+                    'route'   => 'employees-adm.index'
                 ],
                 [
                     'text'    => 'Funcionarios',

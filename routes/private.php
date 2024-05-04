@@ -7,7 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CargoController;
 use App\Http\Controllers\RangoController;
 use App\Http\Controllers\EmployeeStatusController;
-use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EmployeeAdmController;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -28,8 +28,6 @@ Route::resource('employee-status', EmployeeStatusController::class)
   ->only(['index', 'store', 'update', 'destroy'])
   ->names('employee-status');
 
-Route::resource('employees', EmployeeController::class)
-  ->only(['index', 'store', 'update', 'destroy'])
-  ->names('employees');
-
-Route::get('employees/{employee}', [EmployeeController::class, 'getById'])->name('employees.get-by-id');
+Route::resource('employees-adm', EmployeeAdmController::class)
+  ->only(['index', 'show', 'store', 'update', 'destroy'])
+  ->names('employees-adm');

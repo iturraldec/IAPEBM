@@ -35,31 +35,36 @@
     $("#inputCondicion").inputmask({regex:"[A-Za-z\\s]+"})
 
     // datatable
+    let customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Empleado Administrativo</button>';
     let datatable = $('#dtEmpleados').DataTable({
-        "ajax": "{{ route('employees.index') }}",
+        "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
+        "ajax": "{{ route('employees-adm.index') }}",
         serverSide: true,
         processing: true,
         "columns": [
           {"data": "id", visible: false},
           {"data": "codigo"},
-          {"data": "people.cedula"},
-          {"data": "people.name"},
+          {"data": "person.cedula"},
+          {"data": "person.name"},
           {"data":null,
-          "render": function ( data, type, row, meta ) {
-                  let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>';
+           "className" : "dt-body-center",
+           "render": function ( data, type, row, meta ) {
+                  let ruta = "{{ route('employees-adm.show', ['employees_adm' => 'valor']) }}";
+
+                  ruta = ruta.replace('valor', data.person_id);
+                  let btn_view = `<a class="ver btn btn-secondary btn-sm mr-1" href="${ruta}" target="_blank"><i class="fas fa-eye"></i></a>`;
+                  let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></button>';
                   let btn_eliminar = '<button class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
                   
-                  return  btn_editar + btn_eliminar;
+                  return  btn_view + btn_editar + btn_eliminar;
                 },
-          "orderable": false
+           "orderable": false,
+           "width" : "8em"
           }
         ]
     });
 
-    // Agregar botón personalizado
-    var customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Condición</button>';
-    
-    $('#dt-employee-status_wrapper .dataTables_length').append(customButton);
+    $("#dt-add-button").html(customButton);
 
     // boton agregar condicion
     $("#btn-agregar").click(function() {
@@ -73,18 +78,12 @@
     // boton editar empleado
     $("#dtEmpleados tbody").on("click", ".editar", function() {
       let data = datatable.row($(this).parents()).data();
-      let ruta = "{{ route('employees.get-by-id', ['employee' => 'valor']) }}";
+      let ruta = "{{ route('employees-adm.show', ['employees_adm' => 'valor']) }}";
 
-      ruta = ruta.replace('valor', data.id);
-      fetch(ruta)
-      .then(response => response.json())
-      .then(json => console.log(json));
-
-      //
-
-      $("#modalTitle").html(data.people.name);
+      ruta = ruta.replace('valor', data.person_id);
+      $("#modalTitle").html(data.person.name);
       $("#inputCodigo").val(data.codigo);
-      $("#inputCedula").val(data.people.cedula);
+      $("#inputCedula").val(data.person.cedula);
       $("#inputRif").val(data.rif);
       $('#modalForm').modal('show');
     });

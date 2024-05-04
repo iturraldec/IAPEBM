@@ -111,13 +111,14 @@
             {"data": "id", "orderable": false},
             {"data": "name"},
             {"data":null,
-            "render": function ( data, type, row, meta ) {
+             "className" : "dt-body-center",
+             "render": function ( data, type, row, meta ) {
                     let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm" data-toggle="modal" data-target="#modalForm"><i class="fas fa-edit"></i></button>';
                     let btn_eliminar = '<button class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
                     
                     return  btn_editar + btn_eliminar;
                   },
-            "orderable": false
+             "orderable": false
             }
           ]
       });

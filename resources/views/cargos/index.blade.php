@@ -35,7 +35,9 @@
     $("#inputCargo").inputmask({regex:"[A-Za-z\\s]+"})
 
     // datatable
+    let customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Cargo</button>';
     let datatable = $('#dt-cargos').DataTable({
+        "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
         "ajax": "{{ route('cargos.index') }}",
         processing: true,
         serverSide: true,
@@ -43,21 +45,19 @@
           {"data": "id", "orderable": false},
           {"data": "name"},
           {"data":null,
-          "render": function ( data, type, row, meta ) {
+           "className" : "dt-body-center",  
+           "render": function ( data, type, row, meta ) {
                   let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>';
                   let btn_eliminar = '<button class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
                   
                   return  btn_editar + btn_eliminar;
                 },
-          "orderable": false
+           "orderable": false
           }
         ]
     });
 
-    // Agregar botón personalizado
-    var customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Cargo</button>';
-    
-    $('#dt-cargos_wrapper .dataTables_length').append(customButton);
+    $("#dt-add-button").html(customButton);
 
     // boton agregar cargo
     $("#btn-agregar").click(function() {

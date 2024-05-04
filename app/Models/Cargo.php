@@ -10,7 +10,7 @@ class Cargo extends Model
     use SoftDeletes;
 
     //
-    protected $table = 'cargos';
+    protected $table = 'employee_cargos';
 
     //
     protected $fillable = ['name'];

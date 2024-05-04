@@ -29,7 +29,7 @@ class CargoController extends Controller
     public function store(Request $request)
     {
       $validator = $request->validate([
-        'name' => 'required|string|max:200|unique:cargos'
+        'name' => 'required|string|max:200|unique:employee_cargos'
       ]);
 
       Cargo::Create($request->all());
@@ -49,7 +49,7 @@ class CargoController extends Controller
             'required',
             'string',
             'max:200',
-            Rule::unique('cargos')->ignore($cargo->id),
+            Rule::unique('employee_cargos')->ignore($cargo->id),
         ]
       ]);
 

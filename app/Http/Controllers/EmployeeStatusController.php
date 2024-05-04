@@ -28,7 +28,7 @@ class EmployeeStatusController extends Controller
     public function store(Request $request)
     {
       $validator = $request->validate([
-        'name' => 'required|string|max:255|unique:employee_status'
+        'name' => 'required|string|max:255|unique:employee_condiciones'
       ]);
 
       EmployeeStatus::Create($request->all());
@@ -48,7 +48,7 @@ class EmployeeStatusController extends Controller
             'required',
             'string',
             'max:255',
-            Rule::unique('employee_status')->ignore($employeeStatus->id),
+            Rule::unique('employee_condiciones')->ignore($employeeStatus->id),
         ]
       ]);
 
