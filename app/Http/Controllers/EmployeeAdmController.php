@@ -30,6 +30,7 @@ class EmployeeAdmController extends EmpleadoController
       $pdf = Facade\Pdf::loadView('employee-adm.view', compact('data'));
       
       return $pdf->stream("empleado-".$data->cedula);
+      //return view('employee-adm.view', compact('data'));
     }
 
     /**

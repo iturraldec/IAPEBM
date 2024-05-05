@@ -31,10 +31,7 @@ function lib_ShowMensaje(mensaje,tipo = 'toast') {
 
 // chequear que una cadena este vacia o no
 function lib_isEmpty(cadena) {
- if( cadena == null || cadena.length == 0 || /^\s+$/.test(cadena) ) {
-   return true;
-  }
-  return false;
+ return (cadena == null || cadena.length == 0 || /^\s+$/.test(cadena));
 }
 
 // chequear la valides de una direccion de correo electronico
@@ -54,4 +51,16 @@ function lib_Confirmar(titulo) {
        confirmButtonColor: '#FF0000',
        cancelButtonText: 'No',
      })
+}
+
+// objeto solo letras y espacio
+function lib_characterMask()
+{
+   return {regex:"[A-Za-z\\s]+"};
+}
+
+// objeto solo numeros
+function lib_digitMask()
+{
+   return {regex:"\\d+"};
 }

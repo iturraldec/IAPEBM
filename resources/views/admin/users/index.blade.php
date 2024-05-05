@@ -33,10 +33,10 @@
   <script>
     $(document).ready(function () {
       // mascara de cedula del usuario
-      $("#documentInput").inputmask({regex:"\\d+"})
+      $("#documentInput").inputmask(lib_digitMask())
       
       // mascara del nombre del usuario
-      $("#nameInput").inputmask({regex:"[A-Za-z]+"})
+      $("#nameInput").inputmask(lib_characterMask())
 
       // datatable
       let customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Usuario</button>';
@@ -61,7 +61,7 @@
             {"data":null,
              "className" : "dt-body-center",  
              "render": function ( data, type, row, meta ) {
-                    let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>';
+                    let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></button>';
                     let btn_eliminar = '<button class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
                     
                     return  btn_editar + btn_eliminar;

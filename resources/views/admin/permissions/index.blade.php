@@ -53,10 +53,10 @@
   <script>
     $(document).ready(function () {
       // mascara  de 'inputPermission' (agregar)
-      $("#inputPermission").inputmask({regex:"[A-Za-z\\s]+"});
+      $("#inputPermission").inputmask(lib_characterMask());
 
       // mascara  de 'input_permission' (editar)
-      $("#input_permission").inputmask({regex:"[A-Za-z\\s]+"});
+      $("#input_permission").inputmask(lib_characterMask());
 
       // validacion de form para agregar
       $('#permissionForm').validate({
@@ -113,7 +113,7 @@
             {"data":null,
              "className" : "dt-body-center",
              "render": function ( data, type, row, meta ) {
-                    let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm" data-toggle="modal" data-target="#modalForm"><i class="fas fa-edit"></i></button>';
+                    let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm mr-1" data-toggle="modal" data-target="#modalForm"><i class="fas fa-edit"></i></button>';
                     let btn_eliminar = '<button class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
                     
                     return  btn_editar + btn_eliminar;
