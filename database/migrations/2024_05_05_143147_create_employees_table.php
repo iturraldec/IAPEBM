@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('employee_cargo_id')->nullable();
             $table->unsignedSmallInteger('employee_condicion_id')->nullable();
             $table->unsignedSmallInteger('employee_tipo_id')->nullable();
+            $table->unsignedSmallInteger('employee_location_id')->nullable();
             $table->string('rif', 20);
             $table->string('codigo_patria', 20)->nullable();
             $table->string('religion');
@@ -32,6 +33,7 @@ return new class extends Migration
             $table->foreign('employee_cargo_id')->references('id')->on('employee_cargos')->nullOnDelete();
             $table->foreign('employee_condicion_id')->references('id')->on('employee_condiciones')->nullOnDelete();
             $table->foreign('employee_tipo_id')->references('id')->on('employee_tipos')->nullOnDelete();
+            $table->foreign('employee_location_id')->references('id')->on('employee_locations')->nullOnDelete();
         });
     }
 
