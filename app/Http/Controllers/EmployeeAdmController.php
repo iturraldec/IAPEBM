@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade;
+use App\Models\Phone;
 
 //
 class EmployeeAdmController extends EmpleadoController
@@ -20,6 +21,12 @@ class EmployeeAdmController extends EmpleadoController
       else {
         return view('employee-adm.index');
       }
+    }
+
+    //
+    public function edit(Employee $employees_adm)
+    {
+      return response($this->getById($employees_adm));
     }
 
     //
@@ -55,5 +62,11 @@ class EmployeeAdmController extends EmpleadoController
     public function destroy(string $id)
     {
         //
+    }
+
+    //
+    public function addPhone(Request $request)
+    {
+      return response(Phone::create($request->all()), 201);
     }
 }

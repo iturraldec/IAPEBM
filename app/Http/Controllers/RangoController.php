@@ -29,7 +29,7 @@ class RangoController extends Controller
     public function store(Request $request)
     {
       $validator = $request->validate([
-        'name' => 'required|string|max:200|unique:rangos'
+        'name' => 'required|string|max:200|unique:police_jerarquias'
       ]);
 
       Rango::Create($request->all());
@@ -49,7 +49,7 @@ class RangoController extends Controller
             'required',
             'string',
             'max:200',
-            Rule::unique('rangos')->ignore($rango->id),
+            Rule::unique('police_jerarquias')->ignore($rango->id),
         ]
       ]);
 

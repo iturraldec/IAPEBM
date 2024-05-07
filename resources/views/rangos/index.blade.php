@@ -30,30 +30,33 @@
 <script>
   $(document).ready(function () {
     // macara del cargo
-    $("#inputRango").inputmask({regex:"[A-Za-z\\s]+"})
+    $("#inputRango").inputmask(lib_characterMask())
 
     // datatable
+    let customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Rango</button>';
     let datatable = $('#dt-rangos').DataTable({
+        "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
+        serverSide : true,
+        processing: true,
         "ajax": "{{ route('rangos.index') }}",
         "columns": [
           {"data": "id", "orderable": false},
           {"data": "name"},
           {"data":null,
-          "render": function ( data, type, row, meta ) {
-                  let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>';
+           "className" : "dt-body-center",
+           "render": function ( data, type, row, meta ) {
+                  let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></button>';
                   let btn_eliminar = '<button class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
                   
                   return  btn_editar + btn_eliminar;
                 },
-          "orderable": false
+           "orderable": false
           }
-        ]
+        ],
+        "drawCallback": function( settings ) {
+            $("#dt-add-button").html(customButton);
+        }
     });
-
-    // Agregar botón personalizado
-    var customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Rango</button>';
-    
-    $('#dt-rangos_wrapper .dataTables_length').append(customButton);
 
     // boton agregar rango
     $("#btn-agregar").click(function() {

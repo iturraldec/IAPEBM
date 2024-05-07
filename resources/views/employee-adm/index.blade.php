@@ -31,16 +31,17 @@
 @section('js')
 <script>
   $(document).ready(function () {
-    // macara del cargo
-    $("#inputCondicion").inputmask({regex:"[A-Za-z\\s]+"})
+    var person = {};
 
+    ///////////////////////////////////////////////////////////
     // datatable
+    ///////////////////////////////////////////////////////////
+
     let customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Empleado Administrativo</button>';
     let datatable = $('#dtEmpleados').DataTable({
-        "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
-        "ajax": "{{ route('employees-adm.index') }}",
+        "dom": '<"d-flex justify-content-between"l<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
         serverSide: true,
-        processing: true,
+        "ajax": "{{ route('employees-adm.index') }}",
         "columns": [
           {"data": "id", visible: false},
           {"data": "codigo"},
@@ -66,26 +67,75 @@
 
     $("#dt-add-button").html(customButton);
 
-    // boton agregar condicion
-    $("#btn-agregar").click(function() {
-      $("#modalTitle").html("Agregar Condición");
-      $("#inputCondicion").val("");
-      $("#inputCondicion").data("id", "");
-      $("#inputCondicion").attr("placeholder", "Ingrese nombre de la Condición");
-      $('#modalForm').modal('show');
-    });
-
+    ///////////////////////////////////////////////////////////////////
     // boton editar empleado
+    ///////////////////////////////////////////////////////////////////
+
     $("#dtEmpleados tbody").on("click", ".editar", function() {
       let data = datatable.row($(this).parents()).data();
-      let ruta = "{{ route('employees-adm.show', ['employees_adm' => 'valor']) }}";
+      let ruta = "{{ route('employees-adm.edit', ['employees_adm' => 'valor']) }}";
 
-      ruta = ruta.replace('valor', data.person_id);
-      $("#modalTitle").html(data.person.name);
-      $("#inputCodigo").val(data.codigo);
-      $("#inputCedula").val(data.person.cedula);
-      $("#inputRif").val(data.rif);
-      $('#modalForm').modal('show');
+      ruta = ruta.replace('valor', data.id);
+      fetch(ruta)
+      .then(response => response.json())
+      .then(responseJSON => {
+        person = structuredClone(responseJSON);
+        printPhones();
+        $("#modalTitle").html(person.name);
+        $('#modalForm').modal('show');
+      });
+    });
+
+    // imprimir telefonos
+    function printPhones() {
+      let cadena = '';
+
+      $("#divPhones").html("");
+      person.phones.forEach(phone => {
+        cadena += `
+          <div class="input-group">
+            <input type="text" class="form-control" value="${phone.number}" />
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <button class="delPhone btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+              </div>
+            </div>
+          </div>`
+      });
+      $("#divPhones").html(cadena);
+    };
+
+    // agregar telefono
+    $("#addPhone").click(function () {
+      // envio los datos al servidor
+      let phone = {
+          person_id       : person.id,
+          phone_type_id   : 1,
+          number          : $("#inputPhone").val()
+      };
+
+      fetch("{{ route('employees-adm.addPhone') }}", {
+        method:"POST",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+          "Content-Type": "application/json",
+          "Accept" : "application/json"
+        },
+        body: JSON.stringify(phone),
+      })
+      .then(response => response.json())
+      .then(data => {
+        person.phones.push(data);
+        printPhones();
+        $("#inputPhone").val("")
+      });
+      
+      console.log(person.phones);
+    });
+
+    // eliminar telefono
+    $(document).delegate('.delPhone', 'click', function() {
+      console.log('eliminado:' + $(this).attr('data-phoneId'));
     });
 
     // validacion de form

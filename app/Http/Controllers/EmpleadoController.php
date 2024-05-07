@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\People;
+use App\Models\Phone;
 
 //
 class EmpleadoController extends Controller
@@ -15,10 +16,8 @@ class EmpleadoController extends Controller
   }
 
   //
-  public function getById(int $person_id)
+  public function getById(Employee $employee)
   {
-    $empleado = People::Where('id', $person_id)->with('employee', 'civil_status', 'phones')->first();
-
-    return $empleado;
+    return People::with('employee', 'civil_status', 'phones')->find($employee->person_id);
   }
 }

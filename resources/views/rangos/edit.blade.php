@@ -21,7 +21,8 @@
               <input type="text" 
                     id="inputRango" 
                     name="name"
-                    class="form-control @error('name') is-invalid @enderror" 
+                    class="form-control @error('name') is-invalid @enderror"
+                    onkeyup="this.value = this.value.toUpperCase();"
               >
             </div>
           </div>
