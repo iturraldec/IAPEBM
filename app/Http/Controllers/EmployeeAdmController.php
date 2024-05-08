@@ -33,7 +33,7 @@ class EmployeeAdmController extends Controller
     //
     public function edit(Employee $employees_adm)
     {
-      return response(Person::with('employee', 'civil_status', 'phones')->find($employees_adm->person_id));
+      return response(Person::with('employee', 'civil_status', 'phones')->find($employees_adm->person_id), 200);
     }
 
     //
@@ -69,11 +69,5 @@ class EmployeeAdmController extends Controller
     public function destroy(string $id)
     {
         //
-    }
-
-    //
-    public function addPhone(Request $request)
-    {
-      return response(Phone::create($request->all()), 201);
     }
 }

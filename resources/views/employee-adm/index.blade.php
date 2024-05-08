@@ -86,51 +86,65 @@
       });
     });
 
+    ///////////////////////////////////////////////////////////////////
     // imprimir telefonos
+    ///////////////////////////////////////////////////////////////////
+
     function printPhones() {
       let cadena = '';
 
       $("#divPhones").html("");
       person.phones.forEach(phone => {
         cadena += `
-          <div class="input-group">
+          <div class="input-group mb-2">
             <input type="text" class="form-control" value="${phone.number}" readonly />
             <div class="input-group-append">
-              <div class="input-group-text">
-                <a class="delPhone btn btn-danger btn-sm" data-phone-id="${phone.id}"><i class="fas fa-trash-alt"></i></a>
-              </div>
+              <a class="delPhone btn btn-danger btn-sm" data-phone-id="${phone.id}"><i class="fas fa-trash-alt"></i></a>
             </div>
           </div>`
       });
       $("#divPhones").html(cadena);
     };
 
+    ///////////////////////////////////////////////////////////////////
     // agregar telefono
+    ///////////////////////////////////////////////////////////////////
+
     $("#addPhone").click(function () {
-      let phone = {
+      let number = $("#inputPhone").val();
+
+      if(lib_isEmpty(number)) {
+        lib_ShowMensaje("Debe ingresar el número de teléfono!", "error");
+      }
+      else {
+        let phone = {
           person_id       : person.id,
           phone_type_id   : 1,
-          number          : $("#inputPhone").val()
-      };
+          number          : number
+        };
 
-      fetch("{{ route('phones.store') }}", {
-        method:"POST",
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-          "Content-Type": "application/json",
-          "Accept"      : "application/json"
-        },
-        body: JSON.stringify(phone),
-      })
-      .then(response => response.json())
-      .then(data => {
-        person.phones.push(data);
-        printPhones();
-        $("#inputPhone").val("");
-      });
+        fetch("{{ route('phones.store') }}", {
+          method:"POST",
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            "Content-Type": "application/json",
+            "Accept"      : "application/json"
+          },
+          body: JSON.stringify(phone),
+        })
+        .then(response => response.json())
+        .then(data => {
+          person.phones.push(data);
+          printPhones();
+          $("#inputPhone").val("");
+        });
+      }
     });
 
+    ///////////////////////////////////////////////////////////////////
     // eliminar telefono
+    ///////////////////////////////////////////////////////////////////
+
     $(document).delegate('.delPhone', 'click', function() {
       let phone_id = $(this).attr('data-phone-id');
       let ruta = "{{ route('phones.destroy', ['phone' => 'valor']) }}";
@@ -147,90 +161,6 @@
         printPhones();
         console.log(person.phones);
       });
-    });
-
-    // validacion de form
-    $('#condicionForm').validate({
-      submitHandler: function (form) {
-        let formData = $(form).serializeArray();
-        let id = $("#inputCondicion").data("id");
-
-        if (id === "") {                          // agregar condicion
-          grabar_datos("{{ route('employee-status.store') }}", 'POST', formData);
-        }
-        else {                                    // editar cargo
-          let ruta = "{{ route('employee-status.update', ['employee_status' => 'valor']) }}";
-
-          ruta = ruta.replace('valor', id);
-          grabar_datos(ruta, 'PUT', formData);
-        };
-
-        $('#modalForm').modal('hide');
-      },
-      rules: {
-        name: {
-          required: true
-        },
-      },
-      messages: {
-        name: {
-          required: "Debes ingresar el nombre de la condición."
-        },
-      },
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-      }
-    });
-
-    // funcion para grabar los datos al agregar/modificar
-    function grabar_datos(_url, _type, _data) {
-      $.ajax({
-        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        url: _url,
-        type: _type,
-        data: _data,
-        dataType:'json'
-      })
-      .done(function(resp){
-        datatable.ajax.reload();
-        lib_ShowMensaje(resp.message);
-      })
-      .fail(function(resp){
-        lib_ShowMensaje(resp.responseJSON.message, 'error');
-      });
-    }
-    
-    // boton eliminar condicion
-    $("#dt-employee-status tbody").on("click",".eliminar",function() {
-      let data = datatable.row($(this).parents()).data();
-
-      lib_Confirmar("Seguro de ELIMINAR la condición: " + data.name + "?")
-      .then((result) => {
-        if (result.isConfirmed) {
-          let ruta = "{{ route('employee-status.destroy', ['employee_status' => 'valor']) }}";
-
-          ruta = ruta.replace('valor', data.id);
-          
-          $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            url: ruta,
-            type: 'DELETE',
-            dataType:'json',
-            success: function(resp){
-              datatable.ajax.reload();
-              lib_ShowMensaje("Condición eliminada.");
-            }
-          });
-        }
-      })
     });
   });
 </script>

@@ -70,6 +70,7 @@
                   </div>
                 </div>
               </div>
+              <!-- fin de tab home -->
               
               <!-- tab phones -->
               <div class="tab-pane fade" id="custom-tabs-one-phones" role="tabpanel" aria-labelledby="custom-tabs-one-phone-tab">
