@@ -75,17 +75,24 @@
               <!-- tab phones -->
               <div class="tab-pane fade" id="custom-tabs-one-phones" role="tabpanel" aria-labelledby="custom-tabs-one-phone-tab">
                 <div class="row">
-                  <div class="col-8">
-                    <div class="form-group">
-                      <input type="text" id="inputPhone" class="form-control" placeholder="Ingresa número de teléfono">
-                    </div>
-                  </div>
-                  
-                  <div class="col-4">
-                    <button id="addPhone" class="btn btn-primary mb-3">Agregar</button>
+                  <div class="col-6">
+                    <select id="selectPhoneType" class="form-control">
+                      @foreach ($phone_types as $phone_type)
+                        <option value="{{ $phone_type->id }}">{{ $phone_type->name }}</option>
+                      @endforeach
+                    </select>
                   </div>
 
-                  <div id="divPhones" class="col"></div>
+                  <div class="col-6">
+                    <div class="input-group mb-2">
+                      <input type="text" id="inputPhone" class="form-control" placeholder="Ingresa número de teléfono">
+                      <div class="input-group-append">
+                        <button id="addPhone" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="divPhones"></div>
 
                 </div>
               </div>

@@ -33,6 +33,9 @@
   $(document).ready(function () {
     var person = {};
 
+    // mascara  de 'inputPhone', numero de telefono
+    $("#inputPhone").inputmask(lib_phoneMask());
+
     ///////////////////////////////////////////////////////////
     // datatable
     ///////////////////////////////////////////////////////////
@@ -96,7 +99,10 @@
       $("#divPhones").html("");
       person.phones.forEach(phone => {
         cadena += `
-          <div class="input-group mb-2">
+          <div class="col input-group mb-2">
+            <span class="mr-1">
+              <input type="text" class="form-control" value="${phone.type.name}" readonly />
+            </span>
             <input type="text" class="form-control" value="${phone.number}" readonly />
             <div class="input-group-append">
               <a class="delPhone btn btn-danger btn-sm" data-phone-id="${phone.id}"><i class="fas fa-trash-alt"></i></a>
@@ -111,6 +117,8 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#addPhone").click(function () {
+      let phoneTypeId = $("#selectPhoneType :selected").val();
+      let phoneTypeName = $("#selectPhoneType :selected").text();
       let number = $("#inputPhone").val();
 
       if(lib_isEmpty(number)) {
@@ -119,7 +127,7 @@
       else {
         let phone = {
           person_id       : person.id,
-          phone_type_id   : 1,
+          phone_type_id   : phoneTypeId,
           number          : number
         };
 
@@ -134,6 +142,9 @@
         })
         .then(response => response.json())
         .then(data => {
+          data.type = {
+            name : phoneTypeName
+          };
           person.phones.push(data);
           printPhones();
           $("#inputPhone").val("");
@@ -159,7 +170,6 @@
       .then(data => {
         person.phones = person.phones.filter(phone => phone.id != phone_id);
         printPhones();
-        console.log(person.phones);
       });
     });
   });

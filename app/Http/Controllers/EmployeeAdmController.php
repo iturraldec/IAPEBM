@@ -6,6 +6,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade;
 use App\Models\Person;
+use App\Models\PhoneType;
 
 //
 class EmployeeAdmController extends Controller
@@ -26,14 +27,15 @@ class EmployeeAdmController extends Controller
       return datatables()->of(Employee::where('grupo_id', $this->grupo_id)->with('person')->get())->toJson();
     }
     else {
-      return view('employee-adm.index');
+      $phone_types = PhoneType::get();
+      return view('employee-adm.index', compact('phone_types'));
     }
   }
 
     //
     public function edit(Employee $employees_adm)
     {
-      return response(Person::with('employee', 'civil_status', 'phones')->find($employees_adm->person_id), 200);
+      return response(Person::with('employee', 'civil_status', 'phones.type')->find($employees_adm->person_id), 200);
     }
 
     //

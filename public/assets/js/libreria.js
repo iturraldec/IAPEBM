@@ -64,3 +64,9 @@ function lib_digitMask()
 {
    return {regex:"\\d+"};
 }
+
+// filtro para telefonos
+function lib_phoneMask()
+{
+   return {regex:"[\\d\\s-]+"};
+}
