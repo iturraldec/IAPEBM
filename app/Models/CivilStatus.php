@@ -15,6 +15,6 @@ class CivilStatus extends Model
 
   public function person()
   {
-    return $this->hasOne(People::class);
+    return $this->hasOne(Person::class);
   }
 }

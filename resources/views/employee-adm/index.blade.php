@@ -94,10 +94,10 @@
       person.phones.forEach(phone => {
         cadena += `
           <div class="input-group">
-            <input type="text" class="form-control" value="${phone.number}" />
+            <input type="text" class="form-control" value="${phone.number}" readonly />
             <div class="input-group-append">
               <div class="input-group-text">
-                <button class="delPhone btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                <a class="delPhone btn btn-danger btn-sm" data-phone-id="${phone.id}"><i class="fas fa-trash-alt"></i></a>
               </div>
             </div>
           </div>`
@@ -107,19 +107,18 @@
 
     // agregar telefono
     $("#addPhone").click(function () {
-      // envio los datos al servidor
       let phone = {
           person_id       : person.id,
           phone_type_id   : 1,
           number          : $("#inputPhone").val()
       };
 
-      fetch("{{ route('employees-adm.addPhone') }}", {
+      fetch("{{ route('phones.store') }}", {
         method:"POST",
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
           "Content-Type": "application/json",
-          "Accept" : "application/json"
+          "Accept"      : "application/json"
         },
         body: JSON.stringify(phone),
       })
@@ -127,15 +126,27 @@
       .then(data => {
         person.phones.push(data);
         printPhones();
-        $("#inputPhone").val("")
+        $("#inputPhone").val("");
       });
-      
-      console.log(person.phones);
     });
 
     // eliminar telefono
     $(document).delegate('.delPhone', 'click', function() {
-      console.log('eliminado:' + $(this).attr('data-phoneId'));
+      let phone_id = $(this).attr('data-phone-id');
+      let ruta = "{{ route('phones.destroy', ['phone' => 'valor']) }}";
+
+      ruta = ruta.replace('valor', phone_id);
+      fetch(ruta, {
+        method:"DELETE",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      })
+      .then(data => {
+        person.phones = person.phones.filter(phone => phone.id != phone_id);
+        printPhones();
+        console.log(person.phones);
+      });
     });
 
     // validacion de form

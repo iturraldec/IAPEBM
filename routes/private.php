@@ -8,7 +8,7 @@ use App\Http\Controllers\CargoController;
 use App\Http\Controllers\RangoController;
 use App\Http\Controllers\EmployeeStatusController;
 use App\Http\Controllers\EmployeeAdmController;
-use App\Models\Employee;
+use App\Http\Controllers\PhoneController;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -34,3 +34,6 @@ Route::resource('employees-adm', EmployeeAdmController::class)
   ->names('employees-adm');
 
 Route::post('employees-adm', [EmployeeAdmController::class, 'addPhone'])->name('employees-adm.addPhone');
+
+// telefonos
+Route::resource('phones', PhoneController::class)->only(['store', 'destroy'])->names('phones');

@@ -5,28 +5,35 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade;
-use App\Models\Phone;
+use App\Models\Person;
 
 //
-class EmployeeAdmController extends EmpleadoController
+class EmployeeAdmController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-      if(request()->ajax()) {
-        return $this->getToDataTable(1);
-      }
-      else {
-        return view('employee-adm.index');
-      }
+  private $grupo_id;
+
+  public function __construct()
+  { 
+    $this->grupo_id = 1;
+  }
+
+  /**
+   * Display a listing of the resource.
+   */
+  public function index()
+  {
+    if(request()->ajax()) {
+      return datatables()->of(Employee::where('grupo_id', $this->grupo_id)->with('person')->get())->toJson();
     }
+    else {
+      return view('employee-adm.index');
+    }
+  }
 
     //
     public function edit(Employee $employees_adm)
     {
-      return response($this->getById($employees_adm));
+      return response(Person::with('employee', 'civil_status', 'phones')->find($employees_adm->person_id));
     }
 
     //

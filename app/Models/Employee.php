@@ -4,9 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\People;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\Person;
 
 class Employee extends Model
 {
@@ -22,6 +20,6 @@ class Employee extends Model
     //
     public function person() : BelongsTo
     {
-        return $this->belongsTo(People::class);
+        return $this->belongsTo(Person::class);
     }
 }
