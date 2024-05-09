@@ -55,7 +55,7 @@
            "render": function ( data, type, row, meta ) {
                   let ruta = "{{ route('employees-adm.show', ['employees_adm' => 'valor']) }}";
 
-                  ruta = ruta.replace('valor', data.person_id);
+                  ruta = ruta.replace('valor', data.id);
                   let btn_view = `<a class="ver btn btn-secondary btn-sm mr-1" href="${ruta}" target="_blank"><i class="fas fa-eye"></i></a>`;
                   let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></button>';
                   let btn_eliminar = '<button class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';

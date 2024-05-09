@@ -33,46 +33,52 @@ class EmployeeAdmController extends Controller
     }
   }
 
-    //
-    public function edit(Employee $employees_adm)
-    {
-      return response(Person::with('employee', 'civil_status', 'phones.type')->find($employees_adm->person_id), 200);
-    }
+  //
+  public function getById(Employee $employee)
+  {
+    return Person::with('employee', 'civil_status', 'phones.type')->find($employee->person_id);
+  }
 
-    //
-    public function show(int $employees_adm)
-    {
-      $data = parent::getById($employees_adm);
+  //
+  public function edit(Employee $employees_adm)
+  {
+    return response($this->getById($employees_adm), 200);
+  }
 
-      $pdf = Facade\Pdf::loadView('employee-adm.view', compact('data'));
-      
-      return $pdf->stream("empleado-".$data->cedula);
-      //return view('employee-adm.view', compact('data'));
-    }
+  //
+  public function show(Employee $employees_adm)
+  {
+    $data = $this->getById($employees_adm);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    $pdf = Facade\Pdf::loadView('employee-adm.view', compact('data'));
+    
+    return $pdf->stream("empleado-".$data->cedula);
+    //return view('employee-adm.view', compact('data'));
+  }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+  /**
+   * Store a newly created resource in storage.
+   */
+  public function store(Request $request)
+  {
+      //
+  }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Employee $employees_adm)
-    {
-      $employees_adm->delete();
-      
-      return Response::HTTP_NO_CONTENT;
-    }
+  /**
+   * Update the specified resource in storage.
+   */
+  public function update(Request $request, string $id)
+  {
+      //
+  }
+
+  /**
+   * Remove the specified resource from storage.
+   */
+  public function destroy(Employee $employees_adm)
+  {
+    $employees_adm->delete();
+    
+    return Response::HTTP_NO_CONTENT;
+  }
 }
