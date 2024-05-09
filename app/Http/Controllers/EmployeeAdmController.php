@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employee;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
+use App\Models\Employee;
 use App\Models\Person;
 use App\Models\PhoneType;
 
@@ -68,8 +69,10 @@ class EmployeeAdmController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Employee $employees_adm)
     {
-        //
+      $employees_adm->delete();
+      
+      return Response::HTTP_NO_CONTENT;
     }
 }

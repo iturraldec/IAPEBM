@@ -299,6 +299,11 @@ return [
 
         // Sidebar items:
         [
+            'text'    => 'Mantenimiento',
+            'icon'    => 'fas fa-tools',
+            'url'   => '/',
+        ],
+        [
             'text'    => 'Permisos',
             'route'   => 'admin.permissions.index',
         ],

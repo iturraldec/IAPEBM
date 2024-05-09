@@ -69,6 +69,7 @@ class CargoController extends Controller
       $cargo->delete();
       $data['success'] = true;
       $data['message'] = 'Cargo elminado.';
+      
       return response($data, Response::HTTP_NO_CONTENT);
     }
 }

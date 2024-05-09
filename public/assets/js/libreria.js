@@ -44,13 +44,13 @@ function lib_isEmail(email) {
 // retorna un objeto Swal para confirmar/negar una accion
 function lib_Confirmar(titulo) {
  return Swal.fire({
-       icon: 'question',
-       title: titulo,
-       showCancelButton: true,
-       confirmButtonText: 'Si',
-       confirmButtonColor: '#FF0000',
-       cancelButtonText: 'No',
-     })
+            icon: 'question',
+            title: titulo,
+            showCancelButton: true,
+            confirmButtonText: 'Si',
+            confirmButtonColor: '#FF0000',
+            cancelButtonText: 'No',
+         });
 }
 
 // objeto solo letras y espacio

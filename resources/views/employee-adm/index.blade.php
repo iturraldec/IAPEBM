@@ -172,6 +172,34 @@
         printPhones();
       });
     });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar empleado
+    ///////////////////////////////////////////////////////////////////
+
+    $("#dtEmpleados tbody").on("click",".eliminar",function() {
+      let data = datatable.row($(this).parents()).data();
+
+      lib_Confirmar("Seguro de ELIMINAR a: " + data.person.name + "?")
+      .then((result) => {
+        if (result.isConfirmed) {
+          let ruta = "{{ route('employees-adm.destroy', ['employees_adm' => 'valor']) }}";
+
+          ruta = ruta.replace('valor', data.id);
+          
+          $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            url: ruta,
+            type: 'DELETE',
+            dataType:'json',
+            success: function(resp){
+              datatable.ajax.reload();
+              lib_ShowMensaje("Empleado Administrativo.");
+            }
+          });
+        }
+      })
+    });
   });
 </script>
 @endsection
