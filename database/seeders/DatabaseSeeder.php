@@ -85,12 +85,6 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Institucional'],
         ]);
 
-        // tipo de direcciones
-        DB::table('address_types')->insert([
-            ['name' => 'Residencia'],
-            ['name' => 'Padre/Madre'],
-        ]);
-
         // estado civil
         DB::table('civil_status')->insert([
             ['name' => 'Soltero(a)'],

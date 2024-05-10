@@ -14,15 +14,13 @@ return new class extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('person_id');
-            $table->unsignedTinyInteger('address_type_id')->nullable();
             $table->string('address');
-            // parroquia
-            // municipio
+            $table->unsignedInteger('parroquia_id')->nullable();
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');
-            $table->foreign('address_type_id')->references('id')->on('address_types')->nullOnDelete();
+            $table->foreign('parroquia_id')->references('id')->on('locations')->nullOnDelete();
+
         });
     }
 

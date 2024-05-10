@@ -33,9 +33,6 @@
   $(document).ready(function () {
     var person = {};
 
-    // mascara  de 'inputPhone', numero de telefono
-    $("#inputPhone").inputmask(lib_phoneMask());
-
     ///////////////////////////////////////////////////////////
     // datatable
     ///////////////////////////////////////////////////////////
@@ -70,6 +67,9 @@
 
     $("#dt-add-button").html(customButton);
 
+    // definir numero de telefono
+    $("#inputPhone").inputmask(lib_phoneMask());
+
     ///////////////////////////////////////////////////////////////////
     // boton editar empleado
     ///////////////////////////////////////////////////////////////////
@@ -83,17 +83,28 @@
       .then(response => response.json())
       .then(responseJSON => {
         person = structuredClone(responseJSON);
-        printPhones();
+        makeForm();
         $("#modalTitle").html(person.name);
         $('#modalForm').modal('show');
       });
     });
 
     ///////////////////////////////////////////////////////////////////
+    // crear formulario
+    ///////////////////////////////////////////////////////////////////
+
+    function makeForm()
+    {
+      // print de telefonos
+      imprimirTelefonos();
+    }
+
+    ///////////////////////////////////////////////////////////////////
     // imprimir telefonos
     ///////////////////////////////////////////////////////////////////
 
-    function printPhones() {
+    function imprimirTelefonos()
+    {
       let cadena = '';
 
       $("#divPhones").html("");
@@ -105,50 +116,34 @@
             </span>
             <input type="text" class="form-control" value="${phone.number}" readonly />
             <div class="input-group-append">
-              <a class="delPhone btn btn-danger btn-sm" data-phone-id="${phone.id}"><i class="fas fa-trash-alt"></i></a>
+              <a class="delPhone btn btn-danger btn-sm" data-phone-id="${phone.number}"><i class="fas fa-trash-alt"></i></a>
             </div>
           </div>`
       });
       $("#divPhones").html(cadena);
-    };
+    }
 
     ///////////////////////////////////////////////////////////////////
     // agregar telefono
     ///////////////////////////////////////////////////////////////////
-
     $("#addPhone").click(function () {
-      let phoneTypeId = $("#selectPhoneType :selected").val();
-      let phoneTypeName = $("#selectPhoneType :selected").text();
       let number = $("#inputPhone").val();
 
       if(lib_isEmpty(number)) {
         lib_ShowMensaje("Debe ingresar el número de teléfono!", "error");
-      }
+      } 
       else {
+        let phoneTypeId = $("#selectPhoneType :selected").val();
+        let phoneTypeName = $("#selectPhoneType :selected").text();
         let phone = {
-          person_id       : person.id,
           phone_type_id   : phoneTypeId,
-          number          : number
+          number          : number,
+          type            : { name :  phoneTypeName }
         };
 
-        fetch("{{ route('phones.store') }}", {
-          method:"POST",
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            "Content-Type": "application/json",
-            "Accept"      : "application/json"
-          },
-          body: JSON.stringify(phone),
-        })
-        .then(response => response.json())
-        .then(data => {
-          data.type = {
-            name : phoneTypeName
-          };
-          person.phones.push(data);
-          printPhones();
-          $("#inputPhone").val("");
-        });
+        person.phones.push(phone);
+        $("#inputPhone").val("");
+        imprimirTelefonos();
       }
     });
 
@@ -158,20 +153,32 @@
 
     $(document).delegate('.delPhone', 'click', function() {
       let phone_id = $(this).attr('data-phone-id');
-      let ruta = "{{ route('phones.destroy', ['phone' => 'valor']) }}";
-
-      ruta = ruta.replace('valor', phone_id);
-      fetch(ruta, {
-        method:"DELETE",
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      })
-      .then(data => {
-        person.phones = person.phones.filter(phone => phone.id != phone_id);
-        printPhones();
-      });
+      
+      person.phones = person.phones.filter(phone => phone.number != phone_id);
+      imprimirTelefonos();
     });
+
+    ///////////////////////////////////////////////////////////////////
+    // enviar los datos del empleado al servidor
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnGrabar").click(function() {
+      let ruta = "{{ route('employees-adm.update', ['employees_adm' => 'valor']) }}";
+
+      ruta = ruta.replace('valor', person.id);
+      fetch(ruta, {
+        method: "PUT",
+        headers: {
+          'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content'),
+          'Content-Type'  : 'application/json',
+          'Accept'        : 'application/json'
+        },
+        body: JSON.stringify(person)
+      })
+      .then(response => response.json())
+      .then(data => console.log(data));
+    });
+
 
     ///////////////////////////////////////////////////////////////////
     // eliminar empleado

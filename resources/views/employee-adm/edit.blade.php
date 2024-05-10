@@ -18,13 +18,13 @@
           <div class="card-header p-0 pt-1">
             <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
               <li class="nav-item">
-                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Resumen</a>
+                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Identificación</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="custom-tabs-one-phones-tab" data-toggle="pill" href="#custom-tabs-one-phones" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Teléfono(s)</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Messages</a>
+                <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Dirección(es)</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Settings</a>
@@ -68,6 +68,12 @@
                   <div class="col-8">
                     <input type="text" class="form-control" id="inputTlf" readonly>
                   </div>
+
+                  <div class="col">
+                    <button id="btnGrabar" class="btn btn-danger">Grabar</button>
+                    <button class="btn btn-secondary" data-dismiss="modal">Salir</button>
+                  </div>
+
                 </div>
               </div>
               <!-- fin de tab home -->
@@ -91,7 +97,7 @@
                       </div>
                     </div>
                   </div>
-
+                
                   <div id="divPhones"></div>
 
                 </div>
@@ -109,11 +115,6 @@
           <!-- /.card -->
         </div>
       </div>
-
-{{--         <div class="modal-footer">
-        <button type="submit" class="btn btn-danger">Grabar</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
-      </div> --}}
     </div>
   </div>
 </div>

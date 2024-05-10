@@ -70,3 +70,8 @@ function lib_phoneMask()
 {
    return {regex:"[\\d\\s-]+"};
 }
+
+// retorna un random entero
+function lib_getRandomInt(max) {
+   return Math.floor(Math.random() * max);
+}

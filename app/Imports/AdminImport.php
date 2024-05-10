@@ -59,8 +59,7 @@ class AdminImport implements ToCollection, WithHeadingRow
             // direccion
             if(substr($row['ult_direcc'], 0, 3) != 'SIN') {
                 DB::table('addresses')->insert([
-                    'person_id' => $person_id, 
-                    'address_type_id' => 1, 
+                    'person_id' => $person_id,
                     'address' => $row['ult_direcc']
                 ]);
             }
