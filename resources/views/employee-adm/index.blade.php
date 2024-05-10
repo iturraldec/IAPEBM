@@ -67,9 +67,6 @@
 
     $("#dt-add-button").html(customButton);
 
-    // definir numero de telefono
-    $("#inputPhone").inputmask(lib_phoneMask());
-
     ///////////////////////////////////////////////////////////////////
     // boton editar empleado
     ///////////////////////////////////////////////////////////////////
@@ -100,6 +97,12 @@
     }
 
     ///////////////////////////////////////////////////////////////////
+    // mascara numero de telefono
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputPhone").inputmask(lib_phoneMask());
+
+    ///////////////////////////////////////////////////////////////////
     // imprimir telefonos
     ///////////////////////////////////////////////////////////////////
 
@@ -120,21 +123,42 @@
             </div>
           </div>`
       });
+
       $("#divPhones").html(cadena);
     }
 
     ///////////////////////////////////////////////////////////////////
     // agregar telefono
     ///////////////////////////////////////////////////////////////////
-    $("#addPhone").click(function () {
-      let number = $("#inputPhone").val();
 
-      if(lib_isEmpty(number)) {
-        lib_ShowMensaje("Debe ingresar el número de teléfono!", "error");
-      } 
-      else {
+    $('#phoneForm').validate({
+      rules: {
+        inputPhone: {
+          required: true
+        },
+      },
+      messages: {
+        inputPhone: {
+          required: "Debes ingresar el número de teléfono."
+        },
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.input-group').append(error);
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+      },
+      submitHandler: function (form, e) {
+        e.preventDefault();
+
         let phoneTypeId = $("#selectPhoneType :selected").val();
         let phoneTypeName = $("#selectPhoneType :selected").text();
+        let number = $("#inputPhone").val();
         let phone = {
           phone_type_id   : phoneTypeId,
           number          : number,
