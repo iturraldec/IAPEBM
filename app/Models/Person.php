@@ -33,7 +33,7 @@ class Person extends Model
     //
     public function phones() : HasMany
     {
-        return $this->hasMany(Phone::class, 'person_id', 'id');
+        return $this->hasMany(Phone::class);
     }
 
     //

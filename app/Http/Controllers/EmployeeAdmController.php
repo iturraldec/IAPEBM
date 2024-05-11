@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
@@ -92,6 +93,18 @@ class EmployeeAdmController extends Controller
 
     $person->phones()->delete();
     $person->phones()->saveMany($phones);
+
+    // modifico sus direcciones
+    $addresses = [];
+    foreach($request->addresses as $address) {
+      $addresses[] = new Address([
+                    'address' => $address['address'],
+                    'parroquia_id' => $address['parroquia_id']
+                  ]);
+    };
+
+    $person->addresses()->delete();
+    $person->addresses()->saveMany($addresses);
  
     return response(['message' => 'Ok'], Response::HTTP_OK);
   }
