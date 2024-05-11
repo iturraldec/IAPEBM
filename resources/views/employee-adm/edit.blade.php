@@ -112,6 +112,7 @@
                     <div class="col-6">
                       <label for="selectMunicipio">Municipio</label>
                       <select id="selectMunicipio" class="form-control">
+                        <option value="0">SELECCIONE MUNICIPIO</option>
                         @foreach ($municipios as $municipio)
                           <option value="{{ $municipio->id }}">{{ $municipio->name }}</option>
                         @endforeach
@@ -120,11 +121,7 @@
 
                     <div class="col-6">
                       <label for="selectParroquia">Parroquia</label>
-                      <select id="selectParroquia" class="form-control">
-                        @foreach ($parroquias as $parroquia)
-                          <option value="{{ $parroquia->id }}">{{ $parroquia->name }}</option>
-                        @endforeach
-                      </select>
+                      <select id="selectParroquia" class="form-control"></select>
                     </div>
 
                     <div class="col input-group my-2">

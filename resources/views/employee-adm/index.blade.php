@@ -32,6 +32,8 @@
 <script>
   $(document).ready(function () {
     var person = {};
+    var municipios  = {{ Js::from($municipios) }};
+    var parroquias  = {{ Js::from($parroquias) }};
 
     ///////////////////////////////////////////////////////////
     // datatable
@@ -66,6 +68,24 @@
     });
 
     $("#dt-add-button").html(customButton);
+
+    ///////////////////////////////////////////////////////////////////
+    // filtro de las parroquias
+    ///////////////////////////////////////////////////////////////////
+
+    $("#selectMunicipio").change(function() {
+      let selectedOption = $(this).val();
+
+      $("#selectParroquia").empty();
+      parroquias.forEach(parroquia => {
+        if(parroquia.padre_id == selectedOption) {
+          $('#selectParroquia')
+            .append($("<option></option>")
+            .attr("value", parroquia.id)
+            .text(parroquia.name));
+        }
+      });
+    });
 
     ///////////////////////////////////////////////////////////////////
     // boton editar empleado
