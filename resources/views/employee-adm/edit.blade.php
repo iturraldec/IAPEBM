@@ -24,7 +24,7 @@
                 <a class="nav-link" id="custom-tabs-one-phones-tab" data-toggle="pill" href="#custom-tabs-one-phones" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Teléfono(s)</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Dirección(es)</a>
+                <a class="nav-link" id="custom-tabs-one-adresses-tab" data-toggle="pill" href="#custom-tabs-one-adresses" role="tab" aria-controls="custom-tabs-one-adresses" aria-selected="false">Dirección(es)</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Settings</a>
@@ -94,7 +94,7 @@
                       <div class="input-group mb-2">
                         <input type="text" id="inputPhone" name="inputPhone" class="form-control" placeholder="Ingresa número de teléfono">
                         <div class="input-group-append">
-                          <button type="submit" id="addPhone" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
+                          <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
                         </div>
                       </div>
                     </div>
@@ -105,9 +105,43 @@
               </div>
               <!-- fin de tab phones -->
 
-              <div class="tab-pane fade" id="custom-tabs-one-messages" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
-                  Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
+              <!-- tab de direcciones -->
+              <div class="tab-pane fade" id="custom-tabs-one-adresses" role="tabpanel" aria-labelledby="custom-tabs-one-adresses-tab">
+                <form id="addressForm">
+                  <div class="row">
+                    <div class="col-6">
+                      <label for="selectMunicipio">Municipio</label>
+                      <select id="selectMunicipio" class="form-control">
+                        @foreach ($municipios as $municipio)
+                          <option value="{{ $municipio->id }}">{{ $municipio->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+
+                    <div class="col-6">
+                      <label for="selectParroquia">Parroquia</label>
+                      <select id="selectParroquia" class="form-control">
+                        @foreach ($parroquias as $parroquia)
+                          <option value="{{ $parroquia->id }}">{{ $parroquia->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+
+                    <div class="col input-group my-2">
+                      <input type="text" id="inputAddress" name="inputAddress" class="form-control" placeholder="Ingresa la dirección">
+                      <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div id="divAddresses"></div>
+                  
+                </form>
               </div>
+              <!-- fin de tab de direcciones -->
+
               <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
                   Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis.
               </div>

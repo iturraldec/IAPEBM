@@ -92,12 +92,12 @@
 
     function makeForm()
     {
-      // print de telefonos
       imprimirTelefonos();
+      imprimirDirecciones();
     }
 
     ///////////////////////////////////////////////////////////////////
-    // mascara numero de telefono
+    // mascara para el numero de telefono
     ///////////////////////////////////////////////////////////////////
 
     $("#inputPhone").inputmask(lib_phoneMask());
@@ -111,7 +111,7 @@
       let cadena = '';
 
       $("#divPhones").html("");
-      person.phones.forEach(phone => {
+      person.phones.forEach((phone, index) => {
         cadena += `
           <div class="col input-group mb-2">
             <span class="mr-1">
@@ -119,7 +119,7 @@
             </span>
             <input type="text" class="form-control" value="${phone.number}" readonly />
             <div class="input-group-append">
-              <a class="delPhone btn btn-danger btn-sm" data-phone-id="${phone.number}"><i class="fas fa-trash-alt"></i></a>
+              <a class="delPhone btn btn-danger btn-sm" id="${index}"><i class="fas fa-trash-alt"></i></a>
             </div>
           </div>`
       });
@@ -176,10 +176,85 @@
     ///////////////////////////////////////////////////////////////////
 
     $(document).delegate('.delPhone', 'click', function() {
-      let phone_id = $(this).attr('data-phone-id');
+      let phone_id = $(this).attr('id');
       
-      person.phones = person.phones.filter(phone => phone.number != phone_id);
+      person.phones = person.phones.filter((phone, index) => index != phone_id);
       imprimirTelefonos();
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // imprimir direcciones
+    ///////////////////////////////////////////////////////////////////
+
+    function imprimirDirecciones()
+    {
+      let cadena = '';
+
+      $("#divAddresses").html("");
+      person.addresses.forEach((address, index) => {
+        cadena += `
+          <div class="input-group mb-2">
+            <input type="text" class="form-control" value="${address.address}" readonly />
+            <div class="input-group-append">
+              <a class="delAddress btn btn-danger btn-sm" id="${index}"><i class="fas fa-trash-alt"></i></a>
+            </div>
+          </div>`
+      });
+
+      $("#divAddresses").html(cadena);
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    // agregar direccion
+    ///////////////////////////////////////////////////////////////////
+
+    $('#addressForm').validate({
+      rules: {
+        inputAddress: {
+          required: true
+        },
+      },
+      messages: {
+        inputAddress: {
+          required: "Debes ingresar una direeción."
+        },
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.input-group').append(error);
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+      },
+      submitHandler: function (form, e) {
+        e.preventDefault();
+
+        let parroquiaId = $("#selectParroquia :selected").val();
+        let addressText  = $("#inputAddress").val();
+        let address = {
+          address       : addressText,
+          parroquia_id  : parroquiaId
+        };
+
+        person.addresses.push(address);
+        $("#inputAddress").val("");
+        imprimirDirecciones();
+      }
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar direccion
+    ///////////////////////////////////////////////////////////////////
+
+    $(document).delegate('.delAddress', 'click', function() {
+      let address_id = $(this).attr('id');
+
+      person.addresses = person.addresses.filter((address, index) => index != address_id);
+      imprimirDirecciones();
     });
 
     ///////////////////////////////////////////////////////////////////

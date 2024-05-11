@@ -22,7 +22,7 @@ class Person extends Model
     public function civil_status() : BelongsTo
     {
         return $this->belongsTo(CivilStatus::class);
-    }
+    }   
 
     //
     public function blood_type() : BelongsTo
@@ -34,5 +34,11 @@ class Person extends Model
     public function phones() : HasMany
     {
         return $this->hasMany(Phone::class, 'person_id');
+    }
+
+    //
+    public function addresses() : HasMany
+    {
+        return $this->hasMany(Address::class);
     }
 }

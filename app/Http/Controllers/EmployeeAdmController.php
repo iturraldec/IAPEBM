@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade;
 use App\Models\Employee;
 use App\Models\Person;
 use App\Models\PhoneType;
+use App\Models\Location;
 
 //
 class EmployeeAdmController extends Controller
@@ -28,15 +29,19 @@ class EmployeeAdmController extends Controller
       return datatables()->of(Employee::where('grupo_id', $this->grupo_id)->with('person')->get())->toJson();
     }
     else {
+      $location = new Location();
       $phone_types = PhoneType::get();
-      return view('employee-adm.index', compact('phone_types'));
+      $municipios = $location->getMunicipios();
+      $parroquias = $location->getParroquias();
+
+      return view('employee-adm.index', compact('phone_types', 'municipios', 'parroquias'));
     }
   }
 
   //
   public function getById(Employee $employee)
   {
-    return Person::with('employee', 'civil_status', 'phones.type')->find($employee->person_id);
+    return Person::with('employee', 'civil_status', 'phones.type', 'addresses')->find($employee->person_id);
   }
 
   //
