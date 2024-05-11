@@ -9,6 +9,7 @@ use App\Models\Employee;
 use App\Models\Person;
 use App\Models\PhoneType;
 use App\Models\Location;
+use App\Models\Phone;
 
 //
 class EmployeeAdmController extends Controller
@@ -74,7 +75,25 @@ class EmployeeAdmController extends Controller
    */
   public function update(Request $request, Employee $employees_adm)
   {
-    return response($request->all());
+
+    // modifico la persona
+    $person = Person::find($employees_adm->person_id);
+   /* $person->name = "Nuevo nombre cambiado4";
+    $person->save();
+ */
+    // modifico sus telefonos
+    $phones = [];
+    foreach($request->phones as $phone) {
+      $phones[] = new Phone([
+                    'phone_type_id' => $phone['phone_type_id'],
+                    'number' => $phone['number']
+                  ]);
+    };
+
+    $person->phones()->delete();
+    $person->phones()->saveMany($phones);
+ 
+    return response(['message' => 'Ok'], Response::HTTP_OK);
   }
 
   /**

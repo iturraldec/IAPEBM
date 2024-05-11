@@ -275,7 +275,10 @@
         body: JSON.stringify(person)
       })
       .then(response => response.json())
-      .then(data => console.log(data));
+      .then(data => {
+        datatable.ajax.reload();
+        lib_ShowMensaje("Datos actualizados.");
+      });
     });
 
 
