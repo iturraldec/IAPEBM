@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('person_id');
             $table->string('address');
             $table->unsignedInteger('parroquia_id')->nullable();
+            $table->string('zona_postal', 10)->nullable();
             $table->timestamps();
 
             $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');

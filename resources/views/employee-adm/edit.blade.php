@@ -1,5 +1,7 @@
-<div class="modal fade" id="modalForm" 
+<div class="modal fade" 
+    id="modalForm" 
     data-backdrop="static"
+    data-keyboard="false"
     tabindex="-1" 
     aria-labelledby="staticBackdropLabel" 
     aria-hidden="true"
@@ -124,8 +126,24 @@
                       <select id="selectParroquia" class="form-control"></select>
                     </div>
 
-                    <div class="col input-group my-2">
-                      <input type="text" id="inputAddress" name="inputAddress" class="form-control" placeholder="Ingresa la dirección">
+                    <div class="col my-2">
+                      <label for="inputZonaPostal">Dirección y Zona Postal</label>
+                      <input type="text" 
+                            id="inputAddress" 
+                            name="inputAddress" 
+                            class="form-control" 
+                            placeholder="Ingresa la dirección"
+                            onkeyup="this.value = this.value.toUpperCase();"
+                      >
+                    </div>
+
+                    <div class="input-group mb-2">
+                      <input type"text" 
+                            id="inputZonaPostal" 
+                            name="inputZonaPostal" 
+                            class="form-control" 
+                            placeholder="Ingrese la zona postal."
+                      />
                       <div class="input-group-append">
                         <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
                       </div>

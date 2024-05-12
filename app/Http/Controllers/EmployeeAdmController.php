@@ -99,14 +99,15 @@ class EmployeeAdmController extends Controller
     foreach($request->addresses as $address) {
       $addresses[] = new Address([
                     'address' => $address['address'],
-                    'parroquia_id' => $address['parroquia_id']
+                    'parroquia_id' => $address['parroquia_id'],
+                    'zona_postal' => $address['zona_postal']
                   ]);
     };
 
     $person->addresses()->delete();
     $person->addresses()->saveMany($addresses);
  
-    return response(['message' => 'Ok'], Response::HTTP_OK);
+    return response($person, Response::HTTP_OK);
   }
 
   /**

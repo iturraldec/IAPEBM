@@ -102,6 +102,8 @@
         person = structuredClone(responseJSON);
         makeForm();
         $("#modalTitle").html(person.name);
+        $("#selectMunicipio").val("0");
+        $("#selectParroquia").empty();
         $('#modalForm').modal('show');
       });
     });
@@ -121,6 +123,12 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#inputPhone").inputmask(lib_phoneMask());
+
+    ///////////////////////////////////////////////////////////////////
+    // mascara la zona postal
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputZonaPostal").inputmask(lib_digitMask());
 
     ///////////////////////////////////////////////////////////////////
     // imprimir telefonos
@@ -233,10 +241,18 @@
         inputAddress: {
           required: true
         },
+        inputZonaPostal: {
+          required: true,
+          maxlength: 10
+        }
       },
       messages: {
         inputAddress: {
           required: "Debes ingresar una direeción."
+        },
+        inputZonaPostal: {
+          required: "Debes ingresar la zona postal de la dirección.",
+          maxlength: "Debes ingresar máximo 10 digitos."
         },
       },
       errorElement: 'span',
@@ -253,15 +269,15 @@
       submitHandler: function (form, e) {
         e.preventDefault();
 
-        let parroquiaId = $("#selectParroquia :selected").val();
-        let addressText  = $("#inputAddress").val();
         let address = {
-          address       : addressText,
-          parroquia_id  : parroquiaId
+          address       : $("#inputAddress").val(),
+          parroquia_id  : $("#selectParroquia :selected").val(),
+          zona_postal   : $("#inputZonaPostal").val()
         };
 
         person.addresses.push(address);
         $("#inputAddress").val("");
+        $("#inputZonaPostal").val("");
         imprimirDirecciones();
       }
     });
@@ -296,6 +312,7 @@
       })
       .then(response => response.json())
       .then(data => {
+        console.log(data);
         datatable.ajax.reload();
         lib_ShowMensaje("Datos actualizados.");
       });
@@ -323,7 +340,7 @@
             dataType:'json',
             success: function(resp){
               datatable.ajax.reload();
-              lib_ShowMensaje("Empleado Administrativo.");
+              lib_ShowMensaje("Empleado Administrativo eliminado.");
             }
           });
         }
