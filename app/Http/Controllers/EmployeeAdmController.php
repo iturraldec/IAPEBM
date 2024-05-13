@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Address;
+use App\Models\BloodType;
+use App\Models\CivilStatus;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
@@ -32,11 +34,13 @@ class EmployeeAdmController extends Controller
     }
     else {
       $location = new Location();
-      $phone_types = PhoneType::get();
-      $municipios = $location->getMunicipios();
-      $parroquias = $location->getParroquias();
+      $phone_types  = PhoneType::get();
+      $municipios   = $location->getMunicipios();
+      $parroquias   = $location->getParroquias();
+      $edoCivil     = CivilStatus::get();
+      $tipoSangre   = BloodType::get();
 
-      return view('employee-adm.index', compact('phone_types', 'municipios', 'parroquias'));
+      return view('employee-adm.index', compact('phone_types', 'municipios', 'parroquias', 'edoCivil', 'tipoSangre'));
     }
   }
 
@@ -76,12 +80,20 @@ class EmployeeAdmController extends Controller
    */
   public function update(Request $request, Employee $employees_adm)
   {
-
+    
     // modifico la persona
     $person = Person::find($employees_adm->person_id);
-   /* $person->name = "Nuevo nombre cambiado4";
+    $person->cedula = $request->cedula;
+    $person->name = $request->name;
+    $person->sex = $request->sex;
+    $person->birthday = $request->birthday;
+    $person->place_of_birth = $request->place_of_birth;
+    $person->civil_status_id = $request->civil_status_id;
+    $person->blood_type_id = $request->blood_type_id;
+    $person->email = $request->email;
+    $person->notes = $request->notes;
     $person->save();
- */
+
     // modifico sus telefonos
     $phones = [];
     foreach($request->phones as $phone) {

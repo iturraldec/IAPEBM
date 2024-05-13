@@ -101,9 +101,6 @@
       .then(responseJSON => {
         person = structuredClone(responseJSON);
         makeForm();
-        $("#modalTitle").html(person.name);
-        $("#selectMunicipio").val("0");
-        $("#selectParroquia").empty();
         $('#modalForm').modal('show');
       });
     });
@@ -114,6 +111,19 @@
 
     function makeForm()
     {
+      $("#modalTitle").html(person.name);
+      $("#inputCedula").val(person.cedula);
+      $("#inputRif").val(person.employee.rif);
+      $("#inputNombre").val(person.name);
+      $("#selectSexo").val(person.sex);
+      $("#inputBirthday").val(person.birthday);
+      $("#inputPlaceOfBirth").val(person.place_of_birth);
+      $("#selectEstadoCivil").val(person.civil_status_id);
+      $("#selectSangre").val(person.blood_type_id);
+      $("#inputEmail").val(person.email);
+      $("#inputNotas").val(person.notes);
+      $("#selectMunicipio").val("0");
+      $("#selectParroquia").empty();
       imprimirTelefonos();
       imprimirDirecciones();
     }
@@ -298,9 +308,29 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnGrabar").click(function() {
+      if(person.phones.length < 1) {
+        lib_ShowMensaje("Debe ingresar al menos un teléfono!", "error");
+        return;
+      }
+
+      if(person.addresses.length < 1) {
+        lib_ShowMensaje("Debe ingresar al menos una dirección!", "error");
+        return;
+      }
+
       let ruta = "{{ route('employees-adm.update', ['employees_adm' => 'valor']) }}";
 
       ruta = ruta.replace('valor', person.id);
+      person.cedula = $("#inputCedula").val();
+      person.name = $("#inputNombre").val();
+      person.sex = $("#selectSexo").val();
+      person.birthday = $("#inputBirthday").val();
+      person.place_of_birth = $("#inputPlaceOfBirth").val();
+      person.civil_status_id = $("#selectEstadoCivil").val();
+      person.blood_type_id = $("#selectSangre").val();
+      person.email = $("#inputEmail").val();
+      person.notes = $("#inputNotas").val();
+      person.employee.rif = $("#inputRif").val();
       fetch(ruta, {
         method: "PUT",
         headers: {

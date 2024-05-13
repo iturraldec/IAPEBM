@@ -9,11 +9,8 @@ class CivilStatus extends Model
 {   
   //
   protected $table = 'civil_status';
-  
-  //
-  protected $fillable = ['name'];
 
-  public function person()
+  public function person() : HasOne
   {
     return $this->hasOne(Person::class);
   }

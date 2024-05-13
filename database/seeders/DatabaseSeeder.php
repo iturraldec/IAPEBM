@@ -91,7 +91,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Casado(a)'],
             ['name' => 'Divorsiado(a)'],
             ['name' => 'Viudo(a)'],
-            ['name' => 'Unio Estable de Hecho'],
+            ['name' => 'Union Estable de Hecho'],
         ]);
     }
 }
