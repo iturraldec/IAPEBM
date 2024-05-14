@@ -41,4 +41,10 @@ class Person extends Model
     {
         return $this->hasMany(Address::class);
     }
+
+    //
+    public function images() : HasMany
+    {
+        return $this->hasMany(PersonImage::class);
+    }
 }

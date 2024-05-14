@@ -31,7 +31,7 @@
                 <a class="nav-link" id="custom-tabs-one-adresses-tab" data-toggle="pill" href="#custom-tabs-one-adresses" role="tab" aria-controls="custom-tabs-one-adresses" aria-selected="false">Dirección(es)</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Datos Administrativos</a>
+                <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-images" role="tab" aria-controls="custom-tabs-one-images" aria-selected="false">Imagenes</a>
               </li>
             </ul>
           </div>
@@ -222,9 +222,41 @@
               </div>
               <!-- fin de tab de direcciones -->
 
-              <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
-                  Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis.
+              <!-- tab de fotos -->
+              <div class="tab-pane fade" id="custom-tabs-one-images" role="tabpanel" aria-labelledby="custom-tabs-one-images-tab">
+                <div class="container-fluid">
+                  <div class="row">
+
+                    <div class="col-4">
+                      <div class="form-group">
+                        <label for="inputFile">Seleccione imagen</label>
+                        <div class="input-group">
+                          <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputFile">
+                            <label class="custom-file-label" for="inputFile"></label>
+                          </div>
+
+                          <div class="input-group-append">
+                            <span class="input-group-text">Upload</span>
+                          </div>
+
+                          <div id="previewImage" class="mt-3"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-8">
+                      <div class="row">
+                        <div id="divImages">
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <!-- fin de tab de fotos -->
+
             </div>
           </div>
           <!-- /.card -->

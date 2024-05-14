@@ -412,8 +412,8 @@ return [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'vendor/datatables/css/dataTables.bootstrap4.min.css',
-                ],
-            ],
+                ]
+            ]
         ],
         'jqueryValidation' => [
             'active' => true,
@@ -427,8 +427,8 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'vendor/jquery-validation/additional-methods.min.js',
-                ],
-            ],
+                ]
+            ]
         ],
         'Sweetalert2' => [
             'active' => true,
@@ -437,8 +437,8 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'vendor/sweetalert2/sweetalert2.all.min.js',
-                ],
-            ],
+                ]
+            ]
         ],
         'icheck-bootstrap' => [
             'active' => true,
@@ -447,8 +447,8 @@ return [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'vendor/icheck-bootstrap/icheck-bootstrap.min.css',
-                ],
-            ],
+                ]
+            ]
         ],
         'inputmask' => [
             'active' => true,
@@ -457,9 +457,24 @@ return [
                     'type'  => 'js',
                     'asset' => true,
                     'location' => 'vendor/inputmask/jquery.inputmask.min.js',
-                ],
-            ],
+                ]
+            ]
         ],
+        'dropzone' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/dropzone/min/dropzone.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/dropzone/min/dropzone.min.js'
+                ]
+            ]
+        ]
     ],
 
     /*

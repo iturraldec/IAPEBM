@@ -2,6 +2,28 @@
 
 @section('title', 'Emppleados Administrativos')
 
+@section('css')
+<style>
+  .image-container {
+    max-width: 100%;
+    height: auto;
+  }
+
+  #previewImage {
+    width: 250px;
+    height: 200px;
+    border: 1px solid black;
+    overflow: hidden;
+  }
+
+  #previewImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+</style>
+@endsection
+
 @section('content_header')
   <h1>Listado de Empleados Administrativos.</h1>
 @endsection
@@ -31,6 +53,7 @@
 @section('js')
 <script>
   $(document).ready(function () {
+    var imagePath = "{{ asset('storage') }}";
     var person = {};
     var municipios  = {{ Js::from($municipios) }};
     var parroquias  = {{ Js::from($parroquias) }};
@@ -111,6 +134,8 @@
 
     function makeForm()
     {
+      let cadena = "";
+
       $("#modalTitle").html(person.name);
       $("#inputCedula").val(person.cedula);
       $("#inputRif").val(person.employee.rif);
@@ -126,6 +151,14 @@
       $("#selectParroquia").empty();
       imprimirTelefonos();
       imprimirDirecciones();
+      person.images.forEach(image => {
+        cadena += `
+          <div class="col-6 mb-2 border border-dark">
+            <img src="${imagePath + '/' + image['file']}" class="image-container rounded p-2 mx-auto d-block" >
+            <button class="form-control btn-danger mb-2">Eliminar</button>
+          </div>`
+      });
+      $("#divImages").html(cadena);
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -301,6 +334,17 @@
 
       person.addresses = person.addresses.filter((address, index) => index != address_id);
       imprimirDirecciones();
+    });
+
+    $('#inputFile').change(function() {
+      var file = this.files[0];
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        $('#previewImage').html('<img src="' + e.target.result + '">');
+      }
+
+      reader.readAsDataURL(file);
     });
 
     ///////////////////////////////////////////////////////////////////

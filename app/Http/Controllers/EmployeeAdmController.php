@@ -47,7 +47,7 @@ class EmployeeAdmController extends Controller
   //
   public function getById(Employee $employee)
   {
-    return Person::with('employee', 'civil_status', 'phones.type', 'addresses')->find($employee->person_id);
+    return Person::with('employee', 'civil_status', 'phones.type', 'addresses', 'images')->find($employee->person_id);
   }
 
   //
