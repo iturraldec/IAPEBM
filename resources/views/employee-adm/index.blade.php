@@ -4,11 +4,6 @@
 
 @section('css')
 <style>
-  .image-container {
-    max-width: 100%;
-    height: auto;
-  }
-
   #previewImage {
     width: 250px;
     height: 200px;
@@ -123,6 +118,7 @@
       .then(response => response.json())
       .then(responseJSON => {
         person = structuredClone(responseJSON);
+        person.images.forEach(image => image.deleted = false);
         makeForm();
         $('#modalForm').modal('show');
       });
@@ -134,8 +130,6 @@
 
     function makeForm()
     {
-      let cadena = "";
-
       $("#modalTitle").html(person.name);
       $("#inputCedula").val(person.cedula);
       $("#inputRif").val(person.employee.rif);
@@ -151,14 +145,7 @@
       $("#selectParroquia").empty();
       imprimirTelefonos();
       imprimirDirecciones();
-      person.images.forEach(image => {
-        cadena += `
-          <div class="col-6 mb-2 border border-dark">
-            <img src="${imagePath + '/' + image['file']}" class="image-container rounded p-2 mx-auto d-block" >
-            <button class="form-control btn-danger mb-2">Eliminar</button>
-          </div>`
-      });
-      $("#divImages").html(cadena);
+      imprimirImagenes();
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -181,7 +168,6 @@
     {
       let cadena = '';
 
-      $("#divPhones").html("");
       person.phones.forEach((phone, index) => {
         cadena += `
           <div class="col input-group mb-2">
@@ -246,7 +232,7 @@
     // eliminar telefono
     ///////////////////////////////////////////////////////////////////
 
-    $(document).delegate('.delPhone', 'click', function() {
+    $(document).on('click', '.delPhone', function() {
       let phone_id = $(this).attr('id');
       
       person.phones = person.phones.filter((phone, index) => index != phone_id);
@@ -261,7 +247,6 @@
     {
       let cadena = '';
 
-      $("#divAddresses").html("");
       person.addresses.forEach((address, index) => {
         cadena += `
           <div class="input-group mb-2">
@@ -329,12 +314,36 @@
     // eliminar direccion
     ///////////////////////////////////////////////////////////////////
 
-    $(document).delegate('.delAddress', 'click', function() {
+    $(document).on('click', '.delAddress', function() {
       let address_id = $(this).attr('id');
 
       person.addresses = person.addresses.filter((address, index) => index != address_id);
       imprimirDirecciones();
     });
+
+    ///////////////////////////////////////////////////////////////////
+    // imprimir imagenes
+    ///////////////////////////////////////////////////////////////////
+
+    function imprimirImagenes() {
+      let cadena = "";
+
+      person.images.forEach(image => {
+        if(!image.deleted) {
+          cadena += `
+            <div class="col-6 mb-2">
+              <img src="${imagePath + '/' + image['file']}" class="img-fluid img-thumbnail mb-2" >
+              <button class="deleteImage form-control btn-danger mb-2" id='${image['id']}'>Eliminar</button>
+            </div>`
+        }
+      });
+
+      $("#divImages").html(cadena);
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    // agregar una imagen
+    ///////////////////////////////////////////////////////////////////
 
     $('#inputFile').change(function() {
       var file = this.files[0];
@@ -345,6 +354,21 @@
       }
 
       reader.readAsDataURL(file);
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // borrar una imagen del servidor
+    ///////////////////////////////////////////////////////////////////
+
+    $(document).on('click', '.deleteImage', function() {
+      let imagen_id = $(this).attr('id');
+
+      person.images.forEach(image => {
+        if(image.id.toString() === imagen_id) {
+          image.deleted = true;
+        }
+      });
+      imprimirImagenes();
     });
 
     ///////////////////////////////////////////////////////////////////
