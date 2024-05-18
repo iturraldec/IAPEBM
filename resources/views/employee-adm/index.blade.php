@@ -2,23 +2,6 @@
 
 @section('title', 'Emppleados Administrativos')
 
-@section('css')
-<style>
-  #previewImage {
-    width: 250px;
-    height: 200px;
-    border: 1px solid black;
-    overflow: hidden;
-  }
-
-  #previewImage img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-</style>
-@endsection
-
 @section('content_header')
   <h1>Listado de Empleados Administrativos.</h1>
 @endsection
@@ -48,10 +31,12 @@
 @section('js')
 <script>
   $(document).ready(function () {
-    var imagePath = "{{ asset('storage') }}";
     var person = {};
+    var formData;
+    var imagePath = "{{ env('IMAGES_URL') }}";
     var municipios  = {{ Js::from($municipios) }};
     var parroquias  = {{ Js::from($parroquias) }};
+    var emptyImages = 'Sin imagenes en servidor.';
 
     ///////////////////////////////////////////////////////////
     // datatable
@@ -119,6 +104,7 @@
       .then(responseJSON => {
         person = structuredClone(responseJSON);
         person.images.forEach(image => image.deleted = false);
+        formData = new FormData();
         makeForm();
         $('#modalForm').modal('show');
       });
@@ -322,7 +308,7 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // imprimir imagenes
+    // imprimir imagenes del servidor
     ///////////////////////////////////////////////////////////////////
 
     function imprimirImagenes() {
@@ -331,10 +317,10 @@
       person.images.forEach(image => {
         if(!image.deleted) {
           cadena += `
-            <div class="col-6 mb-2">
-              <img src="${imagePath + '/' + image['file']}" class="img-fluid img-thumbnail mb-2" >
-              <button class="deleteImage form-control btn-danger mb-2" id='${image['id']}'>Eliminar</button>
-            </div>`
+            <div class="col-6">
+              <img src="${imagePath + image['file']}" class="img-fluid img-thumbnail m-2" width="200" height="250">
+              <button class="deleteImage form-control btn-danger p-2" id='${image['id']}'>Eliminar</button>
+            </div>`;
         }
       });
 
@@ -342,22 +328,7 @@
     }
 
     ///////////////////////////////////////////////////////////////////
-    // agregar una imagen
-    ///////////////////////////////////////////////////////////////////
-
-    $('#inputFile').change(function() {
-      var file = this.files[0];
-      var reader = new FileReader();
-
-      reader.onload = function(e) {
-        $('#previewImage').html('<img src="' + e.target.result + '">');
-      }
-
-      reader.readAsDataURL(file);
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // borrar una imagen del servidor
+    // borrar una imagen cargada desde el servidor
     ///////////////////////////////////////////////////////////////////
 
     $(document).on('click', '.deleteImage', function() {
@@ -370,6 +341,48 @@
       });
       imprimirImagenes();
     });
+
+    ///////////////////////////////////////////////////////////////////
+    // agregar una imagen nueva
+    ///////////////////////////////////////////////////////////////////
+
+    $('#inputImage').on('change', function(e) {
+      formData.append('images[]', e.target.files[0]);
+      imprimirImagenesNuevas();
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar una imagen nueva
+    ///////////////////////////////////////////////////////////////////
+
+    $(document).on('click', '.deleteImagenNueva', function() {
+      let imagesArray = Array.from(formData.getAll('images[]'));
+
+      imagesArray.splice($(this).attr('id'), 1);
+      formData.delete('images[]');
+      imagesArray.forEach(image => formData.append('images[]', image));
+      imprimirImagenesNuevas();
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // imprimir imagenes nuevas
+    ///////////////////////////////////////////////////////////////////
+
+    function imprimirImagenesNuevas() {
+      let contenedor = $("#divNewImages");
+
+      contenedor.empty();
+      for (let i = 0; i < formData.getAll('images[]').length; i++) {
+        let div = $('<div class="col-6"></div>');
+        let img = $('<img class="img-fluid img-thumbnail m-2" width="200" height="250">');
+        let botonEliminar = $(`<button class="deleteImagenNueva form-control btn-danger p-2" id="${i}">Eliminar</button>`);
+
+        img.attr('src', URL.createObjectURL(formData.getAll('images[]')[i]));
+        div.append(img);
+        div.append(botonEliminar);
+        contenedor.append(div);
+      }
+    };
 
     ///////////////////////////////////////////////////////////////////
     // enviar los datos del empleado al servidor
@@ -386,9 +399,9 @@
         return;
       }
 
-      let ruta = "{{ route('employees-adm.update', ['employees_adm' => 'valor']) }}";
+      let ruta = "{{ route('employees-adm.update', ['employees_adm' => '.valor']) }}";
 
-      ruta = ruta.replace('valor', person.id);
+      ruta = ruta.replace('.valor', person.id);
       person.cedula = $("#inputCedula").val();
       person.name = $("#inputNombre").val();
       person.sex = $("#selectSexo").val();
@@ -399,6 +412,7 @@
       person.email = $("#inputEmail").val();
       person.notes = $("#inputNotas").val();
       person.employee.rif = $("#inputRif").val();
+
       fetch(ruta, {
         method: "PUT",
         headers: {
@@ -410,7 +424,18 @@
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
+        if(formData.has('images[]')) {
+          let postImagesRoute = "{{ route('employees-adm.add-images', ['cedula' => '.valor']) }}";
+
+          postImagesRoute = postImagesRoute.replace('.valor', person.cedula);
+          fetch(postImagesRoute, {
+            method  : "POST",
+            headers : {
+              'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content')
+            },
+            body    : formData
+          });
+        }
         datatable.ajax.reload();
         lib_ShowMensaje("Datos actualizados.");
       });

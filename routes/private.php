@@ -30,10 +30,5 @@ Route::resource('employee-status', EmployeeStatusController::class)
   ->names('employee-status');
 
 // empleados administrativos
-Route::resource('employees-adm', EmployeeAdmController::class)
-  ->names('employees-adm');
-
-Route::post('employees-adm', [EmployeeAdmController::class, 'addPhone'])->name('employees-adm.addPhone');
-
-// telefonos
-Route::resource('phones', PhoneController::class)->only(['store', 'destroy'])->names('phones');
+Route::resource('employees-adm', EmployeeAdmController::class)->names('employees-adm');
+Route::post('employees-adm/{cedula}', [EmployeeAdmController::class, 'addImages'])->name('employees-adm.add-images');

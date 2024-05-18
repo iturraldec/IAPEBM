@@ -11,6 +11,9 @@ class PersonImage extends Model
   protected $table = 'person_images';
 
   //
+  protected $fillable = ['person_id', 'file'];
+
+  //
   public function person() : HasOne
   {
     return $this->hasOne(Person::class);

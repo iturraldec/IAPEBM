@@ -224,39 +224,29 @@
 
               <!-- tab de fotos -->
               <div class="tab-pane fade" id="custom-tabs-one-images" role="tabpanel" aria-labelledby="custom-tabs-one-images-tab">
-                <div class="container-fluid">
+                <div class="container">
                   <div class="row">
 
-                    <div class="col-4">
-                      <div class="form-group">
-                        <label for="inputFile">Seleccione imagen</label>
-                        <div class="input-group">
-                          <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputFile">
-                            <label class="custom-file-label" for="inputFile"></label>
-                          </div>
+                    <!-- imagenes nuevas -->
+                    <div class="col-6 border border-dark">
+                      <div  id="divNewImages" class="row">imagenes por subir</div>
+                    </div>
+                    <!-- fin de imagenes nuevas -->
 
-                          <div class="input-group-append">
-                            <span class="input-group-text">Upload</span>
-                          </div>
+                    <!-- imagenes en servidor -->
+                    <div class="col-6 border-dark">
+                      <div  id="divImages" class="row"></div>
+                    </div>
+                    <!-- fin de imagenes en servidor -->
 
-                          <div id="previewImage" class="mt-3"></div>
-                        </div>
-                      </div>
+                    <div class="col mt-2">
+                      <input type="file" class="form-control" id="inputImage" accept="image/*">
                     </div>
 
-                    <div class="col-8">
-                      <div class="row">
-                        <div id="divImages">
-
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
               <!-- fin de tab de fotos -->
-
             </div>
           </div>
           <!-- /.card -->

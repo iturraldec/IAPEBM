@@ -8,10 +8,13 @@ use App\Models\CivilStatus;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
+use Illuminate\Support\Facades\Storage;
+
 use App\Models\Employee;
 use App\Models\Person;
 use App\Models\PhoneType;
 use App\Models\Location;
+use App\Models\PersonImage;
 use App\Models\Phone;
 
 //
@@ -72,7 +75,6 @@ class EmployeeAdmController extends Controller
    */
   public function store(Request $request)
   {
-      //
   }
 
   /**
@@ -80,7 +82,6 @@ class EmployeeAdmController extends Controller
    */
   public function update(Request $request, Employee $employees_adm)
   {
-    
     // modifico la persona
     $person = Person::find($employees_adm->person_id);
     $person->cedula = $request->cedula;
@@ -118,8 +119,25 @@ class EmployeeAdmController extends Controller
 
     $person->addresses()->delete();
     $person->addresses()->saveMany($addresses);
- 
+    
     return response($person, Response::HTTP_OK);
+  }
+
+  //
+  public function addImages(Request $request, string $cedula)
+  {
+    if ($request->hasFile('images')) {
+      $person = Person::firstWhere('cedula', $cedula);
+      $_files = [];
+      foreach($request->file('images') as $image) {
+        $_files[] = [
+            'person_id' => $person->id, 
+            'file'      => Storage::url($image->store("public/employees/$cedula"))
+        ];
+      }
+      
+      PersonImage::insert($_files);
+   }
   }
 
   /**
