@@ -147,8 +147,10 @@ class EmployeeAdmController extends Controller
         ];
       }
       
-      PersonImage::insert($_files);
+      return response(PersonImage::insert($_files));
    }
+
+   return Response::HTTP_NO_CONTENT;
   }
 
   /**

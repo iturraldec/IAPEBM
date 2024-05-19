@@ -132,6 +132,7 @@
       imprimirTelefonos();
       imprimirDirecciones();
       imprimirImagenes();
+      imprimirImagenesNuevas();
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -328,7 +329,7 @@
     }
 
     ///////////////////////////////////////////////////////////////////
-    // borrar una imagen cargada desde el servidor
+    // borrar una imagen del servidor
     ///////////////////////////////////////////////////////////////////
 
     $(document).on('click', '.deleteImage', function() {
