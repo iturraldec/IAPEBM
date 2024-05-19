@@ -319,7 +319,7 @@
         if(!image.deleted) {
           cadena += `
             <div class="col-6">
-              <img src="${imagePath + image['file']}" class="img-fluid img-thumbnail m-2" width="200" height="250">
+              <img src="${imagePath + image['file']}" class="img-fluid img-thumbnail mt-2" width="200" height="250">
               <button class="deleteImage form-control btn-danger p-2" id='${image['id']}'>Eliminar</button>
             </div>`;
         }
@@ -375,7 +375,7 @@
       contenedor.empty();
       for (let i = 0; i < formData.getAll('images[]').length; i++) {
         let div = $('<div class="col-6"></div>');
-        let img = $('<img class="img-fluid img-thumbnail m-2" width="200" height="250">');
+        let img = $('<img class="img-fluid img-thumbnail mt-2" width="200" height="250">');
         let botonEliminar = $(`<button class="deleteImagenNueva form-control btn-danger p-2" id="${i}">Eliminar</button>`);
 
         img.attr('src', URL.createObjectURL(formData.getAll('images[]')[i]));

@@ -229,20 +229,23 @@
 
                     <!-- imagenes nuevas -->
                     <div class="col-6 border border-dark">
-                      <div  id="divNewImages" class="row">imagenes por subir</div>
+                      <div class="h5 text-center">Imagenes a subir</div>
+
+                      <div id="divNewImages" class="row"></div>
+
+                      <div class="col mt-2">
+                        <input type="file" class="form-control" id="inputImage" accept="image/*">
+                      </div>
                     </div>
                     <!-- fin de imagenes nuevas -->
-
+                    
                     <!-- imagenes en servidor -->
-                    <div class="col-6 border-dark">
+                    <div class="col-6 border border-dark">
+                      <div class="h5 text-center">Imagenes en servidor</div>
+
                       <div  id="divImages" class="row"></div>
                     </div>
                     <!-- fin de imagenes en servidor -->
-
-                    <div class="col mt-2">
-                      <input type="file" class="form-control" id="inputImage" accept="image/*">
-                    </div>
-
                   </div>
                 </div>
               </div>
