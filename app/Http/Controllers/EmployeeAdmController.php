@@ -119,7 +119,18 @@ class EmployeeAdmController extends Controller
 
     $person->addresses()->delete();
     $person->addresses()->saveMany($addresses);
+
+    // actualizar las imagenes
+    foreach($request->images as $image){
+      if($image['deleted']) {
+        $employeeImage = PersonImage::find($image['id']);
+        $employeeImage->delete();
+        $fileImage = str_replace('/storage', 'public', $image['file']);
+        Storage::delete($fileImage);
+      }
+    };
     
+    //
     return response($person, Response::HTTP_OK);
   }
 
