@@ -42,7 +42,7 @@
     // datatable
     ///////////////////////////////////////////////////////////
 
-    let customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Empleado Administrativo</button>';
+    let customButton = '<button id="btnAgregar" class="btn btn-primary">Agregar Empleado Administrativo</button>';
     let datatable = $('#dtEmpleados').DataTable({
         "dom": '<"d-flex justify-content-between"l<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
         serverSide: true,
@@ -91,6 +91,46 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // agregar un empleado 
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnAgregar").click(function() {
+      person = {
+        id              : 0,
+        name            : '',
+        cedula          : '',
+        sex             : 'M',
+        birthday        : '01-01-1970',
+        place_of_birth  : '',
+        civil_status_id : 1,
+        blood_type_id   : 1,
+        email           : '',
+        notes           : '',
+        employee        : {
+          id            : 0,
+          person_id     : 0,
+          grupo_id      : 1,
+          codigo        : '',
+          fecha_ingreso : new Date(Date.now()).toLocaleDateString(),
+          employee_cargo_id     : null,
+          employee_condicion_id : null,
+          employee_tipo_id      : null,
+          employee_location_id  : null,
+          rif                   : '',
+          codigo_patria         : '',
+          religion              : '',
+          deporte               : '',
+          is_licencia           : false,
+          licencia_grado        : ''
+        },
+        phones          : [],
+        addresses       : [],
+        images          : []
+      };
+      makeForm();
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // boton editar empleado
     ///////////////////////////////////////////////////////////////////
 
@@ -104,9 +144,7 @@
       .then(responseJSON => {
         person = structuredClone(responseJSON);
         person.images.forEach(image => image.deleted = false);
-        formData = new FormData();
         makeForm();
-        $('#modalForm').modal('show');
       });
     });
 
@@ -116,6 +154,7 @@
 
     function makeForm()
     {
+      formData = new FormData();
       $("#modalTitle").html(person.name);
       $("#inputCedula").val(person.cedula);
       $("#inputRif").val(person.employee.rif);
@@ -133,6 +172,7 @@
       imprimirDirecciones();
       imprimirImagenes();
       imprimirImagenesNuevas();
+      $('#modalForm').modal('show');
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -146,6 +186,96 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#inputZonaPostal").inputmask(lib_digitMask());
+
+    ///////////////////////////////////////////////////////////////////
+    // validar formulario de persona
+    ///////////////////////////////////////////////////////////////////
+
+    $("#personForm").validate({
+      rules:{
+        inputCedula : {
+          required : true,
+          minlength: 7,
+          maxlength: 15
+        },
+        inputRif : {
+          required : true,
+          minlength: 10,
+          maxlength: 20
+        },
+        inputNombre : {
+          required : true,
+          maxlength: 200
+        },
+        inputBirthday : {
+          required : true
+        },
+        inputPlaceOfBirth : {
+          required : true,
+          maxlength: 200
+        },
+        inputEmail : {
+          required : true,
+          email:true,
+          maxlength: 255
+        }
+      },
+      messages: {
+        inputCedula: {
+          required : "Debe ingresar el número de cédula.",
+          minlength: "Debe ingresar mínimo 7 dígitos.",
+          maxlength: "Debe ingresar un máxiom de 15 dígitos."
+        },
+        inputRif: {
+          required : "Debe ingresar el número de R.I.F.",
+          minlength: "Debe ingresar mínimo 10 dígitos.",
+          maxlength: "Debe ingresar un máxiom de 20 dígitos."
+        },
+        inputNombre: {
+          required : "Debe ingresar el nombre del empleado.",
+          maxlength: "Debe ingresar un máxiom de 200 carácteres."
+        },
+        inputBirthday : {
+          required : "Debe ingresar la fecha de nacimiento."
+        },
+        inputPlaceOfBirth : {
+          required : "Debe ingresar el lugar de nacimiento.",
+          maxlength: "Debe ingresar un máximo de 200 carácteres."
+        },
+        inputEmail:{
+          required: "Deeb ingresar la dirección de correo electrónico.",
+          email: "Deeb ingresar una dirección de correo electrónico.",
+          maxlength: "Debe ingresar un máximo de 255 carácteres."
+        }
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.form-group').append(error);
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+      },
+      submitHandler: function (form, e) {
+        e.preventDefault();
+
+        if(person.phones.length < 1) {
+          lib_ShowMensaje("Debe ingresar al menos un número teléfonico!", "error");
+          return;
+        }
+
+        if(person.addresses.length < 1) {
+          lib_ShowMensaje("Debe ingresar al menos una dirección de ubicación!", "error");
+          return;
+        }
+
+        //
+        send();
+      }
+    });
 
     ///////////////////////////////////////////////////////////////////
     // imprimir telefonos
@@ -389,20 +519,21 @@
     // enviar los datos del empleado al servidor
     ///////////////////////////////////////////////////////////////////
 
-    $("#btnGrabar").click(function() {
-      if(person.phones.length < 1) {
-        lib_ShowMensaje("Debe ingresar al menos un teléfono!", "error");
-        return;
+    function send() {
+      let ruta;
+      let _method;
+
+      if(person.id == 0) {
+        ruta = "{{ route('employees-adm.store') }}";
+        _method = "POST";
+      }
+      else {
+        ruta = "{{ route('employees-adm.update', ['employees_adm' => '.valor']) }}";
+
+        ruta = ruta.replace('.valor', person.id);
+        _method = "PUT";
       }
 
-      if(person.addresses.length < 1) {
-        lib_ShowMensaje("Debe ingresar al menos una dirección!", "error");
-        return;
-      }
-
-      let ruta = "{{ route('employees-adm.update', ['employees_adm' => '.valor']) }}";
-
-      ruta = ruta.replace('.valor', person.id);
       person.cedula = $("#inputCedula").val();
       person.name = $("#inputNombre").val();
       person.sex = $("#selectSexo").val();
@@ -415,7 +546,7 @@
       person.employee.rif = $("#inputRif").val();
 
       fetch(ruta, {
-        method: "PUT",
+        method: _method,
         headers: {
           'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content'),
           'Content-Type'  : 'application/json',
@@ -429,18 +560,19 @@
           let postImagesRoute = "{{ route('employees-adm.add-images', ['cedula' => '.valor']) }}";
 
           postImagesRoute = postImagesRoute.replace('.valor', person.cedula);
-          fetch(postImagesRoute, {
+          console.log(postImagesRoute);
+          /* fetch(postImagesRoute, {
             method  : "POST",
             headers : {
               'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content')
             },
             body    : formData
-          });
+          }); */
         }
         datatable.ajax.reload();
         lib_ShowMensaje("Datos actualizados.");
       });
-    });
+    };
 
 
     ///////////////////////////////////////////////////////////////////

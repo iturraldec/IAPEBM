@@ -75,6 +75,19 @@ class EmployeeAdmController extends Controller
    */
   public function store(Request $request)
   {
+    $person = Person::create([
+      'cedula'          => $request->cedula, 
+      'name'            => $request->name, 
+      'sex'             => $request->sex, 
+      'birthday'        => $request->birthday, 
+      'place_of_birth'  => $request->place_of_birth, 
+      'email'           => $request->email, 
+      'civil_status_id'  => $request->civil_status_id, 
+      'blood_type_id'   => $request->blood_type_id, 
+      'notes'           => $request->notes
+    ]);
+
+    return response($person, 201);
   }
 
   /**

@@ -39,111 +39,114 @@
           <div class="card-body">
             <div class="tab-content" id="custom-tabs-one-tabContent">
               
-              <!-- tab home -->
+              <!-- tab principal -->
               <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-                <div class="row">
-                  <div class="col-3 form-group">
-                    <label for="inputCedula">Cédula</label>
-                    <input type="text" 
-                          class="form-control" 
-                          id="inputCedula" 
-                          name="inputCedula" 
-                          placeholder="No. de cédula"
-                    />
-                  </div>
+                <form id="personForm">
+                  <div class="row">
+                    <div class="col-3 form-group">
+                      <label for="inputCedula">Cédula</label>
+                      <input type="text" 
+                            class="form-control" 
+                            id="inputCedula" 
+                            name="inputCedula" 
+                            placeholder="No. de cédula"
+                      />
+                    </div>
 
-                  <div class="col-3 form-group">
-                    <label for="inputRif">R.I.F.</label>
-                    <input type="text" 
-                          class="form-control" 
-                          id="inputRif" 
-                          name="inputRif"
-                          placeholder="No. de R.I.F."
-                    />
-                  </div>
+                    <div class="col-3 form-group">
+                      <label for="inputRif">R.I.F.</label>
+                      <input type="text" 
+                            class="form-control" 
+                            id="inputRif" 
+                            name="inputRif"
+                            placeholder="No. de R.I.F."
+                            onkeyup="this.value = this.value.toUpperCase();"
+                      />
+                    </div>
 
-                  <div class="col-6 form-group">
-                    <label for="inputNombre">Nombre(s) y Apellido(s)</label>
-                    <input type="text" 
-                          class="form-control" 
-                          id="inputNombre"
-                          name="inputNombre"
-                          placeholder="Ingresa su nombre(s) y apellido(s)"
-                          onkeyup="this.value = this.value.toUpperCase();"
-                    />
-                  </div>
+                    <div class="col-6 form-group">
+                      <label for="inputNombre">Nombre(s) y Apellido(s)</label>
+                      <input type="text" 
+                            class="form-control" 
+                            id="inputNombre"
+                            name="inputNombre"
+                            placeholder="Ingresa su nombre(s) y apellido(s)"
+                            onkeyup="this.value = this.value.toUpperCase();"
+                      />
+                    </div>
 
-                  <div class="col-3 form-group">
-                    <label for="selectSexo">Sexo</label>
-                    <select id="selectSexo" class="form-control">
-                      <option value="M">MASCULINO</option>
-                      <option value="F">FEMENINO</option>
-                    </select>
-                  </div>
+                    <div class="col-3 form-group">
+                      <label for="selectSexo">Sexo</label>
+                      <select id="selectSexo" class="form-control">
+                        <option value="M">MASCULINO</option>
+                        <option value="F">FEMENINO</option>
+                      </select>
+                    </div>
 
-                  <div class="col-3 form-group">
-                    <label for="inputBirthday">Fecha de Nacimiento</label>
-                    <input type="date" class="form-control" id="inputBirthday" name="inputBirthday" />
-                  </div>
+                    <div class="col-3 form-group">
+                      <label for="inputBirthday">Fecha de Nacimiento</label>
+                      <input type="date" class="form-control" id="inputBirthday" name="inputBirthday" />
+                    </div>
 
-                  <div class="col-6 form-group">
-                    <label for="inputPlaceOfBirth">Lugar de Nacimiento</label>
-                    <input type="text"
-                          class="form-control"
-                          id="inputPlaceOfBirth"
-                          name="inputPlaceOfBirth"
-                          placeholder="Ingresa el lugar de nacimiento"
-                          onkeyup="this.value = this.value.toUpperCase();"
-                    />
-                  </div>
+                    <div class="col-6 form-group">
+                      <label for="inputPlaceOfBirth">Lugar de Nacimiento</label>
+                      <input type="text"
+                            class="form-control"
+                            id="inputPlaceOfBirth"
+                            name="inputPlaceOfBirth"
+                            placeholder="Ingresa el lugar de nacimiento"
+                            onkeyup="this.value = this.value.toUpperCase();"
+                      />
+                    </div>
 
-                  <div class="col-3 form-group">
-                    <label for="selectEstadoCivil">Estado Civil</label>
-                    <select id="selectEstadoCivil" class="form-control">
-                      @foreach($edoCivil as $estado)
-                        <option value="{{ $estado->id }}">{{ $estado->name }}</option>
-                      @endforeach
-                    </select>
-                  </div>
+                    <div class="col-3 form-group">
+                      <label for="selectEstadoCivil">Estado Civil</label>
+                      <select id="selectEstadoCivil" class="form-control">
+                        @foreach($edoCivil as $estado)
+                          <option value="{{ $estado->id }}">{{ $estado->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
 
-                  <div class="col-3 form-group">
-                    <label for="selectSangre">Tipo Sanguineo</label>
-                    <select id="selectSangre" class="form-control">
-                      @foreach($tipoSangre as $tipo)
-                        <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                  
-                  <div class="col-6 form-group">
-                    <label for="inputEmail">Correo Electrónico</label>
-                    <input type="email"
-                          class="form-control"
-                          id="inputEmail"
-                          name="inputEmail"
-                          placeholder="Ingresa el correo electrónico"
-                          onkeyup="this.value = this.value.toLowerCase();"
-                    />
-                  </div>
+                    <div class="col-3 form-group">
+                      <label for="selectSangre">Tipo Sanguineo</label>
+                      <select id="selectSangre" class="form-control">
+                        @foreach($tipoSangre as $tipo)
+                          <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                    
+                    <div class="col-6 form-group">
+                      <label for="inputEmail">Correo Electrónico</label>
+                      <input type="email"
+                            class="form-control"
+                            id="inputEmail"
+                            name="inputEmail"
+                            placeholder="Ingresa el correo electrónico"
+                            onkeyup="this.value = this.value.toLowerCase();"
+                      />
+                    </div>
 
-                  <div class="col-12 form-group">
-                    <label for="inputNotas">Observaciones</label>
-                    <textarea class="form-control"
-                              id="inputNotas"
-                              placeholder="Ingresa observaciones"
-                              rows="3"
-                              onkeyup="this.value = this.value.toUpperCase();"
-                    /></textarea>
-                  </div>
+                    <div class="col-12 form-group">
+                      <label for="inputNotas">Observaciones</label>
+                      <textarea class="form-control"
+                                id="inputNotas"
+                                placeholder="Ingresa observaciones"
+                                rows="3"
+                                onkeyup="this.value = this.value.toUpperCase();"
+                      /></textarea>
+                    </div>
 
-                  <div class="col">
-                    <button type="button" id="btnGrabar" class="btn btn-danger">Grabar</button>
-                    <button class="btn btn-secondary" data-dismiss="modal">Salir</button>
-                  </div>
+                    <div class="col">
+                      <button type="submit" id="btnGrabar" class="btn btn-danger">Grabar</button>
+                      <button class="btn btn-secondary" data-dismiss="modal">Salir</button>
+                    </div>
 
-                </div>
+                  </div>
+                </form>
               </div>
-              <!-- fin de tab home -->
+              <!-- fin de tab principal -->
               
               <!-- tab phones -->
               <div class="tab-pane fade" id="custom-tabs-one-phones" role="tabpanel" aria-labelledby="custom-tabs-one-phone-tab">
@@ -250,6 +253,7 @@
                 </div>
               </div>
               <!-- fin de tab de fotos -->
+
             </div>
           </div>
           <!-- /.card -->

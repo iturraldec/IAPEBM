@@ -13,6 +13,11 @@ class Person extends Model
     protected $table = 'people';
 
     //
+    protected $fillable = [
+        'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'email', 'civil_status_id', 'blood_type_id', 'notes'
+    ];
+
+    //
     public function employee() : HasOne
     {
         return $this->hasOne(Employee::class, 'person_id');
