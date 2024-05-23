@@ -22,7 +22,7 @@
           <div class="card-header p-0 pt-1">
             <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
               <li class="nav-item">
-                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Datos Personales</a>
+                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Identificación</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="custom-tabs-one-phones-tab" data-toggle="pill" href="#custom-tabs-one-phones" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Teléfono(s)</a>
@@ -31,7 +31,10 @@
                 <a class="nav-link" id="custom-tabs-one-adresses-tab" data-toggle="pill" href="#custom-tabs-one-adresses" role="tab" aria-controls="custom-tabs-one-adresses" aria-selected="false">Dirección(es)</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-images" role="tab" aria-controls="custom-tabs-one-images" aria-selected="false">Imagenes</a>
+                <a class="nav-link" id="custom-tabs-one-images-tab" data-toggle="pill" href="#custom-tabs-one-images" role="tab" aria-controls="custom-tabs-one-images" aria-selected="false">Imagenes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-one-admin-tab" data-toggle="pill" href="#custom-tabs-one-admin" role="tab" aria-controls="custom-tabs-one-admin" aria-selected="false">Administración</a>
               </li>
             </ul>
           </div>
@@ -253,6 +256,111 @@
                 </div>
               </div>
               <!-- fin de tab de fotos -->
+
+              <!-- tab datos administrativos -->
+              <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
+                <form id="adminForm">
+                  <div class="row">
+                    <div class="col-4 form-group">
+                      <label for="inputCodigo">Código Administrativo</label>
+                      <input type="text" 
+                            class="form-control" 
+                            id="inputCodigo" 
+                            name="inputCodigo" 
+                            placeholder="No. de código"
+                      />
+                    </div>
+
+                    <div class="col-4 form-group">
+                      <label for="inputFechaIngreso">Fecha de Ingreso</label>
+                      <input type="date"
+                            class="form-control" 
+                            id="inputFechaIngreso" 
+                            name="inputFechaIngreso"
+                      />
+                    </div>
+
+                    <div class="col-4 form-group">
+                      <label for="selectCargo">Cargo</label>
+                      <select id="selectCargo" class="form-control">
+                        @foreach($cargos as $cargo)
+                          <option value="{{ $cargo->id }}">{{ $cargo->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+
+                    <div class="col-4 form-group">
+                      <label for="selectStatus">Condición</label>
+                      <select id="selectStatus" class="form-control">
+                        @foreach($status as $condicion)
+                          <option value="{{ $condicion->id }}">{{ $condicion->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+
+                    <div class="col-4 form-group">
+                      <label for="selectTipos">Tipo</label>
+                      <select id="selectTipos" class="form-control">
+                        @foreach($tipos as $tipo)
+                          <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+
+                    <div class="col-4 form-group">
+                      <label for="selectUbicaciones">Ubicación</label>
+                      <select id="selectUbicaciones" class="form-control">
+                        @foreach($ubicaciones as $ubicacion)
+                          <option value="{{ $ubicacion->id }}">{{ $ubicacion->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                    
+                    <div class="col-4 form-group">
+                      <label for="inputPatria">Código Patria</label>
+                      <input type="text"
+                            class="form-control"
+                            id="inputPatria"
+                            name="inputPatria"
+                            placeholder="Ingresa el código patria"
+                      />
+                    </div>
+
+                    <div class="col-4 form-group">
+                      <label for="inputReligion">Religión</label>
+                      <input type="text"
+                            class="form-control"
+                            id="inputReligion"
+                            name="inputReligion"
+                            placeholder="Religión prefesada por el empleado"
+                            onkeyup="this.value = this.value.toUpperCase();"
+                      />
+                    </div>
+
+                    <div class="col-4 form-group">
+                      <label for="inputDeporte">Deporte</label>
+                      <input type="text"
+                            class="form-control"
+                            id="inputDeporte"
+                            name="inputDeporte"
+                            placeholder="Deporte practicado por el empleado"
+                            onkeyup="this.value = this.value.toUpperCase();"
+                      />
+                    </div>
+
+                    <div class="col-4 form-group">
+                      <label for="inputLicencia">Licencia</label>
+                      <input type="text"
+                            class="form-control"
+                            id="inputLicencia"
+                            name="inputLicencia"
+                            placeholder="Ingrese la licencia"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- fin de datos administrativos -->
 
             </div>
           </div>

@@ -38,6 +38,10 @@
     var parroquias  = {{ Js::from($parroquias) }};
     var emptyImages = 'Sin imagenes en servidor.';
 
+    jQuery.validator.setDefaults({
+      debug: true
+    });
+
     ///////////////////////////////////////////////////////////
     // datatable
     ///////////////////////////////////////////////////////////
@@ -120,7 +124,6 @@
           codigo_patria         : '',
           religion              : '',
           deporte               : '',
-          is_licencia           : false,
           licencia_grado        : ''
         },
         phones          : [],
@@ -168,6 +171,8 @@
       $("#inputNotas").val(person.notes);
       $("#selectMunicipio").val("0");
       $("#selectParroquia").empty();
+      $("#inputCodigo").val(person.employee.codigo);
+      $("#inputFechaIngreso").val(person.employee.fecha_ingreso);
       imprimirTelefonos();
       imprimirDirecciones();
       imprimirImagenes();
@@ -273,7 +278,7 @@
         }
 
         //
-        send();
+        $('#adminForm').submit();
       }
     });
 
@@ -516,10 +521,84 @@
     };
 
     ///////////////////////////////////////////////////////////////////
+    // formulario de datos administrativos
+    ///////////////////////////////////////////////////////////////////
+
+    $('#adminForm').validate({
+      rules: {
+        inputCodigo: {
+          required: true,
+          maxlength: 20
+        },
+        inputFechaIngreso: {
+          required: true
+        },
+        inputPatria: {
+          required: true,
+          maxlength: 20
+        },
+        inputReligion: {
+          required: true,
+          maxlength: 100
+        },
+        inputDeporte: {
+          required: true,
+          maxlength: 100
+        },
+        inputLicencia: {
+          required: true,
+          maxlength: 100
+        }
+      },
+      messages: {
+        inputCodigo: {
+          required: "Debes ingresar el Código Administrativo.",
+          maxlength: "Debes ingresar máximo 20 digitos."
+        },
+        inputFechaIngreso: {
+          required: "Debes ingresar la fecha de ingreso."
+        },
+        inputPatria: {
+          required: "Debes ingresar el Código del Carnet Patria.",
+          maxlength: "Debes ingresar máximo 20 digitos."
+        },
+        inputReligion: {
+          required: "Debes ingresar la religión profesada por el empleado.",
+          maxlength: "Debes ingresar máximo 100 digitos."
+        },
+        inputDeporte: {
+          required: "Debes ingresar el deporte practicado por el empleado.",
+          maxlength: "Debes ingresar máximo 100 digitos."
+        },
+        inputLicencia: {
+          required: "Debes ingresar el tipo de licencia del empleado.",
+          maxlength: "Debes ingresar máximo 100 digitos."
+        }
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.form-group').append(error);
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+      },
+      submitHandler: function (form, e) {
+        e.preventDefault();
+
+        alert("vengo?");
+      }
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // enviar los datos del empleado al servidor
     ///////////////////////////////////////////////////////////////////
 
     function send() {
+      return;
       let ruta;
       let _method;
 
@@ -544,6 +623,15 @@
       person.email = $("#inputEmail").val();
       person.notes = $("#inputNotas").val();
       person.employee.rif = $("#inputRif").val();
+      person.employee.codigo = 'input';// $("#inputRif").val(); 
+      person.employee.employee_cargo_id = 1;// $("#inputRif").val(); 
+      person.employee.employee_condicion_id = 1;// $("#inputRif").val(); 
+      person.employee.employee_tipo_id = 1;// $("#inputRif").val(); 
+      person.employee.employee_location_id = 1;// $("#inputRif").val(); 
+      person.employee.codigo_patria = 'patria';// $("#inputRif").val(); 
+      person.employee.religion = 'religion';// $("#inputRif").val(); 
+      person.employee.deporte = 'deporte';// $("#inputRif").val(); 
+      person.employee.licencia_grado = 'licencia';// $("#inputRif").val(); 
 
       fetch(ruta, {
         method: _method,

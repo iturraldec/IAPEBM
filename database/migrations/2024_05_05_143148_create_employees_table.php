@@ -23,10 +23,9 @@ return new class extends Migration
             $table->unsignedSmallInteger('employee_location_id')->nullable();
             $table->string('rif', 20);
             $table->string('codigo_patria', 20)->nullable();
-            $table->string('religion');
-            $table->string('deporte');
-            $table->boolean('is_licencia')->default(false);
-            $table->string('licencia_grado')->nullable();
+            $table->string('religion', 100)->nullable();
+            $table->string('deporte', 100)->nullable();
+            $table->string('licencia_grado', 100)->nullable();
             $table->timestamps();
             $table->softDeletes();
 

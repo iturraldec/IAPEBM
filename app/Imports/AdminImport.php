@@ -80,7 +80,6 @@ class AdminImport implements ToCollection, WithHeadingRow
                 'rif' => $row['rif_usr'],
                 'religion' => $row['religion_usr'],
                 'deporte' => $row['deportes_usr'],
-                'is_licencia' => ($row['licen_usr'] == 'NO') ? false : true,
                 'licencia_grado' => $row['gradolicen_usr'],
             ];
             

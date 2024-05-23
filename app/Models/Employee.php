@@ -14,7 +14,15 @@ class Employee extends Model
         'grupo_id',
         'codigo',
         'fecha_ingreso',
-        'employee_cargo_id'
+        'employee_cargo_id',
+        'employee_condicion_id',
+        'employee_tipo_id',
+        'employee_location_id',
+        'rif',
+        'codigo_patria',
+        'religion',
+        'deporte',
+        'licencia_grado',
     ];
 
     //

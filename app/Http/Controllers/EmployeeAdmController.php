@@ -2,20 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Address;
-use App\Models\BloodType;
-use App\Models\CivilStatus;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
 use Illuminate\Support\Facades\Storage;
+use \DateTime;
 
+use App\Models\Address;
+use App\Models\BloodType;
+use App\Models\CivilStatus;
 use App\Models\Employee;
 use App\Models\Person;
 use App\Models\PhoneType;
 use App\Models\Location;
 use App\Models\PersonImage;
 use App\Models\Phone;
+use App\Models\Cargo;
+use App\Models\EmployeeStatus;
+use App\Models\EmployeeTipos;
+use App\Models\EmployeeLocations;
 
 //
 class EmployeeAdmController extends Controller
@@ -42,8 +47,13 @@ class EmployeeAdmController extends Controller
       $parroquias   = $location->getParroquias();
       $edoCivil     = CivilStatus::get();
       $tipoSangre   = BloodType::get();
+      $cargos       = Cargo::OrderBy('name')->get();
+      $status       = EmployeeStatus::OrderBy('name')->get();
+      $tipos        = EmployeeTipos::OrderBy('name')->get();
+      $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
 
-      return view('employee-adm.index', compact('phone_types', 'municipios', 'parroquias', 'edoCivil', 'tipoSangre'));
+      return view('employee-adm.index', compact('phone_types', 'municipios', 
+                  'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones'));
     }
   }
 
@@ -70,11 +80,43 @@ class EmployeeAdmController extends Controller
     //return view('employee-adm.view', compact('data'));
   }
 
+  //
+  private function _addPhones($person, $_phones)
+  {
+    $phone = [];
+    foreach($_phones as $phone) {
+      $phones[] = new Phone([
+                    'phone_type_id' => $phone['phone_type_id'],
+                    'number'        => $phone['number']
+                  ]);
+    };
+
+    $person->phones()->delete();
+    $person->phones()->saveMany($phones);
+  }
+
+  //
+  private function _addAddresses($person, $_addresses)
+  {
+    $addresses = [];
+    foreach($_addresses as $address) {
+      $addresses[] = new Address([
+                    'address'       => $address['address'],
+                    'parroquia_id'  => $address['parroquia_id'],
+                    'zona_postal'   => $address['zona_postal']
+                  ]);
+    };
+
+    $person->addresses()->delete();
+    $person->addresses()->saveMany($addresses);
+  }
+
   /**
    * Store a newly created resource in storage.
    */
   public function store(Request $request)
   {
+    // agrego la persona
     $person = Person::create([
       'cedula'          => $request->cedula, 
       'name'            => $request->name, 
@@ -87,6 +129,30 @@ class EmployeeAdmController extends Controller
       'notes'           => $request->notes
     ]);
 
+    // agrego al empleado administrativo
+    $employee = Employee::create([
+      'person_id'               => $person->id,
+      'grupo_id'                => 1,
+      'codigo'                  => $request->employee['codigo'],
+      'fecha_ingreso'           => DateTime::createFromFormat('d/m/Y', $request->employee['fecha_ingreso'])->format('Y-m-d'),
+      'employee_cargo_id'       => $request->employee['employee_cargo_id'],
+      'employee_condicion_id'   => $request->employee['employee_condicion_id'],
+      'employee_tipo_id'        => $request->employee['employee_tipo_id'],
+      'employee_location_id'    => $request->employee['employee_location_id'],
+      'rif'                     => $request->employee['rif'],
+      'codigo_patria'           => $request->employee['codigo_patria'],
+      'religion'                => $request->employee['religion'],
+      'deporte'                 => $request->employee['deporte'],
+      'licencia_grado'          => $request->employee['licencia_grado'],
+    ]);
+
+    // agregar telefonos
+    $this->_addPhones($person, $request->phones);
+
+    // agregar direcciones
+    $this->_addAddresses($person, $request->addresses);
+
+    //
     return response($person, 201);
   }
 
@@ -109,29 +175,10 @@ class EmployeeAdmController extends Controller
     $person->save();
 
     // modifico sus telefonos
-    $phones = [];
-    foreach($request->phones as $phone) {
-      $phones[] = new Phone([
-                    'phone_type_id' => $phone['phone_type_id'],
-                    'number' => $phone['number']
-                  ]);
-    };
+    $this->_addPhones($person, $request->phones);
 
-    $person->phones()->delete();
-    $person->phones()->saveMany($phones);
-
-    // modifico sus direcciones
-    $addresses = [];
-    foreach($request->addresses as $address) {
-      $addresses[] = new Address([
-                    'address' => $address['address'],
-                    'parroquia_id' => $address['parroquia_id'],
-                    'zona_postal' => $address['zona_postal']
-                  ]);
-    };
-
-    $person->addresses()->delete();
-    $person->addresses()->saveMany($addresses);
+    // modificar direcciones
+    $this->_addAddresses($person, $request->addresses);
 
     // actualizar las imagenes
     foreach($request->images as $image){
