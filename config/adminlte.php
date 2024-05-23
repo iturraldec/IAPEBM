@@ -461,7 +461,7 @@ return [
             ]
         ],
         'dropzone' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'css',
@@ -472,6 +472,21 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'vendor/dropzone/min/dropzone.min.js'
+                ]
+            ]
+        ],
+        'toastr' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/toastr/toastr.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/toastr/toastr.min.js'
                 ]
             ]
         ]

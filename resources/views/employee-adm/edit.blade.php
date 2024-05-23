@@ -259,7 +259,7 @@
 
               <!-- tab datos administrativos -->
               <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
-                <form id="adminForm">
+
                   <div class="row">
                     <div class="col-4 form-group">
                       <label for="inputCodigo">Código Administrativo</label>
@@ -358,7 +358,7 @@
                       />
                     </div>
                   </div>
-                </form>
+
               </div>
               <!-- fin de datos administrativos -->
 

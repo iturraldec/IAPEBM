@@ -161,6 +161,16 @@ class EmployeeAdmController extends Controller
    */
   public function update(Request $request, Employee $employees_adm)
   {
+    $request->validate([
+      'employee.codigo'         => 'required',
+      'employee.codigo_patria'  => 'required',
+      'employee.religion'       => 'required',
+      'employee.deporte'        => 'required',
+      'employee.licencia'       => 'required',
+    ]);
+
+    return response($request->all());
+
     // modifico la persona
     $person = Person::find($employees_adm->person_id);
     $person->cedula = $request->cedula;

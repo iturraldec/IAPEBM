@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('codigo_patria', 20)->nullable();
             $table->string('religion', 100)->nullable();
             $table->string('deporte', 100)->nullable();
-            $table->string('licencia_grado', 100)->nullable();
+            $table->string('licencia', 100)->nullable();
             $table->timestamps();
             $table->softDeletes();
 

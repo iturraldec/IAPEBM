@@ -37,10 +37,9 @@
     var municipios  = {{ Js::from($municipios) }};
     var parroquias  = {{ Js::from($parroquias) }};
     var emptyImages = 'Sin imagenes en servidor.';
-
-    jQuery.validator.setDefaults({
-      debug: true
-    });
+    toastr.options.closeButton = true;
+    toastr.options.timeOut = 0;
+    toastr.options.extendedTimeOut = 0;
 
     ///////////////////////////////////////////////////////////
     // datatable
@@ -173,6 +172,10 @@
       $("#selectParroquia").empty();
       $("#inputCodigo").val(person.employee.codigo);
       $("#inputFechaIngreso").val(person.employee.fecha_ingreso);
+      $("#inputPatria").val(person.employee.codigo_patria);
+      $("#inputReligion").val(person.employee.religion);
+      $("#inputDeporte").val(person.employee.deporte);
+      $("#inputLicencia").val(person.employee.licencia);
       imprimirTelefonos();
       imprimirDirecciones();
       imprimirImagenes();
@@ -278,7 +281,7 @@
         }
 
         //
-        $('#adminForm').submit();
+        send();
       }
     });
 
@@ -598,7 +601,6 @@
     ///////////////////////////////////////////////////////////////////
 
     function send() {
-      return;
       let ruta;
       let _method;
 
@@ -623,15 +625,12 @@
       person.email = $("#inputEmail").val();
       person.notes = $("#inputNotas").val();
       person.employee.rif = $("#inputRif").val();
-      person.employee.codigo = 'input';// $("#inputRif").val(); 
-      person.employee.employee_cargo_id = 1;// $("#inputRif").val(); 
-      person.employee.employee_condicion_id = 1;// $("#inputRif").val(); 
-      person.employee.employee_tipo_id = 1;// $("#inputRif").val(); 
-      person.employee.employee_location_id = 1;// $("#inputRif").val(); 
-      person.employee.codigo_patria = 'patria';// $("#inputRif").val(); 
-      person.employee.religion = 'religion';// $("#inputRif").val(); 
-      person.employee.deporte = 'deporte';// $("#inputRif").val(); 
-      person.employee.licencia_grado = 'licencia';// $("#inputRif").val(); 
+      person.employee.codigo = $("#inputCodigo").val(); 
+      person.employee.fecha_ingreso = $("#inputFechaIngreso").val();
+      person.employee.codigo_patria = $("#inputPatria").val(); 
+      person.employee.religion = $("#inputReligion").val(); 
+      person.employee.deporte = $("#inputDeporte").val(); 
+      person.employee.licencia = $("#inputLicencia").val(); 
 
       fetch(ruta, {
         method: _method,
@@ -642,25 +641,39 @@
         },
         body: JSON.stringify(person)
       })
-      .then(response => response.json())
+      .then(response => {
+        if(response.ok) lib_ShowMensaje("Datos actualizados.")
+        else {
+          response.text().then(r => {
+            let errores = JSON.parse(r);
+
+            for (let propiedad in errores.errors) {
+              errores.errors[propiedad].forEach(error => toastr.error(error, 'Atención'));
+            }
+          });
+        }
+      })
+    };
+        /*
       .then(data => {
+        console.log(data);
         if(formData.has('images[]')) {
           let postImagesRoute = "{{ route('employees-adm.add-images', ['cedula' => '.valor']) }}";
 
           postImagesRoute = postImagesRoute.replace('.valor', person.cedula);
-          console.log(postImagesRoute);
-          /* fetch(postImagesRoute, {
+          fetch(postImagesRoute, {
             method  : "POST",
             headers : {
               'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content')
             },
             body    : formData
-          }); */
+          });
         }
         datatable.ajax.reload();
-        lib_ShowMensaje("Datos actualizados.");
-      });
-    };
+        lib_ShowMensaje("Datos actualizados."); 
+      })
+      .catch(errors => errors.json())
+      .then(mensajeErrores => console.log(mensajeErrores));*/
 
 
     ///////////////////////////////////////////////////////////////////

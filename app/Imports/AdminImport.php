@@ -80,7 +80,7 @@ class AdminImport implements ToCollection, WithHeadingRow
                 'rif' => $row['rif_usr'],
                 'religion' => $row['religion_usr'],
                 'deporte' => $row['deportes_usr'],
-                'licencia_grado' => $row['gradolicen_usr'],
+                'licencia' => $row['gradolicen_usr'],
             ];
             
             $empleado_id = DB::table('employees')->insertGetId($record);
