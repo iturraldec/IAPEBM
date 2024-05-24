@@ -54,24 +54,31 @@ function lib_Confirmar(titulo) {
 }
 
 // objeto solo letras y espacio
-function lib_characterMask()
-{
+function lib_characterMask() {
    return {regex:"[A-Za-z\\s]+"};
 }
 
 // objeto solo numeros
-function lib_digitMask()
-{
+function lib_digitMask() {
    return {regex:"\\d+"};
 }
 
 // filtro para telefonos
-function lib_phoneMask()
-{
+function lib_phoneMask() {
    return {regex:"[\\d\\s-]+"};
 }
 
 // retorna un random entero
 function lib_getRandomInt(max) {
    return Math.floor(Math.random() * max);
+}
+
+// mensaje de tipos toastr
+function lib_toastr(mensajes, tipo = 'error') {
+   if(Array.isArray(mensajes)) {
+      mensajes.forEach(mensaje => toastr.error(mensaje, 'Atención'));
+   }
+   else {
+      toastr.error(mensajes, 'Atención');
+   }
 }

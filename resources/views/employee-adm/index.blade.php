@@ -312,35 +312,15 @@
     ///////////////////////////////////////////////////////////////////
     // agregar telefono
     ///////////////////////////////////////////////////////////////////
-
-    $('#phoneForm').validate({
-      rules: {
-        inputPhone: {
-          required: true
-        },
-      },
-      messages: {
-        inputPhone: {
-          required: "Debes ingresar el número de teléfono."
-        },
-      },
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.input-group').append(error);
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-      },
-      submitHandler: function (form, e) {
-        e.preventDefault();
-
-        let phoneTypeId = $("#selectPhoneType :selected").val();
-        let phoneTypeName = $("#selectPhoneType :selected").text();
-        let number = $("#inputPhone").val();
+    $("#btnAddPhone").click(function() {
+      let phoneTypeId   = $("#selectPhoneType :selected").val();
+      let phoneTypeName = $("#selectPhoneType :selected").text();
+      let number        = $("#inputPhone").val();
+      
+      if(lib_isEmpty(number)) {
+        lib_toastr("Error: Debe ingresar un número de teléfono!");
+      }
+      else {
         let phone = {
           phone_type_id   : phoneTypeId,
           number          : number,
@@ -389,50 +369,28 @@
     // agregar direccion
     ///////////////////////////////////////////////////////////////////
 
-    $('#addressForm').validate({
-      rules: {
-        inputAddress: {
-          required: true
-        },
-        inputZonaPostal: {
-          required: true,
-          maxlength: 10
-        }
-      },
-      messages: {
-        inputAddress: {
-          required: "Debes ingresar una direeción."
-        },
-        inputZonaPostal: {
-          required: "Debes ingresar la zona postal de la dirección.",
-          maxlength: "Debes ingresar máximo 10 digitos."
-        },
-      },
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.input-group').append(error);
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-      },
-      submitHandler: function (form, e) {
-        e.preventDefault();
-
-        let address = {
+    $("#btnAddAddress").click(function() {
+      let address = {
           address       : $("#inputAddress").val(),
           parroquia_id  : $("#selectParroquia :selected").val(),
           zona_postal   : $("#inputZonaPostal").val()
         };
 
-        person.addresses.push(address);
-        $("#inputAddress").val("");
-        $("#inputZonaPostal").val("");
-        imprimirDirecciones();
-      }
+        if(lib_isEmpty(address.address)) {
+          lib_toastr("Error: Debe ingresar una dirección!");
+        }
+        else if(lib_isEmpty(address.zona_postal)) {
+          lib_toastr("Error: Debe ingresar la zona postal!");
+        }
+        else if(address.zona_postal.length > 10) {
+          lib_toastr("Error: La zona postal no puede exceder de 10 caracteres!");
+        }
+        else {
+          person.addresses.push(address);
+          $("#inputAddress").val("");
+          $("#inputZonaPostal").val("");
+          imprimirDirecciones();
+        }
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -642,39 +600,33 @@
         body: JSON.stringify(person)
       })
       .then(response => {
-        if(response.ok) lib_ShowMensaje("Datos actualizados.")
+        if(response.ok) {
+          if(formData.has('images[]')) {
+            let postImagesRoute = "{{ route('employees-adm.add-images', ['cedula' => '.valor']) }}";
+
+            postImagesRoute = postImagesRoute.replace('.valor', person.cedula);
+            fetch(postImagesRoute, {
+              method  : "POST",
+              headers : {
+                'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content')
+              },
+              body    : formData
+            });
+          };
+          
+          lib_ShowMensaje("Datos actualizados.");
+        }
         else {
           response.text().then(r => {
             let errores = JSON.parse(r);
 
             for (let propiedad in errores.errors) {
-              errores.errors[propiedad].forEach(error => toastr.error(error, 'Atención'));
+              lib_toastr(errores.errors[propiedad]);
             }
           });
         }
       })
     };
-        /*
-      .then(data => {
-        console.log(data);
-        if(formData.has('images[]')) {
-          let postImagesRoute = "{{ route('employees-adm.add-images', ['cedula' => '.valor']) }}";
-
-          postImagesRoute = postImagesRoute.replace('.valor', person.cedula);
-          fetch(postImagesRoute, {
-            method  : "POST",
-            headers : {
-              'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content')
-            },
-            body    : formData
-          });
-        }
-        datatable.ajax.reload();
-        lib_ShowMensaje("Datos actualizados."); 
-      })
-      .catch(errors => errors.json())
-      .then(mensajeErrores => console.log(mensajeErrores));*/
-
 
     ///////////////////////////////////////////////////////////////////
     // eliminar empleado

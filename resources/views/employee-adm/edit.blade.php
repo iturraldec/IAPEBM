@@ -153,78 +153,75 @@
               
               <!-- tab phones -->
               <div class="tab-pane fade" id="custom-tabs-one-phones" role="tabpanel" aria-labelledby="custom-tabs-one-phone-tab">
-                <form id="phoneForm">
-                  <div class="row">
-                    <div class="col-6">
-                      <select id="selectPhoneType" class="form-control">
-                        @foreach ($phone_types as $phone_type)
-                          <option value="{{ $phone_type->id }}">{{ $phone_type->name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
+                <div class="row">
+                  <div class="col-6">
+                    <select id="selectPhoneType" class="form-control">
+                      @foreach ($phone_types as $phone_type)
+                        <option value="{{ $phone_type->id }}">{{ $phone_type->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
 
-                    <div class="col-6">
-                      <div class="input-group mb-2">
-                        <input type="text" id="inputPhone" name="inputPhone" class="form-control" placeholder="Ingresa número de teléfono">
-                        <div class="input-group-append">
-                          <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
-                        </div>
+                  <div class="col-6">
+                    <div class="input-group mb-2">
+                      <input type="text" id="inputPhone" name="inputPhone" class="form-control" placeholder="Ingresa número de teléfono">
+                      <div class="input-group-append">
+                        <button type="button" id="btnAddPhone" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
                       </div>
                     </div>
-                  
-                    <div id="divPhones"></div>
                   </div>
-                </form>
+                
+                  <div id="divPhones"></div>
+                </div>
               </div>
               <!-- fin de tab phones -->
 
               <!-- tab de direcciones -->
               <div class="tab-pane fade" id="custom-tabs-one-adresses" role="tabpanel" aria-labelledby="custom-tabs-one-adresses-tab">
-                <form id="addressForm">
-                  <div class="row">
-                    <div class="col-6">
-                      <label for="selectMunicipio">Municipio</label>
-                      <select id="selectMunicipio" class="form-control">
-                        <option value="0">SELECCIONE MUNICIPIO</option>
-                        @foreach ($municipios as $municipio)
-                          <option value="{{ $municipio->id }}">{{ $municipio->name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-
-                    <div class="col-6">
-                      <label for="selectParroquia">Parroquia</label>
-                      <select id="selectParroquia" class="form-control"></select>
-                    </div>
-
-                    <div class="col my-2">
-                      <label for="inputZonaPostal">Dirección y Zona Postal</label>
-                      <input type="text" 
-                            id="inputAddress" 
-                            name="inputAddress" 
-                            class="form-control" 
-                            placeholder="Ingresa la dirección"
-                            onkeyup="this.value = this.value.toUpperCase();"
-                      >
-                    </div>
-
-                    <div class="input-group mb-2">
-                      <input type"text" 
-                            id="inputZonaPostal" 
-                            name="inputZonaPostal" 
-                            class="form-control" 
-                            placeholder="Ingrese la zona postal"
-                      />
-                      <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
-                      </div>
-                    </div>
-
+                <div class="row">
+                  <div class="col-6">
+                    <label for="selectMunicipio">Municipio</label>
+                    <select id="selectMunicipio" class="form-control">
+                      <option value="0">SELECCIONE MUNICIPIO</option>
+                      @foreach ($municipios as $municipio)
+                        <option value="{{ $municipio->id }}">{{ $municipio->name }}</option>
+                      @endforeach
+                    </select>
                   </div>
 
-                  <div id="divAddresses"></div>
-                  
-                </form>
+                  <div class="col-6">
+                    <label for="selectParroquia">Parroquia</label>
+                    <select id="selectParroquia" class="form-control"></select>
+                  </div>
+
+                  <div class="col my-2">
+                    <label for="inputZonaPostal">Dirección y Zona Postal</label>
+                    <input type="text" 
+                          id="inputAddress" 
+                          name="inputAddress" 
+                          class="form-control" 
+                          placeholder="Ingresa la dirección"
+                          onkeyup="this.value = this.value.toUpperCase();"
+                    >
+                  </div>
+
+                  <div class="input-group mb-2">
+                    <input type"text" 
+                          id="inputZonaPostal" 
+                          name="inputZonaPostal" 
+                          class="form-control" 
+                          placeholder="Ingrese la zona postal"
+                    />
+
+                    <div class="input-group-append">
+                      <button type="buttond" id="btnAddAddress" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div id="divAddresses"></div>
+
               </div>
               <!-- fin de tab de direcciones -->
 
@@ -259,106 +256,104 @@
 
               <!-- tab datos administrativos -->
               <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
-
-                  <div class="row">
-                    <div class="col-4 form-group">
-                      <label for="inputCodigo">Código Administrativo</label>
-                      <input type="text" 
-                            class="form-control" 
-                            id="inputCodigo" 
-                            name="inputCodigo" 
-                            placeholder="No. de código"
-                      />
-                    </div>
-
-                    <div class="col-4 form-group">
-                      <label for="inputFechaIngreso">Fecha de Ingreso</label>
-                      <input type="date"
-                            class="form-control" 
-                            id="inputFechaIngreso" 
-                            name="inputFechaIngreso"
-                      />
-                    </div>
-
-                    <div class="col-4 form-group">
-                      <label for="selectCargo">Cargo</label>
-                      <select id="selectCargo" class="form-control">
-                        @foreach($cargos as $cargo)
-                          <option value="{{ $cargo->id }}">{{ $cargo->name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-
-                    <div class="col-4 form-group">
-                      <label for="selectStatus">Condición</label>
-                      <select id="selectStatus" class="form-control">
-                        @foreach($status as $condicion)
-                          <option value="{{ $condicion->id }}">{{ $condicion->name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-
-                    <div class="col-4 form-group">
-                      <label for="selectTipos">Tipo</label>
-                      <select id="selectTipos" class="form-control">
-                        @foreach($tipos as $tipo)
-                          <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-
-                    <div class="col-4 form-group">
-                      <label for="selectUbicaciones">Ubicación</label>
-                      <select id="selectUbicaciones" class="form-control">
-                        @foreach($ubicaciones as $ubicacion)
-                          <option value="{{ $ubicacion->id }}">{{ $ubicacion->name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                    
-                    <div class="col-4 form-group">
-                      <label for="inputPatria">Código Patria</label>
-                      <input type="text"
-                            class="form-control"
-                            id="inputPatria"
-                            name="inputPatria"
-                            placeholder="Ingresa el código patria"
-                      />
-                    </div>
-
-                    <div class="col-4 form-group">
-                      <label for="inputReligion">Religión</label>
-                      <input type="text"
-                            class="form-control"
-                            id="inputReligion"
-                            name="inputReligion"
-                            placeholder="Religión prefesada por el empleado"
-                            onkeyup="this.value = this.value.toUpperCase();"
-                      />
-                    </div>
-
-                    <div class="col-4 form-group">
-                      <label for="inputDeporte">Deporte</label>
-                      <input type="text"
-                            class="form-control"
-                            id="inputDeporte"
-                            name="inputDeporte"
-                            placeholder="Deporte practicado por el empleado"
-                            onkeyup="this.value = this.value.toUpperCase();"
-                      />
-                    </div>
-
-                    <div class="col-4 form-group">
-                      <label for="inputLicencia">Licencia</label>
-                      <input type="text"
-                            class="form-control"
-                            id="inputLicencia"
-                            name="inputLicencia"
-                            placeholder="Ingrese la licencia"
-                      />
-                    </div>
+                <div class="row">
+                  <div class="col-4 form-group">
+                    <label for="inputCodigo">Código Administrativo</label>
+                    <input type="text" 
+                          class="form-control" 
+                          id="inputCodigo" 
+                          name="inputCodigo" 
+                          placeholder="No. de código"
+                    />
                   </div>
 
+                  <div class="col-4 form-group">
+                    <label for="inputFechaIngreso">Fecha de Ingreso</label>
+                    <input type="date"
+                          class="form-control" 
+                          id="inputFechaIngreso" 
+                          name="inputFechaIngreso"
+                    />
+                  </div>
+
+                  <div class="col-4 form-group">
+                    <label for="selectCargo">Cargo</label>
+                    <select id="selectCargo" class="form-control">
+                      @foreach($cargos as $cargo)
+                        <option value="{{ $cargo->id }}">{{ $cargo->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+
+                  <div class="col-4 form-group">
+                    <label for="selectStatus">Condición</label>
+                    <select id="selectStatus" class="form-control">
+                      @foreach($status as $condicion)
+                        <option value="{{ $condicion->id }}">{{ $condicion->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+
+                  <div class="col-4 form-group">
+                    <label for="selectTipos">Tipo</label>
+                    <select id="selectTipos" class="form-control">
+                      @foreach($tipos as $tipo)
+                        <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+
+                  <div class="col-4 form-group">
+                    <label for="selectUbicaciones">Ubicación</label>
+                    <select id="selectUbicaciones" class="form-control">
+                      @foreach($ubicaciones as $ubicacion)
+                        <option value="{{ $ubicacion->id }}">{{ $ubicacion->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  
+                  <div class="col-4 form-group">
+                    <label for="inputPatria">Código Patria</label>
+                    <input type="text"
+                          class="form-control"
+                          id="inputPatria"
+                          name="inputPatria"
+                          placeholder="Ingresa el código patria"
+                    />
+                  </div>
+
+                  <div class="col-4 form-group">
+                    <label for="inputReligion">Religión</label>
+                    <input type="text"
+                          class="form-control"
+                          id="inputReligion"
+                          name="inputReligion"
+                          placeholder="Religión prefesada por el empleado"
+                          onkeyup="this.value = this.value.toUpperCase();"
+                    />
+                  </div>
+
+                  <div class="col-4 form-group">
+                    <label for="inputDeporte">Deporte</label>
+                    <input type="text"
+                          class="form-control"
+                          id="inputDeporte"
+                          name="inputDeporte"
+                          placeholder="Deporte practicado por el empleado"
+                          onkeyup="this.value = this.value.toUpperCase();"
+                    />
+                  </div>
+
+                  <div class="col-4 form-group">
+                    <label for="inputLicencia">Licencia</label>
+                    <input type="text"
+                          class="form-control"
+                          id="inputLicencia"
+                          name="inputLicencia"
+                          placeholder="Ingrese la licencia"
+                    />
+                  </div>
+                </div>
               </div>
               <!-- fin de datos administrativos -->
 

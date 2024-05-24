@@ -22,7 +22,7 @@ class Employee extends Model
         'codigo_patria',
         'religion',
         'deporte',
-        'licencia_grado',
+        'licencia',
     ];
 
     //

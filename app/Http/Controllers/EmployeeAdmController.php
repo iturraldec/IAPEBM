@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
 use Illuminate\Support\Facades\Storage;
 use \DateTime;
+use Illuminate\Validation\Rule;
 
 use App\Models\Address;
 use App\Models\BloodType;
@@ -116,6 +117,21 @@ class EmployeeAdmController extends Controller
    */
   public function store(Request $request)
   {
+    $request->validate([
+      'employee.codigo' => [
+        'required',
+        'max:20'
+      ],
+      'employee.fecha_ingreso'  => 'required',
+      'employee.codigo_patria'  => [
+        'required',
+        'max:100'
+      ],
+      'employee.religion'       => 'required|max:100',
+      'employee.deporte'        => 'required|max:100',
+      'employee.licencia'       => 'required|max:100',
+    ]);
+
     // agrego la persona
     $person = Person::create([
       'cedula'          => $request->cedula, 
@@ -134,7 +150,8 @@ class EmployeeAdmController extends Controller
       'person_id'               => $person->id,
       'grupo_id'                => 1,
       'codigo'                  => $request->employee['codigo'],
-      'fecha_ingreso'           => DateTime::createFromFormat('d/m/Y', $request->employee['fecha_ingreso'])->format('Y-m-d'),
+      //'fecha_ingreso'           => DateTime::createFromFormat('d/m/Y', $request->employee['fecha_ingreso'])->format('Y-m-d'),
+      'fecha_ingreso'           => $request->employee['fecha_ingreso'],
       'employee_cargo_id'       => $request->employee['employee_cargo_id'],
       'employee_condicion_id'   => $request->employee['employee_condicion_id'],
       'employee_tipo_id'        => $request->employee['employee_tipo_id'],
@@ -143,7 +160,7 @@ class EmployeeAdmController extends Controller
       'codigo_patria'           => $request->employee['codigo_patria'],
       'religion'                => $request->employee['religion'],
       'deporte'                 => $request->employee['deporte'],
-      'licencia_grado'          => $request->employee['licencia_grado'],
+      'licencia'                => $request->employee['licencia'],
     ]);
 
     // agregar telefonos
@@ -162,14 +179,19 @@ class EmployeeAdmController extends Controller
   public function update(Request $request, Employee $employees_adm)
   {
     $request->validate([
-      'employee.codigo'         => 'required',
-      'employee.codigo_patria'  => 'required',
-      'employee.religion'       => 'required',
-      'employee.deporte'        => 'required',
-      'employee.licencia'       => 'required',
+      'employee.codigo' => [
+        'required',
+        'max:20'
+      ],
+      'employee.fecha_ingreso'  => 'required',
+      'employee.codigo_patria'  => [
+        'required',
+        'max:100'
+      ],
+      'employee.religion'       => 'required|max:100',
+      'employee.deporte'        => 'required|max:100',
+      'employee.licencia'       => 'required|max:100',
     ]);
-
-    return response($request->all());
 
     // modifico la persona
     $person = Person::find($employees_adm->person_id);
@@ -199,6 +221,20 @@ class EmployeeAdmController extends Controller
         Storage::delete($fileImage);
       }
     };
+
+    // modifico los datos del empleado
+    $employees_adm->codigo = $request->employee['codigo'];
+    $employees_adm->fecha_ingreso = $request->employee['fecha_ingreso'];
+    $employees_adm->employee_cargo_id = $request->employee['employee_cargo_id'];
+    $employees_adm->employee_condicion_id = $request->employee['employee_condicion_id'];
+    $employees_adm->employee_tipo_id = $request->employee['employee_tipo_id'];
+    $employees_adm->employee_location_id = $request->employee['employee_location_id'];
+    $employees_adm->rif = $request->employee['rif'];
+    $employees_adm->codigo_patria = $request->employee['codigo_patria'];
+    $employees_adm->religion =  $request->employee['religion'];
+    $employees_adm->deporte = $request->employee['deporte'];
+    $employees_adm->licencia =  $request->employee['licencia'];
+    $employees_adm->save();
     
     //
     return response($person, Response::HTTP_OK);
