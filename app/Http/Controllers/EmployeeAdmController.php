@@ -77,8 +77,7 @@ class EmployeeAdmController extends Controller
 
     $pdf = Facade\Pdf::loadView('employee-adm.view', compact('data'));
     
-    return $pdf->stream("empleado-".$data->cedula);
-    //return view('employee-adm.view', compact('data'));
+    return $pdf->stream("ea-".$data->cedula);
   }
 
   //
@@ -150,7 +149,6 @@ class EmployeeAdmController extends Controller
       'person_id'               => $person->id,
       'grupo_id'                => 1,
       'codigo'                  => $request->employee['codigo'],
-      //'fecha_ingreso'           => DateTime::createFromFormat('d/m/Y', $request->employee['fecha_ingreso'])->format('Y-m-d'),
       'fecha_ingreso'           => $request->employee['fecha_ingreso'],
       'employee_cargo_id'       => $request->employee['employee_cargo_id'],
       'employee_condicion_id'   => $request->employee['employee_condicion_id'],

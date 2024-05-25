@@ -31,15 +31,16 @@
 @section('js')
 <script>
   $(document).ready(function () {
+    toastr.options.closeButton = true;
+    toastr.options.timeOut = 0;
+    toastr.options.extendedTimeOut = 0;
+      
     var person = {};
     var formData;
     var imagePath = "{{ env('IMAGES_URL') }}";
     var municipios  = {{ Js::from($municipios) }};
     var parroquias  = {{ Js::from($parroquias) }};
     var emptyImages = 'Sin imagenes en servidor.';
-    toastr.options.closeButton = true;
-    toastr.options.timeOut = 0;
-    toastr.options.extendedTimeOut = 0;
 
     ///////////////////////////////////////////////////////////
     // datatable
@@ -123,7 +124,7 @@
           codigo_patria         : '',
           religion              : '',
           deporte               : '',
-          licencia_grado        : ''
+          licencia              : ''
         },
         phones          : [],
         addresses       : [],

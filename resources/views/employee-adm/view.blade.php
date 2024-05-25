@@ -1,16 +1,33 @@
 @extends('layouts.pdf')
 
 @section('title')
-  Datos de: {{ $data->name }}
+  Datos personales de: {{ $data->name }}
 @endsection
 
 @section('content')
-<div class="row text-center">
-  <div class="col">
-    VISTA DEL EMPLEADO
-  </div>
-</div>
-  Nombre: {{ $data->name }}<br>
+  <table class="table table-bordered table-sm" style="font-size: 24px">
+    <tbody>
+      <tr>
+        <td>
+          1.1. Nombres y Apellidos<br>
+          1.2. Partida de Nacimiento (anexo)
+        </td>
+        <td class="h6">{{ $data->name }}</td>
+        <td class="text-center"><img src="{{ public_path($data->images[0]['file']) }}" width="150" height="auto"></td>
+      </tr>
+      <tr>
+        <td>
+          Cédula de Identidad
+          <div>{{ $data->cedula }}</div>
+        </td>
+        <td>
+          Lugar de Nacimiento
+          <div>{{ $data->place_of_birth }}</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
   Cédula: {{ $data->cedula }}<br>
   Sexo: {{ $data->sex }}<br>
   Fecha de Nacimiento: {{ $data->birthday }}<br>
