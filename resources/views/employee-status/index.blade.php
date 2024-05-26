@@ -3,7 +3,7 @@
 @section('title', 'Emppleados-Condiciones')
 
 @section('content_header')
-  <h1>Listado de Condiciones de los Empleados.</h1>
+  <h1>Listado de Condiciones de Empleados.</h1>
 @endsection
 
 @section('content')

@@ -352,8 +352,8 @@ return [
                     'route'   => 'employees-adm.index'
                 ],
                 [
-                    'text'    => 'Funcionarios',
-                    'route'   => 'employee-status.index'
+                    'text'    => 'Policias',
+                    'route'   => 'home'
                 ],
             ]
         ],

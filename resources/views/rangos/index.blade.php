@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Listado de Rangos')
+@section('title', 'Listado de Rangos Policiales')
 
 @section('content_header')
   <h1>Listado de Rangos.</h1>

@@ -3,7 +3,7 @@
 @section('title', 'Listado de Permisos')
 
 @section('content_header')
-  <h1>Listado de Permisos.</h1>
+  <h1>Listado de Permisos de Usuarios.</h1>
 @endsection
 
 
