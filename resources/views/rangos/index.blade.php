@@ -35,8 +35,6 @@
     // datatable
     let datatable = $('#dt-rangos').DataTable({
         "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
-        serverSide : true,
-        processing: true,
         "ajax": "{{ route('rangos.index') }}",
         "columns": [
           {"data": "id", "orderable": false},

@@ -39,8 +39,6 @@
     let datatable = $('#dt-cargos').DataTable({
         "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
         "ajax": "{{ route('cargos.index') }}",
-        processing: true,
-        serverSide: true,
         "columns": [
           {"data": "id", "orderable": false},
           {"data": "name"},

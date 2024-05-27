@@ -26,6 +26,8 @@
 
 @include('employee-adm.edit')
 
+@include('common.load-data')
+
 @endsection
 
 @section('js')
@@ -49,7 +51,6 @@
     let customButton = '<button id="btnAgregar" class="btn btn-primary">Agregar Empleado Administrativo</button>';
     let datatable = $('#dtEmpleados').DataTable({
         "dom": '<"d-flex justify-content-between"l<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
-        serverSide: true,
         "ajax": "{{ route('employees-adm.index') }}",
         "columns": [
           {"data": "id", visible: false},
@@ -142,12 +143,14 @@
       let ruta = "{{ route('employees-adm.edit', ['employees_adm' => 'valor']) }}";
 
       ruta = ruta.replace('valor', data.id);
+      $('#loadDataModal').modal('show');
       fetch(ruta)
       .then(response => response.json())
       .then(responseJSON => {
         person = structuredClone(responseJSON);
         person.images.forEach(image => image.deleted = false);
         makeForm();
+        $('#loadDataModal').modal('hide');
       });
     });
 
