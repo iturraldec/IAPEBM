@@ -303,20 +303,21 @@ return [
             'icon'    => 'fas fa-tools',
             'url'   => '/',
         ],
-        [
-            'text'    => 'Permisos',
-            'route'   => 'admin.permissions.index',
-        ],
-        [
-            'text'    => 'Roles',
-            'route'   => 'admin.roles.index'
-        ],
+        
         [
             'text'    => 'Usuarios',
             'icon'    => 'fas fa-users',
             'submenu' => [
                 [
-                    'text'  => 'Listado',
+                    'text'    => 'Permisos',
+                    'route'   => 'admin.permissions.index',
+                ],
+                [
+                    'text'    => 'Roles',
+                    'route'   => 'admin.roles.index'
+                ],
+                [
+                    'text'  => 'Listado de Usuarios',
                     'route' => 'admin.users.index',
                     'icon'  => 'fas fa-table',
                 ],

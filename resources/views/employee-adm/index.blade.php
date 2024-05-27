@@ -293,8 +293,7 @@
     // imprimir telefonos
     ///////////////////////////////////////////////////////////////////
 
-    function imprimirTelefonos()
-    {
+    function imprimirTelefonos() {
       let cadena = '';
 
       person.phones.forEach((phone, index) => {
