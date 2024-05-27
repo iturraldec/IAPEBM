@@ -340,16 +340,16 @@ return [
                     'route'   => 'cargos.index'
                 ],
                 [
-                    'text'    => 'Rangos',
-                    'route'   => 'rangos.index'
-                ],
-                [
                     'text'    => 'Condiciones',
                     'route'   => 'employee-status.index'
                 ],
                 [
                     'text'    => 'Administrativos',
                     'route'   => 'employees-adm.index'
+                ],
+                [
+                    'text'    => 'Rangos',
+                    'route'   => 'rangos.index'
                 ],
                 [
                     'text'    => 'Policias',

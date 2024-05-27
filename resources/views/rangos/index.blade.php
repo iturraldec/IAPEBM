@@ -3,7 +3,7 @@
 @section('title', 'Listado de Rangos Policiales')
 
 @section('content_header')
-  <h1>Listado de Rangos.</h1>
+  <h1>Listado de Rangos Policiales.</h1>
 @endsection
 
 @section('content')
@@ -33,7 +33,6 @@
     $("#inputRango").inputmask(lib_characterMask())
 
     // datatable
-    let customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Rango</button>';
     let datatable = $('#dt-rangos').DataTable({
         "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
         serverSide : true,
@@ -52,11 +51,10 @@
                 },
            "orderable": false
           }
-        ],
-        "drawCallback": function( settings ) {
-            $("#dt-add-button").html(customButton);
-        }
+        ]
     });
+
+    $("#dt-add-button").html('<button id="btn-agregar" class="btn btn-primary">Agregar Rango</button>');
 
     // boton agregar rango
     $("#btn-agregar").click(function() {
@@ -67,7 +65,7 @@
       $('#modalForm').modal('show');
     });
 
-    // boton editar cargo
+    // boton editar rango
     $("#dt-rangos tbody").on("click", ".editar", function() {
       let data = datatable.row($(this).parents()).data();
       
@@ -80,6 +78,29 @@
 
     // validacion de form
     $('#rangoForm').validate({
+      rules: {
+        name: {
+          required: true,
+          maxlength:255
+        },
+      },
+      messages: {
+        name: {
+          required: "Debes ingresar el nombre del rango.",
+          maxlength: "Debes ingresar máximo 255 caracteres."
+        },
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.form-group').append(error);
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+      },
       submitHandler: function (form) {
         let formData = $(form).serializeArray();
         let id = $("#inputRango").data("id");
@@ -96,27 +117,6 @@
 
         $('#modalForm').modal('hide');
       },
-      rules: {
-        name: {
-          required: true
-        },
-      },
-      messages: {
-        name: {
-          required: "Debes ingresar el nombre del rango."
-        },
-      },
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-      }
     });
 
     // funcion para grabar los datos al agregar/modificar
