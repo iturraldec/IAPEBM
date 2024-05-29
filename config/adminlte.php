@@ -354,7 +354,7 @@ return [
                 ],
                 [
                     'text'    => 'Policias',
-                    'route'   => 'home'
+                    'route'   => 'employees-police.index'
                 ],
             ]
         ],

@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Empleados Administrativos')
+@section('title', 'Empleados Policiales')
 
 @section('content_header')
-  <h1>Listado de Empleados Administrativos.</h1>
+  <h1>Listado de Empleados Policiales.</h1>
 @endsection
 
 @section('content')
@@ -48,10 +48,10 @@
     // datatable
     ///////////////////////////////////////////////////////////
 
-    let customButton = '<button id="btnAgregar" class="btn btn-primary">Agregar Empleado Administrativo</button>';
+    let customButton = '<button id="btnAgregar" class="btn btn-primary">Agregar Empleado Policial</button>';
     let datatable = $('#dtEmpleados').DataTable({
         "dom": '<"d-flex justify-content-between"l<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
-        "ajax": "{{ route('employees-adm.index') }}",
+        "ajax": "{{ route('employees-police.index') }}",
         "columns": [
           {"data": "id", visible: false},
           {"data": "codigo"},
@@ -161,7 +161,7 @@
     function makeForm()
     {
       formData = new FormData();
-      $("#modalTitle").html((person.id == 0) ? 'Agregar Empleado Administrativo' : person.name);
+      $("#modalTitle").html((person.id == 0) ? 'Agregar Empleado Policial' : person.name);
       $("#inputCedula").val(person.cedula);
       $("#inputRif").val(person.employee.rif);
       $("#inputNombre").val(person.name);

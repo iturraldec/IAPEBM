@@ -8,7 +8,7 @@ use App\Http\Controllers\CargoController;
 use App\Http\Controllers\RangoController;
 use App\Http\Controllers\EmployeeStatusController;
 use App\Http\Controllers\EmployeeAdmController;
-use App\Http\Controllers\PhoneController;
+use App\Http\Controllers\EmployeePoliceController;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -32,3 +32,7 @@ Route::resource('employee-status', EmployeeStatusController::class)
 // empleados administrativos
 Route::resource('employees-adm', EmployeeAdmController::class)->names('employees-adm');
 Route::post('employees-adm/{cedula}', [EmployeeAdmController::class, 'addImages'])->name('employees-adm.add-images');
+
+// empleados policiales
+Route::resource('employees-police', EmployeePoliceController::class)->names('employees-police');
+Route::post('employees-police/{cedula}', [EmployeePoliceController::class, 'addImages'])->name('employees-police.add-images');
