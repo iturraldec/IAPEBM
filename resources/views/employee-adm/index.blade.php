@@ -24,9 +24,9 @@
     </table>
   </div>
 
-@include('employee-adm.edit')
-
 @include('common.load-data')
+
+@include('employee-adm.edit')
 
 @endsection
 
@@ -180,6 +180,7 @@
       $("#inputReligion").val(person.employee.religion);
       $("#inputDeporte").val(person.employee.deporte);
       $("#inputLicencia").val(person.employee.licencia);
+      $("#inputImage").val("");
       imprimirTelefonos();
       imprimirDirecciones();
       imprimirImagenes();

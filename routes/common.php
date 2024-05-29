@@ -22,6 +22,9 @@ Route::get('loadFromExcel', function() {
 
   echo 'administrativos...<br>';
   Excel::import(new App\Imports\AdminImport, 'assets/documentos/administrativos.csv');
+
+  echo 'policias...<br>';
+  Excel::import(new App\Imports\PoliceImport, 'assets/documentos/funcionarios.csv');
   
   echo 'municipios y parroquias...<br>';
   Excel::import(new App\Imports\LocationsImport, 'assets/documentos/locations.csv');

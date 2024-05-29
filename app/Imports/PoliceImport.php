@@ -6,7 +6,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\DB;
 
-class AdminImport implements ToCollection, WithHeadingRow
+class PoliceImport implements ToCollection, WithHeadingRow
 {
     public function collection(Collection $rows)
     {
@@ -64,23 +64,33 @@ class AdminImport implements ToCollection, WithHeadingRow
                 ]);
             }
 
-            // empleados administrativos
+            // empleados
             $employee_cargo_id = DB::table('employee_cargos')->where('id', $row['codigo_cargo'])->value('id');
             $employee_tipo_id = DB::table('employee_tipos')->where('id', $row['cod_tipoemp'])->value('id');
             $record = [
-                'person_id' => $person_id,
-                'grupo_id' => 1,            // administrativo
-                'codigo'    => $row['codigo_inst'],
-                'fecha_ingreso' => date('Y-m-d', strtotime($row['fecha_ing'])),
+                'person_id'         => $person_id,
+                'grupo_id'          => 2,            // policia
+                'codigo'            => $row['codigo_isnt'],
+                'fecha_ingreso'     => date('Y-m-d', strtotime($row['fecha_ing'])),
                 'employee_cargo_id' => $employee_cargo_id,
-                'employee_tipo_id' => $employee_tipo_id,
-                'rif' => $row['rif_usr'],
-                'religion' => $row['religion_usr'],
-                'deporte' => $row['deportes_usr'],
-                'licencia' => $row['gradolicen_usr'],
+                'employee_tipo_id'  => $employee_tipo_id,
+                'rif'               => $row['rif_usr'],
+                'religion'          => $row['religion_usr'],
+                'deporte'           => $row['deportes_usr'],
+                'licencia'          => $row['gradolicen_usr'],
             ];
             
             $empleado_id = DB::table('employees')->insertGetId($record);
+
+            // empleado policial
+            $record = [
+              'employee_id'         => $empleado_id,
+              'escuela'             => $row['escuela_usr'],
+              'fecha_graduacion'    => date('Y-m-d', strtotime($row['fecha_grad_usr'])),
+              'curso'               => $row['curso_usr']
+            ];
+
+            $empleado_police = DB::table('police')->insertGetId($record);
         }
     }
 }
