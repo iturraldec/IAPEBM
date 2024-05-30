@@ -26,7 +26,7 @@
 
 @include('common.load-data')
 
-@include('employee-adm.edit')
+@include('employee-police.edit')
 
 @endsection
 
@@ -48,7 +48,6 @@
     // datatable
     ///////////////////////////////////////////////////////////
 
-    let customButton = '<button id="btnAgregar" class="btn btn-primary">Agregar Empleado Policial</button>';
     let datatable = $('#dtEmpleados').DataTable({
         "dom": '<"d-flex justify-content-between"l<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
         "ajax": "{{ route('employees-police.index') }}",
@@ -75,7 +74,7 @@
         ]
     });
 
-    $("#dt-add-button").html(customButton);
+    $("#dt-add-button").html('<button id="btnAgregar" class="btn btn-primary">Agregar Empleado Policial</button>');
 
     ///////////////////////////////////////////////////////////////////
     // filtro de las parroquias
@@ -112,11 +111,11 @@
         email           : '',
         notes           : '',
         employee        : {
-          id            : 0,
-          person_id     : 0,
-          grupo_id      : 1,
-          codigo        : '',
-          fecha_ingreso : new Date(Date.now()).toLocaleDateString(),
+          id                    : 0,
+          person_id             : 0,
+          grupo_id              : 1,
+          codigo                : '',
+          fecha_ingreso         : new Date(Date.now()).toLocaleDateString(),
           employee_cargo_id     : null,
           employee_condicion_id : null,
           employee_tipo_id      : null,
@@ -125,7 +124,10 @@
           codigo_patria         : '',
           religion              : '',
           deporte               : '',
-          licencia              : ''
+          licencia              : '',
+          escuela               : '',
+          fecha_graducion       : new Date(Date.now()).toLocaleDateString(),
+          curso                 : ''
         },
         phones          : [],
         addresses       : [],
@@ -180,6 +182,9 @@
       $("#inputReligion").val(person.employee.religion);
       $("#inputDeporte").val(person.employee.deporte);
       $("#inputLicencia").val(person.employee.licencia);
+      $("#inputEscuela").val(person.employee.escuela);
+      $("#inputFechaGrado").val(person.employee.fecha_graducion);
+      $("#inputCurso").val(person.employee.curso);
       $("#inputImage").val("");
       imprimirTelefonos();
       imprimirDirecciones();
@@ -277,16 +282,13 @@
 
         if(person.phones.length < 1) {
           lib_ShowMensaje("Debe ingresar al menos un número teléfonico!", "error");
-          return;
         }
-
-        if(person.addresses.length < 1) {
+        else if(person.addresses.length < 1) {
           lib_ShowMensaje("Debe ingresar al menos una dirección de ubicación!", "error");
-          return;
         }
-
-        //
-        send();
+        else {
+          send();
+        }
       }
     });
 
@@ -486,79 +488,6 @@
     };
 
     ///////////////////////////////////////////////////////////////////
-    // formulario de datos administrativos
-    ///////////////////////////////////////////////////////////////////
-
-    $('#adminForm').validate({
-      rules: {
-        inputCodigo: {
-          required: true,
-          maxlength: 20
-        },
-        inputFechaIngreso: {
-          required: true
-        },
-        inputPatria: {
-          required: true,
-          maxlength: 20
-        },
-        inputReligion: {
-          required: true,
-          maxlength: 100
-        },
-        inputDeporte: {
-          required: true,
-          maxlength: 100
-        },
-        inputLicencia: {
-          required: true,
-          maxlength: 100
-        }
-      },
-      messages: {
-        inputCodigo: {
-          required: "Debes ingresar el Código Administrativo.",
-          maxlength: "Debes ingresar máximo 20 digitos."
-        },
-        inputFechaIngreso: {
-          required: "Debes ingresar la fecha de ingreso."
-        },
-        inputPatria: {
-          required: "Debes ingresar el Código del Carnet Patria.",
-          maxlength: "Debes ingresar máximo 20 digitos."
-        },
-        inputReligion: {
-          required: "Debes ingresar la religión profesada por el empleado.",
-          maxlength: "Debes ingresar máximo 100 digitos."
-        },
-        inputDeporte: {
-          required: "Debes ingresar el deporte practicado por el empleado.",
-          maxlength: "Debes ingresar máximo 100 digitos."
-        },
-        inputLicencia: {
-          required: "Debes ingresar el tipo de licencia del empleado.",
-          maxlength: "Debes ingresar máximo 100 digitos."
-        }
-      },
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-      },
-      submitHandler: function (form, e) {
-        e.preventDefault();
-
-        alert("vengo?");
-      }
-    });
-
-    ///////////////////////////////////////////////////////////////////
     // enviar los datos del empleado al servidor
     ///////////////////////////////////////////////////////////////////
 
@@ -567,7 +496,7 @@
       let _method;
 
       if(person.id == 0) {
-        ruta = "{{ route('employees-adm.store') }}";
+        ruta = "{{ route('employees-police.store') }}";
         _method = "POST";
       }
       else {
@@ -589,10 +518,17 @@
       person.employee.rif = $("#inputRif").val();
       person.employee.codigo = $("#inputCodigo").val(); 
       person.employee.fecha_ingreso = $("#inputFechaIngreso").val();
+      person.employee.employee_cargo_id = $("#selectCargo").val();
+      person.employee.employee_condicion_id = $("#selectStatus").val();
+      person.employee.employee_tipo_id = $("#selectTipos").val();
+      person.employee.employee_location_id = $("#selectUbicaciones").val();
       person.employee.codigo_patria = $("#inputPatria").val(); 
       person.employee.religion = $("#inputReligion").val(); 
       person.employee.deporte = $("#inputDeporte").val(); 
-      person.employee.licencia = $("#inputLicencia").val(); 
+      person.employee.licencia = $("#inputLicencia").val();
+      person.employee.escuela = $("#inputEscuela").val();
+      person.employee.fecha_graduacion = $("#inputFechaGrado").val();
+      person.employee.curso = $("#inputCurso").val();
 
       fetch(ruta, {
         method: _method,
@@ -606,7 +542,7 @@
       .then(response => {
         if(response.ok) {
           if(formData.has('images[]')) {
-            let postImagesRoute = "{{ route('employees-adm.add-images', ['cedula' => '.valor']) }}";
+            let postImagesRoute = "{{ route('employees-police.add-images', ['cedula' => '.valor']) }}";
 
             postImagesRoute = postImagesRoute.replace('.valor', person.cedula);
             fetch(postImagesRoute, {
@@ -640,7 +576,7 @@
       let data = datatable.row($(this).parents()).data();
 
       lib_Confirmar("Seguro de ELIMINAR a: " + data.person.name + "?")
-      .then((result) => {
+      .then((result) => { 
         if (result.isConfirmed) {
           let ruta = "{{ route('employees-adm.destroy', ['employees_adm' => 'valor']) }}";
 

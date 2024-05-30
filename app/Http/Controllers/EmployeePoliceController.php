@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use \DateTime;
 use Illuminate\Validation\Rule;
 
@@ -117,6 +118,7 @@ class EmployeePoliceController extends Controller
   public function store(Request $request)
   {
     $request->validate([
+      'cedula'  => 'required|max:15|unique:people',
       'employee.codigo' => [
         'required',
         'max:20'
@@ -126,9 +128,12 @@ class EmployeePoliceController extends Controller
         'required',
         'max:100'
       ],
-      'employee.religion'       => 'required|max:100',
-      'employee.deporte'        => 'required|max:100',
-      'employee.licencia'       => 'required|max:100',
+      'employee.religion'         => 'required|max:100',
+      'employee.deporte'          => 'required|max:100',
+      'employee.licencia'         => 'required|max:100',
+      'employee.escuela'          => 'required|max:100',
+      'employee.fecha_graduacion' => 'required',
+      'employee.curso'            => 'required|max:10',
     ]);
 
     // agrego la persona
@@ -144,10 +149,10 @@ class EmployeePoliceController extends Controller
       'notes'           => $request->notes
     ]);
 
-    // agrego al empleado administrativo
+    // agrego empleado policial
     $employee = Employee::create([
       'person_id'               => $person->id,
-      'grupo_id'                => 1,
+      'grupo_id'                => $this->grupo_id,
       'codigo'                  => $request->employee['codigo'],
       'fecha_ingreso'           => $request->employee['fecha_ingreso'],
       'employee_cargo_id'       => $request->employee['employee_cargo_id'],
@@ -166,6 +171,14 @@ class EmployeePoliceController extends Controller
 
     // agregar direcciones
     $this->_addAddresses($person, $request->addresses);
+
+    // agrego datos policiales
+    DB::table('police')->insert([
+      'employee_id'       => $employee->id,
+      'escuela'           => $request->employee['escuela'],
+      'fecha_graduacion'  => $request->employee['fecha_graduacion'],
+      'curso'             => $request->employee['curso'],
+    ]);
 
     //
     return response($person, 201);

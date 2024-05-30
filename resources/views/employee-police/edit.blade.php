@@ -348,6 +348,37 @@
                       placeholder="Ingrese la licencia"
                 />
               </div>
+
+              <div class="col-4 form-group">
+                <label for="inputEscuela">Lugar de graducaión(Escuela)</label>
+                <input type="text"
+                      class="form-control"
+                      id="inputEscuela"
+                      name="inputEscuela"
+                      placeholder="Ingrese la escuela"
+                      onkeyup="this.value = this.value.toUpperCase();"
+                />
+              </div>
+
+              <div class="col-4 form-group">
+                <label for="inputFechaGrado">Fecha de Grado</label>
+                <input type="date"
+                      class="form-control"
+                      id="inputFechaGrado"
+                      name="inputFechaGrado"
+                      placeholder="Ingrese fecha"
+                />
+              </div>
+
+              <div class="col-4 form-group">
+                <label for="inputCurso">Curso</label>
+                <input type="text"
+                      class="form-control"
+                      id="inputCurso"
+                      name="inputCurso"
+                      placeholder="Ingrese el curso"
+                />
+              </div>
             </div>
           </div>
           <!-- fin de datos administrativos -->

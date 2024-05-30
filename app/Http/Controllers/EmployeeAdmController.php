@@ -147,7 +147,7 @@ class EmployeeAdmController extends Controller
     // agrego al empleado administrativo
     $employee = Employee::create([
       'person_id'               => $person->id,
-      'grupo_id'                => 1,
+      'grupo_id'                => $this->grupo_id,
       'codigo'                  => $request->employee['codigo'],
       'fecha_ingreso'           => $request->employee['fecha_ingreso'],
       'employee_cargo_id'       => $request->employee['employee_cargo_id'],

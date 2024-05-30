@@ -589,6 +589,10 @@
       person.employee.rif = $("#inputRif").val();
       person.employee.codigo = $("#inputCodigo").val(); 
       person.employee.fecha_ingreso = $("#inputFechaIngreso").val();
+      person.employee.employee_cargo_id = $("#selectCargo").val();
+      person.employee.employee_condicion_id = $("#selectStatus").val();
+      person.employee.employee_tipo_id = $("#selectTipos").val();
+      person.employee.employee_location_id = $("#selectUbicaciones").val();
       person.employee.codigo_patria = $("#inputPatria").val(); 
       person.employee.religion = $("#inputReligion").val(); 
       person.employee.deporte = $("#inputDeporte").val(); 
