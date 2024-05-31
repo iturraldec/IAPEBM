@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedInteger('person_id');
             $table->string('file');
             $table->timestamps();
+
+            $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');
         });
     }
 

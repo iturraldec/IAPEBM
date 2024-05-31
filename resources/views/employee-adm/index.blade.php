@@ -51,6 +51,7 @@
     let customButton = '<button id="btnAgregar" class="btn btn-primary">Agregar Empleado Administrativo</button>';
     let datatable = $('#dtEmpleados').DataTable({
         "dom": '<"d-flex justify-content-between"l<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
+        serverSide: true,
         "ajax": "{{ route('employees-adm.index') }}",
         "columns": [
           {"data": "id", visible: false},

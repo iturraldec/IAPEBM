@@ -149,7 +149,13 @@ class EmployeePoliceController extends Controller
       'notes'           => $request->notes
     ]);
 
-    // agrego empleado policial
+    // agregar telefonos
+    $this->_addPhones($person, $request->phones);
+
+    // agregar direcciones
+    $this->_addAddresses($person, $request->addresses);
+
+    // agrego empleado
     $employee = Employee::create([
       'person_id'               => $person->id,
       'grupo_id'                => $this->grupo_id,
@@ -165,12 +171,6 @@ class EmployeePoliceController extends Controller
       'deporte'                 => $request->employee['deporte'],
       'licencia'                => $request->employee['licencia'],
     ]);
-
-    // agregar telefonos
-    $this->_addPhones($person, $request->phones);
-
-    // agregar direcciones
-    $this->_addAddresses($person, $request->addresses);
 
     // agrego datos policiales
     DB::table('police')->insert([
@@ -273,9 +273,12 @@ class EmployeePoliceController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(Employee $employees_adm)
+  public function destroy(int $employees_polouse)
   {
-    $employees_adm->delete();
+    $person = Person::find($employees_polouse);
+    if(!is_null($person)) {
+      $person->delete();
+    }
     
     return Response::HTTP_NO_CONTENT;
   }

@@ -50,6 +50,7 @@
 
     let datatable = $('#dtEmpleados').DataTable({
         "dom": '<"d-flex justify-content-between"l<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
+        serverSide: true,
         "ajax": "{{ route('employees-police.index') }}",
         "columns": [
           {"data": "id", visible: false},
@@ -578,7 +579,7 @@
       lib_Confirmar("Seguro de ELIMINAR a: " + data.person.name + "?")
       .then((result) => { 
         if (result.isConfirmed) {
-          let ruta = "{{ route('employees-adm.destroy', ['employees_adm' => 'valor']) }}";
+          let ruta = "{{ route('employees-police.destroy', ['employees_polouse' => 'valor']) }}";
 
           ruta = ruta.replace('valor', data.id);
           
@@ -589,7 +590,7 @@
             dataType:'json',
             success: function(resp){
               datatable.ajax.reload();
-              lib_ShowMensaje("Empleado Administrativo eliminado.");
+              lib_ShowMensaje("Empleado Policial eliminado.");
             }
           });
         }
