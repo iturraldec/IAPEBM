@@ -574,7 +574,7 @@
       else {
         ruta = "{{ route('employees-adm.update', ['employees_adm' => '.valor']) }}";
 
-        ruta = ruta.replace('.valor', person.id);
+        ruta = ruta.replace('.valor', person.employee.id);
         _method = "PUT";
       }
 
@@ -623,6 +623,7 @@
             });
           };
           
+          datatable.ajax.reload();
           lib_ShowMensaje("Datos actualizados.");
         }
         else {

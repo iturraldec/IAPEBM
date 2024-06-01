@@ -62,13 +62,13 @@ class EmployeePoliceController extends Controller
   //
   public function getById(Employee $employee)
   {
-    return Person::with('employee', 'civil_status', 'phones.type', 'addresses', 'images')->find($employee->person_id);
+    return Person::with('employee.police', 'civil_status', 'phones.type', 'addresses', 'images')->find($employee->person_id);
   }
 
   //
-  public function edit(Employee $employees_adm)
+  public function edit(Employee $employees_polouse)
   {
-    return response($this->getById($employees_adm), 200);
+    return response($this->getById($employees_polouse), 200);
   }
 
   //
@@ -187,9 +187,10 @@ class EmployeePoliceController extends Controller
   /**
    * Update the specified resource in storage.
    */
-  public function update(Request $request, Employee $employees_adm)
+  public function update(Request $request, Employee $employees_polouse)
   {
     $request->validate([
+      'cedula'  => 'required|max:15|unique:people',
       'employee.codigo' => [
         'required',
         'max:20'
@@ -199,13 +200,16 @@ class EmployeePoliceController extends Controller
         'required',
         'max:100'
       ],
-      'employee.religion'       => 'required|max:100',
-      'employee.deporte'        => 'required|max:100',
-      'employee.licencia'       => 'required|max:100',
+      'employee.religion'         => 'required|max:100',
+      'employee.deporte'          => 'required|max:100',
+      'employee.licencia'         => 'required|max:100',
+      'employee.escuela'          => 'required|max:100',
+      'employee.fecha_graduacion' => 'required',
+      'employee.curso'            => 'required|max:10',
     ]);
 
     // modifico la persona
-    $person = Person::find($employees_adm->person_id);
+    $person = Person::find($employees_polouse->person_id);
     $person->cedula = $request->cedula;
     $person->name = $request->name;
     $person->sex = $request->sex;
@@ -220,10 +224,10 @@ class EmployeePoliceController extends Controller
     // modifico sus telefonos
     $this->_addPhones($person, $request->phones);
 
-    // modificar direcciones
+    // modifico sus direcciones
     $this->_addAddresses($person, $request->addresses);
 
-    // actualizar las imagenes
+    // modifico sus imagenes
     foreach($request->images as $image){
       if($image['deleted']) {
         $employeeImage = PersonImage::find($image['id']);
@@ -234,20 +238,29 @@ class EmployeePoliceController extends Controller
     };
 
     // modifico los datos del empleado
-    $employees_adm->codigo = $request->employee['codigo'];
-    $employees_adm->fecha_ingreso = $request->employee['fecha_ingreso'];
-    $employees_adm->employee_cargo_id = $request->employee['employee_cargo_id'];
-    $employees_adm->employee_condicion_id = $request->employee['employee_condicion_id'];
-    $employees_adm->employee_tipo_id = $request->employee['employee_tipo_id'];
-    $employees_adm->employee_location_id = $request->employee['employee_location_id'];
-    $employees_adm->rif = $request->employee['rif'];
-    $employees_adm->codigo_patria = $request->employee['codigo_patria'];
-    $employees_adm->religion =  $request->employee['religion'];
-    $employees_adm->deporte = $request->employee['deporte'];
-    $employees_adm->licencia =  $request->employee['licencia'];
-    $employees_adm->save();
+    $employees_polouse->codigo = $request->employee['codigo'];
+    $employees_polouse->fecha_ingreso = $request->employee['fecha_ingreso'];
+    $employees_polouse->employee_cargo_id = $request->employee['employee_cargo_id'];
+    $employees_polouse->employee_condicion_id = $request->employee['employee_condicion_id'];
+    $employees_polouse->employee_tipo_id = $request->employee['employee_tipo_id'];
+    $employees_polouse->employee_location_id = $request->employee['employee_location_id'];
+    $employees_polouse->rif = $request->employee['rif'];
+    $employees_polouse->codigo_patria = $request->employee['codigo_patria'];
+    $employees_polouse->religion =  $request->employee['religion'];
+    $employees_polouse->deporte = $request->employee['deporte'];
+    $employees_polouse->licencia =  $request->employee['licencia'];
+    $employees_polouse->save();
+
+    // modifico los datos policiales
+    DB::table('police')
+      ->where('employee_id', $employees_polouse->id)
+      ->update([
+          'escuela'           => $request->employee['police']['escuela'],
+          'fecha_graduacion'  => $request->employee['police']['fecha_graduacion'],
+          'curso'             => $request->employee['police']['curso']
+        ]);     
     
-    //
+        //
     return response($person, Response::HTTP_OK);
   }
 

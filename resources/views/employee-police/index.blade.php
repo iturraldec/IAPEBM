@@ -126,9 +126,11 @@
           religion              : '',
           deporte               : '',
           licencia              : '',
-          escuela               : '',
-          fecha_graducion       : new Date(Date.now()).toLocaleDateString(),
-          curso                 : ''
+          police                : {
+            escuela             : '',
+            fecha_graduacion    : new Date(Date.now()).toLocaleDateString(),
+            curso               : ''
+          }
         },
         phones          : [],
         addresses       : [],
@@ -143,7 +145,7 @@
 
     $("#dtEmpleados tbody").on("click", ".editar", function() {
       let data = datatable.row($(this).parents()).data();
-      let ruta = "{{ route('employees-adm.edit', ['employees_adm' => 'valor']) }}";
+      let ruta = "{{ route('employees-police.edit', ['employees_polouse' => 'valor']) }}";
 
       ruta = ruta.replace('valor', data.id);
       $('#loadDataModal').modal('show');
@@ -151,6 +153,7 @@
       .then(response => response.json())
       .then(responseJSON => {
         person = structuredClone(responseJSON);
+        console.log(person.employee.police);
         person.images.forEach(image => image.deleted = false);
         makeForm();
         $('#loadDataModal').modal('hide');
@@ -183,9 +186,9 @@
       $("#inputReligion").val(person.employee.religion);
       $("#inputDeporte").val(person.employee.deporte);
       $("#inputLicencia").val(person.employee.licencia);
-      $("#inputEscuela").val(person.employee.escuela);
-      $("#inputFechaGrado").val(person.employee.fecha_graducion);
-      $("#inputCurso").val(person.employee.curso);
+      $("#inputEscuela").val(person.employee.police.escuela);
+      $("#inputFechaGrado").val(person.employee.police.fecha_graduacion);
+      $("#inputCurso").val(person.employee.police.curso);
       $("#inputImage").val("");
       imprimirTelefonos();
       imprimirDirecciones();
@@ -501,7 +504,7 @@
         _method = "POST";
       }
       else {
-        ruta = "{{ route('employees-adm.update', ['employees_adm' => '.valor']) }}";
+        ruta = "{{ route('employees-police.update', ['employees_polouse' => '.valor']) }}";
 
         ruta = ruta.replace('.valor', person.id);
         _method = "PUT";
@@ -527,9 +530,9 @@
       person.employee.religion = $("#inputReligion").val(); 
       person.employee.deporte = $("#inputDeporte").val(); 
       person.employee.licencia = $("#inputLicencia").val();
-      person.employee.escuela = $("#inputEscuela").val();
-      person.employee.fecha_graduacion = $("#inputFechaGrado").val();
-      person.employee.curso = $("#inputCurso").val();
+      person.employee.police.escuela = $("#inputEscuela").val();
+      person.employee.police.fecha_graduacion = $("#inputFechaGrado").val();
+      person.employee.police.curso = $("#inputCurso").val();
 
       fetch(ruta, {
         method: _method,
@@ -555,6 +558,7 @@
             });
           };
           
+          datatable.ajax.reload();
           lib_ShowMensaje("Datos actualizados.");
         }
         else {

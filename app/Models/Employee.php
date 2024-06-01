@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Person;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Employee extends Model
 {
@@ -29,5 +30,11 @@ class Employee extends Model
     public function person() : BelongsTo
     {
         return $this->belongsTo(Person::class);
+    }
+
+    // datos policiales
+    public function police() : HasOne
+    {
+        return $this->hasOne(Police::class);
     }
 }

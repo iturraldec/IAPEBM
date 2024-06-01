@@ -260,9 +260,12 @@ class EmployeeAdmController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(Employee $employees_adm)
+  public function destroy(int $employees_id)
   {
-    $employees_adm->delete();
+    $person = Person::find($employees_id);
+    if(!is_null($person)) {
+      $person->delete();
+    }
     
     return Response::HTTP_NO_CONTENT;
   }
