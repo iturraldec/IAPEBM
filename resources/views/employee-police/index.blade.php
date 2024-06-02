@@ -506,7 +506,7 @@
       else {
         ruta = "{{ route('employees-police.update', ['employees_polouse' => '.valor']) }}";
 
-        ruta = ruta.replace('.valor', person.id);
+        ruta = ruta.replace('.valor', person.employee.id);
         _method = "PUT";
       }
 
@@ -530,9 +530,11 @@
       person.employee.religion = $("#inputReligion").val(); 
       person.employee.deporte = $("#inputDeporte").val(); 
       person.employee.licencia = $("#inputLicencia").val();
-      person.employee.police.escuela = $("#inputEscuela").val();
-      person.employee.police.fecha_graduacion = $("#inputFechaGrado").val();
-      person.employee.police.curso = $("#inputCurso").val();
+      person.employee.police = {
+        escuela           : $("#inputEscuela").val(),
+        fecha_graduacion  : $("#inputFechaGrado").val(),
+        curso             : $("#inputCurso").val()
+      };
 
       fetch(ruta, {
         method: _method,

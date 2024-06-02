@@ -131,9 +131,9 @@ class EmployeePoliceController extends Controller
       'employee.religion'         => 'required|max:100',
       'employee.deporte'          => 'required|max:100',
       'employee.licencia'         => 'required|max:100',
-      'employee.escuela'          => 'required|max:100',
-      'employee.fecha_graduacion' => 'required',
-      'employee.curso'            => 'required|max:10',
+      'employee.police.escuela'          => 'required|max:100',
+      'employee.police.fecha_graduacion' => 'required',
+      'employee.police.curso'            => 'required|max:10',
     ]);
 
     // agrego la persona
@@ -175,9 +175,9 @@ class EmployeePoliceController extends Controller
     // agrego datos policiales
     DB::table('police')->insert([
       'employee_id'       => $employee->id,
-      'escuela'           => $request->employee['escuela'],
-      'fecha_graduacion'  => $request->employee['fecha_graduacion'],
-      'curso'             => $request->employee['curso'],
+      'escuela'           => $request->employee['police']['escuela'],
+      'fecha_graduacion'  => $request->employee['police']['fecha_graduacion'],
+      'curso'             => $request->employee['police']['curso'],
     ]);
 
     //
@@ -189,11 +189,20 @@ class EmployeePoliceController extends Controller
    */
   public function update(Request $request, Employee $employees_polouse)
   {
+/*     var_dump($request->all());
+    return; */
     $request->validate([
-      'cedula'  => 'required|max:15|unique:people',
+      'cedula'  => [
+        'required',
+        'max:15',
+        Rule::unique('people')->ignore($employees_polouse->person_id)
+      ],
       'employee.codigo' => [
         'required',
         'max:20'
+        ///////////////////////////////////////////////////////////
+        // FALTA VALIDAR DE QUE NO EXISTA EL CODIGO!!!
+        ///////////////////////////////////////////////////////////
       ],
       'employee.fecha_ingreso'  => 'required',
       'employee.codigo_patria'  => [
@@ -203,9 +212,9 @@ class EmployeePoliceController extends Controller
       'employee.religion'         => 'required|max:100',
       'employee.deporte'          => 'required|max:100',
       'employee.licencia'         => 'required|max:100',
-      'employee.escuela'          => 'required|max:100',
-      'employee.fecha_graduacion' => 'required',
-      'employee.curso'            => 'required|max:10',
+      'employee.police.escuela'          => 'required|max:100',
+      'employee.police.fecha_graduacion' => 'required',
+      'employee.police.curso'            => 'required|max:10',
     ]);
 
     // modifico la persona
