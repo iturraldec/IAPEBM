@@ -1,5 +1,7 @@
 @extends('adminlte::auth.login')
 
+@section('title', 'Login')
+
 @section('js')
 <script>
 $(document).ready(function () {
