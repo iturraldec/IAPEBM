@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
 use Illuminate\Support\Facades\Storage;
-use \DateTime;
-use Illuminate\Validation\Rule;
 
 use App\Models\Address;
 use App\Models\BloodType;
@@ -176,6 +174,11 @@ class EmployeeAdmController extends Controller
    */
   public function update(Request $request, Employee $employees_adm)
   {
+    /*
+    $this->validate($request, [
+      'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+    */
     $request->validate([
       'employee.codigo' => [
         'required',
@@ -210,8 +213,8 @@ class EmployeeAdmController extends Controller
     // modificar direcciones
     $this->_addAddresses($person, $request->addresses);
 
-    // actualizar las imagenes
-    foreach($request->images as $image){
+    // eliminar las imagenes que el usuario selecciono
+    foreach($request->images as $image) {
       if($image['deleted']) {
         $employeeImage = PersonImage::find($image['id']);
         $employeeImage->delete();
@@ -243,15 +246,15 @@ class EmployeeAdmController extends Controller
   {
     if ($request->hasFile('images')) {
       $person = Person::firstWhere('cedula', $cedula);
-      $_files = [];
+      $files = [];
       foreach($request->file('images') as $image) {
-        $_files[] = [
-            'person_id' => $person->id, 
+        $files[] = [
+            'person_id' => $person->id,
             'file'      => Storage::url($image->store("public/employees/$cedula"))
         ];
       }
       
-      return response(PersonImage::insert($_files));
+      return response(PersonImage::insert($files));
    }
 
    return Response::HTTP_NO_CONTENT;
