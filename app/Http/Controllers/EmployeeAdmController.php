@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
-use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManagerStatic as Image;
 
 use App\Models\Address;
 use App\Models\BloodType;
@@ -218,8 +218,7 @@ class EmployeeAdmController extends Controller
       if($image['deleted']) {
         $employeeImage = PersonImage::find($image['id']);
         $employeeImage->delete();
-        $fileImage = str_replace('/storage', 'public', $image['file']);
-        Storage::delete($fileImage);
+        unlink($image['file']);
       }
     };
 
@@ -248,16 +247,18 @@ class EmployeeAdmController extends Controller
       $person = Person::firstWhere('cedula', $cedula);
       $files = [];
       foreach($request->file('images') as $image) {
+        $file = "images/$cedula/" . uniqid() . ".png";
+        Image::make($image->getRealPath())->resize(200,200)->save($file, 0, 'png');
         $files[] = [
             'person_id' => $person->id,
-            'file'      => Storage::url($image->store("public/employees/$cedula"))
+            'file'      => $file
         ];
       }
       
       return response(PersonImage::insert($files));
-   }
+    }
 
-   return Response::HTTP_NO_CONTENT;
+    return Response::HTTP_NO_CONTENT;
   }
 
   /**

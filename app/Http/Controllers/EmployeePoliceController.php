@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use \DateTime;
 use Illuminate\Validation\Rule;
+use Intervention\Image\ImageManagerStatic as Image;
 
 use App\Models\Address;
 use App\Models\BloodType;
@@ -189,8 +188,6 @@ class EmployeePoliceController extends Controller
    */
   public function update(Request $request, Employee $employees_polouse)
   {
-/*     var_dump($request->all());
-    return; */
     $request->validate([
       'cedula'  => [
         'required',
@@ -236,13 +233,12 @@ class EmployeePoliceController extends Controller
     // modifico sus direcciones
     $this->_addAddresses($person, $request->addresses);
 
-    // modifico sus imagenes
-    foreach($request->images as $image){
+    // eliminar las imagenes que el usuario selecciono
+    foreach($request->images as $image) {
       if($image['deleted']) {
         $employeeImage = PersonImage::find($image['id']);
         $employeeImage->delete();
-        $fileImage = str_replace('/storage', 'public', $image['file']);
-        Storage::delete($fileImage);
+        unlink($image['file']);
       }
     };
 
@@ -278,16 +274,18 @@ class EmployeePoliceController extends Controller
   {
     if ($request->hasFile('images')) {
       $person = Person::firstWhere('cedula', $cedula);
-      $_files = [];
+      $files = [];
       foreach($request->file('images') as $image) {
-        $_files[] = [
-            'person_id' => $person->id, 
-            'file'      => Storage::url($image->store("public/employees/$cedula"))
+        $file = "images/$cedula/" . uniqid() . ".png";
+        Image::make($image->getRealPath())->resize(200,200)->save($file, 0, 'png');
+        $files[] = [
+            'person_id' => $person->id,
+            'file'      => $file
         ];
       }
       
-      return response(PersonImage::insert($_files));
-   }
+      return response(PersonImage::insert($files));
+    }
 
    return Response::HTTP_NO_CONTENT;
   }

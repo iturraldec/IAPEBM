@@ -420,7 +420,7 @@
         if(!image.deleted) {
           cadena += `
             <div class="col-6">
-              <img src="${imagePath + image['file']}" class="img-fluid img-thumbnail mt-2" width="200" height="250">
+              <img src="${image['file']}" class="img-fluid img-thumbnail mt-2" width="200" height="250">
               <button class="deleteImage form-control btn-danger p-2" id='${image['id']}'>Eliminar</button>
             </div>`;
         }
