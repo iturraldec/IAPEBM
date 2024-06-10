@@ -13,7 +13,13 @@
           1.2. Partida de Nacimiento (anexo)
         </td>
         <td class="h6">{{ $data->name }}</td>
-        <td class="text-center"><img src="{{ public_path($data->images[0]['file']) }}" width="150" height="auto"></td>
+        <td class="text-center">
+          @if(isset($data->images[0]['file']))
+            <img src="{{ $data->images[0]['file'] }}" width="150" height="auto">
+          @else
+            <img src="{{ public_path('assets/images/avatar.png') }}" width="150" height="auto">
+          @endif
+        </td>
       </tr>
       <tr>
         <td>

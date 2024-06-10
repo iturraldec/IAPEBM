@@ -36,23 +36,11 @@ class EmployeeAdmController extends Controller
    */
   public function index()
   {
-    if(request()->ajax()) {
-      return datatables()->of(Employee::where('grupo_id', $this->grupo_id)->with('person')->get())->toJson();
+    if(! request()->ajax()) {
+      return view('employee-adm.index');
     }
     else {
-      $location = new Location();
-      $phone_types  = PhoneType::get();
-      $municipios   = $location->getMunicipios();
-      $parroquias   = $location->getParroquias();
-      $edoCivil     = CivilStatus::get();
-      $tipoSangre   = BloodType::get();
-      $cargos       = Cargo::OrderBy('name')->get();
-      $status       = EmployeeStatus::OrderBy('name')->get();
-      $tipos        = EmployeeTipos::OrderBy('name')->get();
-      $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
-
-      return view('employee-adm.index', compact('phone_types', 'municipios', 
-                  'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones'));
+      return datatables()->of(Employee::where('grupo_id', $this->grupo_id)->with('person')->get())->toJson();
     }
   }
 
@@ -62,10 +50,41 @@ class EmployeeAdmController extends Controller
     return Person::with('employee', 'civil_status', 'phones.type', 'addresses', 'images')->find($employee->person_id);
   }
 
-  //
+  // crear empleado
+  public function create()
+  {
+    $location = new Location();
+    $phone_types  = PhoneType::get();
+    $municipios   = $location->getMunicipios();
+    $parroquias   = $location->getParroquias();
+    $edoCivil     = CivilStatus::get();
+    $tipoSangre   = BloodType::get();
+    $cargos       = Cargo::OrderBy('name')->get();
+    $status       = EmployeeStatus::OrderBy('name')->get();
+    $tipos        = EmployeeTipos::OrderBy('name')->get();
+    $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
+
+    return view('employee-adm.edit', compact('phone_types', 'municipios', 
+                  'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones'));
+  }
+
+  // edicion de emplado
   public function edit(Employee $employees_adm)
   {
-    return response($this->getById($employees_adm), 200);
+    $data = $this->getById($employees_adm);
+    $location = new Location();
+    $phone_types  = PhoneType::get();
+    $municipios   = $location->getMunicipios();
+    $parroquias   = $location->getParroquias();
+    $edoCivil     = CivilStatus::get();
+    $tipoSangre   = BloodType::get();
+    $cargos       = Cargo::OrderBy('name')->get();
+    $status       = EmployeeStatus::OrderBy('name')->get();
+    $tipos        = EmployeeTipos::OrderBy('name')->get();
+    $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
+
+    return view('employee-adm.edit', compact('phone_types', 'municipios', 
+                  'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones', 'data'));
   }
 
   //
