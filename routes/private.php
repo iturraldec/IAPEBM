@@ -31,7 +31,7 @@ Route::resource('employee-status', EmployeeStatusController::class)
 
 // empleados administrativos
 Route::resource('employees-adm', EmployeeAdmController::class)->names('employees-adm');
-Route::post('employees-adm/{cedula}', [EmployeeAdmController::class, 'addImages'])->name('employees-adm.add-images');
+Route::post('employees-adm/{id}/{cedula}', [EmployeeAdmController::class, 'addImages'])->name('employees-adm.add-images');
 
 // empleados policiales
 Route::resource('employees-police', EmployeePoliceController::class)->names('employees-police');

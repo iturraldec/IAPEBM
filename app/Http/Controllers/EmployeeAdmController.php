@@ -92,6 +92,8 @@ class EmployeeAdmController extends Controller
       'licencia'              => 'required|max:100',
       'phone_type_id'         => 'required',
       'phone_number'          => 'required',
+      'parroquia_id'          => 'required',
+      'address'               => 'required',
     ]);
 
     // agrego los datos personales
@@ -117,7 +119,7 @@ class EmployeeAdmController extends Controller
                         $request->input('zona_postal'));
 
     //
-    return $person;
+    return response($person, Response::HTTP_CREATED);
   }
 
   // edicion de emplado
@@ -137,36 +139,6 @@ class EmployeeAdmController extends Controller
 
     return view('employee-adm.edit', compact('phone_types', 'municipios', 
                   'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones', 'data'));
-  }
-
-  // agregar los telefonos del empleado
-  private function _addPhones($person, $phonesTypeIds, $phonesNumbers)
-  {
-    $phones = [];
-    foreach($phonesTypeIds as $indice => $phoneTypeId) {
-      $phones[] = new Phone([
-                      'phone_type_id' => $phoneTypeId,
-                      'number'        => $phonesNumbers[$indice]
-                    ]);
-    };
-    $person->phones()->delete();
-    $person->phones()->saveMany($phones);
-  }
-
-  // agregar las direcciones del empleado
-  private function _addAddresses($person, $addresses, $parroquia_id, $zona_postal)
-  {
-    $addresses = [];
-    foreach($addresses as $indice => $address) {
-      $addresses[] = new Address([
-        'address'       => $address,
-        'parroquia_id'  => $parroquia_id[$indice],
-        'zona_postal'   => $zona_postal[$indice]
-      ]);
-    };
-
-    $person->addresses()->delete();
-    $person->addresses()->saveMany($addresses);
   }
 
   /**
@@ -240,17 +212,47 @@ class EmployeeAdmController extends Controller
     return response($person, Response::HTTP_OK);
   }
 
+  // agregar los telefonos del empleado
+  private function _addPhones($person, $phonesTypeIds, $phonesNumbers)
+  {
+    $phones = [];
+    foreach($phonesTypeIds as $indice => $phoneTypeId) {
+      $phones[] = new Phone([
+                      'phone_type_id' => $phoneTypeId,
+                      'number'        => $phonesNumbers[$indice]
+                    ]);
+    };
+
+    $person->phones()->delete();
+    $person->phones()->saveMany($phones);
+  }
+
+  // agregar las direcciones del empleado
+  private function _addAddresses($person, $address, $parroquia_id, $zona_postal)
+  {
+    $addresses = [];
+    foreach($address as $indice => $_address) {
+      $addresses[] = new Address([
+        'address'       => $_address,
+        'parroquia_id'  => $parroquia_id[$indice],
+        'zona_postal'   => $zona_postal[$indice]
+      ]);
+    };
+
+    $person->addresses()->delete();
+    $person->addresses()->saveMany($addresses);
+  }
+
   //
-  public function addImages(Request $request, string $cedula)
+  public function addImages(Request $request, int $id, string $cedula)
   {
     if ($request->hasFile('images')) {
-      $person = Person::firstWhere('cedula', $cedula);
       $files = [];
       foreach($request->file('images') as $image) {
         $file = "images/$cedula/" . uniqid() . ".png";
-        Image::make($image->getRealPath())->resize(200,200)->save($file, 0, 'png');
+        //Image::make($image->getRealPath())->resize(200,200)->save($file, 0, 'png');
         $files[] = [
-            'person_id' => $person->id,
+            'person_id' => $id,
             'file'      => $file
         ];
       }

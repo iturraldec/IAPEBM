@@ -200,13 +200,18 @@
           </div>
 
           <div class="col my-2">
-            <label for="inputZonaPostal">Dirección y Zona Postal</label>
-            <input type="text" 
-                  id="inputAddress" 
-                  class="form-control" 
-                  placeholder="Ingresa la dirección"
-                  onkeyup="this.value = this.value.toUpperCase();"
-            >
+            <label for="inputAddress">Dirección y Zona Postal</label>
+            <div class="input-group mb-2">
+              <input type="text" 
+                    id="inputAddress" 
+                    class="form-control" 
+                    placeholder="Ingresa la dirección"
+                    onkeyup="this.value = this.value.toUpperCase();"
+              >
+              <div class="input-group-append">
+                <button type="button" id="btnAddAddress" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
+              </div>
+            </div>
           </div>
 
           <div class="input-group mb-2">
@@ -216,7 +221,6 @@
                   placeholder="Ingrese la zona postal"
             />
           </div>
-
         </div>
 
         <div class="row" id="divAddresses"></div>
@@ -224,7 +228,7 @@
       </div>
       <!-- fin de tab de direcciones -->
 
-      <!-- tab de fotos -->
+      <!-- tab de imagenes -->
       <div class="tab-pane fade" id="custom-tabs-one-images" role="tabpanel" aria-labelledby="custom-tabs-one-images-tab">
         <div class="container">
           <div class="row">
@@ -375,12 +379,19 @@
     var person = {};  // POR ELIMINAR
     ///////////////////////////////////////////////
 
-    var phones = [];  // telefonos del empleado
-    var formData;     // imagenes del empleado
+    var phones      = [];                               // telefonos del empleado
+    var addresses   = [];                               // direcciones del empleado
+    var formData    = new FormData();                   // imagenes del empleado
     var municipios  = {{ Js::from($municipios) }};
     var parroquias  = {{ Js::from($parroquias) }};
     var emptyImages = 'Sin imagenes en servidor.';
 
+    ///////////////////////////////////////////////////////////////////
+    // mascara para el numero de telefono
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputPhone").inputmask(lib_phoneMask());
+    
     ///////////////////////////////////////////////////////////////////
     // agregar telefono
     ///////////////////////////////////////////////////////////////////
@@ -401,6 +412,17 @@
         showPhones();
         $("#inputPhone").val("");
       }
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar telefono
+    ///////////////////////////////////////////////////////////////////
+
+    $(document).on('click', '.delPhone', function() {
+      let phone_id = $(this).attr('id');
+      
+      phones = phones.filter((phone, index) => index != phone_id);
+      showPhones();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -431,17 +453,6 @@
     };
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar telefono
-    ///////////////////////////////////////////////////////////////////
-
-    $(document).on('click', '.delPhone', function() {
-      let phone_id = $(this).attr('id');
-      
-      phones = phones.filter((phone, index) => index != phone_id);
-      showPhones();
-    });
-
-    ///////////////////////////////////////////////////////////////////
     // filtro de las parroquias
     ///////////////////////////////////////////////////////////////////
 
@@ -458,6 +469,77 @@
         }
       });
     });
+
+    ///////////////////////////////////////////////////////////////////
+    // mascara la zona postal
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputZonaPostal").inputmask(lib_digitMask());
+
+    ///////////////////////////////////////////////////////////////////
+    // agregar direccion
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnAddAddress").click(function() {
+      let address = {
+          address       : $("#inputAddress").val(),
+          parroquia_id  : $("#selectParroquia :selected").val(),
+          zona_postal   : $("#inputZonaPostal").val()
+        };
+
+        if(address.parroquia_id === undefined) {
+          lib_toastr("Error: Debe seleccionar una parroquia!");
+        }
+        else if(lib_isEmpty(address.address)) {
+          lib_toastr("Error: Debe ingresar una dirección!");
+        }
+        else if(lib_isEmpty(address.zona_postal)) {
+          lib_toastr("Error: Debe ingresar la zona postal!");
+        }
+        else if(address.zona_postal.length > 10) {
+          lib_toastr("Error: La zona postal no puede exceder de 10 caracteres!");
+        }
+        else {
+          addresses.push(address);
+          $("#inputAddress").val("");
+          $("#inputZonaPostal").val("");
+          showDirecciones();
+        }
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar direccion
+    ///////////////////////////////////////////////////////////////////
+
+    $(document).on('click', '.delAddress', function() {
+      let address_id = $(this).attr('id');
+
+      addresses = addresses.filter((address, index) => index != address_id);
+      showDirecciones();
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // mostrar direcciones
+    ///////////////////////////////////////////////////////////////////
+
+    function showDirecciones()
+    {
+      let cadena = '';
+
+      addresses.forEach((address, index) => {
+        cadena += `
+          <div class="input-group mb-2">
+            <input type="hidden" name="parroquia_id[]" value="${address.parroquia_id}" />
+            <input type="hidden" name="zona_postal[]" value="${address.zona_postal}" />
+            <input type="text" class="form-control" name="address[]" value="${address.address}" readonly />
+            <div class="input-group-append">
+              <a class="delAddress btn btn-danger btn-sm" id="${index}"><i class="fas fa-trash-alt"></i></a>
+            </div>
+          </div>`
+      });
+
+      $("#divAddresses").html(cadena);
+    };
 
     ///////////////////////////////////////////////////////////////////
     // agregar/editar un empleado 
@@ -492,29 +574,32 @@
         method: _method,
         headers: {
           'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content'),
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json'
+          'Content-Type'  : 'application/x-www-form-urlencoded',
+          'Accept'        : 'application/json'
         },
         body: data
       })
       .then(response => {
         if(response.ok) {
-          /*if(formData.has('images[]')) {
-            let postImagesRoute = "{{ route('employees-adm.add-images', ['cedula' => '.valor']) }}";
+          response.json().then(responseData => {
+            console.log(responseData);
+            if(formData.has('images[]')) {
+              let postImagesRoute = "{{ route('employees-adm.add-images', ['id' => 'valor1', 'cedula' => 'valor2']) }}";
 
-            postImagesRoute = postImagesRoute.replace('.valor', person.cedula);
-            fetch(postImagesRoute, {
-              method  : "POST",
-              headers : {
-                'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content')
-              },
-              body    : formData
-            });
-          };
-          
-          datatable.ajax.reload();
-          lib_ShowMensaje("Datos actualizados.");*/
-          alert("jsjsjs");
+              postImagesRoute = postImagesRoute.replace('valor1', responseData.id);
+              postImagesRoute = postImagesRoute.replace('valor2', responseData.cedula);
+
+              fetch(postImagesRoute, {
+                method  : "POST",
+                headers : {
+                  'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content')
+                },
+                body : formData
+              });
+            }
+          });
+
+          lib_ShowMensaje("Datos actualizados.");
         }
         else {
           response.text().then(r => {
@@ -560,176 +645,7 @@
       imprimirImagenes();
       imprimirImagenesNuevas();
       $('#modalForm').modal('show');
-    }
-
-    ///////////////////////////////////////////////////////////////////
-    // mascara para el numero de telefono
-    ///////////////////////////////////////////////////////////////////
-
-    $("#inputPhone").inputmask(lib_phoneMask());
-
-    ///////////////////////////////////////////////////////////////////
-    // mascara la zona postal
-    ///////////////////////////////////////////////////////////////////
-
-    $("#inputZonaPostal").inputmask(lib_digitMask());
-
-    ///////////////////////////////////////////////////////////////////
-    // validar formulario de persona
-    ///////////////////////////////////////////////////////////////////
-
-    $("#personForm").validate({
-      ignore: "",
-      rules:{
-        inputCedula : {
-          required : true,
-          minlength: 7,
-          maxlength: 15
-        },
-        inputRif : {
-          required : true,
-          minlength: 10,
-          maxlength: 20
-        },
-        inputNombre : {
-          required : true,
-          maxlength: 200
-        },
-        inputBirthday : {
-          required : true
-        },
-        inputPlaceOfBirth : {
-          required : true,
-          maxlength: 200
-        },
-        inputEmail : {
-          required : true,
-          email:true,
-          maxlength: 255
-        },
-        demo: {
-          required:true
-        }
-      },
-      messages: {
-        demo: {
-          required: "Este es demo input",
-        },
-        inputCedula: {
-          required : "Debe ingresar el número de cédula.",
-          minlength: "Debe ingresar mínimo 7 dígitos.",
-          maxlength: "Debe ingresar un máxiom de 15 dígitos."
-        },
-        inputRif: {
-          required : "Debe ingresar el número de R.I.F.",
-          minlength: "Debe ingresar mínimo 10 dígitos.",
-          maxlength: "Debe ingresar un máxiom de 20 dígitos."
-        },
-        inputNombre: {
-          required : "Debe ingresar el nombre del empleado.",
-          maxlength: "Debe ingresar un máxiom de 200 carácteres."
-        },
-        inputBirthday : {
-          required : "Debe ingresar la fecha de nacimiento."
-        },
-        inputPlaceOfBirth : {
-          required : "Debe ingresar el lugar de nacimiento.",
-          maxlength: "Debe ingresar un máximo de 200 carácteres."
-        },
-        inputEmail:{
-          required: "Deeb ingresar la dirección de correo electrónico.",
-          email: "Deeb ingresar una dirección de correo electrónico.",
-          maxlength: "Debe ingresar un máximo de 255 carácteres."
-        }
-      },
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-      },
-      submitHandler: function (form, e) {
-        e.preventDefault();
-
-        if(person.phones.length < 1) {
-          lib_ShowMensaje("Debe ingresar al menos un número teléfonico!", "error");
-          return;
-        }
-
-        if(person.addresses.length < 1) {
-          lib_ShowMensaje("Debe ingresar al menos una dirección de ubicación!", "error");
-          return;
-        }
-
-        //
-        send();
-      }
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // imprimir direcciones
-    ///////////////////////////////////////////////////////////////////
-
-    function imprimirDirecciones()
-    {
-      let cadena = '';
-
-      person.addresses.forEach((address, index) => {
-        cadena += `
-          <div class="input-group mb-2">
-            <input type="text" class="form-control" value="${address.address}" readonly />
-            <div class="input-group-append">
-              <a class="delAddress btn btn-danger btn-sm" id="${index}"><i class="fas fa-trash-alt"></i></a>
-            </div>
-          </div>`
-      });
-
-      $("#divAddresses").html(cadena);
-    }
-
-    ///////////////////////////////////////////////////////////////////
-    // agregar direccion
-    ///////////////////////////////////////////////////////////////////
-
-    $("#btnAddAddress").click(function() {
-      let address = {
-          address       : $("#inputAddress").val(),
-          parroquia_id  : $("#selectParroquia :selected").val(),
-          zona_postal   : $("#inputZonaPostal").val()
-        };
-
-        if(lib_isEmpty(address.address)) {
-          lib_toastr("Error: Debe ingresar una dirección!");
-        }
-        else if(lib_isEmpty(address.zona_postal)) {
-          lib_toastr("Error: Debe ingresar la zona postal!");
-        }
-        else if(address.zona_postal.length > 10) {
-          lib_toastr("Error: La zona postal no puede exceder de 10 caracteres!");
-        }
-        else {
-          person.addresses.push(address);
-          $("#inputAddress").val("");
-          $("#inputZonaPostal").val("");
-          imprimirDirecciones();
-        }
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // eliminar direccion
-    ///////////////////////////////////////////////////////////////////
-
-    $(document).on('click', '.delAddress', function() {
-      let address_id = $(this).attr('id');
-
-      person.addresses = person.addresses.filter((address, index) => index != address_id);
-      imprimirDirecciones();
-    });
+    };
 
     ///////////////////////////////////////////////////////////////////
     // imprimir imagenes del servidor
@@ -809,83 +725,10 @@
     };
 
     ///////////////////////////////////////////////////////////////////
-    // formulario de datos administrativos
-    ///////////////////////////////////////////////////////////////////
-
-    $('#adminForm').validate({
-      rules: {
-        inputCodigo: {
-          required: true,
-          maxlength: 20
-        },
-        inputFechaIngreso: {
-          required: true
-        },
-        inputPatria: {
-          required: true,
-          maxlength: 20
-        },
-        inputReligion: {
-          required: true,
-          maxlength: 100
-        },
-        inputDeporte: {
-          required: true,
-          maxlength: 100
-        },
-        inputLicencia: {
-          required: true,
-          maxlength: 100
-        }
-      },
-      messages: {
-        inputCodigo: {
-          required: "Debes ingresar el Código Administrativo.",
-          maxlength: "Debes ingresar máximo 20 digitos."
-        },
-        inputFechaIngreso: {
-          required: "Debes ingresar la fecha de ingreso."
-        },
-        inputPatria: {
-          required: "Debes ingresar el Código del Carnet Patria.",
-          maxlength: "Debes ingresar máximo 20 digitos."
-        },
-        inputReligion: {
-          required: "Debes ingresar la religión profesada por el empleado.",
-          maxlength: "Debes ingresar máximo 100 digitos."
-        },
-        inputDeporte: {
-          required: "Debes ingresar el deporte practicado por el empleado.",
-          maxlength: "Debes ingresar máximo 100 digitos."
-        },
-        inputLicencia: {
-          required: "Debes ingresar el tipo de licencia del empleado.",
-          maxlength: "Debes ingresar máximo 100 digitos."
-        }
-      },
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-      },
-      submitHandler: function (form, e) {
-        e.preventDefault();
-
-        alert("vengo?");
-      }
-    });
-
-    ///////////////////////////////////////////////////////////////////
     // enviar los datos del empleado al servidor
     ///////////////////////////////////////////////////////////////////
 
-    function send() {
+    function sendx() {
       let ruta;
       let _method;
 
@@ -921,43 +764,6 @@
       person.employee.deporte = $("#inputDeporte").val(); 
       person.employee.licencia = $("#inputLicencia").val(); 
 
-      fetch(ruta, {
-        method: _method,
-        headers: {
-          'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content'),
-          'Content-Type'  : 'application/json',
-          'Accept'        : 'application/json'
-        },
-        body: JSON.stringify(person)
-      })
-      .then(response => {
-        if(response.ok) {
-          if(formData.has('images[]')) {
-            let postImagesRoute = "{{ route('employees-adm.add-images', ['cedula' => '.valor']) }}";
-
-            postImagesRoute = postImagesRoute.replace('.valor', person.cedula);
-            fetch(postImagesRoute, {
-              method  : "POST",
-              headers : {
-                'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content')
-              },
-              body    : formData
-            });
-          };
-          
-          datatable.ajax.reload();
-          lib_ShowMensaje("Datos actualizados.");
-        }
-        else {
-          response.text().then(r => {
-            let errores = JSON.parse(r);
-
-            for (let propiedad in errores.errors) {
-              lib_toastr(errores.errors[propiedad]);
-            }
-          });
-        }
-      })
     };
   });
 </script>

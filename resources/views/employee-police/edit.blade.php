@@ -190,7 +190,7 @@
               </div>
 
               <div class="col my-2">
-                <label for="inputZonaPostal">Dirección y Zona Postal</label>
+                <label for="inputAddress">Dirección y Zona Postal</label>
                 <input type="text" 
                       id="inputAddress" 
                       name="inputAddress" 
