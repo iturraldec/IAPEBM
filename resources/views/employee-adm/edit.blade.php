@@ -582,7 +582,6 @@
       .then(response => {
         if(response.ok) {
           response.json().then(responseData => {
-            console.log(responseData);
             if(formData.has('images[]')) {
               let postImagesRoute = "{{ route('employees-adm.add-images', ['id' => 'valor1', 'cedula' => 'valor2']) }}";
 
