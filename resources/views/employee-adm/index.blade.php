@@ -62,7 +62,15 @@
         ]
     });
 
-    $("#dt-add-button").html(`<a href="{{ route('employees-adm.create') }}" class="btn btn-primary" target="_blank">Agregar Empleado Administrativo</a>`);
+    $("#dt-add-button").html(`<a href="#" id="btnAgregarEmpleado" class="btn btn-primary">Agregar Empleado Administrativo</a>`);
+
+    ///////////////////////////////////////////////////////////////////
+    // agregar empleado
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnAgregarEmpleado").on('click', function() {
+      window.open("{{ route('employees-adm.create') }}");
+    });
 
     ///////////////////////////////////////////////////////////////////
     // eliminar empleado

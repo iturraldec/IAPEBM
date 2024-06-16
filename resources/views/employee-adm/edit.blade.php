@@ -12,6 +12,7 @@
 
 @section('content')
 <div class="card card-primary card-tabs">
+  <!-- card-header -->
   <div class="card-header p-0 pt-1">
     <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
       <li class="nav-item">
@@ -75,6 +76,7 @@
                   id="inputNombre"
                   name="name"
                   required
+                  minlength="3"
                   maxlength="200"
                   placeholder="Ingresa su nombre(s) y apellido(s)"
                   onkeyup="this.value = this.value.toUpperCase();"
@@ -117,7 +119,7 @@
           </div>
 
           <div class="col-3 form-group">
-            <label for="selectSangre">Tipo Sanguineo</label>
+            <label for="selectSangre">Tipo de Sangre</label>
             <select id="selectSangre" class="form-control" name="blood_type_id">
               @foreach($tipoSangre as $tipo)
                 <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
@@ -149,6 +151,7 @@
 
           <div class="col">
             <button type="submit" class="btn btn-danger">Grabar</button>
+            <button type="button" id="btnSalir" class="btn btn-secondary">Retornar</button>
           </div>
         </div>
       </div>
@@ -265,7 +268,7 @@
             <input type="text" 
                   class="form-control" 
                   id="inputCodigo" 
-                  name="codigo" 
+                  name="codigo"
                   placeholder="No. de código"
             />
           </div>
@@ -372,12 +375,9 @@
 @section('js')
 <script>
   $(document).ready(function () {
-    toastr.options.closeButton = true;
-    toastr.options.timeOut = 0;
-    toastr.options.extendedTimeOut = 0;
-    ///////////////////////////////////////////////  
-    var person = {};  // POR ELIMINAR
-    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////
+    // variables globales
+    ///////////////////////////////////////////////////////////////////
 
     var phones      = [];                               // telefonos del empleado
     var addresses   = [];                               // direcciones del empleado
@@ -385,6 +385,24 @@
     var municipios  = {{ Js::from($municipios) }};
     var parroquias  = {{ Js::from($parroquias) }};
     var emptyImages = 'Sin imagenes en servidor.';
+
+    ///////////////////////////////////////////////////////////////////
+    // configuracion de 'toatsr'
+    ///////////////////////////////////////////////////////////////////
+
+    toastr.options.closeButton = true;
+    toastr.options.timeOut = 0;
+    toastr.options.extendedTimeOut = 0;
+
+    $("#btnSalir").click(function() {
+      window.close();
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // mascara para el nombre
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputNombre").inputmask(lib_characterMask());
 
     ///////////////////////////////////////////////////////////////////
     // mascara para el numero de telefono
@@ -553,6 +571,11 @@
         return;
       }
 
+      if(addresses.length < 1) {
+        lib_toastr("Error: Debe ingresar al menos una dirección de ubicación!");
+        return;
+      }
+
       let ruta;
       let _method;
       let empleadoId = $("#empleadoId").val();
@@ -598,7 +621,8 @@
             }
           });
 
-          lib_ShowMensaje("Datos actualizados.");
+          lib_ShowMensaje("Empleado Administrativo agregado!", 'mensaje')
+          .then(response => window.close());
         }
         else {
           response.text().then(r => {
