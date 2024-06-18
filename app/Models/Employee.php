@@ -26,7 +26,7 @@ class Employee extends Model
         'licencia',
     ];
 
-    //
+    // datos personales
     public function person() : BelongsTo
     {
         return $this->belongsTo(Person::class);

@@ -44,7 +44,7 @@ class EmployeeAdmController extends Controller
     }
   }
 
-  //
+  // retorna los datos de un empleado
   public function getById(Employee $employee)
   {
     return Person::with('employee', 'civil_status', 'phones.type', 'addresses', 'images')->find($employee->person_id);
@@ -53,7 +53,7 @@ class EmployeeAdmController extends Controller
   // vista para crear empleado
   public function create()
   {
-    $location = new Location();
+    $location     = new Location();
     $phone_types  = PhoneType::get();
     $municipios   = $location->getMunicipios();
     $parroquias   = $location->getParroquias();
@@ -64,8 +64,9 @@ class EmployeeAdmController extends Controller
     $tipos        = EmployeeTipos::OrderBy('name')->get();
     $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
 
-    return view('employee-adm.edit', compact('phone_types', 'municipios', 
-                  'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones'));
+    return view('employee-adm.create', 
+                  compact('phone_types', 'municipios', 'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 
+                          'status', 'tipos', 'ubicaciones'));
   }
 
   // agregar empleado
@@ -79,6 +80,7 @@ class EmployeeAdmController extends Controller
       'birthday'              => 'required|date',
       'place_of_birth'        => 'required|max:255',
       'civil_status_id'       => 'required',
+      'blood_type_id'         => 'required',
       'email'                 => 'required|email|unique:people',
       'codigo'                => 'required|max:20',
       'fecha_ingreso'         => 'required|date',
@@ -98,7 +100,7 @@ class EmployeeAdmController extends Controller
 
     // agrego los datos personales
     $person = Person::create($request->only([
-      'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'email', 'notes'
+      'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type_id', 'email', 'notes'
     ]));
 
     // agrego los datos administrativos
@@ -125,8 +127,9 @@ class EmployeeAdmController extends Controller
   // edicion de emplado
   public function edit(Employee $employees_adm)
   {
-    $data = $this->getById($employees_adm);
-    $location = new Location();
+    $formMode     = 'edit';
+    $data['employee']         = $employees_adm;
+    $location     = new Location();
     $phone_types  = PhoneType::get();
     $municipios   = $location->getMunicipios();
     $parroquias   = $location->getParroquias();
@@ -137,7 +140,7 @@ class EmployeeAdmController extends Controller
     $tipos        = EmployeeTipos::OrderBy('name')->get();
     $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
 
-    return view('employee-adm.edit', compact('phone_types', 'municipios', 
+    return view('employee-adm.edit', compact('formMode', 'phone_types', 'municipios', 
                   'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones', 'data'));
   }
 

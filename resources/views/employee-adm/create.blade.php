@@ -3,13 +3,7 @@
 @section('title', 'Empleado Administrativo')
 
 @section('content_header')
-  <h1>
-    @if($formMode == 'create')
-      Agregar Empleado Administrativo
-    @else
-      Actualizar Empleado: $person->name 
-    @endif
-  </h1>
+  <h1>Agregar Empleado Administrativo</h1>
 @endsection
 
 @section('content')
@@ -243,29 +237,19 @@
 
       <!-- tab de imagenes -->
       <div class="tab-pane fade" id="custom-tabs-one-images" role="tabpanel" aria-labelledby="custom-tabs-one-images-tab">
-        <div class="container">
-          <div class="row">
+        <div class="row">
 
-            <!-- imagenes nuevas -->
-            <div class="col-6 border border-dark">
-              <div class="h5 text-center">Imagenes a subir</div>
+          <!-- imagenes nuevas -->
+          <div class="col border border-dark">
+            <div class="h5 text-center">Imagenes a subir</div>
 
-              <div id="divNewImages" class="row"></div>
+            <div id="divNewImages" class="row"></div>
 
-              <div class="col mt-2">
-                <input type="file" class="form-control" id="inputImage" accept="image/*">
-              </div>
+            <div class="mt-2">
+              <input type="file" class="form-control" id="inputImage" accept="image/*">
             </div>
-            <!-- fin de imagenes nuevas -->
-            
-            <!-- imagenes en servidor -->
-            <div class="col-6 border border-dark">
-              <div class="h5 text-center">Imagenes en servidor</div>
-
-              <div  id="divImages" class="row"></div>
-            </div>
-            <!-- fin de imagenes en servidor -->
           </div>
+          <!-- fin de imagenes nuevas -->
         </div>
       </div>
       <!-- fin de tab de fotos -->
@@ -392,18 +376,12 @@
     ///////////////////////////////////////////////////////////////////
     // variables globales
     ///////////////////////////////////////////////////////////////////
-    if('{{ $formMode }}' === 'edit') {
-      console.log({{ Js::from($data['employee']) }});
-      return;
-    }
-
-    var data        = {{ isset($data) ? Js::from($data, JSON_INVALID_UTF8_IGNORE) : 'null'  }};   // id del empleado
+    
     var phones      = [];                                               // telefonos del empleado
     var addresses   = [];                                               // direcciones del empleado
     var formData    = new FormData();                                   // imagenes nuevas del empleado
     var municipios  = {{ Js::from($municipios) }};
     var parroquias  = {{ Js::from($parroquias) }};
-    var emptyImages = 'Sin imagenes en servidor.';
 
     ///////////////////////////////////////////////////////////////////
     // configuracion de 'toatsr'
@@ -412,49 +390,6 @@
     toastr.options.closeButton = true;
     toastr.options.timeOut = 0;
     toastr.options.extendedTimeOut = 0;
-
-    ///////////////////////////////////////////////////////////////////
-    // pueblo los inputs
-    ///////////////////////////////////////////////////////////////////
-    if(data != null) {
-
-      // telefonos
-      data.phones.forEach(phone => {
-        phones.push({
-          phone_type_id : phone.phone_type_id,
-          phoneTypeName : phone.type.name,
-          number        : phone.number
-        });
-      });
-
-      // direcciones
-      data.addresses.forEach(direccion => {
-        addresses.push({
-          address       : direccion.address,
-          parroquia_id  : direccion.parroquia_id,
-          zona_postal   : direccion.zona_postal
-        });
-      });
-
-      // imprimir telefonos
-      showPhones();
-      
-      // imprimir direcciones
-      showDirecciones();
-
-      // imagenes del servidor
-      let cadena = "";
-
-      data.images.forEach(image => {
-        cadena += `
-          <div class="col-6">
-            <img src="${image['file']}" class="img-fluid img-thumbnail mt-2" width="200" height="250">
-            <button class="deleteImage form-control btn-danger p-2" id='${image['id']}'>Eliminar</button>
-          </div>`;
-      });
-
-      $("#divImages").html(cadena);
-    }
 
     ///////////////////////////////////////////////////////////////////
     // cerrar pestaña de edicion
@@ -475,6 +410,12 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#inputPhone").inputmask(lib_phoneMask());
+
+    ///////////////////////////////////////////////////////////////////
+    // mascara la zona postal
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputZonaPostal").inputmask(lib_digitMask());
     
     ///////////////////////////////////////////////////////////////////
     // agregar telefono
@@ -544,6 +485,7 @@
       let selectedOption = $(this).val();
 
       $("#selectParroquia").empty();
+      $('#selectParroquia').append("<option value='0'>SELECCIONE LA PARROQUIA</option>");
       parroquias.forEach(parroquia => {
         if(parroquia.padre_id == selectedOption) {
           $('#selectParroquia')
@@ -553,12 +495,6 @@
         }
       });
     });
-
-    ///////////////////////////////////////////////////////////////////
-    // mascara la zona postal
-    ///////////////////////////////////////////////////////////////////
-
-    $("#inputZonaPostal").inputmask(lib_digitMask());
 
     ///////////////////////////////////////////////////////////////////
     // agregar direccion
@@ -642,24 +578,10 @@
         return;
       }
 
-      let ruta;
-      let _method;
-
-      if(data != null) {
-        ruta = "{{ route('employees-adm.store') }}";
-        _method = "POST";
-      }
-      else {
-        ruta = "{{ route('employees-adm.update', ['employees_adm' => '.valor']) }}";
-
-        ruta = ruta.replace('.valor', data.employee.id);
-        _method = "PUT";
-      }
- 
       data = $(this).serialize();
 
-      fetch(ruta, {
-        method: _method,
+      fetch("{{ route('employees-adm.store') }}", {
+        method: 'POST',
         headers: {
           'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content'),
           'Content-Type'  : 'application/x-www-form-urlencoded',
@@ -702,31 +624,16 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // borrar una imagen del servidor
-    ///////////////////////////////////////////////////////////////////
-
-    $(document).on('click', '.deleteImage', function() {
-      let imagen_id = $(this).attr('id');
-
-      person.images.forEach(image => {
-        if(image.id.toString() === imagen_id) {
-          image.deleted = true;
-        }
-      });
-      imprimirImagenes();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // agregar una imagen nueva
+    // agregar una imagen
     ///////////////////////////////////////////////////////////////////
 
     $('#inputImage').on('change', function(e) {
       formData.append('images[]', e.target.files[0]);
-      imprimirImagenesNuevas();
+      imprimirImagenes();
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar una imagen nueva
+    // eliminar una imagen
     ///////////////////////////////////////////////////////////////////
 
     $(document).on('click', '.deleteImagenNueva', function() {
@@ -735,19 +642,19 @@
       imagesArray.splice($(this).attr('id'), 1);
       formData.delete('images[]');
       imagesArray.forEach(image => formData.append('images[]', image));
-      imprimirImagenesNuevas();
+      imprimirImagenes();
     });
 
     ///////////////////////////////////////////////////////////////////
     // imprimir imagenes nuevas
     ///////////////////////////////////////////////////////////////////
 
-    function imprimirImagenesNuevas() {
+    function imprimirImagenes() {
       let contenedor = $("#divNewImages");
 
       contenedor.empty();
       for (let i = 0; i < formData.getAll('images[]').length; i++) {
-        let div = $('<div class="col-6"></div>');
+        let div = $('<div class="col-3 text-center"></div>');
         let img = $('<img class="img-fluid img-thumbnail mt-2" width="200" height="250">');
         let botonEliminar = $(`<button class="deleteImagenNueva form-control btn-danger p-2" id="${i}">Eliminar</button>`);
 
