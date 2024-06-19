@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
 use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Validation\Rule;
 
 use App\Models\Address;
 use App\Models\BloodType;
@@ -72,6 +73,7 @@ class EmployeeAdmController extends Controller
   // agregar empleado
   public function store(Request $request)
   {
+    // validacion de los datos
     $request->validate([
       'cedula'                => 'required|min:7|max:15|unique:people',
       'rif'                   => 'required|max:20|unique:employees',
@@ -109,7 +111,7 @@ class EmployeeAdmController extends Controller
                       'religion', 'deporte', 'licencia');
     $employeeData['person_id'] = $person->id;
     $employeeData['grupo_id'] = $this->grupo_id;
-    $employee = Employee::create($employeeData);
+    Employee::create($employeeData);
 
     // agrego los telefonos del empleado
     $this->_addPhones($person, $request->input('phone_type_id'), $request->input('phone_number'));
@@ -127,8 +129,6 @@ class EmployeeAdmController extends Controller
   // edicion de emplado
   public function edit(Employee $employees_adm)
   {
-    $formMode     = 'edit';
-    $data['employee']         = $employees_adm;
     $location     = new Location();
     $phone_types  = PhoneType::get();
     $municipios   = $location->getMunicipios();
@@ -139,8 +139,10 @@ class EmployeeAdmController extends Controller
     $status       = EmployeeStatus::OrderBy('name')->get();
     $tipos        = EmployeeTipos::OrderBy('name')->get();
     $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
+    $data['employee'] = $employees_adm;
+    $data['person'] = Person::with('civil_status', 'phones.type', 'addresses', 'images')->find($employees_adm->person_id);
 
-    return view('employee-adm.edit', compact('formMode', 'phone_types', 'municipios', 
+    return view('employee-adm.edit', compact('phone_types', 'municipios', 
                   'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones', 'data'));
   }
 
@@ -149,66 +151,89 @@ class EmployeeAdmController extends Controller
    */
   public function update(Request $request, Employee $employees_adm)
   {
-    /*
-    $this->validate($request, [
-      'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
-    */
+    // validacion de los datos
     $request->validate([
-      'employee.codigo' => [
+      'cedula' => [
         'required',
-        'max:20'
+        'min:7',
+        'max:15',
+        Rule::unique('people')->ignore($employees_adm->person_id)
       ],
-      'employee.fecha_ingreso'  => 'required',
-      'employee.codigo_patria'  => [
+      'rif' => [
         'required',
-        'max:100'
+        'max:20',
+        Rule::unique('employees')->ignore($employees_adm->id)
       ],
-      'employee.religion'       => 'required|max:100',
-      'employee.deporte'        => 'required|max:100',
-      'employee.licencia'       => 'required|max:100',
+      'name'                  => 'required|max:200',
+      'sex'                   => 'required|max:1',
+      'birthday'              => 'required|date',
+      'place_of_birth'        => 'required|max:255',
+      'civil_status_id'       => 'required',
+      'blood_type_id'         => 'required',
+      'email' => [
+        'required',
+        'email',
+        Rule::unique('people')->ignore($employees_adm->person_id)
+      ],
+      'codigo'                => 'required|max:20',
+      'fecha_ingreso'         => 'required|date',
+      'employee_cargo_id'     => 'required',
+      'employee_condicion_id' => 'required',
+      'employee_tipo_id'      => 'required',
+      'employee_location_id'  => 'required',
+      'codigo_patria'         => 'required|max:20',
+      'religion'              => 'required|max:100',
+      'deporte'               => 'required|max:100',
+      'licencia'              => 'required|max:100',
+      'phone_type_id'         => 'required',
+      'phone_number'          => 'required',
+      'parroquia_id'          => 'required',
+      'address'               => 'required',
     ]);
 
-    // modifico la persona
-    $person = Person::find($employees_adm->person_id);
-    $person->cedula = $request->cedula;
-    $person->name = $request->name;
-    $person->sex = $request->sex;
-    $person->birthday = $request->birthday;
-    $person->place_of_birth = $request->place_of_birth;
-    $person->civil_status_id = $request->civil_status_id;
-    $person->blood_type_id = $request->blood_type_id;
-    $person->email = $request->email;
-    $person->notes = $request->notes;
+    // actualizo la persona
+    $person                   = Person::find($employees_adm->person_id);
+    $person->cedula           = $request->cedula;
+    $person->name             = $request->name;
+    $person->sex              = $request->sex;
+    $person->birthday         = $request->birthday;
+    $person->place_of_birth   = $request->place_of_birth;
+    $person->civil_status_id  = $request->civil_status_id;
+    $person->blood_type_id    = $request->blood_type_id;
+    $person->email            = $request->email;
+    $person->notes            = $request->notes;
     $person->save();
 
-    // modifico sus telefonos
-    $this->_addPhones($person, $request->phones);
+    // actualizo sus telefonos
+    $this->_addPhones($person, $request->phone_type_id, $request->phone_number);
 
     // modificar direcciones
-    $this->_addAddresses($person, $request->addresses);
+    $this->_addAddresses($person, 
+                        $request->input('address'),
+                        $request->input('parroquia_id'),
+                        $request->input('zona_postal'));
 
-    // eliminar las imagenes que el usuario selecciono
-    foreach($request->images as $image) {
-      if($image['deleted']) {
-        $employeeImage = PersonImage::find($image['id']);
+    // eliminar las imagenes que el usuario elimino
+    if($request->has('imagesDeleted')) {
+      foreach($request->imagesDeleted as $id) {
+        $employeeImage = PersonImage::find($id);
         $employeeImage->delete();
-        unlink($image['file']);
+        unlink(storage_path('app/public/employee') . str_replace('image', '', $employeeImage->file));
       }
-    };
+    }
 
-    // modifico los datos del empleado
-    $employees_adm->codigo = $request->employee['codigo'];
-    $employees_adm->fecha_ingreso = $request->employee['fecha_ingreso'];
-    $employees_adm->employee_cargo_id = $request->employee['employee_cargo_id'];
-    $employees_adm->employee_condicion_id = $request->employee['employee_condicion_id'];
-    $employees_adm->employee_tipo_id = $request->employee['employee_tipo_id'];
-    $employees_adm->employee_location_id = $request->employee['employee_location_id'];
-    $employees_adm->rif = $request->employee['rif'];
-    $employees_adm->codigo_patria = $request->employee['codigo_patria'];
-    $employees_adm->religion =  $request->employee['religion'];
-    $employees_adm->deporte = $request->employee['deporte'];
-    $employees_adm->licencia =  $request->employee['licencia'];
+    // modifico los datos del administrativos
+    $employees_adm->codigo                = $request->input('codigo');
+    $employees_adm->fecha_ingreso         = $request->input('fecha_ingreso');
+    $employees_adm->employee_cargo_id     = $request->input('employee_cargo_id');
+    $employees_adm->employee_condicion_id = $request->input('employee_condicion_id');
+    $employees_adm->employee_tipo_id      = $request->input('employee_tipo_id');
+    $employees_adm->employee_location_id  = $request->input('employee_location_id');
+    $employees_adm->rif                   = $request->input('rif');
+    $employees_adm->codigo_patria         = $request->input('codigo_patria');
+    $employees_adm->religion              = $request->input('religion');
+    $employees_adm->deporte               = $request->input('deporte');
+    $employees_adm->licencia              = $request->input('licencia');
     $employees_adm->save();
     
     //
