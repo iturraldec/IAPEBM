@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Address extends Model
 {
   //
+  protected $table = 'addresses';
+
+  //
   protected $fillable = ['person_id', 'address', 'parroquia_id', 'zona_postal'];
 
   //

@@ -17,6 +17,12 @@ class Person extends Model
         'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'email', 'civil_status_id', 'blood_type_id', 'notes'
     ];
 
+    // retorna los datos de un empleado
+    public static function getById(int $id)
+    {
+        return Person::with('employee', 'civil_status', 'phones.type', 'addresses', 'images')->find($id);
+    }
+
     //
     public function employee() : HasOne
     {

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Barryvdh\DomPDF\Facade;
 use Intervention\Image\ImageManagerStatic as Image;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade;
 use Illuminate\Validation\Rule;
 
 use App\Models\Address;
@@ -43,12 +43,6 @@ class EmployeeAdmController extends Controller
     else {
       return datatables()->of(Employee::where('grupo_id', $this->grupo_id)->with('person')->get())->toJson();
     }
-  }
-
-  // retorna los datos de un empleado
-  public function getById(Employee $employee)
-  {
-    return Person::with('employee', 'civil_status', 'phones.type', 'addresses', 'images')->find($employee->person_id);
   }
 
   // vista para crear empleado
@@ -95,9 +89,9 @@ class EmployeeAdmController extends Controller
       'deporte'               => 'required|max:100',
       'licencia'              => 'required|max:100',
       'phone_type_id'         => 'required',
-      'phone_number'          => 'required',
+      'phone_number'          => 'required|max:20',
       'parroquia_id'          => 'required',
-      'address'               => 'required',
+      'address'               => 'required|max:255',
     ]);
 
     // agrego los datos personales
@@ -126,7 +120,7 @@ class EmployeeAdmController extends Controller
     return response($person, Response::HTTP_CREATED);
   }
 
-  // edicion de emplado
+  // vista para la edicion de emplado
   public function edit(Employee $employees_adm)
   {
     $location     = new Location();
@@ -140,7 +134,7 @@ class EmployeeAdmController extends Controller
     $tipos        = EmployeeTipos::OrderBy('name')->get();
     $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
     $data['employee'] = $employees_adm;
-    $data['person'] = Person::with('civil_status', 'phones.type', 'addresses', 'images')->find($employees_adm->person_id);
+    $data['person']   = Person::getById($employees_adm->person_id);
 
     return view('employee-adm.edit', compact('phone_types', 'municipios', 
                   'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones', 'data'));
@@ -186,9 +180,9 @@ class EmployeeAdmController extends Controller
       'deporte'               => 'required|max:100',
       'licencia'              => 'required|max:100',
       'phone_type_id'         => 'required',
-      'phone_number'          => 'required',
+      'phone_number'          => 'required|max:20',
       'parroquia_id'          => 'required',
-      'address'               => 'required',
+      'address'               => 'required|max:255',
     ]);
 
     // actualizo la persona
@@ -261,12 +255,11 @@ class EmployeeAdmController extends Controller
     $addresses = [];
     foreach($address as $indice => $_address) {
       $addresses[] = new Address([
-        'address'       => $_address,
-        'parroquia_id'  => $parroquia_id[$indice],
-        'zona_postal'   => $zona_postal[$indice]
-      ]);
+                        'address'       => $_address,
+                        'parroquia_id'  => $parroquia_id[$indice],
+                        'zona_postal'   => $zona_postal[$indice]
+                      ]);
     };
-
     $person->addresses()->delete();
     $person->addresses()->saveMany($addresses);
   }
@@ -308,10 +301,10 @@ class EmployeeAdmController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(int $employees_id)
+  public function destroy(Employee $employees_adm)
   {
-    $person = Person::find($employees_id);
-    if(!is_null($person)) {
+    $person = Person::find($employees_adm->person_id);
+    if(! is_null($person)) {
       $person->delete();
     }
     

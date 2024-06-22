@@ -3,7 +3,7 @@
 @section('title', 'Empleado Policial')
 
 @section('content_header')
-  <h1>Actualizar Empleado Policial: {{ $data['person']['name'] }}</h1>
+  <h1>Agregar Empleado Policial</h1>
 @endsection
 
 @section('content')
@@ -43,7 +43,6 @@
                   class="form-control" 
                   id="inputCedula" 
                   name="cedula"
-                  value="{{ $data['person']['cedula'] }}"
                   minlength="7"
                   maxlength="15"
                   required
@@ -57,7 +56,6 @@
                   class="form-control" 
                   id="inputRif" 
                   name="rif"
-                  value="{{ $data['employee']['rif'] }}"
                   maxlength="20"
                   required
                   placeholder="No. de R.I.F."
@@ -71,7 +69,6 @@
                   class="form-control" 
                   id="inputNombre"
                   name="name"
-                  value="{{ $data['person']['name'] }}"
                   required
                   minlength="3"
                   maxlength="200"
@@ -83,8 +80,9 @@
           <div class="col-3 form-group">
             <label for="selectSexo">Sexo</label>
             <select id="selectSexo" class="form-control" name="sex">
-              <option value="M" {{ $data['person']['sex'] == 'M' ? 'selected' : ''}}>MASCULINO</option>
-              <option value="F" {{ $data['person']['sex'] == 'F' ? 'selected' : ''}}>FEMENINO</option>
+              <option value="0" selected>SELECCIONE EL SEXO</option>
+              <option value="M">MASCULINO</option>
+              <option value="F">FEMENINO</option>
             </select>
           </div>
 
@@ -94,7 +92,6 @@
                   class="form-control" 
                   id="inputBirthday" 
                   name="birthday"
-                  value="{{ $data['person']['birthday'] }}"
                   required />
           </div>
 
@@ -104,7 +101,6 @@
                   class="form-control"
                   id="inputPlaceOfBirth"
                   name="place_of_birth"
-                  value="{{ $data['person']['place_of_birth'] }}"
                   maxlength="255"
                   required
                   placeholder="Ingresa el lugar de nacimiento"
@@ -115,8 +111,9 @@
           <div class="col-3 form-group">
             <label for="selectEstadoCivil">Estado Civil</label>
             <select id="selectEstadoCivil" class="form-control" name="civil_status_id">
+              <option value="0" selected>SELECCIONE ESTADO CIVIL</option>
               @foreach($edoCivil as $estado)
-                <option value="{{ $estado->id }}" {{ $data['person']['civil_status_id'] == $estado->id ? 'selected' : ''}}>{{ $estado->name }}</option>
+                <option value="{{ $estado->id }}">{{ $estado->name }}</option>
               @endforeach
             </select>
           </div>
@@ -124,8 +121,9 @@
           <div class="col-3 form-group">
             <label for="selectSangre">Tipo de Sangre</label>
             <select id="selectSangre" class="form-control" name="blood_type_id">
+              <option value="0" selected>SELECCIONE TIPO</option>
               @foreach($tipoSangre as $tipo)
-                <option value="{{ $tipo->id }}" {{ $data['person']['blood_type_id'] == $tipo->id ? 'selected' : ''}}>{{ $tipo->name }}</option>
+                <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
               @endforeach
             </select>
           </div>
@@ -136,7 +134,6 @@
                   class="form-control"
                   id="inputEmail"
                   name="email"
-                  value="{{ $data['person']['email'] }}"
                   placeholder="Ingresa el correo electrónico"
                   onkeyup="this.value = this.value.toLowerCase();"
             />
@@ -150,7 +147,7 @@
                       placeholder="Ingresa observaciones"
                       rows="3"
                       onkeyup="this.value = this.value.toUpperCase();"
-            />{{ $data['person']['notes'] }}</textarea>
+            /></textarea>
           </div>
 
           <div class="col">
@@ -213,7 +210,7 @@
             <label for="inputAddress">Dirección y Zona Postal</label>
             <div class="input-group mb-2">
               <input type="text" 
-                    id="inputAddress" 
+                    id="inputAddress"
                     class="form-control" 
                     placeholder="Ingresa la dirección"
                     onkeyup="this.value = this.value.toUpperCase();"
@@ -226,7 +223,7 @@
 
           <div class="input-group mb-2">
             <input type"text" 
-                  id="inputZonaPostal" 
+                  id="inputZonaPostal"
                   class="form-control" 
                   placeholder="Ingrese la zona postal"
             />
@@ -240,29 +237,19 @@
 
       <!-- tab de imagenes -->
       <div class="tab-pane fade" id="custom-tabs-one-images" role="tabpanel" aria-labelledby="custom-tabs-one-images-tab">
-        <div class="container">
-          <div class="row">
+        <div class="row">
 
-            <!-- imagenes nuevas -->
-            <div class="col-6 border border-dark">
-              <div class="h5 text-center">Imagenes a subir</div>
+          <!-- imagenes nuevas -->
+          <div class="col border border-dark">
+            <div class="h5 text-center">Imagenes a subir</div>
 
-              <div id="divNewImages" class="row"></div>
+            <div id="divNewImages" class="row"></div>
 
-              <div class="col mt-2">
-                <input type="file" class="form-control" id="inputImage" accept="image/*">
-              </div>
+            <div class="mt-2">
+              <input type="file" class="form-control" id="inputImage" accept="image/*">
             </div>
-            <!-- fin de imagenes nuevas -->
-            
-            <!-- imagenes en servidor -->
-            <div class="col-6 border border-dark">
-              <div class="h5 text-center">Imagenes en servidor</div>
-
-              <div  id="divImages" class="row"></div>
-            </div>
-            <!-- fin de imagenes en servidor -->
           </div>
+          <!-- fin de imagenes nuevas -->
         </div>
       </div>
       <!-- fin de tab de fotos -->
@@ -276,7 +263,6 @@
                   class="form-control" 
                   id="inputCodigo" 
                   name="codigo"
-                  value="{{ $data['employee']['codigo'] }}"
                   placeholder="No. de código"
             />
           </div>
@@ -287,17 +273,15 @@
                   class="form-control" 
                   id="inputFechaIngreso" 
                   name="fecha_ingreso"
-                  value="{{ $data['employee']['fecha_ingreso'] }}"
             />
           </div>
 
           <div class="col-4 form-group">
             <label for="selectCargo">Cargo</label>
             <select id="selectCargo" class="form-control" name="employee_cargo_id">
+              <option value="0" selected>SELECCIONE EL CARGO</option>
               @foreach($cargos as $cargo)
-                <option value="{{ $cargo->id }}" {{ $data['employee']['employee_cargo_id'] == $cargo->id ? 'selected' : ''}}>
-                  {{ $cargo->name }}
-                </option>
+                <option value="{{ $cargo->id }}">{{ $cargo->name }}</option>
               @endforeach
             </select>
           </div>
@@ -305,10 +289,9 @@
           <div class="col-4 form-group">
             <label for="selectStatus">Condición</label>
             <select id="selectStatus" class="form-control" name="employee_condicion_id">
+              <option value="0" selected>SELECCIONE LA CONDICIÓN</option>
               @foreach($status as $condicion)
-                <option value="{{ $condicion->id }}"{{ $data['employee']['employee_condicion_id'] == $condicion->id ? 'selected' : ''}}>
-                  {{ $condicion->name }}
-                </option>
+                <option value="{{ $condicion->id }}">{{ $condicion->name }}</option>
               @endforeach
             </select>
           </div>
@@ -316,10 +299,9 @@
           <div class="col-4 form-group">
             <label for="selectTipos">Tipo</label>
             <select id="selectTipos" class="form-control" name="employee_tipo_id">
+              <option value="0" selected>SELECCIONE EL TIPO</option>
               @foreach($tipos as $tipo)
-                <option value="{{ $tipo->id }}" {{ $data['employee']['employee_tipo_id'] == $tipo->id ? 'selected' : ''}}>
-                  {{ $tipo->name }}
-                </option>
+                <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
               @endforeach
             </select>
           </div>
@@ -327,10 +309,9 @@
           <div class="col-4 form-group">
             <label for="selectUbicaciones">Ubicación</label>
             <select id="selectUbicaciones" class="form-control" name="employee_location_id">
+              <option value="0" selected>SELECCIONE LA UBICACIÓN</option>
               @foreach($ubicaciones as $ubicacion)
-                <option value="{{ $ubicacion->id }}"{{ $data['employee']['employee_location_id'] == $ubicacion->id ? 'selected' : ''}}>
-                  {{ $ubicacion->name }}
-                </option>
+                <option value="{{ $ubicacion->id }}">{{ $ubicacion->name }}</option>
               @endforeach
             </select>
           </div>
@@ -341,7 +322,6 @@
                   class="form-control"
                   id="inputPatria"
                   name="codigo_patria"
-                  value="{{ $data['employee']['codigo_patria'] }}"
                   placeholder="Ingresa el código patria"
             />
           </div>
@@ -352,7 +332,6 @@
                   class="form-control"
                   id="inputReligion"
                   name="religion"
-                  value="{{ $data['employee']['religion'] }}"
                   placeholder="Religión prefesada por el empleado"
                   onkeyup="this.value = this.value.toUpperCase();"
             />
@@ -364,7 +343,6 @@
                   class="form-control"
                   id="inputDeporte"
                   name="deporte"
-                  value="{{ $data['employee']['deporte'] }}"
                   placeholder="Deporte practicado por el empleado"
                   onkeyup="this.value = this.value.toUpperCase();"
             />
@@ -376,7 +354,6 @@
                   class="form-control"
                   id="inputLicencia"
                   name="licencia"
-                  value="{{ $data['employee']['licencia'] }}"
                   placeholder="Ingrese la licencia"
             />
           </div>
@@ -387,7 +364,6 @@
                   class="form-control"
                   id="inputEscuela"
                   name="escuela"
-                  value="{{ $data['employee']['escuela'] }}"
                   placeholder="Ingrese la escuela"
                   onkeyup="this.value = this.value.toUpperCase();"
             />
@@ -399,7 +375,6 @@
                   class="form-control"
                   id="inputFechaGrado"
                   name="fecha_graduacion"
-                  value="{{ $data['employee']['fecha_graduacion'] }}"
                   placeholder="Ingrese fecha"
             />
           </div>
@@ -410,11 +385,9 @@
                   class="form-control"
                   id="inputCurso"
                   name="curso"
-                  value="{{ $data['employee']['curso'] }}"
                   placeholder="Ingrese el curso"
             />
           </div>
-
         </div>
       </div>
       <!-- fin de datos administrativos -->
@@ -434,50 +407,20 @@
     ///////////////////////////////////////////////////////////////////
     // variables globales
     ///////////////////////////////////////////////////////////////////
-
-    var phones      = {{ Js::from($data['person']['phones']) }};        // telefonos del empleado
-    var addresses   = {{ Js::from($data['person']['addresses']) }};     // direcciones del empleado
-    var imageSrvPath = "{{ asset('/') }}";                              // path de la imagenes en el servidor
-    var images      = []                                                // imagenes en servidor del empleado
+    
+    var phones      = [];                                               // telefonos del empleado
+    var addresses   = [];                                               // direcciones del empleado
     var formData    = new FormData();                                   // imagenes nuevas del empleado
-    var municipios  = {{ Js::from($municipios) }};                      // municipios
-    var parroquias  = {{ Js::from($parroquias) }};                      // parroquias
-    var emptyImages = 'Sin imagenes en servidor.';
-
-    // ruta para la modificacion del empleado policial
-    var ruta        =  "{{ route('employees-police.update', ['employees_polouse' => $data['employee']['id']]) }}";
-
-    // inicio la configuracion de la vista
-    viewInit();
+    var municipios  = {{ Js::from($municipios) }};
+    var parroquias  = {{ Js::from($parroquias) }};
 
     ///////////////////////////////////////////////////////////////////
-    // configuracion inicial del formulario
+    // configuracion de 'toatsr'
     ///////////////////////////////////////////////////////////////////
 
-    function viewInit() {
-      // configuracion de 'toatsr'
-      toastr.options.closeButton = true;
-      toastr.options.timeOut = 0;
-      toastr.options.extendedTimeOut = 0;
-
-      // imprimir los telefonos
-      showPhones();
-
-      // imprimir direcciones
-      showDirecciones();
-
-      // imprimir imagenes del servidor
-      let imagenesSrv = {{ Js::from($data['person']['images']) }};
-
-      images = imagenesSrv.map(image => {
-                image.file = imageSrvPath + image.file;
-                image.deleted = false;
-                
-                return image;
-              });
- 
-      showSrvImages();
-    }
+    toastr.options.closeButton = true;
+    toastr.options.timeOut = 0;
+    toastr.options.extendedTimeOut = 0;
 
     ///////////////////////////////////////////////////////////////////
     // cerrar pestaña de edicion
@@ -498,6 +441,12 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#inputPhone").inputmask(lib_phoneMask());
+
+    ///////////////////////////////////////////////////////////////////
+    // mascara la zona postal
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputZonaPostal").inputmask(lib_digitMask());
     
     ///////////////////////////////////////////////////////////////////
     // agregar telefono
@@ -512,9 +461,7 @@
       else {
         phones.push({
           phone_type_id : $("#selectPhoneType :selected").val(),
-          type : {
-            name : $("#selectPhoneType :selected").text()
-          },
+          phoneTypeName : $("#selectPhoneType :selected").text(),
           number        : _number
         });
 
@@ -544,7 +491,7 @@
         cadena += `
           <div class="col-6">
             <input type="hidden" class="form-control" name="phone_type_id[]" value="${phone.phone_type_id}" />
-            <input type="text" class="form-control" value="${phone.type.name}" readonly />
+            <input type="text" class="form-control" value="${phone.phoneTypeName}" readonly />
           </div>
 
           <div class="col-6">
@@ -569,6 +516,7 @@
       let selectedOption = $(this).val();
 
       $("#selectParroquia").empty();
+      $('#selectParroquia').append("<option value='0'>SELECCIONE LA PARROQUIA</option>");
       parroquias.forEach(parroquia => {
         if(parroquia.padre_id == selectedOption) {
           $('#selectParroquia')
@@ -578,12 +526,6 @@
         }
       });
     });
-
-    ///////////////////////////////////////////////////////////////////
-    // mascara la zona postal
-    ///////////////////////////////////////////////////////////////////
-
-    $("#inputZonaPostal").inputmask(lib_digitMask());
 
     ///////////////////////////////////////////////////////////////////
     // agregar direccion
@@ -651,54 +593,16 @@
     };
 
     ///////////////////////////////////////////////////////////////////
-    // borrar una imagen del servidor
-    ///////////////////////////////////////////////////////////////////
-
-    $(document).on('click', '.deleteImage', function() {
-      let imagen_id = $(this).attr('id');
-
-      images.forEach(image => {
-        if(image.id.toString() === imagen_id) {
-          image.deleted = true;
-        }
-      });
-      showSrvImages();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // mostrar imagenes del servidor
-    ///////////////////////////////////////////////////////////////////
-    function showSrvImages() {
-      let cadena = '';
-
-      images.forEach(image => {
-        if(image.deleted) {
-          cadena += `
-            <input type="hidden" name="imagesDeleted[]" value="${image['id']}" />`;
-        }
-        else {
-          cadena += `
-            <div class="col-6 text-center">
-              <img src="${image.file}" class="img-fluid img-thumbnail mt-2" width="200" height="250">
-              <button class="deleteImage form-control btn-danger mb-2 p-2" id='${image['id']}'>Eliminar</button>
-            </div>`;
-        }
-      });
-
-      $("#divImages").html(cadena);
-    };
-
-    ///////////////////////////////////////////////////////////////////
-    // agregar una imagen nueva
+    // agregar una imagen
     ///////////////////////////////////////////////////////////////////
 
     $('#inputImage').on('change', function(e) {
       formData.append('images[]', e.target.files[0]);
-      imprimirImagenesNuevas();
+      imprimirImagenes();
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar una imagen nueva
+    // eliminar una imagen
     ///////////////////////////////////////////////////////////////////
 
     $(document).on('click', '.deleteImagenNueva', function() {
@@ -707,19 +611,19 @@
       imagesArray.splice($(this).attr('id'), 1);
       formData.delete('images[]');
       imagesArray.forEach(image => formData.append('images[]', image));
-      imprimirImagenesNuevas();
+      imprimirImagenes();
     });
 
     ///////////////////////////////////////////////////////////////////
-    // imprimir imagenes nuevas
+    // imprimir imagenes
     ///////////////////////////////////////////////////////////////////
 
-    function imprimirImagenesNuevas() {
+    function imprimirImagenes() {
       let contenedor = $("#divNewImages");
 
       contenedor.empty();
       for (let i = 0; i < formData.getAll('images[]').length; i++) {
-        let div = $('<div class="col-6"></div>');
+        let div = $('<div class="col-3 text-center"></div>');
         let img = $('<img class="img-fluid img-thumbnail mt-2" width="200" height="250">');
         let botonEliminar = $(`<button class="deleteImagenNueva form-control btn-danger p-2" id="${i}">Eliminar</button>`);
 
@@ -746,11 +650,11 @@
         lib_toastr("Error: Debe ingresar al menos una dirección de ubicación!");
         return;
       }
- 
+
       data = $(this).serialize();
 
-      fetch(ruta, {
-        method: 'PUT',
+      fetch("{{ route('employees-police.store') }}", {
+        method: 'POST',
         headers: {
           'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content'),
           'Content-Type'  : 'application/x-www-form-urlencoded',
@@ -762,7 +666,10 @@
         if(response.ok) {
           response.json().then(responseData => {
             if(formData.has('images[]')) {
-              let postImagesRoute = "{{ route('employees-police.add-images', ['id' => $data['person']['id'], 'cedula' => $data['person']['cedula']]) }}";
+              let postImagesRoute = "{{ route('employees-police.add-images', ['id' => 'valor1', 'cedula' => 'valor2']) }}";
+
+              postImagesRoute = postImagesRoute.replace('valor1', responseData.id);
+              postImagesRoute = postImagesRoute.replace('valor2', responseData.cedula);
 
               fetch(postImagesRoute, {
                 method  : "POST",
@@ -774,7 +681,7 @@
             }
           });
 
-          lib_ShowMensaje("Empleado Administrativo modificado!", 'mensaje')
+          lib_ShowMensaje("Empleado Polcial agregado!", 'mensaje')
           .then(response => window.close());
         }
         else {

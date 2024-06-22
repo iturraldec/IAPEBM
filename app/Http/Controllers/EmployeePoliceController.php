@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Intervention\Image\ImageManagerStatic as Image;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
-use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Http\Request;
 
 use App\Models\Address;
 use App\Models\BloodType;
@@ -22,6 +21,7 @@ use App\Models\Cargo;
 use App\Models\EmployeeStatus;
 use App\Models\EmployeeTipos;
 use App\Models\EmployeeLocations;
+use App\Models\Police;
 
 //
 class EmployeePoliceController extends Controller
@@ -38,36 +38,277 @@ class EmployeePoliceController extends Controller
    */
   public function index()
   {
-    if(request()->ajax()) {
-      return datatables()->of(Employee::where('grupo_id', $this->grupo_id)->with('person')->get())->toJson();
+    if(! request()->ajax()) {
+      return view('employee-police.index');
     }
     else {
-      $location = new Location();
-      $phone_types  = PhoneType::get();
-      $municipios   = $location->getMunicipios();
-      $parroquias   = $location->getParroquias();
-      $edoCivil     = CivilStatus::get();
-      $tipoSangre   = BloodType::get();
-      $cargos       = Cargo::OrderBy('name')->get();
-      $status       = EmployeeStatus::OrderBy('name')->get();
-      $tipos        = EmployeeTipos::OrderBy('name')->get();
-      $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
-
-      return view('employee-police.index', compact('phone_types', 'municipios', 
-                  'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones'));
+      return datatables()->of(Employee::where('grupo_id', $this->grupo_id)->with('person')->get())->toJson();
     }
   }
 
-  //
-  public function getById(Employee $employee)
+  // vista para crear empleado
+  public function create()
   {
-    return Person::with('employee.police', 'civil_status', 'phones.type', 'addresses', 'images')->find($employee->person_id);
+    $location     = new Location();
+    $phone_types  = PhoneType::get();
+    $municipios   = $location->getMunicipios();
+    $parroquias   = $location->getParroquias();
+    $edoCivil     = CivilStatus::get();
+    $tipoSangre   = BloodType::get();
+    $cargos       = Cargo::OrderBy('name')->get();
+    $status       = EmployeeStatus::OrderBy('name')->get();
+    $tipos        = EmployeeTipos::OrderBy('name')->get();
+    $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
+
+    return view('employee-police.create', 
+                  compact('phone_types', 'municipios', 'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 
+                          'status', 'tipos', 'ubicaciones'));
+  }
+
+  // agregar empleado
+  public function store(Request $request)
+  {
+    // validacion de los datos
+    $request->validate([
+      'cedula'                => 'required|min:7|max:15|unique:people',
+      'rif'                   => 'required|max:20|unique:employees',
+      'name'                  => 'required|max:200',
+      'sex'                   => 'required|max:1',
+      'birthday'              => 'required|date',
+      'place_of_birth'        => 'required|max:255',
+      'civil_status_id'       => 'required',
+      'blood_type_id'         => 'required',
+      'email'                 => 'required|email|unique:people',
+      'codigo'                => 'required|max:20',
+      'fecha_ingreso'         => 'required|date',
+      'employee_cargo_id'     => 'required',
+      'employee_condicion_id' => 'required',
+      'employee_tipo_id'      => 'required',
+      'employee_location_id'  => 'required',
+      'codigo_patria'         => 'required|max:20',
+      'religion'              => 'required|max:100',
+      'deporte'               => 'required|max:100',
+      'licencia'              => 'required|max:100',
+      'phone_type_id'         => 'required',
+      'phone_number'          => 'required|max:20',
+      'parroquia_id'          => 'required',
+      'address'               => 'required|max:255',
+      'escuela'               => 'required|max:100',
+      'fecha_graduacion'      => 'required|date',
+      'curso'                 => 'required|max:10',
+    ]);
+
+    // agrego los datos personales
+    $person = Person::create($request->only([
+      'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type_id', 'email', 'notes'
+    ]));
+
+    // agrego los datos administrativos
+    $employeeData = $request->only('codigo', 'fecha_ingreso', 'employee_cargo_id', 'employee_condicion_id',
+                      'employee_tipo_id', 'employee_location_id', 'rif', 'codigo_patria',
+                      'religion', 'deporte', 'licencia');
+    $employeeData['person_id'] = $person->id;
+    $employeeData['grupo_id'] = $this->grupo_id;
+    $employee = Employee::create($employeeData);
+
+    // agrego los datos policiales
+    $employeeData = $request->only('escuela', 'fecha_graduacion', 'curso');
+    $employeeData['employee_id'] = $employee->id;
+    Police::create($employeeData);
+
+    // agrego los telefonos del empleado
+    $this->_addPhones($person, $request->input('phone_type_id'), $request->input('phone_number'));
+
+    // agrego las direcciones del empleado
+    $this->_addAddresses($person, 
+                        $request->input('address'),
+                        $request->input('parroquia_id'),
+                        $request->input('zona_postal'));
+
+    //
+    return response($person, Response::HTTP_CREATED);
+  }
+
+  // edicion de emplado
+  public function edit(Employee $employees_polouse)
+  {
+    $location     = new Location();
+    $phone_types  = PhoneType::get();
+    $municipios   = $location->getMunicipios();
+    $parroquias   = $location->getParroquias();
+    $edoCivil     = CivilStatus::get();
+    $tipoSangre   = BloodType::get();
+    $cargos       = Cargo::OrderBy('name')->get();
+    $status       = EmployeeStatus::OrderBy('name')->get();
+    $tipos        = EmployeeTipos::OrderBy('name')->get();
+    $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
+    $data['person']                       = Person::getById($employees_polouse->person_id);
+    $data['employee']                     = $employees_polouse;
+    $police                               = Police::where('employee_id', $employees_polouse->id)->first();
+    $data['employee']['escuela']          = $police->escuela;
+    $data['employee']['fecha_graduacion'] = $police->fecha_graduacion;
+    $data['employee']['curso']            = $police->curso;
+    
+    return view('employee-police.edit', compact('phone_types', 'municipios', 
+                  'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones', 'data'));
+  }
+
+  /**
+   * Update the specified resource in storage.
+   */
+  public function update(Request $request, Employee $employees_polouse)
+  {
+    // validacion de los datos
+    $request->validate([
+      'cedula' => [
+        'required',
+        'min:7',
+        'max:15',
+        Rule::unique('people')->ignore($employees_polouse->person_id)
+      ],
+      'rif' => [
+        'required',
+        'max:20',
+        Rule::unique('employees')->ignore($employees_polouse->id)
+      ],
+      'name'                  => 'required|max:200',
+      'sex'                   => 'required|max:1',
+      'birthday'              => 'required|date',
+      'place_of_birth'        => 'required|max:255',
+      'civil_status_id'       => 'required',
+      'blood_type_id'         => 'required',
+      'email' => [
+        'required',
+        'email',
+        Rule::unique('people')->ignore($employees_polouse->person_id)
+      ],
+      'codigo'                => 'required|max:20',
+      'fecha_ingreso'         => 'required|date',
+      'employee_cargo_id'     => 'required',
+      'employee_condicion_id' => 'required',
+      'employee_tipo_id'      => 'required',
+      'employee_location_id'  => 'required',
+      'codigo_patria'         => 'required|max:20',
+      'religion'              => 'required|max:100',
+      'deporte'               => 'required|max:100',
+      'licencia'              => 'required|max:100',
+      'phone_type_id'         => 'required',
+      'phone_number'          => 'required',
+      'parroquia_id'          => 'required',
+      'address'               => 'required|max:255',
+      'escuela'               => 'required|max:100',
+      'fecha_graduacion'      => 'required|date',
+      'curso'                 => 'required|max:10',
+    ]);
+
+    // actualizo la persona
+    $person                   = Person::find($employees_polouse->person_id);
+    $person->cedula           = $request->cedula;
+    $person->name             = $request->name;
+    $person->sex              = $request->sex;
+    $person->birthday         = $request->birthday;
+    $person->place_of_birth   = $request->place_of_birth;
+    $person->civil_status_id  = $request->civil_status_id;
+    $person->blood_type_id    = $request->blood_type_id;
+    $person->email            = $request->email;
+    $person->notes            = $request->notes;
+    $person->save();
+
+    // actualizo sus telefonos
+    $this->_addPhones($person, $request->phone_type_id, $request->phone_number);
+
+    // actualizo sus direcciones
+    $this->_addAddresses($person, 
+                        $request->input('address'),
+                        $request->input('parroquia_id'),
+                        $request->input('zona_postal'));
+
+    // eliminar las imagenes que el usuario elimino
+    if($request->has('imagesDeleted')) {
+      foreach($request->imagesDeleted as $id) {
+        $employeeImage = PersonImage::find($id);
+        $employeeImage->delete();
+        unlink(storage_path('app/public/employee') . str_replace('image', '', $employeeImage->file));
+      }
+    }
+    // modifico los datos del administrativos
+    $employees_polouse->codigo                = $request->input('codigo');
+    $employees_polouse->fecha_ingreso         = $request->input('fecha_ingreso');
+    $employees_polouse->employee_cargo_id     = $request->input('employee_cargo_id');
+    $employees_polouse->employee_condicion_id = $request->input('employee_condicion_id');
+    $employees_polouse->employee_tipo_id      = $request->input('employee_tipo_id');
+    $employees_polouse->employee_location_id  = $request->input('employee_location_id');
+    $employees_polouse->rif                   = $request->input('rif');
+    $employees_polouse->codigo_patria         = $request->input('codigo_patria');
+    $employees_polouse->religion              = $request->input('religion');
+    $employees_polouse->deporte               = $request->input('deporte');
+    $employees_polouse->licencia              = $request->input('licencia');
+    $employees_polouse->save();
+
+    // modifico los datos policiales
+    $police = Police::where('employee_id', $employees_polouse->id)->first();
+    $police->escuela               = $request->input('escuela');
+    $police->fecha_graduacion      = $request->input('fecha_graduacion');
+    $police->curso                 = $request->input('curso');
+    $police->save();
+    
+    //
+    return response(Response::HTTP_OK);
+  }
+
+  // agregar los telefonos del empleado
+  private function _addPhones($person, $phonesTypeIds, $phonesNumbers)
+  {
+    $phones = [];
+    foreach($phonesTypeIds as $indice => $phoneTypeId) {
+      $phones[] = new Phone([
+                      'phone_type_id' => $phoneTypeId,
+                      'number'        => $phonesNumbers[$indice]
+                    ]);
+    };
+
+    $person->phones()->delete();
+    $person->phones()->saveMany($phones);
+  }
+
+  // agregar las direcciones del empleado
+  private function _addAddresses($person, $address, $parroquia_id, $zona_postal)
+  {
+    $addresses = [];
+    foreach($address as $indice => $_address) {
+      $addresses[] = new Address([
+                          'address'       => $_address,
+                          'parroquia_id'  => $parroquia_id[$indice],
+                          'zona_postal'   => $zona_postal[$indice]
+                        ]);
+    };
+
+    $person->addresses()->delete();
+    $person->addresses()->saveMany($addresses);
   }
 
   //
-  public function edit(Employee $employees_polouse)
+  public function addImages(Request $request, int $id, string $cedula)
   {
-    return response($this->getById($employees_polouse), 200);
+
+    if ($request->hasFile('images')) {
+      $path = storage_path("app/public/employees/$cedula");
+      $files = [];
+      if(! file_exists($path)) mkdir($path);
+      foreach($request->file('images') as $image) {
+        $name = uniqid() . ".png";
+        $file = "$path/$name";
+        Image::make($image->getRealPath())->resize(200,200)->save($file, 0, 'png');
+        $files[] = [
+            'person_id' => $id,
+            'file'      => "images/$cedula/$name"
+        ];
+      }
+      
+      return response(PersonImage::insert($files));
+    }
+
+    return Response::HTTP_NO_CONTENT;
   }
 
   //
@@ -80,222 +321,12 @@ class EmployeePoliceController extends Controller
     return $pdf->stream("ea-".$data->cedula);
   }
 
-  //
-  private function _addPhones($person, $_phones)
-  {
-    $phone = [];
-    foreach($_phones as $phone) {
-      $phones[] = new Phone([
-                    'phone_type_id' => $phone['phone_type_id'],
-                    'number'        => $phone['number']
-                  ]);
-    };
-
-    $person->phones()->delete();
-    $person->phones()->saveMany($phones);
-  }
-
-  //
-  private function _addAddresses($person, $_addresses)
-  {
-    $addresses = [];
-    foreach($_addresses as $address) {
-      $addresses[] = new Address([
-                    'address'       => $address['address'],
-                    'parroquia_id'  => $address['parroquia_id'],
-                    'zona_postal'   => $address['zona_postal']
-                  ]);
-    };
-
-    $person->addresses()->delete();
-    $person->addresses()->saveMany($addresses);
-  }
-
-  /**
-   * Store a newly created resource in storage.
-   */
-  public function store(Request $request)
-  {
-    $request->validate([
-      'cedula'  => 'required|max:15|unique:people',
-      'employee.codigo' => [
-        'required',
-        'max:20'
-      ],
-      'employee.fecha_ingreso'  => 'required',
-      'employee.codigo_patria'  => [
-        'required',
-        'max:100'
-      ],
-      'employee.religion'         => 'required|max:100',
-      'employee.deporte'          => 'required|max:100',
-      'employee.licencia'         => 'required|max:100',
-      'employee.police.escuela'          => 'required|max:100',
-      'employee.police.fecha_graduacion' => 'required',
-      'employee.police.curso'            => 'required|max:10',
-    ]);
-
-    // agrego la persona
-    $person = Person::create([
-      'cedula'          => $request->cedula, 
-      'name'            => $request->name, 
-      'sex'             => $request->sex, 
-      'birthday'        => $request->birthday, 
-      'place_of_birth'  => $request->place_of_birth, 
-      'email'           => $request->email, 
-      'civil_status_id'  => $request->civil_status_id, 
-      'blood_type_id'   => $request->blood_type_id, 
-      'notes'           => $request->notes
-    ]);
-
-    // agregar telefonos
-    $this->_addPhones($person, $request->phones);
-
-    // agregar direcciones
-    $this->_addAddresses($person, $request->addresses);
-
-    // agrego empleado
-    $employee = Employee::create([
-      'person_id'               => $person->id,
-      'grupo_id'                => $this->grupo_id,
-      'codigo'                  => $request->employee['codigo'],
-      'fecha_ingreso'           => $request->employee['fecha_ingreso'],
-      'employee_cargo_id'       => $request->employee['employee_cargo_id'],
-      'employee_condicion_id'   => $request->employee['employee_condicion_id'],
-      'employee_tipo_id'        => $request->employee['employee_tipo_id'],
-      'employee_location_id'    => $request->employee['employee_location_id'],
-      'rif'                     => $request->employee['rif'],
-      'codigo_patria'           => $request->employee['codigo_patria'],
-      'religion'                => $request->employee['religion'],
-      'deporte'                 => $request->employee['deporte'],
-      'licencia'                => $request->employee['licencia'],
-    ]);
-
-    // agrego datos policiales
-    DB::table('police')->insert([
-      'employee_id'       => $employee->id,
-      'escuela'           => $request->employee['police']['escuela'],
-      'fecha_graduacion'  => $request->employee['police']['fecha_graduacion'],
-      'curso'             => $request->employee['police']['curso'],
-    ]);
-
-    //
-    return response($person, 201);
-  }
-
-  /**
-   * Update the specified resource in storage.
-   */
-  public function update(Request $request, Employee $employees_polouse)
-  {
-    $request->validate([
-      'cedula'  => [
-        'required',
-        'max:15',
-        Rule::unique('people')->ignore($employees_polouse->person_id)
-      ],
-      'employee.codigo' => [
-        'required',
-        'max:20'
-        ///////////////////////////////////////////////////////////
-        // FALTA VALIDAR DE QUE NO EXISTA EL CODIGO!!!
-        ///////////////////////////////////////////////////////////
-      ],
-      'employee.fecha_ingreso'  => 'required',
-      'employee.codigo_patria'  => [
-        'required',
-        'max:100'
-      ],
-      'employee.religion'         => 'required|max:100',
-      'employee.deporte'          => 'required|max:100',
-      'employee.licencia'         => 'required|max:100',
-      'employee.police.escuela'          => 'required|max:100',
-      'employee.police.fecha_graduacion' => 'required',
-      'employee.police.curso'            => 'required|max:10',
-    ]);
-
-    // modifico la persona
-    $person = Person::find($employees_polouse->person_id);
-    $person->cedula = $request->cedula;
-    $person->name = $request->name;
-    $person->sex = $request->sex;
-    $person->birthday = $request->birthday;
-    $person->place_of_birth = $request->place_of_birth;
-    $person->civil_status_id = $request->civil_status_id;
-    $person->blood_type_id = $request->blood_type_id;
-    $person->email = $request->email;
-    $person->notes = $request->notes;
-    $person->save();
-
-    // modifico sus telefonos
-    $this->_addPhones($person, $request->phones);
-
-    // modifico sus direcciones
-    $this->_addAddresses($person, $request->addresses);
-
-    // eliminar las imagenes que el usuario selecciono
-    foreach($request->images as $image) {
-      if($image['deleted']) {
-        $employeeImage = PersonImage::find($image['id']);
-        $employeeImage->delete();
-        unlink($image['file']);
-      }
-    };
-
-    // modifico los datos del empleado
-    $employees_polouse->codigo = $request->employee['codigo'];
-    $employees_polouse->fecha_ingreso = $request->employee['fecha_ingreso'];
-    $employees_polouse->employee_cargo_id = $request->employee['employee_cargo_id'];
-    $employees_polouse->employee_condicion_id = $request->employee['employee_condicion_id'];
-    $employees_polouse->employee_tipo_id = $request->employee['employee_tipo_id'];
-    $employees_polouse->employee_location_id = $request->employee['employee_location_id'];
-    $employees_polouse->rif = $request->employee['rif'];
-    $employees_polouse->codigo_patria = $request->employee['codigo_patria'];
-    $employees_polouse->religion =  $request->employee['religion'];
-    $employees_polouse->deporte = $request->employee['deporte'];
-    $employees_polouse->licencia =  $request->employee['licencia'];
-    $employees_polouse->save();
-
-    // modifico los datos policiales
-    DB::table('police')
-      ->where('employee_id', $employees_polouse->id)
-      ->update([
-          'escuela'           => $request->employee['police']['escuela'],
-          'fecha_graduacion'  => $request->employee['police']['fecha_graduacion'],
-          'curso'             => $request->employee['police']['curso']
-        ]);     
-    
-        //
-    return response($person, Response::HTTP_OK);
-  }
-
-  //
-  public function addImages(Request $request, string $cedula)
-  {
-    if ($request->hasFile('images')) {
-      $person = Person::firstWhere('cedula', $cedula);
-      $files = [];
-      foreach($request->file('images') as $image) {
-        $file = "images/$cedula/" . uniqid() . ".png";
-        Image::make($image->getRealPath())->resize(200,200)->save($file, 0, 'png');
-        $files[] = [
-            'person_id' => $person->id,
-            'file'      => $file
-        ];
-      }
-      
-      return response(PersonImage::insert($files));
-    }
-
-   return Response::HTTP_NO_CONTENT;
-  }
-
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(int $employees_polouse)
+  public function destroy(Employee $employees_polouse)
   {
-    $person = Person::find($employees_polouse);
+    $person = Person::find($employees_polouse->person_id);
     if(!is_null($person)) {
       $person->delete();
     }

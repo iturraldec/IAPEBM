@@ -562,6 +562,48 @@
     };
 
     ///////////////////////////////////////////////////////////////////
+    // agregar una imagen
+    ///////////////////////////////////////////////////////////////////
+
+    $('#inputImage').on('change', function(e) {
+      formData.append('images[]', e.target.files[0]);
+      imprimirImagenes();
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar una imagen
+    ///////////////////////////////////////////////////////////////////
+
+    $(document).on('click', '.deleteImagenNueva', function() {
+      let imagesArray = Array.from(formData.getAll('images[]'));
+
+      imagesArray.splice($(this).attr('id'), 1);
+      formData.delete('images[]');
+      imagesArray.forEach(image => formData.append('images[]', image));
+      imprimirImagenes();
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // imprimir imagenes nuevas
+    ///////////////////////////////////////////////////////////////////
+
+    function imprimirImagenes() {
+      let contenedor = $("#divNewImages");
+
+      contenedor.empty();
+      for (let i = 0; i < formData.getAll('images[]').length; i++) {
+        let div = $('<div class="col-3 text-center"></div>');
+        let img = $('<img class="img-fluid img-thumbnail mt-2" width="200" height="250">');
+        let botonEliminar = $(`<button class="deleteImagenNueva form-control btn-danger p-2" id="${i}">Eliminar</button>`);
+
+        img.attr('src', URL.createObjectURL(formData.getAll('images[]')[i]));
+        div.append(img);
+        div.append(botonEliminar);
+        contenedor.append(div);
+      }
+    };
+
+    ///////////////////////////////////////////////////////////////////
     // agregar/editar un empleado 
     ///////////////////////////////////////////////////////////////////
 
@@ -608,7 +650,7 @@
             }
           });
 
-          lib_ShowMensaje("Empleado Administrativo agregado!", 'mensaje')
+          lib_ShowMensaje("Empleado Administrativo agregado!" + responseData.id, 'mensaje')
           .then(response => window.close());
         }
         else {
@@ -622,48 +664,6 @@
         }
       })
     });
-
-    ///////////////////////////////////////////////////////////////////
-    // agregar una imagen
-    ///////////////////////////////////////////////////////////////////
-
-    $('#inputImage').on('change', function(e) {
-      formData.append('images[]', e.target.files[0]);
-      imprimirImagenes();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // eliminar una imagen
-    ///////////////////////////////////////////////////////////////////
-
-    $(document).on('click', '.deleteImagenNueva', function() {
-      let imagesArray = Array.from(formData.getAll('images[]'));
-
-      imagesArray.splice($(this).attr('id'), 1);
-      formData.delete('images[]');
-      imagesArray.forEach(image => formData.append('images[]', image));
-      imprimirImagenes();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // imprimir imagenes nuevas
-    ///////////////////////////////////////////////////////////////////
-
-    function imprimirImagenes() {
-      let contenedor = $("#divNewImages");
-
-      contenedor.empty();
-      for (let i = 0; i < formData.getAll('images[]').length; i++) {
-        let div = $('<div class="col-3 text-center"></div>');
-        let img = $('<img class="img-fluid img-thumbnail mt-2" width="200" height="250">');
-        let botonEliminar = $(`<button class="deleteImagenNueva form-control btn-danger p-2" id="${i}">Eliminar</button>`);
-
-        img.attr('src', URL.createObjectURL(formData.getAll('images[]')[i]));
-        div.append(img);
-        div.append(botonEliminar);
-        contenedor.append(div);
-      }
-    };
   });
 </script>
 @endsection

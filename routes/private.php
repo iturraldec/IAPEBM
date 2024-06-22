@@ -35,4 +35,4 @@ Route::post('employees-adm/{id}/{cedula}', [EmployeeAdmController::class, 'addIm
 
 // empleados policiales
 Route::resource('employees-police', EmployeePoliceController::class)->names('employees-police');
-Route::post('employees-police/{cedula}', [EmployeePoliceController::class, 'addImages'])->name('employees-police.add-images');
+Route::post('employees-police/{id}/{cedula}', [EmployeePoliceController::class, 'addImages'])->name('employees-police.add-images');
