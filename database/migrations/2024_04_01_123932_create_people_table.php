@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('civil_status_id')->nullable();
             $table->unsignedTinyInteger('blood_type_id')->nullable();
             $table->text('notes')->nullable();
+            $table->string('image');
             $table->timestamps();
             $table->softDeletes();
 

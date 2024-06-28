@@ -94,10 +94,37 @@ class EmployeeAdmController extends Controller
       'address'               => 'required|max:255',
     ]);
 
+    $data_person = $request->only([
+                    'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'civil_status_id', 
+                    'blood_type_id', 'email', 'notes']);
+    
+    $imagePath = 'assets/images/';
+    $imageName = 'avatar.png';
+    
+    if($request->has('imagen')) {
+      $imagePath = 'images/' . $data_person['cedula'] . '/';
+      $imageName = uniqid() . '.png';
+    }
+
     // agrego los datos personales
-    $person = Person::create($request->only([
-      'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type_id', 'email', 'notes'
-    ]));
+    $data_person['image'] = $imagePath . $imageName;
+    $person = Person::create($data_person);
+
+    // agrego la imagen del empleado, si tiene
+    if($request->has('imagen')) {
+      $imagePath = storage_path("app/public/employees/") . $data_person['cedula'] . '/';
+      
+      if(! file_exists($imagePath)) mkdir($imagePath);
+      
+      Image::make($request->file('imagen')->getRealPath())
+              ->resize(200,200)
+              ->save($imagePath . $imageName, 0, 'png');
+
+      PersonImage::insert([
+        'person_id' => $person->id, 
+        'file'      => $person->image
+      ]);
+    }
 
     // agrego los datos administrativos
     $employeeData = $request->only('codigo', 'fecha_ingreso', 'employee_cargo_id', 'employee_condicion_id',
@@ -267,7 +294,6 @@ class EmployeeAdmController extends Controller
   //
   public function addImages(Request $request, int $id, string $cedula)
   {
-
     if ($request->hasFile('images')) {
       $path = storage_path("app/public/employees/$cedula");
       $files = [];

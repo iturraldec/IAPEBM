@@ -14,7 +14,8 @@ class Person extends Model
 
     //
     protected $fillable = [
-        'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'email', 'civil_status_id', 'blood_type_id', 'notes'
+        'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'email', 
+        'civil_status_id', 'blood_type_id', 'notes', 'image'
     ];
 
     // retorna los datos de un empleado

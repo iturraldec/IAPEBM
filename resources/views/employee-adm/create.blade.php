@@ -35,121 +35,158 @@
     <div class="tab-content" id="custom-tabs-one-tabContent">
       
       <!-- tab principal -->
-      <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+      <!-- codigo de ejemplo con imagenes
         <div class="row">
-          <div class="col-3 form-group">
-            <label for="inputCedula">Cédula</label>
-            <input type="text" 
-                  class="form-control" 
-                  id="inputCedula" 
-                  name="cedula"
-                  minlength="7"
-                  maxlength="15"
-                  required
-                  placeholder="No. de cédula"
-            />
-          </div>
+    <div class="col-sm-8" style="background-color:lavender;">.col-sm-8
+      <div class="row">
+        <div class="col-sm-6" style="background-color:lightcyan;">.col-sm-6</div>
+        <div class="col-sm-6" style="background-color:lightgray;">.col-sm-6</div>
+      </div>
+    </div>
+    <div class="col-sm-4" style="background-color:lavenderblush;"><img src="https://placehold.jp/150x150.png"/></div>
+  </div>
 
-          <div class="col-3 form-group">
-            <label for="inputRif">R.I.F.</label>
-            <input type="text" 
-                  class="form-control" 
-                  id="inputRif" 
-                  name="rif"
-                  maxlength="20"
-                  required
-                  placeholder="No. de R.I.F."
-                  onkeyup="this.value = this.value.toUpperCase();"
-            />
-          </div>
+-->
+      <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+        <!-- inicio de row -->
+        <div class="row">
+          <div class="col-9">
 
-          <div class="col-6 form-group">
-            <label for="inputNombre">Nombre(s) y Apellido(s)</label>
-            <input type="text" 
-                  class="form-control" 
-                  id="inputNombre"
-                  name="name"
-                  required
-                  minlength="3"
-                  maxlength="200"
-                  placeholder="Ingresa su nombre(s) y apellido(s)"
-                  onkeyup="this.value = this.value.toUpperCase();"
-            />
-          </div>
+            <!-- inicio de row -->
+            <div class="row">
+              <div class="col-3 form-group">
+                <label for="inputCedula">Cédula</label>
+                <input type="text" 
+                      class="form-control" 
+                      id="inputCedula" 
+                      name="cedula"
+                      minlength="7"
+                      maxlength="15"
+                      required
+                      placeholder="No. de cédula"
+                />
+              </div>
 
-          <div class="col-3 form-group">
-            <label for="selectSexo">Sexo</label>
-            <select id="selectSexo" class="form-control" name="sex">
-              <option value="0" selected>SELECCIONE EL SEXO</option>
-              <option value="M">MASCULINO</option>
-              <option value="F">FEMENINO</option>
-            </select>
-          </div>
-
-          <div class="col-3 form-group">
-            <label for="inputBirthday">Fecha de Nacimiento</label>
-            <input type="date"
-                  class="form-control" 
-                  id="inputBirthday" 
-                  name="birthday"
-                  required />
-          </div>
-
-          <div class="col-6 form-group">
-            <label for="inputPlaceOfBirth">Lugar de Nacimiento</label>
-            <input type="text"
-                  class="form-control"
-                  id="inputPlaceOfBirth"
-                  name="place_of_birth"
-                  maxlength="255"
-                  required
-                  placeholder="Ingresa el lugar de nacimiento"
-                  onkeyup="this.value = this.value.toUpperCase();"
-            />
-          </div>
-
-          <div class="col-3 form-group">
-            <label for="selectEstadoCivil">Estado Civil</label>
-            <select id="selectEstadoCivil" class="form-control" name="civil_status_id">
-              <option value="0" selected>SELECCIONE ESTADO CIVIL</option>
-              @foreach($edoCivil as $estado)
-                <option value="{{ $estado->id }}">{{ $estado->name }}</option>
-              @endforeach
-            </select>
-          </div>
-
-          <div class="col-3 form-group">
-            <label for="selectSangre">Tipo de Sangre</label>
-            <select id="selectSangre" class="form-control" name="blood_type_id">
-              <option value="0" selected>SELECCIONE TIPO</option>
-              @foreach($tipoSangre as $tipo)
-                <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
-              @endforeach
-            </select>
-          </div>
-          
-          <div class="col-6 form-group">
-            <label for="inputEmail">Correo Electrónico</label>
-            <input type="email"
-                  class="form-control"
-                  id="inputEmail"
-                  name="email"
-                  placeholder="Ingresa el correo electrónico"
-                  onkeyup="this.value = this.value.toLowerCase();"
-            />
-          </div>
-
-          <div class="col-12 form-group">
-            <label for="inputNotas">Observaciones</label>
-            <textarea class="form-control"
-                      id="inputNotas"
-                      name="notes"
-                      placeholder="Ingresa observaciones"
-                      rows="3"
+              <div class="col-3 form-group">
+                <label for="inputRif">R.I.F.</label>
+                <input type="text" 
+                      class="form-control" 
+                      id="inputRif" 
+                      name="rif"
+                      maxlength="20"
+                      required
+                      placeholder="No. de R.I.F."
                       onkeyup="this.value = this.value.toUpperCase();"
-            /></textarea>
+                />
+              </div>
+
+              <div class="col-6 form-group">
+                <label for="inputNombre">Nombre(s) y Apellido(s)</label>
+                <input type="text" 
+                      class="form-control" 
+                      id="inputNombre"
+                      name="name"
+                      required
+                      minlength="3"
+                      maxlength="200"
+                      placeholder="Ingresa su nombre(s) y apellido(s)"
+                      onkeyup="this.value = this.value.toUpperCase();"
+                />
+              </div>
+
+              <div class="col-3 form-group">
+                <label for="selectSexo">Sexo</label>
+                <select id="selectSexo" class="form-control" name="sex">
+                  <option value="0" selected>SELECCIONE EL SEXO</option>
+                  <option value="M">MASCULINO</option>
+                  <option value="F">FEMENINO</option>
+                </select>
+              </div>
+    
+              <div class="col-3 form-group">
+                <label for="inputBirthday">Fecha de Nacimiento</label>
+                <input type="date"
+                      class="form-control" 
+                      id="inputBirthday" 
+                      name="birthday"
+                      required />
+              </div>
+    
+              <div class="col-6 form-group">
+                <label for="inputPlaceOfBirth">Lugar de Nacimiento</label>
+                <input type="text"
+                      class="form-control"
+                      id="inputPlaceOfBirth"
+                      name="place_of_birth"
+                      maxlength="255"
+                      required
+                      placeholder="Ingresa el lugar de nacimiento"
+                      onkeyup="this.value = this.value.toUpperCase();"
+                />
+              </div>
+
+              <div class="col-3 form-group">
+                <label for="selectEstadoCivil">Estado Civil</label>
+                <select id="selectEstadoCivil" class="form-control" name="civil_status_id">
+                  <option value="0" selected>SELECCIONE ESTADO CIVIL</option>
+                  @foreach($edoCivil as $estado)
+                    <option value="{{ $estado->id }}">{{ $estado->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+    
+              <div class="col-3 form-group">
+                <label for="selectSangre">Tipo de Sangre</label>
+                <select id="selectSangre" class="form-control" name="blood_type_id">
+                  <option value="0" selected>SELECCIONE TIPO</option>
+                  @foreach($tipoSangre as $tipo)
+                    <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+              
+              <div class="col-6 form-group">
+                <label for="inputEmail">Correo Electrónico</label>
+                <input type="email"
+                      class="form-control"
+                      id="inputEmail"
+                      name="email"
+                      placeholder="Ingresa el correo electrónico"
+                      onkeyup="this.value = this.value.toLowerCase();"
+                />
+              </div>
+
+              <div class="col form-group">
+                <label for="inputNotas">Observaciones</label>
+                <textarea class="form-control"
+                          id="inputNotas"
+                          name="notes"
+                          placeholder="Ingresa observaciones"
+                          rows="3"
+                          onkeyup="this.value = this.value.toUpperCase();"
+                /></textarea>
+              </div>
+
+            </div>
+            <!-- fin de row -->
+
           </div>
 
+          <div class="col-3 border p-2 text-center">
+            <img src="{{ asset('assets/images/avatar.png') }}" 
+                 id="imgAvatar" 
+                 class="img-thumbnail border border-dark"
+                 width="200"
+                 height="250"
+            >
+            <label for="inputAvatar" class="form-control btn btn-primary mt-2">Imagen</label>
+            <input type="file" id="inputAvatar" name="imagen" accept="image/*" style="display: none;" />
+          </div>          
+
+        </div>
+        <!-- fin de row -->
+
+        <div class="row">
           <div class="col">
             <button type="submit" class="btn btn-danger">Grabar</button>
             <button type="button" id="btnSalir" class="btn btn-secondary">Retornar</button>
@@ -399,6 +436,17 @@
       window.close();
     });
 
+    $("#inputAvatar").change(function() {
+      let imagen = this.files[0];
+      let reader = new FileReader();
+
+      reader.onload = function(e) {
+        $("#imgAvatar").attr('src', e.target.result);
+      };
+
+      reader.readAsDataURL(imagen);
+    });
+
     ///////////////////////////////////////////////////////////////////
     // mascara para el nombre
     ///////////////////////////////////////////////////////////////////
@@ -620,13 +668,12 @@
         return;
       }
 
-      data = $(this).serialize();
+      data = new FormData(empleadoForm);
 
       fetch("{{ route('employees-adm.store') }}", {
         method: 'POST',
         headers: {
           'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content'),
-          'Content-Type'  : 'application/x-www-form-urlencoded',
           'Accept'        : 'application/json'
         },
         body: data
@@ -648,10 +695,10 @@
                 body : formData
               });
             }
-          });
 
-          lib_ShowMensaje("Empleado Administrativo agregado!" + responseData.id, 'mensaje')
-          .then(response => window.close());
+            lib_ShowMensaje("Empleado Administrativo agregado!" + responseData.id, 'mensaje')
+            .then(response => window.close());
+          });
         }
         else {
           response.text().then(r => {
