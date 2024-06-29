@@ -35,18 +35,6 @@
     <div class="tab-content" id="custom-tabs-one-tabContent">
       
       <!-- tab principal -->
-      <!-- codigo de ejemplo con imagenes
-        <div class="row">
-    <div class="col-sm-8" style="background-color:lavender;">.col-sm-8
-      <div class="row">
-        <div class="col-sm-6" style="background-color:lightcyan;">.col-sm-6</div>
-        <div class="col-sm-6" style="background-color:lightgray;">.col-sm-6</div>
-      </div>
-    </div>
-    <div class="col-sm-4" style="background-color:lavenderblush;"><img src="https://placehold.jp/150x150.png"/></div>
-  </div>
-
--->
       <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
         <!-- inicio de row -->
         <div class="row">
@@ -696,7 +684,7 @@
               });
             }
 
-            lib_ShowMensaje("Empleado Administrativo agregado!" + responseData.id, 'mensaje')
+            lib_ShowMensaje("Empleado Administrativo agregado!", 'mensaje')
             .then(response => window.close());
           });
         }
