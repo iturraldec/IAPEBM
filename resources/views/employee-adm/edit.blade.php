@@ -36,123 +36,144 @@
       
       <!-- tab principal -->
       <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+        <!-- inicio de row -->
         <div class="row">
-          <div class="col-3 form-group">
-            <label for="inputCedula">Cédula</label>
-            <input type="text" 
-                  class="form-control" 
-                  id="inputCedula" 
-                  name="cedula"
-                  value="{{ $data['person']['cedula'] }}"
-                  minlength="7"
-                  maxlength="15"
-                  required
-                  placeholder="No. de cédula"
-            />
-          </div>
+          <div class="col-9">
+            <div class="row">
+              <div class="col-3 form-group">
+                <label for="inputCedula">Cédula</label>
+                <input type="text" 
+                      class="form-control" 
+                      id="inputCedula" 
+                      name="cedula"
+                      value="{{ $data['person']['cedula'] }}"
+                      minlength="7"
+                      maxlength="15"
+                      required
+                      placeholder="No. de cédula"
+                />
+              </div>
 
-          <div class="col-3 form-group">
-            <label for="inputRif">R.I.F.</label>
-            <input type="text" 
-                  class="form-control" 
-                  id="inputRif" 
-                  name="rif"
-                  value="{{ $data['employee']['rif'] }}"
-                  maxlength="20"
-                  required
-                  placeholder="No. de R.I.F."
-                  onkeyup="this.value = this.value.toUpperCase();"
-            />
-          </div>
-
-          <div class="col-6 form-group">
-            <label for="inputNombre">Nombre(s) y Apellido(s)</label>
-            <input type="text" 
-                  class="form-control" 
-                  id="inputNombre"
-                  name="name"
-                  value="{{ $data['person']['name'] }}"
-                  required
-                  minlength="3"
-                  maxlength="200"
-                  placeholder="Ingresa su nombre(s) y apellido(s)"
-                  onkeyup="this.value = this.value.toUpperCase();"
-            />
-          </div>
-
-          <div class="col-3 form-group">
-            <label for="selectSexo">Sexo</label>
-            <select id="selectSexo" class="form-control" name="sex">
-              <option value="M" {{ $data['person']['sex'] == 'M' ? 'selected' : ''}}>MASCULINO</option>
-              <option value="F" {{ $data['person']['sex'] == 'F' ? 'selected' : ''}}>FEMENINO</option>
-            </select>
-          </div>
-
-          <div class="col-3 form-group">
-            <label for="inputBirthday">Fecha de Nacimiento</label>
-            <input type="date"
-                  class="form-control" 
-                  id="inputBirthday" 
-                  name="birthday"
-                  value="{{ $data['person']['birthday'] }}"
-                  required />
-          </div>
-
-          <div class="col-6 form-group">
-            <label for="inputPlaceOfBirth">Lugar de Nacimiento</label>
-            <input type="text"
-                  class="form-control"
-                  id="inputPlaceOfBirth"
-                  name="place_of_birth"
-                  value="{{ $data['person']['place_of_birth'] }}"
-                  maxlength="255"
-                  required
-                  placeholder="Ingresa el lugar de nacimiento"
-                  onkeyup="this.value = this.value.toUpperCase();"
-            />
-          </div>
-
-          <div class="col-3 form-group">
-            <label for="selectEstadoCivil">Estado Civil</label>
-            <select id="selectEstadoCivil" class="form-control" name="civil_status_id">
-              @foreach($edoCivil as $estado)
-                <option value="{{ $estado->id }}" {{ $data['person']['civil_status_id'] == $estado->id ? 'selected' : ''}}>{{ $estado->name }}</option>
-              @endforeach
-            </select>
-          </div>
-
-          <div class="col-3 form-group">
-            <label for="selectSangre">Tipo de Sangre</label>
-            <select id="selectSangre" class="form-control" name="blood_type_id">
-              @foreach($tipoSangre as $tipo)
-                <option value="{{ $tipo->id }}" {{ $data['person']['blood_type_id'] == $tipo->id ? 'selected' : ''}}>{{ $tipo->name }}</option>
-              @endforeach
-            </select>
-          </div>
-          
-          <div class="col-6 form-group">
-            <label for="inputEmail">Correo Electrónico</label>
-            <input type="email"
-                  class="form-control"
-                  id="inputEmail"
-                  name="email"
-                  value="{{ $data['person']['email'] }}"
-                  placeholder="Ingresa el correo electrónico"
-                  onkeyup="this.value = this.value.toLowerCase();"
-            />
-          </div>
-
-          <div class="col-12 form-group">
-            <label for="inputNotas">Observaciones</label>
-            <textarea class="form-control"
-                      id="inputNotas"
-                      name="notes"
-                      placeholder="Ingresa observaciones"
-                      rows="3"
+              <div class="col-3 form-group">
+                <label for="inputRif">R.I.F.</label>
+                <input type="text" 
+                      class="form-control" 
+                      id="inputRif" 
+                      name="rif"
+                      value="{{ $data['employee']['rif'] }}"
+                      maxlength="20"
+                      required
+                      placeholder="No. de R.I.F."
                       onkeyup="this.value = this.value.toUpperCase();"
-            />{{ $data['person']['notes'] }}</textarea>
+                />
+              </div>
+
+              <div class="col-6 form-group">
+                <label for="inputNombre">Nombre(s) y Apellido(s)</label>
+                <input type="text" 
+                      class="form-control" 
+                      id="inputNombre"
+                      name="name"
+                      value="{{ $data['person']['name'] }}"
+                      required
+                      minlength="3"
+                      maxlength="200"
+                      placeholder="Ingresa su nombre(s) y apellido(s)"
+                      onkeyup="this.value = this.value.toUpperCase();"
+                />
+              </div>
+
+              <div class="col-3 form-group">
+                <label for="selectSexo">Sexo</label>
+                <select id="selectSexo" class="form-control" name="sex">
+                  <option value="M" {{ $data['person']['sex'] == 'M' ? 'selected' : ''}}>MASCULINO</option>
+                  <option value="F" {{ $data['person']['sex'] == 'F' ? 'selected' : ''}}>FEMENINO</option>
+                </select>
+              </div>
+    
+              <div class="col-3 form-group">
+                <label for="inputBirthday">Fecha de Nacimiento</label>
+                <input type="date"
+                      class="form-control" 
+                      id="inputBirthday" 
+                      name="birthday"
+                      value="{{ $data['person']['birthday'] }}"
+                      required />
+              </div>
+    
+              <div class="col-6 form-group">
+                <label for="inputPlaceOfBirth">Lugar de Nacimiento</label>
+                <input type="text"
+                      class="form-control"
+                      id="inputPlaceOfBirth"
+                      name="place_of_birth"
+                      value="{{ $data['person']['place_of_birth'] }}"
+                      maxlength="255"
+                      required
+                      placeholder="Ingresa el lugar de nacimiento"
+                      onkeyup="this.value = this.value.toUpperCase();"
+                />
+              </div>
+
+              <div class="col-3 form-group">
+                <label for="selectEstadoCivil">Estado Civil</label>
+                <select id="selectEstadoCivil" class="form-control" name="civil_status_id">
+                  @foreach($edoCivil as $estado)
+                    <option value="{{ $estado->id }}" {{ $data['person']['civil_status_id'] == $estado->id ? 'selected' : ''}}>{{ $estado->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+    
+              <div class="col-3 form-group">
+                <label for="selectSangre">Tipo de Sangre</label>
+                <select id="selectSangre" class="form-control" name="blood_type_id">
+                  @foreach($tipoSangre as $tipo)
+                    <option value="{{ $tipo->id }}" {{ $data['person']['blood_type_id'] == $tipo->id ? 'selected' : ''}}>{{ $tipo->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+              
+              <div class="col-6 form-group">
+                <label for="inputEmail">Correo Electrónico</label>
+                <input type="email"
+                      class="form-control"
+                      id="inputEmail"
+                      name="email"
+                      value="{{ $data['person']['email'] }}"
+                      placeholder="Ingresa el correo electrónico"
+                      onkeyup="this.value = this.value.toLowerCase();"
+                />
+              </div>
+
+              <div class="col form-group">
+                <label for="inputNotas">Observaciones</label>
+                <textarea class="form-control"
+                          id="inputNotas"
+                          name="notes"
+                          placeholder="Ingresa observaciones"
+                          rows="3"
+                          onkeyup="this.value = this.value.toUpperCase();"
+                />{{ $data['person']['notes'] }}</textarea>
+              </div>
+
+            </div>
+
           </div>
 
+          <div class="col-3 border p-2 text-center">
+            <img src="{{ asset($data['person']['image']) }}" 
+                 id="imgAvatar" 
+                 class="img-thumbnail border border-dark"
+                 width="200"
+                 height="250"
+            >
+            <label for="inputAvatar" class="form-control btn btn-primary mt-2">Imagen</label>
+            <input type="file" id="inputAvatar" name="imagen" accept="image/*" style="display: none;" />
+          </div>          
+
+        </div>
+
+        <div class="row">
           <div class="col">
             <button type="submit" class="btn btn-danger">Grabar</button>
             <button type="button" id="btnSalir" class="btn btn-secondary">Retornar</button>
@@ -616,6 +637,15 @@
     };
 
     ///////////////////////////////////////////////////////////////////
+    // agregar una imagen nueva
+    ///////////////////////////////////////////////////////////////////
+
+    $('#inputImage').on('change', function(e) {
+      formData.append('images[]', e.target.files[0]);
+      imprimirImagenesNuevas();
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // borrar una imagen del servidor
     ///////////////////////////////////////////////////////////////////
 
@@ -652,15 +682,6 @@
 
       $("#divImages").html(cadena);
     };
-
-    ///////////////////////////////////////////////////////////////////
-    // agregar una imagen nueva
-    ///////////////////////////////////////////////////////////////////
-
-    $('#inputImage').on('change', function(e) {
-      formData.append('images[]', e.target.files[0]);
-      imprimirImagenesNuevas();
-    });
 
     ///////////////////////////////////////////////////////////////////
     // eliminar una imagen nueva
