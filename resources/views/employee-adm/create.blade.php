@@ -32,6 +32,9 @@
 
   <div class="card-body">
   <form id="empleadoForm">
+    @method('PUT')
+    @csrf
+
     <div class="tab-content" id="custom-tabs-one-tabContent">
       
       <!-- tab principal -->
@@ -424,6 +427,10 @@
       window.close();
     });
 
+    ///////////////////////////////////////////////////////////////////
+    // al seleccionar la imagen del empleado
+    ///////////////////////////////////////////////////////////////////
+
     $("#inputAvatar").change(function() {
       let imagen = this.files[0];
       let reader = new FileReader();
@@ -640,7 +647,7 @@
     };
 
     ///////////////////////////////////////////////////////////////////
-    // agregar/editar un empleado 
+    // agregar un empleado 
     ///////////////////////////////////////////////////////////////////
 
     $("#empleadoForm").submit(function(e) {
@@ -656,13 +663,11 @@
         return;
       }
 
-      data = new FormData(empleadoForm);
-
+      let data = new FormData(empleadoForm);
+      
       fetch("{{ route('employees-adm.store') }}", {
-        method: 'POST',
         headers: {
-          'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content'),
-          'Accept'        : 'application/json'
+          'Accept' : 'application/json'
         },
         body: data
       })
@@ -678,7 +683,7 @@
               fetch(postImagesRoute, {
                 method  : "POST",
                 headers : {
-                  'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content')
+                  'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content'),
                 },
                 body : formData
               });

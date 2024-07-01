@@ -32,6 +32,9 @@
 
   <div class="card-body">
   <form id="empleadoForm">
+    @method('PUT')
+    @csrf
+
     <div class="tab-content" id="custom-tabs-one-tabContent">
       
       <!-- tab principal -->
@@ -474,6 +477,21 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // al seleccionar la imagen del empleado
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputAvatar").change(function() {
+      let imagen = this.files[0];
+      let reader = new FileReader();
+
+      reader.onload = function(e) {
+        $("#imgAvatar").attr('src', e.target.result);
+      };
+
+      reader.readAsDataURL(imagen);
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // mascara para el nombre
     ///////////////////////////////////////////////////////////////////
 
@@ -717,7 +735,7 @@
     };
 
     ///////////////////////////////////////////////////////////////////
-    // agregar/editar un empleado 
+    // editar un empleado 
     ///////////////////////////////////////////////////////////////////
 
     $("#empleadoForm").submit(function(e) {
@@ -732,17 +750,15 @@
         lib_toastr("Error: Debe ingresar al menos una dirección de ubicación!");
         return;
       }
- 
-      data = $(this).serialize();
+
+      const data = new FormData(empleadoForm);
 
       fetch(ruta, {
-        method: 'PUT',
         headers: {
-          'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content'),
-          'Content-Type'  : 'application/x-www-form-urlencoded',
-          'Accept'        : 'application/json'
+          'Accept' : 'application/json'
         },
-        body: data
+        method  : 'POST',
+        body    : data
       })
       .then(response => {
         if(response.ok) {

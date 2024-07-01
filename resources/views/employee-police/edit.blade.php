@@ -32,6 +32,9 @@
 
   <div class="card-body">
   <form id="empleadoForm">
+    @method('PUT')
+    @csrf
+
     <div class="tab-content" id="custom-tabs-one-tabContent">
       
       <!-- tab principal -->

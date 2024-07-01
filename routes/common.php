@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DemoController;
 use Maatwebsite\Excel\Facades\Excel;
 
 Route::get('loadFromExcel', function() {
