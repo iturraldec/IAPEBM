@@ -94,6 +94,7 @@ class EmployeeAdmController extends Controller
       'address'               => 'required|max:255',
     ]);
 
+    // agrego los datos personales
     $data_person = $request->only([
                     'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'civil_status_id', 
                     'blood_type_id', 'email', 'notes']);
@@ -106,7 +107,6 @@ class EmployeeAdmController extends Controller
       $imageName = uniqid() . '.png';
     }
 
-    // agrego los datos personales
     $data_person['image'] = $imagePath . $imageName;
     $person = Person::create($data_person);
 

@@ -15,6 +15,7 @@
           <th scope="col">Código</th>
           <th scope="col">Cédula</th>
           <th scope="col">Nombres y Apellidos</th>
+          <th scope="col">Imagen</th>
           <th scope="col" class="col-sm-2">Acción</th>
         </tr>
       </thead>
@@ -42,6 +43,14 @@
           {"data": "codigo"},
           {"data": "person.cedula"},
           {"data": "person.name"},
+          {"data": null,
+            "render": function(data, type, row, meta) {              
+              let imagen = "{{ asset('') }}" + data.person.image;
+
+              return `<img src="${imagen}" class="img-thumbnail border border-dark" width="80" height="auto">`;
+            },
+            "orderable": false
+          },
           {"data":null,
            "className" : "dt-body-center",
            "render": function ( data, type, row, meta ) {

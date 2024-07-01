@@ -32,7 +32,6 @@
 
   <div class="card-body">
   <form id="empleadoForm">
-    @method('PUT')
     @csrf
 
     <div class="tab-content" id="custom-tabs-one-tabContent">
@@ -663,12 +662,13 @@
         return;
       }
 
-      let data = new FormData(empleadoForm);
+      const data = new FormData(empleadoForm);
       
       fetch("{{ route('employees-adm.store') }}", {
         headers: {
           'Accept' : 'application/json'
         },
+        method  : "POST",
         body: data
       })
       .then(response => {
