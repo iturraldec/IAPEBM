@@ -239,6 +239,31 @@ class EmployeePoliceController extends Controller
     $person->blood_type_id    = $request->blood_type_id;
     $person->email            = $request->email;
     $person->notes            = $request->notes;
+
+    // cambio de avatar?
+    if($request->has('imagen')) {
+      if(! str_contains($person->image, 'avatar.png')) {
+        $file = storage_path('app/public/employee') . str_replace('image', '', $person->image);
+        if(file_exists($file)) unlink($file);
+      }
+      
+      $imagePath = storage_path("app/public/employees/") . $person->cedula . '/';
+      $imageName = uniqid() . '.png';
+      
+      if(! file_exists($imagePath)) mkdir($imagePath);
+      
+      Image::make($request->file('imagen')->getRealPath())
+              ->resize(200,200)
+              ->save($imagePath . $imageName, 0, 'png');
+
+      $person->image = "images/{$person->cedula}/" . $imageName;
+
+      PersonImage::insert([
+        'person_id' => $person->id, 
+        'file'      => $person->image
+      ]);
+    }
+
     $person->save();
 
     // actualizo sus telefonos
