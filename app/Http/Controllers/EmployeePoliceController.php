@@ -121,14 +121,6 @@ class EmployeePoliceController extends Controller
 
     // agrego la persona
     $person = Person::create($data_person);
-
-    // si tiene imagen la agrego a la tabla de imagenes
-    if($request->has('imagen')) {
-      PersonImage::insert([
-        'person_id' => $person->id, 
-        'file'      => $person->image
-      ]);
-    }
     
     // agrego los datos administrativos
     $employeeData = $request->only('codigo', 'fecha_ingreso', 'employee_cargo_id', 'employee_condicion_id',
@@ -242,26 +234,17 @@ class EmployeePoliceController extends Controller
 
     // cambio de avatar?
     if($request->has('imagen')) {
-      if(! str_contains($person->image, 'avatar.png')) {
-        $file = storage_path('app/public/employee') . str_replace('image', '', $person->image);
-        if(file_exists($file)) unlink($file);
-      }
-      
-      $imagePath = storage_path("app/public/employees/") . $person->cedula . '/';
+      $employeeFolderPath = storage_path('app/public/employees/') . $person->cedula . '/';
       $imageName = uniqid() . '.png';
-      
-      if(! file_exists($imagePath)) mkdir($imagePath);
-      
+      if(! str_contains($person->image, 'avatar.png')) {
+        $file = str_replace('image/', $employeeFolderPath, $person->image);
+        if(file_exists($file)) unlink($file);
+      } 
       Image::make($request->file('imagen')->getRealPath())
               ->resize(200,200)
-              ->save($imagePath . $imageName, 0, 'png');
+              ->save($employeeFolderPath . $imageName, 0, 'png');
 
       $person->image = "images/{$person->cedula}/" . $imageName;
-
-      PersonImage::insert([
-        'person_id' => $person->id, 
-        'file'      => $person->image
-      ]);
     }
 
     $person->save();
@@ -346,7 +329,6 @@ class EmployeePoliceController extends Controller
     if ($request->hasFile('images')) {
       $path = storage_path("app/public/employees/$cedula");
       $files = [];
-      if(! file_exists($path)) mkdir($path);
       foreach($request->file('images') as $image) {
         $name = uniqid() . ".png";
         $file = "$path/$name";
