@@ -99,27 +99,27 @@ class EmployeeAdmController extends Controller
                     'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'civil_status_id', 
                     'blood_type_id', 'email', 'notes']);
     
-    $imagePath = 'assets/images/';
-    $imageName = 'avatar.png';
-    
-    if($request->has('imagen')) {
-      $imagePath = 'images/' . $data_person['cedula'] . '/';
-      $imageName = uniqid() . '.png';
+    // creo la carpeta del empleado
+    $employeeFolderPath = storage_path("app/public/employees/") . $data_person['cedula'] . '/';
+    mkdir($employeeFolderPath);
+
+    // imagen del empleado
+    if(! $request->has('imagen')) {
+      $data_person['image'] = 'assets/images/avatar.png';
     }
-
-    $data_person['image'] = $imagePath . $imageName;
-    $person = Person::create($data_person);
-
-    // agrego la imagen del empleado, si tiene
-    if($request->has('imagen')) {
-      $imagePath = storage_path("app/public/employees/") . $data_person['cedula'] . '/';
-      
-      if(! file_exists($imagePath)) mkdir($imagePath);
-      
+    else {
+      $imageName = uniqid() . '.png';
+      $data_person['image'] = "images/{$data_person['cedula']}/$imageName";
       Image::make($request->file('imagen')->getRealPath())
               ->resize(200,200)
-              ->save($imagePath . $imageName, 0, 'png');
+              ->save($employeeFolderPath . $imageName, 0, 'png');
+    }
 
+    // agrego la persona
+    $person = Person::create($data_person);
+
+    // si tiene imagen la agrego a la tabla de imagenes
+    if($request->has('imagen')) {
       PersonImage::insert([
         'person_id' => $person->id, 
         'file'      => $person->image
