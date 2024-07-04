@@ -29,10 +29,13 @@ class CargoController extends Controller
     public function store(Request $request)
     {
       $validator = $request->validate([
-        'name' => 'required|string|max:200|unique:employee_cargos'
+        'name' => 'required|string|max:200|unique:cargos'
       ]);
 
-      Cargo::Create($request->all());
+      Cargo::Create([
+        'name'    => $request->input('name'),
+        'activo'  => $request->has('activo')
+      ]);
       $mensaje['success'] = true;
       $mensaje['msg'] = 'Cargo creado!';
 
@@ -49,11 +52,12 @@ class CargoController extends Controller
             'required',
             'string',
             'max:200',
-            Rule::unique('employee_cargos')->ignore($cargo->id),
+            Rule::unique('cargos')->ignore($cargo->id),
         ]
       ]);
 
-      $cargo->name = $request->name;
+      $cargo->name    = $request->name;
+      $cargo->activo  = $request->has('activo');
       $cargo->save();
       $data['success'] = true;
       $data['message'] = 'Cargo actualizado......';

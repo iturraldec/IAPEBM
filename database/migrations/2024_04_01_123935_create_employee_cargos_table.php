@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employee_cargos', function (Blueprint $table) {
+        Schema::create('cargos', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name', 200)->unique();
+            $table->boolean('activo')->default(true);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

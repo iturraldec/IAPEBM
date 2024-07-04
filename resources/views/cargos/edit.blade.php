@@ -25,6 +25,12 @@
                     onkeyup="this.value = this.value.toUpperCase();"
               >
             </div>
+            
+            <div class="icheck-primary d-inline">
+              <input type="checkbox" id="chkActivo" name="activo">
+              <label for="chkActivo">Activo</label>
+            </div>
+          
           </div>
 
           <div class="modal-footer">

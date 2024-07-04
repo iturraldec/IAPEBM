@@ -14,11 +14,11 @@
         </td>
         <td class="h6">{{ $data->name }}</td>
         <td class="text-center">
-          @if(isset($data->images[0]['file']))
-            <img src="{{ $data->images[0]['file'] }}" width="150" height="auto">
-          @else
-            <img src="{{ public_path('assets/images/avatar.png') }}" width="150" height="auto">
-          @endif
+            <img src="{{ asset($data->image) }}" 
+                class="img-thumbnail border border-dark"
+                width="150" 
+                height="auto"
+            >
         </td>
       </tr>
       <tr>

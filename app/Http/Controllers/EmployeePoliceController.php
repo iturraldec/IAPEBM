@@ -348,7 +348,7 @@ class EmployeePoliceController extends Controller
   //
   public function show(Employee $employees_adm)
   {
-    $data = $this->getById($employees_adm);
+    $data = Person::getById($employees_adm->person_id);
 
     $pdf = Facade\Pdf::loadView('employee-adm.view', compact('data'));
     

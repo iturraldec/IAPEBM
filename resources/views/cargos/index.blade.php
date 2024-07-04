@@ -14,6 +14,7 @@
           <tr>
             <th scope="col">ID</th>
             <th scope="col">Nombre</th>
+            <th scope="col">Activo</th>
             <th scope="col" class="col-sm-2">Acción</th>
           </tr>
         </thead>
@@ -43,6 +44,13 @@
           {"data": "id", "orderable": false},
           {"data": "name"},
           {"data":null,
+           "className" : "dt-body-center",
+           "render": function ( data, type, row, meta ) {              
+              return  data.activo ? "SI" : "NO";
+            },
+           "orderable": false 
+          },
+          {"data":null,
            "className" : "dt-body-center",  
            "render": function ( data, type, row, meta ) {
                   let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></button>';
@@ -61,6 +69,7 @@
     $("#btn-agregar").click(function() {
       $("#modalTitle").html("Agregar Cargo");
       $("#inputCargo").val("");
+      $("#chkActivo").prop("checked", true);
       $("#inputCargo").data("id", "");
       $("#inputCargo").attr("placeholder", "Ingrese nombre del Cargo");
       $('#modalForm').modal('show');
@@ -72,6 +81,7 @@
       
       $("#modalTitle").html("Modificar Cargo");
       $("#inputCargo").val(data.name);
+      $("#chkActivo").prop("checked", data.activo);
       $("#inputCargo").data("id", data.id);
       $("#inputCargo").attr('placeholder', 'Modificar Cargo');
       $('#modalForm').modal('show');
