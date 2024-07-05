@@ -22,10 +22,11 @@ return new class extends Migration
             $table->unsignedSmallInteger('employee_tipo_id')->nullable();
             $table->unsignedSmallInteger('employee_location_id')->nullable();
             $table->string('rif', 20);
-            $table->string('codigo_patria', 20)->nullable();
-            $table->string('religion', 100)->nullable();
-            $table->string('deporte', 100)->nullable();
-            $table->string('licencia', 100)->nullable();
+            $table->string('codigo_patria', 20)->default('NO DEFINIDO');
+            $table->string('serial_patria', 20)->default('NO DEFINIDO');
+            $table->string('religion', 100)->default('NO DEFINIDO');
+            $table->string('deporte', 100)->default('NO DEFINIDO');
+            $table->string('licencia', 100)->default('NO DEFINIDO');
             $table->timestamps();
             $table->softDeletes();
 

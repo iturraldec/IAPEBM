@@ -86,6 +86,7 @@ class EmployeePoliceController extends Controller
       'employee_tipo_id'      => 'required',
       'employee_location_id'  => 'required',
       'codigo_patria'         => 'required|max:20',
+      'serial_patria'         => 'required|max:20',
       'religion'              => 'required|max:100',
       'deporte'               => 'required|max:100',
       'licencia'              => 'required|max:100',
@@ -124,7 +125,7 @@ class EmployeePoliceController extends Controller
     
     // agrego los datos administrativos
     $employeeData = $request->only('codigo_nomina', 'fecha_ingreso', 'employee_cargo_id', 'employee_condicion_id',
-                      'employee_tipo_id', 'employee_location_id', 'rif', 'codigo_patria',
+                      'employee_tipo_id', 'employee_location_id', 'rif', 'codigo_patria', 'serial_patria',
                       'religion', 'deporte', 'licencia');
     $employeeData['person_id'] = $person->id;
     $employeeData['grupo_id'] = $this->grupo_id;
@@ -208,6 +209,7 @@ class EmployeePoliceController extends Controller
       'employee_tipo_id'      => 'required',
       'employee_location_id'  => 'required',
       'codigo_patria'         => 'required|max:20',
+      'serial_patria'         => 'required|max:20',
       'religion'              => 'required|max:100',
       'deporte'               => 'required|max:100',
       'licencia'              => 'required|max:100',
@@ -275,6 +277,7 @@ class EmployeePoliceController extends Controller
     $employees_polouse->employee_location_id  = $request->input('employee_location_id');
     $employees_polouse->rif                   = $request->input('rif');
     $employees_polouse->codigo_patria         = $request->input('codigo_patria');
+    $employees_polouse->serial_patria         = $request->input('serial_patria');
     $employees_polouse->religion              = $request->input('religion');
     $employees_polouse->deporte               = $request->input('deporte');
     $employees_polouse->licencia              = $request->input('licencia');

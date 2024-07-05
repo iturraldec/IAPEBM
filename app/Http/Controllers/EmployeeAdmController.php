@@ -85,6 +85,7 @@ class EmployeeAdmController extends Controller
       'employee_tipo_id'      => 'required',
       'employee_location_id'  => 'required',
       'codigo_patria'         => 'required|max:20',
+      'serial_patria'         => 'required|max:20',
       'religion'              => 'required|max:100',
       'deporte'               => 'required|max:100',
       'licencia'              => 'required|max:100',
@@ -119,7 +120,7 @@ class EmployeeAdmController extends Controller
 
     // agrego los datos administrativos
     $employeeData = $request->only('codigo_nomina', 'fecha_ingreso', 'employee_cargo_id', 'employee_condicion_id',
-                      'employee_tipo_id', 'employee_location_id', 'rif', 'codigo_patria',
+                      'employee_tipo_id', 'employee_location_id', 'rif', 'codigo_patria', 'serial_patria',
                       'religion', 'deporte', 'licencia');
     $employeeData['person_id'] = $person->id;
     $employeeData['grupo_id'] = $this->grupo_id;
@@ -194,6 +195,7 @@ class EmployeeAdmController extends Controller
       'employee_tipo_id'      => 'required',
       'employee_location_id'  => 'required',
       'codigo_patria'         => 'required|max:20',
+      'serial_patria'         => 'required|max:20',
       'religion'              => 'required|max:100',
       'deporte'               => 'required|max:100',
       'licencia'              => 'required|max:100',
@@ -259,6 +261,7 @@ class EmployeeAdmController extends Controller
     $employees_adm->employee_location_id  = $request->input('employee_location_id');
     $employees_adm->rif                   = $request->input('rif');
     $employees_adm->codigo_patria         = $request->input('codigo_patria');
+    $employees_adm->serial_patria         = $request->input('serial_patria');
     $employees_adm->religion              = $request->input('religion');
     $employees_adm->deporte               = $request->input('deporte');
     $employees_adm->licencia              = $request->input('licencia');

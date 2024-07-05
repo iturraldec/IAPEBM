@@ -366,7 +366,18 @@
                   id="inputPatria"
                   name="codigo_patria"
                   value="{{ $data['employee']['codigo_patria'] }}"
-                  placeholder="Ingresa el código patria"
+                  placeholder="Código del carnet patria"
+            />
+          </div>
+
+          <div class="col-4 form-group">
+            <label for="inputSerialPatria">Serial Patria</label>
+            <input type="text"
+                  class="form-control"
+                  id="inputSerialPatria"
+                  name="serial_patria"
+                  value="{{ $data['employee']['serial_patria'] }}"
+                  placeholder="Serial del carnet patria"
             />
           </div>
 

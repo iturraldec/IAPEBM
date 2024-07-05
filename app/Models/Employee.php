@@ -21,6 +21,7 @@ class Employee extends Model
         'employee_location_id',
         'rif',
         'codigo_patria',
+        'serial_patria',
         'religion',
         'deporte',
         'licencia',

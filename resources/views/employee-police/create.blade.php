@@ -349,7 +349,19 @@
                   class="form-control"
                   id="inputPatria"
                   name="codigo_patria"
-                  placeholder="Ingresa el código patria"
+                  value="NO DEFINIDO"
+                  placeholder="Código del carnet patria"
+            />
+          </div>
+
+          <div class="col-4 form-group">
+            <label for="inputSerialPatria">Serial Patria</label>
+            <input type="text"
+                  class="form-control"
+                  id="inputSerialPatria"
+                  name="serial_patria"
+                  value="NO DEFINIDO"
+                  placeholder="Serial del carnet patria"
             />
           </div>
 
