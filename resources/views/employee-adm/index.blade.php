@@ -12,7 +12,7 @@
       <thead class="thead-dark text-center">
         <tr>
           <th scope="col">ID</th>
-          <th scope="col">Código</th>
+          <th scope="col">Código Nómina</th>
           <th scope="col">Cédula</th>
           <th scope="col">Nombres y Apellidos</th>
           <th scope="col">Imagen</th>
@@ -40,7 +40,7 @@
         "ajax": "{{ route('employees-adm.index') }}",
         "columns": [
           {"data": "id", visible: false},
-          {"data": "codigo"},
+          {"data": "codigo_nomina"},
           {"data": "person.cedula"},
           {"data": "person.name"},
           {"data": null,

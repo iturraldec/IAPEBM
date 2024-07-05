@@ -347,7 +347,11 @@ return [
                     'route'   => 'rangos.index'
                 ],
                 [
-                    'text'    => 'Policias',
+                    'text'    => 'Obreros',
+                    'url'     => '#'
+                ],
+                [
+                    'text'    => 'Uniformados',
                     'route'   => 'employees-police.index'
                 ],
             ]

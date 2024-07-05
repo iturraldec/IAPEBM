@@ -13,7 +13,7 @@ class Employee extends Model
     protected $fillable = [
         'person_id',
         'grupo_id',
-        'codigo',
+        'codigo_nomina',
         'fecha_ingreso',
         'employee_cargo_id',
         'employee_condicion_id',

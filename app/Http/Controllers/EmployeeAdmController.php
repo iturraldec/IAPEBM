@@ -78,7 +78,7 @@ class EmployeeAdmController extends Controller
       'civil_status_id'       => 'required',
       'blood_type_id'         => 'required',
       'email'                 => 'required|email|unique:people',
-      'codigo'                => 'required|max:20',
+      'codigo_nomina'         => 'required|max:20',
       'fecha_ingreso'         => 'required|date',
       'employee_cargo_id'     => 'required',
       'employee_condicion_id' => 'required',
@@ -118,7 +118,7 @@ class EmployeeAdmController extends Controller
     $person = Person::create($data_person);
 
     // agrego los datos administrativos
-    $employeeData = $request->only('codigo', 'fecha_ingreso', 'employee_cargo_id', 'employee_condicion_id',
+    $employeeData = $request->only('codigo_nomina', 'fecha_ingreso', 'employee_cargo_id', 'employee_condicion_id',
                       'employee_tipo_id', 'employee_location_id', 'rif', 'codigo_patria',
                       'religion', 'deporte', 'licencia');
     $employeeData['person_id'] = $person->id;
@@ -187,7 +187,7 @@ class EmployeeAdmController extends Controller
         'email',
         Rule::unique('people')->ignore($employees_adm->person_id)
       ],
-      'codigo'                => 'required|max:20',
+      'codigo_nomina'         => 'required|max:20',
       'fecha_ingreso'         => 'required|date',
       'employee_cargo_id'     => 'required',
       'employee_condicion_id' => 'required',
@@ -251,7 +251,7 @@ class EmployeeAdmController extends Controller
     }
 
     // modifico los datos del administrativos
-    $employees_adm->codigo                = $request->input('codigo');
+    $employees_adm->codigo_nomina         = $request->input('codigo_nomina');
     $employees_adm->fecha_ingreso         = $request->input('fecha_ingreso');
     $employees_adm->employee_cargo_id     = $request->input('employee_cargo_id');
     $employees_adm->employee_condicion_id = $request->input('employee_condicion_id');

@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Empleado Policial')
+@section('title', 'Empleado Uniformado')
 
 @section('content_header')
-  <h1>Agregar Empleado Policial</h1>
+  <h1>Agregar Empleado Uniformado</h1>
 @endsection
 
 @section('content')
@@ -289,8 +289,8 @@
             <input type="text" 
                   class="form-control" 
                   id="inputCodigo" 
-                  name="codigo"
-                  placeholder="No. de código"
+                  name="codigo_nomina"
+                  placeholder="No. de código de nómina"
             />
           </div>
 

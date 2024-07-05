@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Empleado Policial')
+@section('title', 'Empleado Uniformado')
 
 @section('content_header')
-  <h1>Actualizar Empleado Policial: {{ $data['person']['name'] }}</h1>
+  <h1>Actualizar Empleado Uniformado: {{ $data['person']['name'] }}</h1>
 @endsection
 
 @section('content')
@@ -295,13 +295,13 @@
       <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
         <div class="row">
           <div class="col-4 form-group">
-            <label for="inputCodigo">Código Administrativo</label>
+            <label for="inputCodigo">Código de Nómina</label>
             <input type="text" 
                   class="form-control" 
                   id="inputCodigo" 
-                  name="codigo"
-                  value="{{ $data['employee']['codigo'] }}"
-                  placeholder="No. de código"
+                  name="codigo_nomina"
+                  value="{{ $data['employee']['codigo_nomina'] }}"
+                  placeholder="No. de código de nómina"
             />
           </div>
 

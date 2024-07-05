@@ -285,12 +285,12 @@
       <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
         <div class="row">
           <div class="col-4 form-group">
-            <label for="inputCodigo">Código Administrativo</label>
+            <label for="inputCodigo">Código de Nómina</label>
             <input type="text" 
                   class="form-control" 
                   id="inputCodigo" 
-                  name="codigo"
-                  placeholder="No. de código"
+                  name="codigo_nomina"
+                  placeholder="No. de código de nómina"
             />
           </div>
 

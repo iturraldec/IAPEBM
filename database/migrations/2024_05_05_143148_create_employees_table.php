@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('person_id');
             $table->unsignedSmallInteger('grupo_id');
-            $table->string('codigo', 20);
+            $table->string('codigo_nomina', 20);
             $table->date('fecha_ingreso');
             $table->unsignedSmallInteger('employee_cargo_id')->nullable();
             $table->unsignedSmallInteger('employee_condicion_id')->nullable();
