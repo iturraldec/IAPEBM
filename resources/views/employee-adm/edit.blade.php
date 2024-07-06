@@ -415,6 +415,17 @@
                   placeholder="Ingrese la licencia"
             />
           </div>
+
+          <div class="col-4 form-group">
+            <label for="inputCtaBancaria">Nro. Cuenta Bancaria</label>
+            <input type="text"
+                  class="form-control"
+                  id="inputCtaBancaria"
+                  name="nro_cta_bancaria"
+                  value="{{ $data['employee']['nro_cta_bancaria'] }}"
+                  placeholder="Nro. de cuenta bancaria"
+            />
+          </div>
         </div>
       </div>
       <!-- fin de datos administrativos -->

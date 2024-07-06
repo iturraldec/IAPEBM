@@ -121,7 +121,7 @@ class EmployeeAdmController extends Controller
     // agrego los datos administrativos
     $employeeData = $request->only('codigo_nomina', 'fecha_ingreso', 'employee_cargo_id', 'employee_condicion_id',
                       'employee_tipo_id', 'employee_location_id', 'rif', 'codigo_patria', 'serial_patria',
-                      'religion', 'deporte', 'licencia');
+                      'religion', 'deporte', 'licencia', 'nro_cta_bancaria');
     $employeeData['person_id'] = $person->id;
     $employeeData['grupo_id'] = $this->grupo_id;
     Employee::create($employeeData);
@@ -265,6 +265,7 @@ class EmployeeAdmController extends Controller
     $employees_adm->religion              = $request->input('religion');
     $employees_adm->deporte               = $request->input('deporte');
     $employees_adm->licencia              = $request->input('licencia');
+    $employees_adm->nro_cta_bancaria      = $request->input('nro_cta_bancaria');
     $employees_adm->save();
     
     //

@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('religion', 100)->default('NO DEFINIDO');
             $table->string('deporte', 100)->default('NO DEFINIDO');
             $table->string('licencia', 100)->default('NO DEFINIDO');
+            $table->string('nro_cta_bancaria', 30)->default('NO DEFINIDO');
             $table->timestamps();
             $table->softDeletes();
 

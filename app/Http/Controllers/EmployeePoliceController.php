@@ -126,7 +126,7 @@ class EmployeePoliceController extends Controller
     // agrego los datos administrativos
     $employeeData = $request->only('codigo_nomina', 'fecha_ingreso', 'employee_cargo_id', 'employee_condicion_id',
                       'employee_tipo_id', 'employee_location_id', 'rif', 'codigo_patria', 'serial_patria',
-                      'religion', 'deporte', 'licencia');
+                      'religion', 'deporte', 'licencia', 'nro_cta_bancaria');
     $employeeData['person_id'] = $person->id;
     $employeeData['grupo_id'] = $this->grupo_id;
     $employee = Employee::create($employeeData);
@@ -281,6 +281,7 @@ class EmployeePoliceController extends Controller
     $employees_polouse->religion              = $request->input('religion');
     $employees_polouse->deporte               = $request->input('deporte');
     $employees_polouse->licencia              = $request->input('licencia');
+    $employees_polouse->nro_cta_bancaria      = $request->input('nro_cta_bancaria');
     $employees_polouse->save();
 
     // modifico los datos policiales

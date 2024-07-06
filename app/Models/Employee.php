@@ -25,6 +25,7 @@ class Employee extends Model
         'religion',
         'deporte',
         'licencia',
+        'nro_cta_bancaria',
     ];
 
     // datos personales
