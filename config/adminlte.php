@@ -293,12 +293,6 @@ return [
     'menu' => [
         // Sidebar items:
         [
-            'text'    => 'Mantenimiento',
-            'icon'    => 'fas fa-tools',
-            'url'   => '/',
-        ],
-        
-        [
             'text'    => 'Usuarios',
             'icon'    => 'fas fa-users',
             'submenu' => [
@@ -327,8 +321,7 @@ return [
             ],
         ],
         [
-            'text'  => 'Empleados',
-            'icon'  => 'fas fa-users',
+            'text'    => 'Definiciones',
             'submenu'   => [
                 [
                     'text'    => 'Cargos',
@@ -339,12 +332,18 @@ return [
                     'route'   => 'employee-status.index'
                 ],
                 [
-                    'text'    => 'Administrativos',
-                    'route'   => 'employees-adm.index'
-                ],
-                [
                     'text'    => 'Rangos',
                     'route'   => 'rangos.index'
+                ],
+            ]
+        ],
+        [
+            'text'  => 'Empleados',
+            'icon'  => 'fas fa-users',
+            'submenu'   => [
+                [
+                    'text'    => 'Administrativos',
+                    'route'   => 'employees-adm.index'
                 ],
                 [
                     'text'    => 'Obreros',
@@ -355,6 +354,11 @@ return [
                     'route'   => 'employees-police.index'
                 ],
             ]
+        ],
+        [
+            'text'    => 'Mantenimiento',
+            'icon'    => 'fas fa-tools',
+            'url'   => '/',
         ],
     ],
 
