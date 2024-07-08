@@ -19,11 +19,10 @@ return new class extends Migration
             $table->char('sex', 1);
             $table->date('birthday')->nullable();
             $table->text('place_of_birth')->nullable();
-            $table->string('email')->nullable();
             $table->unsignedTinyInteger('civil_status_id')->nullable();
             $table->unsignedTinyInteger('blood_type_id')->nullable();
             $table->text('notes')->nullable();
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

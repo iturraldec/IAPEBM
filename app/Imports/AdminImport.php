@@ -31,7 +31,6 @@ class AdminImport implements ToCollection, WithHeadingRow
                 'sex' => $row['sexo'],
                 'birthday' => date('Y-m-d', strtotime($row['fecha_nac'])),
                 'place_of_birth' => $row['lugar_nac'],
-                'email' => $row['correo_usr'],
                 'civil_status_id' => $civil_status_id,
                 'blood_type_id' => $blood_type_id,
             ];
@@ -65,14 +64,12 @@ class AdminImport implements ToCollection, WithHeadingRow
             }
 
             // empleados administrativos
-            $employee_cargo_id = DB::table('employee_cargos')->where('id', $row['codigo_cargo'])->value('id');
             $employee_tipo_id = DB::table('employee_tipos')->where('id', $row['cod_tipoemp'])->value('id');
             $record = [
                 'person_id' => $person_id,
                 'grupo_id' => 1,            // administrativo
-                'codigo'    => $row['codigo_inst'],
+                'codigo_nomina'    => $row['codigo_inst'],
                 'fecha_ingreso' => date('Y-m-d', strtotime($row['fecha_ing'])),
-                'employee_cargo_id' => $employee_cargo_id,
                 'employee_tipo_id' => $employee_tipo_id,
                 'rif' => $row['rif_usr'],
                 'religion' => $row['religion_usr'],
@@ -81,6 +78,14 @@ class AdminImport implements ToCollection, WithHeadingRow
             ];
             
             $empleado_id = DB::table('employees')->insertGetId($record);
+
+            // correo electronico
+            $record = [
+                'employee_id' => $empleado_id,
+                'email'       => $row['correo_usr'],
+            ];
+
+            $empleado_id = DB::table('employee_emails')->insert($record);
         }
     }
 }

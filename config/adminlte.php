@@ -293,6 +293,11 @@ return [
     'menu' => [
         // Sidebar items:
         [
+            'text'      => 'Dashboard',
+            'icon'      => 'fas fa-chart-line',
+            'url'       => '#'
+        ],
+        [
             'text'    => 'Usuarios',
             'icon'    => 'fas fa-users',
             'submenu' => [

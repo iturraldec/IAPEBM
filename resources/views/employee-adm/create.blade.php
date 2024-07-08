@@ -3,7 +3,16 @@
 @section('title', 'Empleado Administrativo')
 
 @section('content_header')
-  <h1>Agregar Empleado Administrativo</h1>
+  <div class="row">
+    <div class="col-6">
+      <h4>Agregar Datos del Empleado Administrativo</h4>
+    </div>
+  
+    <div class="col-6 d-flex justify-content-end">
+      <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
+      <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
+    </div>
+  </div>
 @endsection
 
 @section('content')
@@ -12,19 +21,10 @@
   <div class="card-header p-0 pt-1">
     <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Identificación</a>
+        <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Personales</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="custom-tabs-one-phones-tab" data-toggle="pill" href="#custom-tabs-one-phones" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Teléfono(s)</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="custom-tabs-one-adresses-tab" data-toggle="pill" href="#custom-tabs-one-adresses" role="tab" aria-controls="custom-tabs-one-adresses" aria-selected="false">Dirección(es)</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="custom-tabs-one-images-tab" data-toggle="pill" href="#custom-tabs-one-images" role="tab" aria-controls="custom-tabs-one-images" aria-selected="false">Imagenes</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="custom-tabs-one-admin-tab" data-toggle="pill" href="#custom-tabs-one-admin" role="tab" aria-controls="custom-tabs-one-admin" aria-selected="false">Administración</a>
+        <a class="nav-link" id="custom-tabs-one-admin-tab" data-toggle="pill" href="#custom-tabs-one-admin" role="tab" aria-controls="custom-tabs-one-admin" aria-selected="false">Administrativos</a>
       </li>
     </ul>
   </div>
@@ -34,52 +34,125 @@
   <form id="empleadoForm">
     @csrf
 
-    <div class="tab-content" id="custom-tabs-one-tabContent">
-      
+    <div class="tab-content" id="custom-tabs-one-tabContent">      
       <!-- tab principal -->
       <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+
+        <!-- inicio de row -->
+        <div class="row d-flex justify-content-around">
+          <div class="col-4 form-group text-center">
+            <img src="{{ asset('assets/images/avatar.png') }}" 
+                  id="imgFotoFrente" 
+                  class="img-thumbnail border border-dark"
+                  width="200"
+                  height="250"
+            >
+            <label for="inputFotoFrente" class="form-control btn border mt-2">De Frente</label>
+            <input type="file" id="inputFotoFrente" name="imgFotoFrente" accept="image/*" style="display: none;" />
+          </div>
+
+          <div class="col-4 form-group text-center">
+            <img src="{{ asset('assets/images/avatar.png') }}" 
+                  id="imgFotoLIzquierdo" 
+                  class="img-thumbnail border border-dark"
+                  width="200"
+                  height="250"
+            >
+            <label for="inputFotoLIzquierdo" class="form-control btn border mt-2">Lado Izquierdo</label>
+            <input type="file" id="inputFotoLIzquierdo" name="imgLIzquierdo" accept="image/*" style="display: none;" />
+          </div>
+
+          <div class="col-4 form-group text-center">
+            <img src="{{ asset('assets/images/avatar.png') }}" 
+                  id="imgFotoLDerecho" 
+                  class="img-thumbnail border border-dark"
+                  width="200"
+                  height="250"
+            >
+            <label for="inputFotoLDerecho" class="form-control btn border mt-2">Lado Derecho</label>
+            <input type="file" id="inputFotoLDerecho" name="imgLDerecho" accept="image/*" style="display: none;" />
+          </div>
+        </div>
+        <!-- fin de row -->
+
         <!-- inicio de row -->
         <div class="row">
-          <div class="col-9">
+          <div class="col-3 form-group">
+            <label for="inputCedula">Cédula</label>
+            <input type="text" 
+                  class="form-control" 
+                  id="inputCedula" 
+                  name="cedula"
+                  minlength="7"
+                  maxlength="15"
+                  required
+                  placeholder="Ingresa Nro. de cédula"
+            />
+          </div>
 
-            <!-- inicio de row -->
-            <div class="row">
+          <div class="col-3 form-group">
+            <label for="inputRif">R.I.F.</label>
+            <input type="text" 
+                  class="form-control" 
+                  id="inputRif" 
+                  name="rif"
+                  maxlength="20"
+                  required
+                  placeholder="Ingresa Nro. de R.I.F."
+                  onkeyup="this.value = this.value.toUpperCase();"
+            />
+          </div>
+
+          <div class="col-3 form-group">
+            <label for="inputPNombre">Primer Nombre</label>
+            <input type="text" 
+                  class="form-control" 
+                  id="inputPNombre"
+                  name="first_name"
+                  required
+                  minlength="3"
+                  maxlength="200"
+                  placeholder="Ingresa su primer nombre"
+                  onkeyup="this.value = this.value.toUpperCase();"
+            />
+          </div>
+
               <div class="col-3 form-group">
-                <label for="inputCedula">Cédula</label>
+                <label for="inputSNombre">Segundo Nombre</label>
                 <input type="text" 
                       class="form-control" 
-                      id="inputCedula" 
-                      name="cedula"
-                      minlength="7"
-                      maxlength="15"
-                      required
-                      placeholder="No. de cédula"
-                />
-              </div>
-
-              <div class="col-3 form-group">
-                <label for="inputRif">R.I.F.</label>
-                <input type="text" 
-                      class="form-control" 
-                      id="inputRif" 
-                      name="rif"
-                      maxlength="20"
-                      required
-                      placeholder="No. de R.I.F."
+                      id="inputSNombre"
+                      name="second_name"
+                      minlength="3"
+                      maxlength="200"
+                      placeholder="Ingresa su segundo nombre"
                       onkeyup="this.value = this.value.toUpperCase();"
                 />
               </div>
 
-              <div class="col-6 form-group">
-                <label for="inputNombre">Nombre(s) y Apellido(s)</label>
+              <div class="col-3 form-group">
+                <label for="inputPApellido">Primer Apellido</label>
                 <input type="text" 
                       class="form-control" 
-                      id="inputNombre"
-                      name="name"
+                      id="inputPApellido"
+                      name="first_last_name"
                       required
                       minlength="3"
                       maxlength="200"
-                      placeholder="Ingresa su nombre(s) y apellido(s)"
+                      placeholder="Ingresa su primer apellido"
+                      onkeyup="this.value = this.value.toUpperCase();"
+                />
+              </div>
+
+              <div class="col-3 form-group">
+                <label for="inputSApellido">Segundo Apellido</label>
+                <input type="text" 
+                      class="form-control" 
+                      id="inputSApellido"
+                      name="second_last_name"
+                      minlength="3"
+                      maxlength="200"
+                      placeholder="Ingresa su segundo apellido"
                       onkeyup="this.value = this.value.toUpperCase();"
                 />
               </div>
@@ -102,7 +175,7 @@
                       required />
               </div>
     
-              <div class="col-6 form-group">
+              <div class="col-3 form-group">
                 <label for="inputPlaceOfBirth">Lugar de Nacimiento</label>
                 <input type="text"
                       class="form-control"
@@ -134,86 +207,124 @@
                   @endforeach
                 </select>
               </div>
-              
-              <div class="col-6 form-group">
-                <label for="inputEmail">Correo Electrónico</label>
-                <input type="email"
-                      class="form-control"
-                      id="inputEmail"
-                      name="email"
-                      placeholder="Ingresa el correo electrónico"
-                      onkeyup="this.value = this.value.toLowerCase();"
-                />
-              </div>
+        </div>
+        <!-- fin de row -->
 
-              <div class="col form-group">
-                <label for="inputNotas">Observaciones</label>
-                <textarea class="form-control"
-                          id="inputNotas"
-                          name="notes"
-                          placeholder="Ingresa observaciones"
-                          rows="3"
-                          onkeyup="this.value = this.value.toUpperCase();"
-                /></textarea>
+        <!-- inicio de row -->
+        <div class="row">
+          
+          <!-- correos del empleado -->
+          <div class="col-6">
+            <div class="card card-primary">
+              <div class="card-header bg-lightblue">
+                <h3 class="card-title">Correo(s) del Empleado</h3>
               </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="input-group">
+                      <input type="email"
+                          class="form-control"
+                          id="inputEmail"
+                          placeholder="Ingresa el correo electrónico"
+                          onkeyup="this.value = this.value.toLowerCase();"
+                      />
 
+                      <div class="input-group-append">
+                        <button type="button" id="btnEmailAdd" class="input-group-text btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>    
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <table id="emailsDT" class="table table-hover border border-primary">
+                      <thead class="text-center">
+                        <tr>
+                          <th scope="col">Correo</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+        
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div> 
+              </div>
+              <!-- /.card-body -->
             </div>
-            <!-- fin de row -->
-
           </div>
+          <!-- fin de correos del empleado-->
 
-          <div class="col-3 border p-2 text-center">
-            <img src="{{ asset('assets/images/avatar.png') }}" 
-                 id="imgAvatar" 
-                 class="img-thumbnail border border-dark"
-                 width="200"
-                 height="250"
-            >
-            <label for="inputAvatar" class="form-control btn btn-primary mt-2">Imagen</label>
-            <input type="file" id="inputAvatar" name="imagen" accept="image/*" style="display: none;" />
-          </div>          
+          <!-- telefonos del empleado -->
+          <div class="col-6">
+            <div class="card bg-light ">
+              <div class="card-header bg-lightblue">
+                <h3 class="card-title">Teléfono(s) del Empleado</h3>
+              </div>
+              <!-- /.card-header -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-6">
+                      <select id="selectPhoneType" class="form-control">
+                        <option value="0" selected>SELECCIONE EL TIPO DE NÚMERO</option>
+                          @foreach ($phone_types as $phone_type)
+                            <option value="{{ $phone_type->id }}">{{ $phone_type->name }}</option>
+                          @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-6">
+                      <div class="input-group">
+                        <input type="text"
+                            class="form-control"
+                            id="inputPhone"
+                            placeholder="Ingresa el número de teléfono"
+                        />
+  
+                        <div class="input-group-append">
+                          <button type="button" id="btnPhoneAdd" class="input-group-text btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-12">
+                      <table id="phonesDT" class="table table-hover border border-primary">
+                        <thead>
+                          <tr>
+                            <th scope="col">TipoID</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Número</th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+          
+                        <tbody></tbody>
+                      </table>
+                    </div>
+                  </div>  
+                </div>
+                <!-- /.card-body -->
+            </div>
+          </div>
+          <!-- fin de telefonos del empleado-->
 
         </div>
         <!-- fin de row -->
 
-        <div class="row">
-          <div class="col">
-            <button type="submit" class="btn btn-danger">Grabar</button>
-            <button type="button" id="btnSalir" class="btn btn-secondary">Retornar</button>
-          </div>
+        <div class="form-group">
+          <label for="inputNotas">Observaciones</label>
+          <textarea class="form-control"
+                    id="inputNotas"
+                    name="notes"
+                    placeholder="Ingresa las observaciones"
+                    rows="3"
+                    onkeyup="this.value = this.value.toUpperCase();"
+          /></textarea>
         </div>
+
       </div>
       <!-- fin de tab principal -->
-      
-      <!-- tab phones -->
-      <div class="tab-pane fade" id="custom-tabs-one-phones" role="tabpanel" aria-labelledby="custom-tabs-one-phone-tab">
-        <div class="row">
-
-          <div class="col-6">
-            <select id="selectPhoneType" class="form-control">
-              <option value="0" selected>SELECCIONE EL TIPO DE NÚMERO</option>
-              @foreach ($phone_types as $phone_type)
-                <option value="{{ $phone_type->id }}">{{ $phone_type->name }}</option>
-              @endforeach
-            </select>
-          </div>
-
-          <div class="col-6">
-            <div class="input-group mb-2">
-              <input type="text" id="inputPhone" class="form-control" placeholder="Ingresa número de teléfono">
-              <div class="input-group-append">
-                <button type="button" id="btnAddPhone" class="btn btn-primary btn-sm">
-                  <i class="fas fa-plus-square"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        
-        </div>
-
-        <div class="row" id="divPhones"></div>
-      </div>
-      <!-- fin de tab phones -->
 
       <!-- tab de direcciones -->
       <div class="tab-pane fade" id="custom-tabs-one-adresses" role="tabpanel" aria-labelledby="custom-tabs-one-adresses-tab">
@@ -261,25 +372,6 @@
 
       </div>
       <!-- fin de tab de direcciones -->
-
-      <!-- tab de imagenes -->
-      <div class="tab-pane fade" id="custom-tabs-one-images" role="tabpanel" aria-labelledby="custom-tabs-one-images-tab">
-        <div class="row">
-
-          <!-- imagenes nuevas -->
-          <div class="col border border-dark">
-            <div class="h5 text-center">Imagenes a subir</div>
-
-            <div id="divNewImages" class="row"></div>
-
-            <div class="mt-2">
-              <input type="file" class="form-control" id="inputImage" accept="image/*">
-            </div>
-          </div>
-          <!-- fin de imagenes nuevas -->
-        </div>
-      </div>
-      <!-- fin de tab de fotos -->
 
       <!-- tab datos administrativos -->
       <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
@@ -429,10 +521,8 @@
     ///////////////////////////////////////////////////////////////////
     // variables globales
     ///////////////////////////////////////////////////////////////////
-    
-    var phones      = [];                                               // telefonos del empleado
+
     var addresses   = [];                                               // direcciones del empleado
-    var formData    = new FormData();                                   // imagenes nuevas del empleado
     var municipios  = {{ Js::from($municipios) }};
     var parroquias  = {{ Js::from($parroquias) }};
 
@@ -445,26 +535,163 @@
     toastr.options.extendedTimeOut = 0;
 
     ///////////////////////////////////////////////////////////////////
+    // foto frontal del empleado
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputFotoFrente").change(function() {
+      let imagen = this.files[0];
+      let reader = new FileReader();
+
+      reader.onload = function(e) {
+        $("#imgFotoFrente").attr('src', e.target.result);
+      };
+
+      reader.readAsDataURL(imagen);
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // foto del lado izquierdo del empleado
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputFotoLIzquierdo").change(function() {
+      let imagen = this.files[0];
+      let reader = new FileReader();
+
+      reader.onload = function(e) {
+        $("#imgFotoLIzquierdo").attr('src', e.target.result);
+      };
+
+      reader.readAsDataURL(imagen);
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // foto del lado derecho del empleado
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputFotoLDerecho").change(function() {
+      let imagen = this.files[0];
+      let reader = new FileReader();
+
+      reader.onload = function(e) {
+        $("#imgFotoLDerecho").attr('src', e.target.result);
+      };
+
+      reader.readAsDataURL(imagen);
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de emails
+    ///////////////////////////////////////////////////////////////////
+
+    var emailsDT = $('#emailsDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'correo',
+          orderable: false,
+          width: '95%'
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
+        }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // agregar un email
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnEmailAdd").click(function () {
+      emailsDT.row.add({'correo' : $("#inputEmail").val()}).draw();
+      $("#inputEmail").val('');
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar un email
+    ///////////////////////////////////////////////////////////////////
+
+    $("#emailsDT tbody").on("click",".eliminar",function() {
+      emailsDT.row($(this).parents())
+              .remove()
+              .draw();
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de telefonos
+    ///////////////////////////////////////////////////////////////////
+
+    var phonesDT = $('#phonesDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'id',
+          visible: false
+        },
+        {
+          data: 'tipo',
+          width: '50%',
+          orderable: false
+        },
+        {
+          data: 'numero',
+          width: '45%',
+          orderable: false
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
+        }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // agregar telefono
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnPhoneAdd").click(function() {
+      let _number = $("#inputPhone").val();
+      
+      if(lib_isEmpty(_number)) {
+        lib_toastr("Error: Debe ingresar un número de teléfono!");
+      }
+      else {
+        phonesDT.row.add({
+          'id'    : $("#selectPhoneType :selected").val(),
+          'tipo'  : $("#selectPhoneType :selected").text(),
+          'numero': _number
+        })
+        .draw();
+        $("#inputPhone").val("");
+      }
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar telefono
+    ///////////////////////////////////////////////////////////////////
+
+    $("#phonesDT tbody").on("click",".eliminar",function() {
+      phonesDT.row($(this).parents())
+              .remove()
+              .draw();
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // cerrar pestaña de edicion
     ///////////////////////////////////////////////////////////////////
 
     $("#btnSalir").click(function() {
       window.close();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // al seleccionar la imagen del empleado
-    ///////////////////////////////////////////////////////////////////
-
-    $("#inputAvatar").change(function() {
-      let imagen = this.files[0];
-      let reader = new FileReader();
-
-      reader.onload = function(e) {
-        $("#imgAvatar").attr('src', e.target.result);
-      };
-
-      reader.readAsDataURL(imagen);
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -484,66 +711,6 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#inputZonaPostal").inputmask(lib_digitMask());
-    
-    ///////////////////////////////////////////////////////////////////
-    // agregar telefono
-    ///////////////////////////////////////////////////////////////////
-
-    $("#btnAddPhone").click(function() {
-      let _number = $("#inputPhone").val();
-      
-      if(lib_isEmpty(_number)) {
-        lib_toastr("Error: Debe ingresar un número de teléfono!");
-      }
-      else {
-        phones.push({
-          phone_type_id : $("#selectPhoneType :selected").val(),
-          phoneTypeName : $("#selectPhoneType :selected").text(),
-          number        : _number
-        });
-
-        showPhones();
-        $("#inputPhone").val("");
-      }
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // eliminar telefono
-    ///////////////////////////////////////////////////////////////////
-
-    $(document).on('click', '.delPhone', function() {
-      let phone_id = $(this).attr('id');
-      
-      phones = phones.filter((phone, index) => index != phone_id);
-      showPhones();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // mostrar telefonos
-    ///////////////////////////////////////////////////////////////////
-    function showPhones() {
-      let cadena = '';
-
-      phones.forEach((phone, index) => {
-        cadena += `
-          <div class="col-6">
-            <input type="hidden" class="form-control" name="phone_type_id[]" value="${phone.phone_type_id}" />
-            <input type="text" class="form-control" value="${phone.phoneTypeName}" readonly />
-          </div>
-
-          <div class="col-6">
-            <div class="input-group mb-2">
-              <input type="text" class="form-control" name="phone_number[]" value="${phone.number}" readonly />
-              <div class="input-group-append">
-                <a class="delPhone btn btn-danger btn-sm" id="${index}"><i class="fas fa-trash-alt"></i></a>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-
-      $("#divPhones").html(cadena);
-    };
 
     ///////////////////////////////////////////////////////////////////
     // filtro de las parroquias
@@ -607,76 +774,17 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // mostrar direcciones
-    ///////////////////////////////////////////////////////////////////
-
-    function showDirecciones()
-    {
-      let cadena = '';
-
-      addresses.forEach((address, index) => {
-        cadena += `
-          <div class="input-group mb-2">
-            <input type="hidden" name="parroquia_id[]" value="${address.parroquia_id}" />
-            <input type="hidden" name="zona_postal[]" value="${address.zona_postal}" />
-            <input type="text" class="form-control" name="address[]" value="${address.address}" readonly />
-            <div class="input-group-append">
-              <a class="delAddress btn btn-danger btn-sm" id="${index}"><i class="fas fa-trash-alt"></i></a>
-            </div>
-          </div>`
-      });
-
-      $("#divAddresses").html(cadena);
-    };
-
-    ///////////////////////////////////////////////////////////////////
-    // agregar una imagen
-    ///////////////////////////////////////////////////////////////////
-
-    $('#inputImage').on('change', function(e) {
-      formData.append('images[]', e.target.files[0]);
-      imprimirImagenes();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // eliminar una imagen
-    ///////////////////////////////////////////////////////////////////
-
-    $(document).on('click', '.deleteImagenNueva', function() {
-      let imagesArray = Array.from(formData.getAll('images[]'));
-
-      imagesArray.splice($(this).attr('id'), 1);
-      formData.delete('images[]');
-      imagesArray.forEach(image => formData.append('images[]', image));
-      imprimirImagenes();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // imprimir imagenes nuevas
-    ///////////////////////////////////////////////////////////////////
-
-    function imprimirImagenes() {
-      let contenedor = $("#divNewImages");
-
-      contenedor.empty();
-      for (let i = 0; i < formData.getAll('images[]').length; i++) {
-        let div = $('<div class="col-3 text-center"></div>');
-        let img = $('<img class="img-fluid img-thumbnail mt-2" width="200" height="250">');
-        let botonEliminar = $(`<button class="deleteImagenNueva form-control btn-danger p-2" id="${i}">Eliminar</button>`);
-
-        img.attr('src', URL.createObjectURL(formData.getAll('images[]')[i]));
-        div.append(img);
-        div.append(botonEliminar);
-        contenedor.append(div);
-      }
-    };
-
-    ///////////////////////////////////////////////////////////////////
     // agregar un empleado 
     ///////////////////////////////////////////////////////////////////
 
-    $("#empleadoForm").submit(function(e) {
-      e.preventDefault();
+    $("#btnGrabar").click(function() {
+      let data = new FormData(empleadoForm);
+
+      emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
+
+      
+      console.log(data);
+      return;
 
       if(phones.length < 1) {
         lib_toastr("Error: Debe ingresar al menos un número de teléfono!");
@@ -688,7 +796,7 @@
         return;
       }
 
-      const data = new FormData(empleadoForm);
+      //const data = new FormData(empleadoForm);
       
       fetch("{{ route('employees-adm.store') }}", {
         headers: {

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedSmallInteger('grupo_id');
             $table->string('codigo_nomina', 20);
             $table->date('fecha_ingreso');
-            $table->unsignedSmallInteger('employee_cargo_id')->nullable();
             $table->unsignedSmallInteger('employee_condicion_id')->nullable();
             $table->unsignedSmallInteger('employee_tipo_id')->nullable();
             $table->unsignedSmallInteger('employee_location_id')->nullable();
@@ -28,11 +27,12 @@ return new class extends Migration
             $table->string('deporte', 100)->default('NO DEFINIDO');
             $table->string('licencia', 100)->default('NO DEFINIDO');
             $table->string('nro_cta_bancaria', 30)->default('NO DEFINIDO');
+            $table->string('image_li')->nullable();
+            $table->string('image_ld')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');
-            $table->foreign('employee_cargo_id')->references('id')->on('employee_cargos')->nullOnDelete();
             $table->foreign('employee_condicion_id')->references('id')->on('employee_condiciones')->nullOnDelete();
             $table->foreign('employee_tipo_id')->references('id')->on('employee_tipos')->nullOnDelete();
             $table->foreign('employee_location_id')->references('id')->on('employee_locations')->nullOnDelete();
