@@ -309,6 +309,67 @@
           </div>
           <!-- fin de telefonos del empleado-->
 
+          <!-- direcciones del empleado -->
+          <div class="col-12">
+            <div class="card bg-light ">
+              <div class="card-header bg-lightblue">
+                <h3 class="card-title">Dirección(es) de ubicación del Empleado</h3>
+              </div>
+              <!-- /.card-header -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-6 mb-1">
+                      <select id="selectEstados" class="form-control"></select>
+                    </div>
+
+                    <div class="col-6">
+                      <select id="selectMunicipios" class="form-control"></select>
+                    </div>
+
+                    <div class="col-6 mb-1">
+                      <select id="selectParroquias" class="form-control"></select>
+                    </div>
+
+                    <div class="col-6">
+                      <div class="input-group">
+                        <input type="text"
+                            class="form-control"
+                            id="inputAddress"
+                            placeholder="Ingresa la dirección"
+                            onkeyup="this.value = this.value.toUpperCase();"
+                        />
+  
+                        <div class="input-group-append">
+                          <button type="button" id="btnAddressAdd" class="input-group-text btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-12">
+                      <table id="addressesDT" class="table table-hover border border-primary">
+                        <thead>
+                          <tr>
+                            <th scope="col">EstadoID</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">MunicipioID</th>
+                            <th scope="col">Municipio</th>
+                            <th scope="col">ParroquiaID</th>
+                            <th scope="col">Parroquia</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+          
+                        <tbody></tbody>
+                      </table>
+                    </div>
+                  </div>  
+                </div>
+                <!-- /.card-body -->
+            </div>
+          </div>
+          <!-- fin de direcciones del empleado-->
+
         </div>
         <!-- fin de row -->
 
@@ -325,53 +386,6 @@
 
       </div>
       <!-- fin de tab principal -->
-
-      <!-- tab de direcciones -->
-      <div class="tab-pane fade" id="custom-tabs-one-adresses" role="tabpanel" aria-labelledby="custom-tabs-one-adresses-tab">
-        <div class="row">
-          <div class="col-6">
-            <label for="selectMunicipio">Municipio</label>
-            <select id="selectMunicipio" class="form-control">
-              <option value="0" selected>SELECCIONE MUNICIPIO</option>
-              @foreach ($municipios as $municipio)
-                <option value="{{ $municipio->id }}">{{ $municipio->name }}</option>
-              @endforeach
-            </select>
-          </div>
-
-          <div class="col-6">
-            <label for="selectParroquia">Parroquia</label>
-            <select id="selectParroquia" class="form-control"></select>
-          </div>
-
-          <div class="col my-2">
-            <label for="inputAddress">Dirección y Zona Postal</label>
-            <div class="input-group mb-2">
-              <input type="text" 
-                    id="inputAddress" 
-                    class="form-control" 
-                    placeholder="Ingresa la dirección"
-                    onkeyup="this.value = this.value.toUpperCase();"
-              >
-              <div class="input-group-append">
-                <button type="button" id="btnAddAddress" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
-              </div>
-            </div>
-          </div>
-
-          <div class="input-group mb-2">
-            <input type"text" 
-                  id="inputZonaPostal" 
-                  class="form-control" 
-                  placeholder="Ingrese la zona postal"
-            />
-          </div>
-        </div>
-
-        <div class="row" id="divAddresses"></div>
-
-      </div>
-      <!-- fin de tab de direcciones -->
 
       <!-- tab datos administrativos -->
       <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
@@ -518,21 +532,36 @@
 @section('js')
 <script>
   $(document).ready(function () {
-    ///////////////////////////////////////////////////////////////////
-    // variables globales
-    ///////////////////////////////////////////////////////////////////
-
-    var addresses   = [];                                               // direcciones del empleado
-    var municipios  = {{ Js::from($municipios) }};
-    var parroquias  = {{ Js::from($parroquias) }};
+    initForm();
 
     ///////////////////////////////////////////////////////////////////
-    // configuracion de 'toatsr'
+    // inicializar formulario
     ///////////////////////////////////////////////////////////////////
+    function initForm() {
+      // configurar 'toastr'
+      toastr.options.closeButton = true;
+      toastr.options.timeOut = 0;
+      toastr.options.extendedTimeOut = 0;
 
-    toastr.options.closeButton = true;
-    toastr.options.timeOut = 0;
-    toastr.options.extendedTimeOut = 0;
+      //cargar estados
+      fetch("{{ route('ubicacion.estados') }}")
+      .then(response => response.json())
+      .then(r => {
+        $("#selectEstados").append('<option value="0">SELECCIONE UN ESTADO</option>');
+        r.estados.forEach(element => {
+          $("#selectEstados").append(`<option value="${element.id_estado}">${element.estado}</option>`);
+        });
+      });
+
+      // mascara para el nombre
+      $("#inputNombre").inputmask(lib_characterMask());
+
+      // mascara para el numero de telefono
+      $("#inputPhone").inputmask(lib_phoneMask());
+
+      // mascara la zona postal
+      $("#inputZonaPostal").inputmask(lib_digitMask());
+    }
 
     ///////////////////////////////////////////////////////////////////
     // foto frontal del empleado
@@ -687,47 +716,110 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // cerrar pestaña de edicion
+    // tabla de direcciones
     ///////////////////////////////////////////////////////////////////
 
-    $("#btnSalir").click(function() {
-      window.close();
+    var addressesDT = $('#addressesDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'estadoId',
+          visible: false
+        },
+        {
+          data: 'estado',
+          orderable: false
+        },
+        {
+          data: 'municipioId',
+          visible: false
+        },
+        {
+          data: 'municipio',
+          orderable: false
+        },
+        {
+          data: 'parroquiaId',
+          visible: false
+        },
+        {
+          data: 'parroquia',
+          orderable: false
+        },
+        {
+          data: 'direccion',
+          orderable: false
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
+        }
+      ]
     });
 
     ///////////////////////////////////////////////////////////////////
-    // mascara para el nombre
+    // cargar municipios
     ///////////////////////////////////////////////////////////////////
 
-    $("#inputNombre").inputmask(lib_characterMask());
+    $("#selectEstados").change(function() {
+      let estado_id = $(this).val();
+      let ruta = "{{ route('ubicacion.municipios', ['estado_id' => 'valor']) }}";
+
+      ruta = ruta.replace('valor', estado_id);
+      fetch(ruta)
+      .then(response => response.json())
+      .then(r => {
+        $("#selectMunicipios").empty();
+        $("#selectParroquias").empty();
+        $("#selectMunicipios").append('<option value="0">SELECCIONE UN MUNICIPIO</option>');
+        r.municipios.forEach(element => {
+          $("#selectMunicipios").append(`<option value="${element.id_municipio}">${element.municipio}</option>`);
+        });
+      });
+    });
 
     ///////////////////////////////////////////////////////////////////
-    // mascara para el numero de telefono
+    // cargar municipios
     ///////////////////////////////////////////////////////////////////
 
-    $("#inputPhone").inputmask(lib_phoneMask());
+    $("#selectEstados").change(function() {
+      let estado_id = $(this).val();
+      let ruta = "{{ route('ubicacion.municipios', ['estado_id' => 'valor']) }}";
+
+      ruta = ruta.replace('valor', estado_id);
+      fetch(ruta)
+      .then(response => response.json())
+      .then(r => {
+        $("#selectMunicipios").empty();
+        $("#selectMunicipios").append('<option value="0">SELECCIONE UN MUNICIPIO</option>');
+        r.municipios.forEach(element => {
+          $("#selectMunicipios").append(`<option value="${element.id_municipio}">${element.municipio}</option>`);
+        });
+      });
+    });
 
     ///////////////////////////////////////////////////////////////////
-    // mascara la zona postal
+    // cargar parroquias
     ///////////////////////////////////////////////////////////////////
 
-    $("#inputZonaPostal").inputmask(lib_digitMask());
+    $("#selectMunicipios").change(function() {
+      let municipio_id = $(this).val();
+      let ruta = "{{ route('ubicacion.parroquias', ['municipio_id' => 'valor']) }}";
 
-    ///////////////////////////////////////////////////////////////////
-    // filtro de las parroquias
-    ///////////////////////////////////////////////////////////////////
-
-    $("#selectMunicipio").change(function() {
-      let selectedOption = $(this).val();
-
-      $("#selectParroquia").empty();
-      $('#selectParroquia').append("<option value='0'>SELECCIONE LA PARROQUIA</option>");
-      parroquias.forEach(parroquia => {
-        if(parroquia.padre_id == selectedOption) {
-          $('#selectParroquia')
-            .append($("<option></option>")
-            .attr("value", parroquia.id)
-            .text(parroquia.name));
-        }
+      ruta = ruta.replace('valor', municipio_id);
+      fetch(ruta)
+      .then(response => response.json())
+      .then(r => {
+        $("#selectParroquias").empty();
+        $("#selectParroquias").append('<option value="0">SELECCIONE UNA PARROQUIA</option>');
+        r.parroquias.forEach(element => {
+          $("#selectParroquias").append(`<option value="${element.id_parroquia}">${element.parroquia}</option>`);
+        });
       });
     });
 
@@ -735,42 +827,35 @@
     // agregar direccion
     ///////////////////////////////////////////////////////////////////
 
-    $("#btnAddAddress").click(function() {
-      let address = {
-          address       : $("#inputAddress").val(),
-          parroquia_id  : $("#selectParroquia :selected").val(),
-          zona_postal   : $("#inputZonaPostal").val()
-        };
-
-        if(address.parroquia_id === undefined) {
-          lib_toastr("Error: Debe seleccionar una parroquia!");
-        }
-        else if(lib_isEmpty(address.address)) {
-          lib_toastr("Error: Debe ingresar una dirección!");
-        }
-        else if(lib_isEmpty(address.zona_postal)) {
-          lib_toastr("Error: Debe ingresar la zona postal!");
-        }
-        else if(address.zona_postal.length > 10) {
-          lib_toastr("Error: La zona postal no puede exceder de 10 caracteres!");
-        }
-        else {
-          addresses.push(address);
-          $("#inputAddress").val("");
-          $("#inputZonaPostal").val("");
-          showDirecciones();
-        }
+    $("#btnAddressAdd").click(function() {
+      let address = $("#inputAddress").val();
+      
+      if(lib_isEmpty(address)) {
+        lib_toastr("Error: Debe ingresar una dirección!");
+      }
+      else {
+        addressesDT.row.add({
+          'estadoId'    : $("#selectEstados :selected").val(),
+          'estado'      : $("#selectEstados :selected").text(),
+          'municipioId' : $("#selectMunicipios :selected").val(),
+          'municipio'   : $("#selectMunicipios :selected").text(),
+          'parroquiaId' : $("#selectParroquias :selected").val(),
+          'parroquia'   : $("#selectParroquias :selected").text(),
+          'direccion'   : address
+        })
+        .draw();
+        $("#inputAddress").val("");
+      }
     });
 
     ///////////////////////////////////////////////////////////////////
     // eliminar direccion
     ///////////////////////////////////////////////////////////////////
 
-    $(document).on('click', '.delAddress', function() {
-      let address_id = $(this).attr('id');
-
-      addresses = addresses.filter((address, index) => index != address_id);
-      showDirecciones();
+    $("#addressesDT tbody").on("click",".eliminar",function() {
+      addressesDT.row($(this).parents())
+              .remove()
+              .draw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -837,6 +922,14 @@
           });
         }
       })
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // cerrar pestaña de edicion
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnSalir").click(function() {
+      window.close();
     });
   });
 </script>

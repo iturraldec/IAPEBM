@@ -14,7 +14,7 @@ use App\Models\CivilStatus;
 use App\Models\Employee;
 use App\Models\Person;
 use App\Models\PhoneType;
-use App\Models\Location;
+use App\Http\Controllers\UbicacionController;
 use App\Models\PersonImage;
 use App\Models\Phone;
 use App\Models\Cargo;
@@ -48,10 +48,7 @@ class EmployeeAdmController extends Controller
   // vista para crear empleado
   public function create()
   {
-    $location     = new Location();
     $phone_types  = PhoneType::get();
-    $municipios   = $location->getMunicipios();
-    $parroquias   = $location->getParroquias();
     $edoCivil     = CivilStatus::get();
     $tipoSangre   = BloodType::get();
     $cargos       = Cargo::OrderBy('name')->get();
@@ -60,7 +57,7 @@ class EmployeeAdmController extends Controller
     $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
 
     return view('employee-adm.create', 
-                  compact('phone_types', 'municipios', 'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 
+                  compact('phone_types', 'edoCivil', 'tipoSangre', 'cargos', 
                           'status', 'tipos', 'ubicaciones'));
   }
 

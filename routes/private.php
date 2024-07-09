@@ -9,6 +9,7 @@ use App\Http\Controllers\RangoController;
 use App\Http\Controllers\EmployeeStatusController;
 use App\Http\Controllers\EmployeeAdmController;
 use App\Http\Controllers\EmployeePoliceController;
+use App\Http\Controllers\UbicacionController;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -36,3 +37,8 @@ Route::post('employees-adm/{id}/{cedula}', [EmployeeAdmController::class, 'addIm
 // empleados policiales
 Route::resource('employees-police', EmployeePoliceController::class)->names('employees-police');
 Route::post('employees-police/{id}/{cedula}', [EmployeePoliceController::class, 'addImages'])->name('employees-police.add-images');
+
+// ubicaciones (estados/municipios/parroquias)
+Route::get('ubicacion/estados', [UbicacionController::class, 'getEstados'])->name('ubicacion.estados');
+Route::get('ubicacion/municipios/{estado_id}', [UbicacionController::class, 'getMunicipios'])->name('ubicacion.municipios');
+Route::get('ubicacion/parroquias/{municipio_id}', [UbicacionController::class, 'getParroquias'])->name('ubicacion.parroquias');
