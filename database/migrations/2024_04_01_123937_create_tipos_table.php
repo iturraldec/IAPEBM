@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employee_condiciones', function (Blueprint $table) {
+        Schema::create('tipos', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name', 200)->unique();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employee_condiciones');
+        Schema::dropIfExists('tipos');
     }
 };

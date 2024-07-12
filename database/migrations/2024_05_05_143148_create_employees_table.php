@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->unsignedInteger('person_id');
             $table->unsignedSmallInteger('grupo_id');
             $table->string('codigo_nomina', 20);
             $table->date('fecha_ingreso');
-            $table->unsignedSmallInteger('employee_condicion_id')->nullable();
-            $table->unsignedSmallInteger('employee_tipo_id')->nullable();
-            $table->unsignedSmallInteger('employee_location_id')->nullable();
+            $table->unsignedSmallInteger('condicion_id')->nullable();
+            $table->unsignedSmallInteger('tipo_id')->nullable();
+            $table->unsignedSmallInteger('ccp_id')->nullable();
             $table->string('rif', 20);
             $table->string('codigo_patria', 20)->default('NO DEFINIDO');
             $table->string('serial_patria', 20)->default('NO DEFINIDO');
@@ -27,15 +27,16 @@ return new class extends Migration
             $table->string('deporte', 100)->default('NO DEFINIDO');
             $table->string('licencia', 100)->default('NO DEFINIDO');
             $table->string('nro_cta_bancaria', 30)->default('NO DEFINIDO');
+            $table->string('image_f')->nullable();
             $table->string('image_li')->nullable();
             $table->string('image_ld')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');
-            $table->foreign('employee_condicion_id')->references('id')->on('employee_condiciones')->nullOnDelete();
-            $table->foreign('employee_tipo_id')->references('id')->on('employee_tipos')->nullOnDelete();
-            $table->foreign('employee_location_id')->references('id')->on('employee_locations')->nullOnDelete();
+            $table->foreign('condicion_id')->references('id')->on('condiciones')->nullOnDelete();
+            $table->foreign('tipo_id')->references('id')->on('tipos')->nullOnDelete();
+            $table->foreign('ccp_id')->references('id')->on('ccps_e')->nullOnDelete();
         });
     }
 

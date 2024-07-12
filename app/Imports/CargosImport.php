@@ -12,7 +12,7 @@ class CargosImport implements ToCollection, WithHeadingRow
     {
         foreach ($rows as $row) 
         {   
-          DB::table('cargos')->insert(['name' => $row['nombre']]);
+          DB::table('cargos')->insert(['name' => $row['name']]);
         }
     }
 }

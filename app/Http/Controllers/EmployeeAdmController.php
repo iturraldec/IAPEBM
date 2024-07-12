@@ -64,6 +64,8 @@ class EmployeeAdmController extends Controller
   // agregar empleado
   public function store(Request $request)
   {
+    return response($request->all());
+
     // validacion de los datos
     $request->validate([
       'cedula'                => 'required|min:7|max:15|unique:people',

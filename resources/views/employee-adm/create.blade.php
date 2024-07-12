@@ -48,7 +48,7 @@
                   height="250"
             >
             <label for="inputFotoFrente" class="form-control btn border mt-2">De Frente</label>
-            <input type="file" id="inputFotoFrente" name="imgFotoFrente" accept="image/*" style="display: none;" />
+            <input type="file" id="inputFotoFrente" name="imagef" accept="image/*" style="display: none;" />
           </div>
 
           <div class="col-4 form-group text-center">
@@ -59,7 +59,7 @@
                   height="250"
             >
             <label for="inputFotoLIzquierdo" class="form-control btn border mt-2">Lado Izquierdo</label>
-            <input type="file" id="inputFotoLIzquierdo" name="imgLIzquierdo" accept="image/*" style="display: none;" />
+            <input type="file" id="inputFotoLIzquierdo" name="imageli" accept="image/*" style="display: none;" />
           </div>
 
           <div class="col-4 form-group text-center">
@@ -70,7 +70,7 @@
                   height="250"
             >
             <label for="inputFotoLDerecho" class="form-control btn border mt-2">Lado Derecho</label>
-            <input type="file" id="inputFotoLDerecho" name="imgLDerecho" accept="image/*" style="display: none;" />
+            <input type="file" id="inputFotoLDerecho" name="imageld" accept="image/*" style="display: none;" />
           </div>
         </div>
         <!-- fin de row -->
@@ -311,7 +311,7 @@
 
           <!-- direcciones del empleado -->
           <div class="col-12">
-            <div class="card bg-light ">
+            <div class="card bg-light">
               <div class="card-header bg-lightblue">
                 <h3 class="card-title">Dirección(es) de ubicación del Empleado</h3>
               </div>
@@ -370,20 +370,29 @@
           </div>
           <!-- fin de direcciones del empleado-->
 
+          <!-- observaciones -->
+          <div class="col">
+            <div class="card bg-light">
+              <div class="card-header bg-lightblue">
+                <h3 class="card-title">Observaciones generales</h3>
+              </div>
+  
+              <div class="card-body">
+                <div class="form-group">
+                  <textarea class="form-control"
+                            id="inputNotas"
+                            name="notes"
+                            placeholder="Ingresa las observaciones"
+                            rows="3"
+                            onkeyup="this.value = this.value.toUpperCase();"
+                  /></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- fin de observaciones -->
         </div>
         <!-- fin de row -->
-
-        <div class="form-group">
-          <label for="inputNotas">Observaciones</label>
-          <textarea class="form-control"
-                    id="inputNotas"
-                    name="notes"
-                    placeholder="Ingresa las observaciones"
-                    rows="3"
-                    onkeyup="this.value = this.value.toUpperCase();"
-          /></textarea>
-        </div>
-
       </div>
       <!-- fin de tab principal -->
 
@@ -863,25 +872,25 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnGrabar").click(function() {
-      let data = new FormData(empleadoForm);
+      const data = new FormData(empleadoForm);
 
       emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
+      phonesDT.column(0).data().each(phone_type_id => data.append('phone_type_ids[]', phone_type_id));
+      phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
+      addressesDT.column(0).data().each(estado_id => data.append('estado_ids[]', estado_id));
+      addressesDT.column(2).data().each(municipio_id => data.append('municipio_ids[]', municipio_id));
+      addressesDT.column(4).data().each(parroquia_id => data.append('parroquia_ids[]', parroquia_id));
+      addressesDT.column(6).data().each(address => data.append('addresses[]', address));
 
-      
-      console.log(data);
-      return;
-
-      if(phones.length < 1) {
+      if(! data.has('phones[]')) {
         lib_toastr("Error: Debe ingresar al menos un número de teléfono!");
         return;
       }
 
-      if(addresses.length < 1) {
+      if(! data.has('addresses[]')) {
         lib_toastr("Error: Debe ingresar al menos una dirección de ubicación!");
         return;
       }
-
-      //const data = new FormData(empleadoForm);
       
       fetch("{{ route('employees-adm.store') }}", {
         headers: {

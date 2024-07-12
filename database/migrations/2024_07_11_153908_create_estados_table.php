@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('phone_types', function (Blueprint $table) {
-            $table->smallIncrements('id');
-            $table->string('name');
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::create('estados', function (Blueprint $table) {
+            $table->unsignedTinyInteger('id_estado');
+            $table->string('estado', 100)->unique();
+            $table->string('iso_366_2', 4)->unique();
+
+            $table->primary('id_estado');
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('phone_types');
+        Schema::dropIfExists('estados');
     }
 };

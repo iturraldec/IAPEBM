@@ -1,13 +1,13 @@
-codigo;nombre
-1;Funcionario Policial
-2;Administrativo
-3;Obrero IAPEM
-4;Libre Nombramiento y Remosion
-5;Administrativo Comision de Servicio
-6;Funcionario Comision de Servicio
-7;Obrero Comision de Servicio
-8;Administrativo Contratado
-9;Empleado Fijo a Tiempo Completo
-10;Obrero Fijo en Puesto Permanente
-11;Empleado Contratado a Tiempo Determinado
-12;Alto Nivel y Direccion
+name;
+Funcionario Policial;
+Administrativo;
+Obrero IAPEM;
+Libre Nombramiento y Remosion;
+Administrativo Comision de Servicio;
+Funcionario Comision de Servicio;
+Obrero Comision de Servicio;
+Administrativo Contratado;
+Empleado Fijo a Tiempo Completo;
+Obrero Fijo en Puesto Permanente;
+Empleado Contratado a Tiempo Determinado;
+Alto Nivel y Direccion;

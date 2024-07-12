@@ -11,13 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('person_images', function (Blueprint $table) {
-            $table->id();
+        Schema::create('addresses', function (Blueprint $table) {
+            $table->increments('id');
             $table->unsignedInteger('person_id');
-            $table->string('file');
+            $table->unsignedInteger('parroquia_id');
+            $table->string('address');
+            $table->string('zona_postal', 10)->nullable();
             $table->timestamps();
 
             $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');
+            $table->foreign('parroquia_id')->references('id_parroquia')->on('parroquias')->nullOnDelete();
+
         });
     }
 
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('person_images');
+        Schema::dropIfExists('addresses');
     }
 };

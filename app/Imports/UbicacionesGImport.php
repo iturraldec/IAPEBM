@@ -6,13 +6,13 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\DB;
 
-class UbicacionesImport implements ToCollection, WithHeadingRow
+class UbicacionesGImport implements ToCollection, WithHeadingRow
 {
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) 
         {   
-          DB::table('employee_locations')->insert(['name' => $row['name']]);
+          DB::table('ccps_g')->insert(['name' => $row['name']]);
         }
     }
 }

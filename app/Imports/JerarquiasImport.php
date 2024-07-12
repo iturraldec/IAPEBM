@@ -12,7 +12,7 @@ class JerarquiasImport implements ToCollection, WithHeadingRow
     {
         foreach ($rows as $row) 
         {   
-          DB::table('police_jerarquias')->insert(['name' => $row['name']]);
+          DB::table('jerarquias')->insert(['name' => $row['name']]);
         }
     }
 }
