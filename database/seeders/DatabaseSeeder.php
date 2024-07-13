@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -65,33 +63,5 @@ class DatabaseSeeder extends Seeder
 
         // usuarios de prueba
         User::factory(10)->create();
-
-        // tipo de sangre
-        DB::table('blood_types')->insert([
-            ['name' => 'A+'],
-            ['name' => 'A-'],
-            ['name' => 'B+'],
-            ['name' => 'B-'],
-            ['name' => 'AB+'],
-            ['name' => 'AB-'],
-            ['name' => 'O+'],
-            ['name' => 'O-'],
-        ]);
-        
-        // tipo de telefonos
-        DB::table('phone_types')->insert([
-            ['name' => 'Celular'],
-            ['name' => 'Casa'],
-            ['name' => 'Institucional'],
-        ]);
-
-        // estado civil
-        DB::table('civil_status')->insert([
-            ['name' => 'Soltero(a)'],
-            ['name' => 'Casado(a)'],
-            ['name' => 'Divorsiado(a)'],
-            ['name' => 'Viudo(a)'],
-            ['name' => 'Union Estable de Hecho'],
-        ]);
     }
 }

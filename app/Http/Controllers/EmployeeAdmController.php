@@ -9,18 +9,12 @@ use Barryvdh\DomPDF\Facade;
 use Illuminate\Validation\Rule;
 
 use App\Models\Address;
-use App\Models\BloodType;
-use App\Models\CivilStatus;
 use App\Models\Employee;
 use App\Models\Person;
-use App\Models\PhoneType;
-use App\Http\Controllers\UbicacionController;
-use App\Models\PersonImage;
 use App\Models\Phone;
 use App\Models\Cargo;
-use App\Models\EmployeeStatus;
+use App\Models\Condicion;
 use App\Models\EmployeeTipos;
-use App\Models\EmployeeLocations;
 
 //
 class EmployeeAdmController extends Controller
@@ -48,17 +42,10 @@ class EmployeeAdmController extends Controller
   // vista para crear empleado
   public function create()
   {
-    $phone_types  = PhoneType::get();
-    $edoCivil     = CivilStatus::get();
-    $tipoSangre   = BloodType::get();
-    $cargos       = Cargo::OrderBy('name')->get();
-    $status       = EmployeeStatus::OrderBy('name')->get();
-    $tipos        = EmployeeTipos::OrderBy('name')->get();
-    $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
+    $cargos = Cargo::OrderBy('name')->get();
+    $condiciones = Condicion::OrderBy('name')->get();
 
-    return view('employee-adm.create', 
-                  compact('phone_types', 'edoCivil', 'tipoSangre', 'cargos', 
-                          'status', 'tipos', 'ubicaciones'));
+    return view('employee-adm.create', compact('cargos', 'condiciones'));
   }
 
   // agregar empleado

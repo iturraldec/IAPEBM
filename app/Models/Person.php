@@ -14,32 +14,20 @@ class Person extends Model
 
     //
     protected $fillable = [
-        'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 'email', 
-        'civil_status_id', 'blood_type_id', 'notes', 'image'
+        'cedula', 'name', 'sex', 'birthday', 'place_of_birth', 
+        'civil_status_id', 'blood_type_id', 'notes'
     ];
 
     // retorna los datos de un empleado
     public static function getById(int $id)
     {
-        return Person::with('employee', 'civil_status', 'phones.type', 'addresses', 'images')->find($id);
+        return Person::with('employee', 'phones.type', 'addresses')->find($id);
     }
 
     //
     public function employee() : HasOne
     {
         return $this->hasOne(Employee::class, 'person_id');
-    }
-
-    //
-    public function civil_status() : BelongsTo
-    {
-        return $this->belongsTo(CivilStatus::class);
-    }   
-
-    //
-    public function blood_type() : BelongsTo
-    {
-        return $this->belongsTo(BloodType::class);
     }
 
     //
@@ -52,11 +40,5 @@ class Person extends Model
     public function addresses() : HasMany
     {
         return $this->hasMany(Address::class);
-    }
-
-    //
-    public function images() : HasMany
-    {
-        return $this->hasMany(PersonImage::class);
     }
 }

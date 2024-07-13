@@ -192,8 +192,8 @@
                 <label for="selectEstadoCivil">Estado Civil</label>
                 <select id="selectEstadoCivil" class="form-control" name="civil_status_id">
                   <option value="0" selected>SELECCIONE ESTADO CIVIL</option>
-                  @foreach($edoCivil as $estado)
-                    <option value="{{ $estado->id }}">{{ $estado->name }}</option>
+                  @foreach (App\Enums\EmployeeCivilStatus::cases() as $case)
+                    <option value="{{ $case->value }}">{{ $case->label() }}</option>
                   @endforeach
                 </select>
               </div>
@@ -202,8 +202,8 @@
                 <label for="selectSangre">Tipo de Sangre</label>
                 <select id="selectSangre" class="form-control" name="blood_type_id">
                   <option value="0" selected>SELECCIONE TIPO</option>
-                  @foreach($tipoSangre as $tipo)
-                    <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
+                  @foreach (App\Enums\EmployeeBloodType::cases() as $case)
+                    <option value="{{ $case->value }}">{{ $case->value }}</option>
                   @endforeach
                 </select>
               </div>
@@ -268,9 +268,9 @@
                     <div class="col-6">
                       <select id="selectPhoneType" class="form-control">
                         <option value="0" selected>SELECCIONE EL TIPO DE NÚMERO</option>
-                          @foreach ($phone_types as $phone_type)
-                            <option value="{{ $phone_type->id }}">{{ $phone_type->name }}</option>
-                          @endforeach
+                        @foreach (App\Enums\PhoneType::cases() as $case)
+                          <option value="{{ $case->value }}">{{ $case->label() }}</option>
+                        @endforeach
                         </select>
                     </div>
 
@@ -432,7 +432,7 @@
             <label for="selectStatus">Condición</label>
             <select id="selectStatus" class="form-control" name="employee_condicion_id">
               <option value="0" selected>SELECCIONE LA CONDICIÓN</option>
-              @foreach($status as $condicion)
+              @foreach($condiciones as $condicion)
                 <option value="{{ $condicion->id }}">{{ $condicion->name }}</option>
               @endforeach
             </select>
@@ -442,9 +442,9 @@
             <label for="selectTipos">Tipo</label>
             <select id="selectTipos" class="form-control" name="employee_tipo_id">
               <option value="0" selected>SELECCIONE EL TIPO</option>
-              @foreach($tipos as $tipo)
+              {{-- @foreach($tipos as $tipo)
                 <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
-              @endforeach
+              @endforeach --}}
             </select>
           </div>
 
@@ -452,9 +452,9 @@
             <label for="selectUbicaciones">Ubicación</label>
             <select id="selectUbicaciones" class="form-control" name="employee_location_id">
               <option value="0" selected>SELECCIONE LA UBICACIÓN</option>
-              @foreach($ubicaciones as $ubicacion)
+              {{-- @foreach($ubicaciones as $ubicacion)
                 <option value="{{ $ubicacion->id }}">{{ $ubicacion->name }}</option>
-              @endforeach
+              @endforeach --}}
             </select>
           </div>
           

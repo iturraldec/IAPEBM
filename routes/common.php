@@ -8,10 +8,6 @@ use Illuminate\Support\Facades\DB;
 use App\Enums\EmployeeBloodType;
 
 Route::get('loadFromExcel', function() {
-  foreach (EmployeeBloodType::cases() as $case) {
-    printf('value="%s";', $case->value);
-};
-dd();
   DB::beginTransaction();
 
   try {
@@ -28,9 +24,9 @@ dd();
     //Excel::import(new App\Imports\JerarquiasImport, 'assets/documentos/rangos.csv');
 
     echo 'ubicaciones...<br>';
-    Excel::import(new App\Imports\UbicacionesGImport, 'assets/documentos/ccpg.csv');
+    /* Excel::import(new App\Imports\UbicacionesGImport, 'assets/documentos/ccpg.csv');
     Excel::import(new App\Imports\UbicacionesEImport, 'assets/documentos/ccpe.csv');
-
+ */
     //
     DB::commit();
   } 
