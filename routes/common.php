@@ -5,7 +5,13 @@ use App\Http\Controllers\AuthController;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 
+use App\Enums\EmployeeBloodType;
+
 Route::get('loadFromExcel', function() {
+  foreach (EmployeeBloodType::cases() as $case) {
+    printf('value="%s";', $case->value);
+};
+dd();
   DB::beginTransaction();
 
   try {
