@@ -10,6 +10,7 @@ use App\Http\Controllers\EmployeeStatusController;
 use App\Http\Controllers\EmployeeAdmController;
 use App\Http\Controllers\EmployeePoliceController;
 use App\Http\Controllers\UbicacionController;
+use App\Http\Controllers\CcpController;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -32,13 +33,16 @@ Route::resource('employee-status', EmployeeStatusController::class)
 
 // empleados administrativos
 Route::resource('employees-adm', EmployeeAdmController::class)->names('employees-adm');
-Route::post('employees-adm/{id}/{cedula}', [EmployeeAdmController::class, 'addImages'])->name('employees-adm.add-images');
+//Route::post('employees-adm/{id}/{cedula}', [EmployeeAdmController::class, 'addImages'])->name('employees-adm.add-images');
 
 // empleados policiales
 Route::resource('employees-police', EmployeePoliceController::class)->names('employees-police');
 Route::post('employees-police/{id}/{cedula}', [EmployeePoliceController::class, 'addImages'])->name('employees-police.add-images');
 
 // ubicaciones (estados/municipios/parroquias)
-Route::get('ubicacion/estados', [UbicacionController::class, 'getEstados'])->name('ubicacion.estados');
 Route::get('ubicacion/municipios/{estado_id}', [UbicacionController::class, 'getMunicipios'])->name('ubicacion.municipios');
 Route::get('ubicacion/parroquias/{municipio_id}', [UbicacionController::class, 'getParroquias'])->name('ubicacion.parroquias');
+
+// ccp
+Route::get('ccps', [CcpController::class, 'getCcps'])->name('ccps');
+Route::get('ccpe/{ccp_id}', [CcpController::class, 'getCcpsByCcp'])->name('ccps.especificos');

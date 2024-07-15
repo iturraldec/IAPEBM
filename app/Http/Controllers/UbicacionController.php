@@ -9,9 +9,7 @@ class UbicacionController extends Controller
   //
   public function getEstados()
   {
-    $estados = DB::table('estados')->orderBy('estado')->get();
-
-    return response(['estados' => $estados], 200);
+    return DB::table('estados')->orderBy('estado')->get();
   }
 
   //

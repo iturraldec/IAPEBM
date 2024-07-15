@@ -111,7 +111,7 @@
                   name="first_name"
                   required
                   minlength="3"
-                  maxlength="200"
+                  maxlength="50"
                   placeholder="Ingresa su primer nombre"
                   onkeyup="this.value = this.value.toUpperCase();"
             />
@@ -124,7 +124,7 @@
                       id="inputSNombre"
                       name="second_name"
                       minlength="3"
-                      maxlength="200"
+                      maxlength="50"
                       placeholder="Ingresa su segundo nombre"
                       onkeyup="this.value = this.value.toUpperCase();"
                 />
@@ -138,7 +138,7 @@
                       name="first_last_name"
                       required
                       minlength="3"
-                      maxlength="200"
+                      maxlength="50"
                       placeholder="Ingresa su primer apellido"
                       onkeyup="this.value = this.value.toUpperCase();"
                 />
@@ -151,7 +151,7 @@
                       id="inputSApellido"
                       name="second_last_name"
                       minlength="3"
-                      maxlength="200"
+                      maxlength="50"
                       placeholder="Ingresa su segundo apellido"
                       onkeyup="this.value = this.value.toUpperCase();"
                 />
@@ -200,7 +200,7 @@
     
               <div class="col-3 form-group">
                 <label for="selectSangre">Tipo de Sangre</label>
-                <select id="selectSangre" class="form-control" name="blood_type_id">
+                <select id="selectSangre" class="form-control" name="blood_type">
                   <option value="0" selected>SELECCIONE TIPO</option>
                   @foreach (App\Enums\EmployeeBloodType::cases() as $case)
                     <option value="{{ $case->value }}">{{ $case->value }}</option>
@@ -319,7 +319,13 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col-6 mb-1">
-                      <select id="selectEstados" class="form-control"></select>
+                      <select id="selectEstados" class="form-control">
+                        <option value="0" selected>SELECCIONE EL TIPO DE ESTADO</option>
+                        @foreach ($estados as $estado)
+                          <option value="{{ $estado->id_estado }}">{{ $estado->estado }}</option>
+                        @endforeach
+                        </select>
+                      </select>
                     </div>
 
                     <div class="col-6">
@@ -420,7 +426,7 @@
 
           <div class="col-4 form-group">
             <label for="selectCargo">Cargo</label>
-            <select id="selectCargo" class="form-control" name="employee_cargo_id">
+            <select id="selectCargo" class="form-control" name="cargo_id">
               <option value="0" selected>SELECCIONE EL CARGO</option>
               @foreach($cargos as $cargo)
                 <option value="{{ $cargo->id }}">{{ $cargo->name }}</option>
@@ -429,8 +435,8 @@
           </div>
 
           <div class="col-4 form-group">
-            <label for="selectStatus">Condición</label>
-            <select id="selectStatus" class="form-control" name="employee_condicion_id">
+            <label for="selectCondicion">Condición</label>
+            <select id="selectCondicion" class="form-control" name="condicion_id">
               <option value="0" selected>SELECCIONE LA CONDICIÓN</option>
               @foreach($condiciones as $condicion)
                 <option value="{{ $condicion->id }}">{{ $condicion->name }}</option>
@@ -439,22 +445,28 @@
           </div>
 
           <div class="col-4 form-group">
-            <label for="selectTipos">Tipo</label>
-            <select id="selectTipos" class="form-control" name="employee_tipo_id">
+            <label for="selectTipo">Tipo</label>
+            <select id="selectTipo" class="form-control" name="tipo_id">
               <option value="0" selected>SELECCIONE EL TIPO</option>
-              {{-- @foreach($tipos as $tipo)
+              @foreach($tipos as $tipo)
                 <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
-              @endforeach --}}
+              @endforeach
             </select>
           </div>
 
           <div class="col-4 form-group">
-            <label for="selectUbicaciones">Ubicación</label>
-            <select id="selectUbicaciones" class="form-control" name="employee_location_id">
-              <option value="0" selected>SELECCIONE LA UBICACIÓN</option>
-              {{-- @foreach($ubicaciones as $ubicacion)
-                <option value="{{ $ubicacion->id }}">{{ $ubicacion->name }}</option>
-              @endforeach --}}
+            <label for="selectCcp">C.C.P.</label>
+            <select id="selectCcp" class="form-control">
+              <option value="0" selected>SELECCIONE EL C.C.P.</option>
+              @foreach($ccps as $ccp)
+                <option value="{{ $ccp->id }}">{{ $ccp->name }}</option>
+              @endforeach
+            </select>
+          </div>
+
+          <div class="col-4 form-group">
+            <label for="selectCcpEspecifico">C.C.P. específico</label>
+            <select id="selectCcpEspecifico" class="form-control" name="ccp_id">
             </select>
           </div>
           
@@ -551,16 +563,6 @@
       toastr.options.closeButton = true;
       toastr.options.timeOut = 0;
       toastr.options.extendedTimeOut = 0;
-
-      //cargar estados
-      fetch("{{ route('ubicacion.estados') }}")
-      .then(response => response.json())
-      .then(r => {
-        $("#selectEstados").append('<option value="0">SELECCIONE UN ESTADO</option>');
-        r.estados.forEach(element => {
-          $("#selectEstados").append(`<option value="${element.id_estado}">${element.estado}</option>`);
-        });
-      });
 
       // mascara para el nombre
       $("#inputNombre").inputmask(lib_characterMask());
@@ -868,6 +870,26 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // cargar ccps de un ccp
+    ///////////////////////////////////////////////////////////////////
+
+    $("#selectCcp").change(function() {
+      let ccp_id = $(this).val();
+      let ruta = "{{ route('ccps.especificos', ['ccp_id' => 'valor']) }}";
+
+      ruta = ruta.replace('valor', ccp_id);
+      fetch(ruta)
+      .then(response => response.json())
+      .then(r => {
+        $("#selectCcpEspecifico").empty();
+        $("#selectCcpEspecifico").append('<option value="0">SELECCIONE UN C.C.P.</option>');
+        r.ccpse.forEach(element => {
+          $("#selectCcpEspecifico").append(`<option value="${element.id}">${element.name}</option>`);
+        });
+      });
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // agregar un empleado 
     ///////////////////////////////////////////////////////////////////
 
@@ -875,23 +897,28 @@
       const data = new FormData(empleadoForm);
 
       emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
-      phonesDT.column(0).data().each(phone_type_id => data.append('phone_type_ids[]', phone_type_id));
+      phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));
       phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
       addressesDT.column(0).data().each(estado_id => data.append('estado_ids[]', estado_id));
       addressesDT.column(2).data().each(municipio_id => data.append('municipio_ids[]', municipio_id));
       addressesDT.column(4).data().each(parroquia_id => data.append('parroquia_ids[]', parroquia_id));
       addressesDT.column(6).data().each(address => data.append('addresses[]', address));
 
+      if(! data.has('emails[]')) {
+        lib_toastr("Error: Debe ingresar al menos un correo personal!");
+        return;
+      }
+
       if(! data.has('phones[]')) {
         lib_toastr("Error: Debe ingresar al menos un número de teléfono!");
         return;
       }
-
+/*
       if(! data.has('addresses[]')) {
         lib_toastr("Error: Debe ingresar al menos una dirección de ubicación!");
         return;
       }
-      
+       */
       fetch("{{ route('employees-adm.store') }}", {
         headers: {
           'Accept' : 'application/json'
@@ -901,25 +928,8 @@
       })
       .then(response => {
         if(response.ok) {
-          response.json().then(responseData => {
-            if(formData.has('images[]')) {
-              let postImagesRoute = "{{ route('employees-adm.add-images', ['id' => 'valor1', 'cedula' => 'valor2']) }}";
-
-              postImagesRoute = postImagesRoute.replace('valor1', responseData.id);
-              postImagesRoute = postImagesRoute.replace('valor2', responseData.cedula);
-
-              fetch(postImagesRoute, {
-                method  : "POST",
-                headers : {
-                  'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content'),
-                },
-                body : formData
-              });
-            }
-
-            lib_ShowMensaje("Empleado Administrativo agregado!", 'mensaje')
-            .then(response => window.close());
-          });
+          lib_ShowMensaje("Empleado Administrativo agregado!", 'mensaje')
+          .then(response => window.close());
         }
         else {
           response.text().then(r => {

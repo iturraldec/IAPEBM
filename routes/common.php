@@ -12,13 +12,13 @@ Route::get('loadFromExcel', function() {
 
   try {
     echo 'cargos...<br>';
-    //Excel::import(new App\Imports\CargosImport, 'assets/documentos/cargos.csv');
+    Excel::import(new App\Imports\CargosImport, 'assets/documentos/cargos.csv');
 
     echo 'condiciones...<br>';
     //Excel::import(new App\Imports\CondicionesImport, 'assets/documentos/condiciones.csv');
 
     echo 'tipos...<br>';
-    //Excel::import(new App\Imports\TiposImport, 'assets/documentos/tipos_empleados.csv');
+    Excel::import(new App\Imports\TiposImport, 'assets/documentos/tipos_empleados.csv');
 
     echo 'policias:jerarquias...<br>';
     //Excel::import(new App\Imports\JerarquiasImport, 'assets/documentos/rangos.csv');
