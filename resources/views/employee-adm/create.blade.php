@@ -362,6 +362,7 @@
                             <th scope="col">ParroquiaID</th>
                             <th scope="col">Parroquia</th>
                             <th scope="col">Dirección</th>
+                            <th scope="col">Z. P.</th>
                             <th scope="col"></th>
                           </tr>
                         </thead>
@@ -764,6 +765,11 @@
           orderable: false
         },
         {
+          data: 'zona_postal',
+          orderable: false,
+          width: "5%"
+        },
+        {
           data: null,
           render: function ( data, type, row, meta ) {
             return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
@@ -852,7 +858,8 @@
           'municipio'   : $("#selectMunicipios :selected").text(),
           'parroquiaId' : $("#selectParroquias :selected").val(),
           'parroquia'   : $("#selectParroquias :selected").text(),
-          'direccion'   : address
+          'direccion'   : address,
+          'zona_postal' : '<input type="text" name="zona_postal[]" value="0000" maxlength="4" size="4" />'
         })
         .draw();
         $("#inputAddress").val("");
@@ -899,9 +906,7 @@
       emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
       phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));
       phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
-      addressesDT.column(0).data().each(estado_id => data.append('estado_ids[]', estado_id));
-      addressesDT.column(2).data().each(municipio_id => data.append('municipio_ids[]', municipio_id));
-      addressesDT.column(4).data().each(parroquia_id => data.append('parroquia_ids[]', parroquia_id));
+      addressesDT.column(4).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
       addressesDT.column(6).data().each(address => data.append('addresses[]', address));
 
       if(! data.has('emails[]')) {
@@ -913,12 +918,12 @@
         lib_toastr("Error: Debe ingresar al menos un número de teléfono!");
         return;
       }
-/*
+
       if(! data.has('addresses[]')) {
         lib_toastr("Error: Debe ingresar al menos una dirección de ubicación!");
         return;
       }
-       */
+
       fetch("{{ route('employees-adm.store') }}", {
         headers: {
           'Accept' : 'application/json'

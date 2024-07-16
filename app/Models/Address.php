@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Address extends Model
 {
@@ -11,11 +11,11 @@ class Address extends Model
   protected $table = 'addresses';
 
   //
-  protected $fillable = ['person_id', 'address', 'parroquia_id', 'zona_postal'];
+  protected $fillable = ['person_id', 'parroquia_id', 'address', 'zona_postal'];
 
   //
-  function person() : BelongsToMany
+  function person() : BelongsTo
   {
-    return $this->belongsToMany(Person::class);
+    return $this->belongsTo(Person::class);
   }
 }

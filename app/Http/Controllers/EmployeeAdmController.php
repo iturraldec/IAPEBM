@@ -83,7 +83,9 @@ class EmployeeAdmController extends Controller
       'licencia'              => 'required|max:100',
       'nro_cta_bancaria'      => 'required|max:30',
       'emails'                => 'required',
-      'phones'                => 'required'
+      'phones'                => 'required',
+      'parroquias_id'         => 'required',
+      'addresses'             => 'required'
     ]);
 
     // agrego los datos personales
@@ -148,12 +150,9 @@ class EmployeeAdmController extends Controller
     // agrego los telefonos del empleado
     $this->_addPhones($person, $request->input('phones_type_id'), $request->input('phones'));
 
-    /*// agrego las direcciones del empleado
-    $this->_addAddresses($person, 
-                        $request->input('address'),
-                        $request->input('parroquia_id'),
-                        $request->input('zona_postal'));
-*/
+    // agrego las direcciones del empleado
+    $this->_addAddresses($person, $request->input('parroquias_id'), $request->input('addresses'), $request->input('zona_postal'));
+
     //
     return response($person, Response::HTTP_CREATED);
   }
@@ -319,18 +318,18 @@ class EmployeeAdmController extends Controller
   }
 
   // agregar las direcciones del empleado
-  private function _addAddresses($person, $address, $parroquia_id, $zona_postal)
+  private function _addAddresses($person, $parroquias_id, $addresses, $zona_postal)
   {
-    $addresses = [];
-    foreach($address as $indice => $_address) {
-      $addresses[] = new Address([
-                        'address'       => $_address,
-                        'parroquia_id'  => $parroquia_id[$indice],
+    $_addresses = [];
+    foreach($addresses as $indice => $address) {
+      $_addresses[] = new Address([
+                        'parroquia_id'  => $parroquias_id[$indice],
+                        'address'       => $address,
                         'zona_postal'   => $zona_postal[$indice]
                       ]);
     };
     $person->addresses()->delete();
-    $person->addresses()->saveMany($addresses);
+    $person->addresses()->saveMany($_addresses);
   }
 
   //
