@@ -324,29 +324,6 @@ class EmployeeObreroController extends Controller
   }
 
   //
-  public function addImages(Request $request, int $id, string $cedula)
-  {
-    if ($request->hasFile('images')) {
-      $path = storage_path("app/public/employees/$cedula");
-      $files = [];
-      if(! file_exists($path)) mkdir($path);
-      foreach($request->file('images') as $image) {
-        $name = uniqid() . ".png";
-        $file = "$path/$name";
-        Image::make($image->getRealPath())->resize(200,200)->save($file, 0, 'png');
-        $files[] = [
-            'person_id' => $id,
-            'file'      => "images/$cedula/$name"
-        ];
-      }
-      
-      return response(PersonImage::insert($files));
-    }
-
-    return Response::HTTP_NO_CONTENT;
-  }
-
-  //
   public function show(Employee $employees_adm)
   {
     $data = Person::getById($employees_adm->person_id);

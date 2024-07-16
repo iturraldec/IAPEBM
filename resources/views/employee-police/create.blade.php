@@ -3,7 +3,16 @@
 @section('title', 'Empleado Uniformado')
 
 @section('content_header')
-  <h1>Agregar Empleado Uniformado</h1>
+  <div class="row">
+    <div class="col-6">
+      <h4>Agregar Datos del Empleado Uniformado</h4>
+    </div>
+  
+    <div class="col-6 d-flex justify-content-end">
+      <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
+      <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
+    </div>
+  </div>
 @endsection
 
 @section('content')
@@ -12,19 +21,10 @@
   <div class="card-header p-0 pt-1">
     <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Identificación</a>
+        <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Personales</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="custom-tabs-one-phones-tab" data-toggle="pill" href="#custom-tabs-one-phones" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Teléfono(s)</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="custom-tabs-one-adresses-tab" data-toggle="pill" href="#custom-tabs-one-adresses" role="tab" aria-controls="custom-tabs-one-adresses" aria-selected="false">Dirección(es)</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="custom-tabs-one-images-tab" data-toggle="pill" href="#custom-tabs-one-images" role="tab" aria-controls="custom-tabs-one-images" aria-selected="false">Imagenes</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="custom-tabs-one-admin-tab" data-toggle="pill" href="#custom-tabs-one-admin" role="tab" aria-controls="custom-tabs-one-admin" aria-selected="false">Administración</a>
+        <a class="nav-link" id="custom-tabs-one-admin-tab" data-toggle="pill" href="#custom-tabs-one-admin" role="tab" aria-controls="custom-tabs-one-admin" aria-selected="false">Administrativos</a>
       </li>
     </ul>
   </div>
@@ -34,52 +34,125 @@
   <form id="empleadoForm">
     @csrf
 
-    <div class="tab-content" id="custom-tabs-one-tabContent">
-      
+    <div class="tab-content" id="custom-tabs-one-tabContent">      
       <!-- tab principal -->
       <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+
+        <!-- inicio de row -->
+        <div class="row d-flex justify-content-around">
+          <div class="col-4 form-group text-center">
+            <img src="{{ asset('assets/images/avatar.png') }}" 
+                  id="imgFotoFrente" 
+                  class="img-thumbnail border border-dark"
+                  width="200"
+                  height="250"
+            >
+            <label for="inputFotoFrente" class="form-control btn border mt-2">De Frente</label>
+            <input type="file" id="inputFotoFrente" name="imagef" accept="image/*" style="display: none;" />
+          </div>
+
+          <div class="col-4 form-group text-center">
+            <img src="{{ asset('assets/images/avatar.png') }}" 
+                  id="imgFotoLIzquierdo" 
+                  class="img-thumbnail border border-dark"
+                  width="200"
+                  height="250"
+            >
+            <label for="inputFotoLIzquierdo" class="form-control btn border mt-2">Lado Izquierdo</label>
+            <input type="file" id="inputFotoLIzquierdo" name="imageli" accept="image/*" style="display: none;" />
+          </div>
+
+          <div class="col-4 form-group text-center">
+            <img src="{{ asset('assets/images/avatar.png') }}" 
+                  id="imgFotoLDerecho" 
+                  class="img-thumbnail border border-dark"
+                  width="200"
+                  height="250"
+            >
+            <label for="inputFotoLDerecho" class="form-control btn border mt-2">Lado Derecho</label>
+            <input type="file" id="inputFotoLDerecho" name="imageld" accept="image/*" style="display: none;" />
+          </div>
+        </div>
+        <!-- fin de row -->
+
         <!-- inicio de row -->
         <div class="row">
-          <div class="col-9">
+          <div class="col-3 form-group">
+            <label for="inputCedula">Cédula</label>
+            <input type="text" 
+                  class="form-control" 
+                  id="inputCedula" 
+                  name="cedula"
+                  minlength="7"
+                  maxlength="15"
+                  required
+                  placeholder="Ingresa Nro. de cédula"
+            />
+          </div>
 
-            <!-- inicio de row -->
-            <div class="row">
+          <div class="col-3 form-group">
+            <label for="inputRif">R.I.F.</label>
+            <input type="text" 
+                  class="form-control" 
+                  id="inputRif" 
+                  name="rif"
+                  maxlength="20"
+                  required
+                  placeholder="Ingresa Nro. de R.I.F."
+                  onkeyup="this.value = this.value.toUpperCase();"
+            />
+          </div>
+
+          <div class="col-3 form-group">
+            <label for="inputPNombre">Primer Nombre</label>
+            <input type="text" 
+                  class="form-control" 
+                  id="inputPNombre"
+                  name="first_name"
+                  required
+                  minlength="3"
+                  maxlength="50"
+                  placeholder="Ingresa su primer nombre"
+                  onkeyup="this.value = this.value.toUpperCase();"
+            />
+          </div>
+
               <div class="col-3 form-group">
-                <label for="inputCedula">Cédula</label>
+                <label for="inputSNombre">Segundo Nombre</label>
                 <input type="text" 
                       class="form-control" 
-                      id="inputCedula" 
-                      name="cedula"
-                      minlength="7"
-                      maxlength="15"
-                      required
-                      placeholder="No. de cédula"
-                />
-              </div>
-
-              <div class="col-3 form-group">
-                <label for="inputRif">R.I.F.</label>
-                <input type="text" 
-                      class="form-control" 
-                      id="inputRif" 
-                      name="rif"
-                      maxlength="20"
-                      required
-                      placeholder="No. de R.I.F."
+                      id="inputSNombre"
+                      name="second_name"
+                      minlength="3"
+                      maxlength="50"
+                      placeholder="Ingresa su segundo nombre"
                       onkeyup="this.value = this.value.toUpperCase();"
                 />
               </div>
 
-              <div class="col-6 form-group">
-                <label for="inputNombre">Nombre(s) y Apellido(s)</label>
+              <div class="col-3 form-group">
+                <label for="inputPApellido">Primer Apellido</label>
                 <input type="text" 
                       class="form-control" 
-                      id="inputNombre"
-                      name="name"
+                      id="inputPApellido"
+                      name="first_last_name"
                       required
                       minlength="3"
-                      maxlength="200"
-                      placeholder="Ingresa su nombre(s) y apellido(s)"
+                      maxlength="50"
+                      placeholder="Ingresa su primer apellido"
+                      onkeyup="this.value = this.value.toUpperCase();"
+                />
+              </div>
+
+              <div class="col-3 form-group">
+                <label for="inputSApellido">Segundo Apellido</label>
+                <input type="text" 
+                      class="form-control" 
+                      id="inputSApellido"
+                      name="second_last_name"
+                      minlength="3"
+                      maxlength="50"
+                      placeholder="Ingresa su segundo apellido"
                       onkeyup="this.value = this.value.toUpperCase();"
                 />
               </div>
@@ -102,7 +175,7 @@
                       required />
               </div>
     
-              <div class="col-6 form-group">
+              <div class="col-3 form-group">
                 <label for="inputPlaceOfBirth">Lugar de Nacimiento</label>
                 <input type="text"
                       class="form-control"
@@ -119,173 +192,222 @@
                 <label for="selectEstadoCivil">Estado Civil</label>
                 <select id="selectEstadoCivil" class="form-control" name="civil_status_id">
                   <option value="0" selected>SELECCIONE ESTADO CIVIL</option>
-                  @foreach($edoCivil as $estado)
-                    <option value="{{ $estado->id }}">{{ $estado->name }}</option>
+                  @foreach (App\Enums\EmployeeCivilStatus::cases() as $case)
+                    <option value="{{ $case->value }}">{{ $case->label() }}</option>
                   @endforeach
                 </select>
               </div>
     
               <div class="col-3 form-group">
                 <label for="selectSangre">Tipo de Sangre</label>
-                <select id="selectSangre" class="form-control" name="blood_type_id">
+                <select id="selectSangre" class="form-control" name="blood_type">
                   <option value="0" selected>SELECCIONE TIPO</option>
-                  @foreach($tipoSangre as $tipo)
-                    <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
+                  @foreach (App\Enums\EmployeeBloodType::cases() as $case)
+                    <option value="{{ $case->value }}">{{ $case->value }}</option>
                   @endforeach
                 </select>
               </div>
-              
-              <div class="col-6 form-group">
-                <label for="inputEmail">Correo Electrónico</label>
-                <input type="email"
-                      class="form-control"
-                      id="inputEmail"
-                      name="email"
-                      placeholder="Ingresa el correo electrónico"
-                      onkeyup="this.value = this.value.toLowerCase();"
-                />
-              </div>
-
-              <div class="col form-group">
-                <label for="inputNotas">Observaciones</label>
-                <textarea class="form-control"
-                          id="inputNotas"
-                          name="notes"
-                          placeholder="Ingresa observaciones"
-                          rows="3"
-                          onkeyup="this.value = this.value.toUpperCase();"
-                /></textarea>
-              </div>
-
-            </div>
-            <!-- fin de row -->
-
-          </div>
-
-          <div class="col-3 border p-2 text-center">
-            <img src="{{ asset('assets/images/avatar.png') }}" 
-                 id="imgAvatar" 
-                 class="img-thumbnail border border-dark"
-                 width="200"
-                 height="250"
-            >
-            <label for="inputAvatar" class="form-control btn btn-primary mt-2">Imagen</label>
-            <input type="file" id="inputAvatar" name="imagen" accept="image/*" style="display: none;" />
-          </div>          
-
         </div>
         <!-- fin de row -->
 
+        <!-- inicio de row -->
         <div class="row">
-          <div class="col">
-            <button type="submit" class="btn btn-danger">Grabar</button>
-            <button type="button" id="btnSalir" class="btn btn-secondary">Retornar</button>
+          
+          <!-- correos del empleado -->
+          <div class="col-6">
+            <div class="card card-primary">
+              <div class="card-header bg-lightblue">
+                <h3 class="card-title">Correo(s) del Empleado</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="input-group">
+                      <input type="email"
+                          class="form-control"
+                          id="inputEmail"
+                          placeholder="Ingresa el correo electrónico"
+                          onkeyup="this.value = this.value.toLowerCase();"
+                      />
+
+                      <div class="input-group-append">
+                        <button type="button" id="btnEmailAdd" class="input-group-text btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>    
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <table id="emailsDT" class="table table-hover border border-primary">
+                      <thead class="text-center">
+                        <tr>
+                          <th scope="col">Correo</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+        
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div> 
+              </div>
+              <!-- /.card-body -->
+            </div>
           </div>
+          <!-- fin de correos del empleado-->
+
+          <!-- telefonos del empleado -->
+          <div class="col-6">
+            <div class="card bg-light ">
+              <div class="card-header bg-lightblue">
+                <h3 class="card-title">Teléfono(s) del Empleado</h3>
+              </div>
+              <!-- /.card-header -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-6">
+                      <select id="selectPhoneType" class="form-control">
+                        <option value="0" selected>SELECCIONE EL TIPO DE NÚMERO</option>
+                        @foreach (App\Enums\PhoneType::cases() as $case)
+                          <option value="{{ $case->value }}">{{ $case->label() }}</option>
+                        @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-6">
+                      <div class="input-group">
+                        <input type="text"
+                            class="form-control"
+                            id="inputPhone"
+                            placeholder="Ingresa el número de teléfono"
+                        />
+  
+                        <div class="input-group-append">
+                          <button type="button" id="btnPhoneAdd" class="input-group-text btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-12">
+                      <table id="phonesDT" class="table table-hover border border-primary">
+                        <thead>
+                          <tr>
+                            <th scope="col">TipoID</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Número</th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+          
+                        <tbody></tbody>
+                      </table>
+                    </div>
+                  </div>  
+                </div>
+                <!-- /.card-body -->
+            </div>
+          </div>
+          <!-- fin de telefonos del empleado-->
+
+          <!-- direcciones del empleado -->
+          <div class="col-12">
+            <div class="card bg-light">
+              <div class="card-header bg-lightblue">
+                <h3 class="card-title">Dirección(es) de ubicación del Empleado</h3>
+              </div>
+              <!-- /.card-header -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-6 mb-1">
+                      <select id="selectEstados" class="form-control">
+                        <option value="0" selected>SELECCIONE UN ESTADO</option>
+                        @foreach ($estados as $estado)
+                          <option value="{{ $estado->id_estado }}">{{ $estado->estado }}</option>
+                        @endforeach
+                        </select>
+                      </select>
+                    </div>
+
+                    <div class="col-6">
+                      <select id="selectMunicipios" class="form-control"></select>
+                    </div>
+
+                    <div class="col-6 mb-1">
+                      <select id="selectParroquias" class="form-control"></select>
+                    </div>
+
+                    <div class="col-6">
+                      <div class="input-group">
+                        <input type="text"
+                            class="form-control"
+                            id="inputAddress"
+                            placeholder="Ingresa la dirección"
+                            onkeyup="this.value = this.value.toUpperCase();"
+                        />
+  
+                        <div class="input-group-append">
+                          <button type="button" id="btnAddressAdd" class="input-group-text btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-12">
+                      <table id="addressesDT" class="table table-hover border border-primary">
+                        <thead>
+                          <tr>
+                            <th scope="col">EstadoID</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">MunicipioID</th>
+                            <th scope="col">Municipio</th>
+                            <th scope="col">ParroquiaID</th>
+                            <th scope="col">Parroquia</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col">Z. P.</th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+          
+                        <tbody></tbody>
+                      </table>
+                    </div>
+                  </div>  
+                </div>
+                <!-- /.card-body -->
+            </div>
+          </div>
+          <!-- fin de direcciones del empleado-->
+
+          <!-- observaciones -->
+          <div class="col">
+            <div class="card bg-light">
+              <div class="card-header bg-lightblue">
+                <h3 class="card-title">Observaciones generales</h3>
+              </div>
+  
+              <div class="card-body">
+                <div class="form-group">
+                  <textarea class="form-control"
+                            id="inputNotas"
+                            name="notes"
+                            placeholder="Ingresa las observaciones"
+                            rows="3"
+                            onkeyup="this.value = this.value.toUpperCase();"
+                  /></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- fin de observaciones -->
         </div>
+        <!-- fin de row -->
       </div>
       <!-- fin de tab principal -->
-      
-      <!-- tab phones -->
-      <div class="tab-pane fade" id="custom-tabs-one-phones" role="tabpanel" aria-labelledby="custom-tabs-one-phone-tab">
-        <div class="row">
-
-          <div class="col-6">
-            <select id="selectPhoneType" class="form-control">
-              <option value="0" selected>SELECCIONE EL TIPO DE NÚMERO</option>
-              @foreach ($phone_types as $phone_type)
-                <option value="{{ $phone_type->id }}">{{ $phone_type->name }}</option>
-              @endforeach
-            </select>
-          </div>
-
-          <div class="col-6">
-            <div class="input-group mb-2">
-              <input type="text" id="inputPhone" class="form-control" placeholder="Ingresa número de teléfono">
-              <div class="input-group-append">
-                <button type="button" id="btnAddPhone" class="btn btn-primary btn-sm">
-                  <i class="fas fa-plus-square"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        
-        </div>
-
-        <div class="row" id="divPhones"></div>
-      </div>
-      <!-- fin de tab phones -->
-
-      <!-- tab de direcciones -->
-      <div class="tab-pane fade" id="custom-tabs-one-adresses" role="tabpanel" aria-labelledby="custom-tabs-one-adresses-tab">
-        <div class="row">
-          <div class="col-6">
-            <label for="selectMunicipio">Municipio</label>
-            <select id="selectMunicipio" class="form-control">
-              <option value="0" selected>SELECCIONE MUNICIPIO</option>
-              @foreach ($municipios as $municipio)
-                <option value="{{ $municipio->id }}">{{ $municipio->name }}</option>
-              @endforeach
-            </select>
-          </div>
-
-          <div class="col-6">
-            <label for="selectParroquia">Parroquia</label>
-            <select id="selectParroquia" class="form-control"></select>
-          </div>
-
-          <div class="col my-2">
-            <label for="inputAddress">Dirección y Zona Postal</label>
-            <div class="input-group mb-2">
-              <input type="text" 
-                    id="inputAddress"
-                    class="form-control" 
-                    placeholder="Ingresa la dirección"
-                    onkeyup="this.value = this.value.toUpperCase();"
-              >
-              <div class="input-group-append">
-                <button type="button" id="btnAddAddress" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i></button>
-              </div>
-            </div>
-          </div>
-
-          <div class="input-group mb-2">
-            <input type"text" 
-                  id="inputZonaPostal"
-                  class="form-control" 
-                  placeholder="Ingrese la zona postal"
-            />
-          </div>
-        </div>
-
-        <div class="row" id="divAddresses"></div>
-
-      </div>
-      <!-- fin de tab de direcciones -->
-
-      <!-- tab de imagenes -->
-      <div class="tab-pane fade" id="custom-tabs-one-images" role="tabpanel" aria-labelledby="custom-tabs-one-images-tab">
-        <div class="row">
-
-          <!-- imagenes nuevas -->
-          <div class="col border border-dark">
-            <div class="h5 text-center">Imagenes a subir</div>
-
-            <div id="divNewImages" class="row"></div>
-
-            <div class="mt-2">
-              <input type="file" class="form-control" id="inputImage" accept="image/*">
-            </div>
-          </div>
-          <!-- fin de imagenes nuevas -->
-        </div>
-      </div>
-      <!-- fin de tab de fotos -->
 
       <!-- tab datos administrativos -->
       <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
         <div class="row">
           <div class="col-4 form-group">
-            <label for="inputCodigo">Código Administrativo</label>
+            <label for="inputCodigo">Código de Nómina</label>
             <input type="text" 
                   class="form-control" 
                   id="inputCodigo" 
@@ -305,7 +427,7 @@
 
           <div class="col-4 form-group">
             <label for="selectCargo">Cargo</label>
-            <select id="selectCargo" class="form-control" name="employee_cargo_id">
+            <select id="selectCargo" class="form-control" name="cargo_id">
               <option value="0" selected>SELECCIONE EL CARGO</option>
               @foreach($cargos as $cargo)
                 <option value="{{ $cargo->id }}">{{ $cargo->name }}</option>
@@ -314,18 +436,18 @@
           </div>
 
           <div class="col-4 form-group">
-            <label for="selectStatus">Condición</label>
-            <select id="selectStatus" class="form-control" name="employee_condicion_id">
+            <label for="selectCondicion">Condición</label>
+            <select id="selectCondicion" class="form-control" name="condicion_id">
               <option value="0" selected>SELECCIONE LA CONDICIÓN</option>
-              @foreach($status as $condicion)
+              @foreach($condiciones as $condicion)
                 <option value="{{ $condicion->id }}">{{ $condicion->name }}</option>
               @endforeach
             </select>
           </div>
 
           <div class="col-4 form-group">
-            <label for="selectTipos">Tipo</label>
-            <select id="selectTipos" class="form-control" name="employee_tipo_id">
+            <label for="selectTipo">Tipo</label>
+            <select id="selectTipo" class="form-control" name="tipo_id">
               <option value="0" selected>SELECCIONE EL TIPO</option>
               @foreach($tipos as $tipo)
                 <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
@@ -334,12 +456,18 @@
           </div>
 
           <div class="col-4 form-group">
-            <label for="selectUbicaciones">Ubicación</label>
-            <select id="selectUbicaciones" class="form-control" name="employee_location_id">
-              <option value="0" selected>SELECCIONE LA UBICACIÓN</option>
-              @foreach($ubicaciones as $ubicacion)
-                <option value="{{ $ubicacion->id }}">{{ $ubicacion->name }}</option>
+            <label for="selectCcp">C.C.P.</label>
+            <select id="selectCcp" class="form-control">
+              <option value="0" selected>SELECCIONE EL C.C.P.</option>
+              @foreach($ccps as $ccp)
+                <option value="{{ $ccp->id }}">{{ $ccp->name }}</option>
               @endforeach
+            </select>
+          </div>
+
+          <div class="col-4 form-group">
+            <label for="selectCcpEspecifico">C.C.P. específico</label>
+            <select id="selectCcpEspecifico" class="form-control" name="ccp_id">
             </select>
           </div>
           
@@ -371,6 +499,7 @@
                   class="form-control"
                   id="inputReligion"
                   name="religion"
+                  value="NO DEFINIDO"
                   placeholder="Religión prefesada por el empleado"
                   onkeyup="this.value = this.value.toUpperCase();"
             />
@@ -382,6 +511,7 @@
                   class="form-control"
                   id="inputDeporte"
                   name="deporte"
+                  value="NO DEFINIDO"
                   placeholder="Deporte practicado por el empleado"
                   onkeyup="this.value = this.value.toUpperCase();"
             />
@@ -393,6 +523,7 @@
                   class="form-control"
                   id="inputLicencia"
                   name="licencia"
+                  value="NO DEFINIDO"
                   placeholder="Ingrese la licencia"
             />
           </div>
@@ -454,83 +585,165 @@
 @section('js')
 <script>
   $(document).ready(function () {
-    ///////////////////////////////////////////////////////////////////
-    // variables globales
-    ///////////////////////////////////////////////////////////////////
-    
-    var phones      = [];                                               // telefonos del empleado
-    var addresses   = [];                                               // direcciones del empleado
-    var formData    = new FormData();                                   // imagenes nuevas del empleado
-    var municipios  = {{ Js::from($municipios) }};
-    var parroquias  = {{ Js::from($parroquias) }};
+    initForm();
 
     ///////////////////////////////////////////////////////////////////
-    // configuracion de 'toatsr'
+    // inicializar formulario
+    ///////////////////////////////////////////////////////////////////
+    function initForm() {
+      // configurar 'toastr'
+      toastr.options.closeButton = true;
+      toastr.options.timeOut = 0;
+      toastr.options.extendedTimeOut = 0;
+
+      // mascara para el nombre
+      $("#inputNombre").inputmask(lib_characterMask());
+
+      // mascara para el numero de telefono
+      $("#inputPhone").inputmask(lib_phoneMask());
+
+      // mascara la zona postal
+      $("#inputZonaPostal").inputmask(lib_digitMask());
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    // foto frontal del empleado
     ///////////////////////////////////////////////////////////////////
 
-    toastr.options.closeButton = true;
-    toastr.options.timeOut = 0;
-    toastr.options.extendedTimeOut = 0;
-
-    ///////////////////////////////////////////////////////////////////
-    // cerrar pestaña de edicion
-    ///////////////////////////////////////////////////////////////////
-
-    $("#btnSalir").click(function() {
-      window.close();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // al seleccionar la imagen del empleado
-    ///////////////////////////////////////////////////////////////////
-
-    $("#inputAvatar").change(function() {
+    $("#inputFotoFrente").change(function() {
       let imagen = this.files[0];
       let reader = new FileReader();
 
       reader.onload = function(e) {
-        $("#imgAvatar").attr('src', e.target.result);
+        $("#imgFotoFrente").attr('src', e.target.result);
       };
 
       reader.readAsDataURL(imagen);
     });
 
     ///////////////////////////////////////////////////////////////////
-    // mascara para el nombre
+    // foto del lado izquierdo del empleado
     ///////////////////////////////////////////////////////////////////
 
-    $("#inputNombre").inputmask(lib_characterMask());
+    $("#inputFotoLIzquierdo").change(function() {
+      let imagen = this.files[0];
+      let reader = new FileReader();
+
+      reader.onload = function(e) {
+        $("#imgFotoLIzquierdo").attr('src', e.target.result);
+      };
+
+      reader.readAsDataURL(imagen);
+    });
 
     ///////////////////////////////////////////////////////////////////
-    // mascara para el numero de telefono
+    // foto del lado derecho del empleado
     ///////////////////////////////////////////////////////////////////
 
-    $("#inputPhone").inputmask(lib_phoneMask());
+    $("#inputFotoLDerecho").change(function() {
+      let imagen = this.files[0];
+      let reader = new FileReader();
+
+      reader.onload = function(e) {
+        $("#imgFotoLDerecho").attr('src', e.target.result);
+      };
+
+      reader.readAsDataURL(imagen);
+    });
 
     ///////////////////////////////////////////////////////////////////
-    // mascara la zona postal
+    // tabla de emails
     ///////////////////////////////////////////////////////////////////
 
-    $("#inputZonaPostal").inputmask(lib_digitMask());
-    
+    var emailsDT = $('#emailsDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'correo',
+          orderable: false,
+          width: '95%'
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
+        }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // agregar un email
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnEmailAdd").click(function () {
+      emailsDT.row.add({'correo' : $("#inputEmail").val()}).draw();
+      $("#inputEmail").val('');
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar un email
+    ///////////////////////////////////////////////////////////////////
+
+    $("#emailsDT tbody").on("click",".eliminar",function() {
+      emailsDT.row($(this).parents())
+              .remove()
+              .draw();
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de telefonos
+    ///////////////////////////////////////////////////////////////////
+
+    var phonesDT = $('#phonesDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'id',
+          visible: false
+        },
+        {
+          data: 'tipo',
+          width: '50%',
+          orderable: false
+        },
+        {
+          data: 'numero',
+          width: '45%',
+          orderable: false
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
+        }
+      ]
+    });
+
     ///////////////////////////////////////////////////////////////////
     // agregar telefono
     ///////////////////////////////////////////////////////////////////
 
-    $("#btnAddPhone").click(function() {
+    $("#btnPhoneAdd").click(function() {
       let _number = $("#inputPhone").val();
       
       if(lib_isEmpty(_number)) {
         lib_toastr("Error: Debe ingresar un número de teléfono!");
       }
       else {
-        phones.push({
-          phone_type_id : $("#selectPhoneType :selected").val(),
-          phoneTypeName : $("#selectPhoneType :selected").text(),
-          number        : _number
-        });
-
-        showPhones();
+        phonesDT.row.add({
+          'id'    : $("#selectPhoneType :selected").val(),
+          'tipo'  : $("#selectPhoneType :selected").text(),
+          'numero': _number
+        })
+        .draw();
         $("#inputPhone").val("");
       }
     });
@@ -539,56 +752,101 @@
     // eliminar telefono
     ///////////////////////////////////////////////////////////////////
 
-    $(document).on('click', '.delPhone', function() {
-      let phone_id = $(this).attr('id');
-      
-      phones = phones.filter((phone, index) => index != phone_id);
-      showPhones();
+    $("#phonesDT tbody").on("click",".eliminar",function() {
+      phonesDT.row($(this).parents())
+              .remove()
+              .draw();
     });
 
     ///////////////////////////////////////////////////////////////////
-    // mostrar telefonos
-    ///////////////////////////////////////////////////////////////////
-    function showPhones() {
-      let cadena = '';
-
-      phones.forEach((phone, index) => {
-        cadena += `
-          <div class="col-6">
-            <input type="hidden" class="form-control" name="phone_type_id[]" value="${phone.phone_type_id}" />
-            <input type="text" class="form-control" value="${phone.phoneTypeName}" readonly />
-          </div>
-
-          <div class="col-6">
-            <div class="input-group mb-2">
-              <input type="text" class="form-control" name="phone_number[]" value="${phone.number}" readonly />
-              <div class="input-group-append">
-                <a class="delPhone btn btn-danger btn-sm" id="${index}"><i class="fas fa-trash-alt"></i></a>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-
-      $("#divPhones").html(cadena);
-    };
-
-    ///////////////////////////////////////////////////////////////////
-    // filtro de las parroquias
+    // tabla de direcciones
     ///////////////////////////////////////////////////////////////////
 
-    $("#selectMunicipio").change(function() {
-      let selectedOption = $(this).val();
-
-      $("#selectParroquia").empty();
-      $('#selectParroquia').append("<option value='0'>SELECCIONE LA PARROQUIA</option>");
-      parroquias.forEach(parroquia => {
-        if(parroquia.padre_id == selectedOption) {
-          $('#selectParroquia')
-            .append($("<option></option>")
-            .attr("value", parroquia.id)
-            .text(parroquia.name));
+    var addressesDT = $('#addressesDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'estadoId',
+          visible: false
+        },
+        {
+          data: 'estado',
+          orderable: false
+        },
+        {
+          data: 'municipioId',
+          visible: false
+        },
+        {
+          data: 'municipio',
+          orderable: false
+        },
+        {
+          data: 'parroquiaId',
+          visible: false
+        },
+        {
+          data: 'parroquia',
+          orderable: false
+        },
+        {
+          data: 'direccion',
+          orderable: false
+        },
+        {
+          data: 'zona_postal',
+          orderable: false,
+          width: "5%"
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
         }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // cargar municipios
+    ///////////////////////////////////////////////////////////////////
+
+    $("#selectEstados").change(function() {
+      let estado_id = $(this).val();
+      let ruta = "{{ route('ubicacion.municipios', ['estado_id' => 'valor']) }}";
+
+      ruta = ruta.replace('valor', estado_id);
+      fetch(ruta)
+      .then(response => response.json())
+      .then(r => {
+        $("#selectMunicipios").empty();
+        $("#selectMunicipios").append('<option value="0">SELECCIONE UN MUNICIPIO</option>');
+        r.municipios.forEach(element => {
+          $("#selectMunicipios").append(`<option value="${element.id_municipio}">${element.municipio}</option>`);
+        });
+      });
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // cargar parroquias
+    ///////////////////////////////////////////////////////////////////
+
+    $("#selectMunicipios").change(function() {
+      let municipio_id = $(this).val();
+      let ruta = "{{ route('ubicacion.parroquias', ['municipio_id' => 'valor']) }}";
+
+      ruta = ruta.replace('valor', municipio_id);
+      fetch(ruta)
+      .then(response => response.json())
+      .then(r => {
+        $("#selectParroquias").empty();
+        $("#selectParroquias").append('<option value="0">SELECCIONE UNA PARROQUIA</option>');
+        r.parroquias.forEach(element => {
+          $("#selectParroquias").append(`<option value="${element.id_parroquia}">${element.parroquia}</option>`);
+        });
       });
     });
 
@@ -596,155 +854,96 @@
     // agregar direccion
     ///////////////////////////////////////////////////////////////////
 
-    $("#btnAddAddress").click(function() {
-      let address = {
-          address       : $("#inputAddress").val(),
-          parroquia_id  : $("#selectParroquia :selected").val(),
-          zona_postal   : $("#inputZonaPostal").val()
-        };
-
-        if(address.parroquia_id === undefined) {
-          lib_toastr("Error: Debe seleccionar una parroquia!");
-        }
-        else if(lib_isEmpty(address.address)) {
-          lib_toastr("Error: Debe ingresar una dirección!");
-        }
-        else if(lib_isEmpty(address.zona_postal)) {
-          lib_toastr("Error: Debe ingresar la zona postal!");
-        }
-        else if(address.zona_postal.length > 10) {
-          lib_toastr("Error: La zona postal no puede exceder de 10 caracteres!");
-        }
-        else {
-          addresses.push(address);
-          $("#inputAddress").val("");
-          $("#inputZonaPostal").val("");
-          showDirecciones();
-        }
+    $("#btnAddressAdd").click(function() {
+      let address = $("#inputAddress").val();
+      
+      if(lib_isEmpty(address)) {
+        lib_toastr("Error: Debe ingresar una dirección!");
+      }
+      else {
+        addressesDT.row.add({
+          'estadoId'    : $("#selectEstados :selected").val(),
+          'estado'      : $("#selectEstados :selected").text(),
+          'municipioId' : $("#selectMunicipios :selected").val(),
+          'municipio'   : $("#selectMunicipios :selected").text(),
+          'parroquiaId' : $("#selectParroquias :selected").val(),
+          'parroquia'   : $("#selectParroquias :selected").text(),
+          'direccion'   : address,
+          'zona_postal' : '<input type="text" name="zona_postal[]" value="0000" maxlength="4" size="4" />'
+        })
+        .draw();
+        $("#inputAddress").val("");
+      }
     });
 
     ///////////////////////////////////////////////////////////////////
     // eliminar direccion
     ///////////////////////////////////////////////////////////////////
 
-    $(document).on('click', '.delAddress', function() {
-      let address_id = $(this).attr('id');
-
-      addresses = addresses.filter((address, index) => index != address_id);
-      showDirecciones();
+    $("#addressesDT tbody").on("click",".eliminar",function() {
+      addressesDT.row($(this).parents())
+              .remove()
+              .draw();
     });
 
     ///////////////////////////////////////////////////////////////////
-    // mostrar direcciones
+    // cargar ccps de un ccp
     ///////////////////////////////////////////////////////////////////
 
-    function showDirecciones()
-    {
-      let cadena = '';
+    $("#selectCcp").change(function() {
+      let ccp_id = $(this).val();
+      let ruta = "{{ route('ccps.especificos', ['ccp_id' => 'valor']) }}";
 
-      addresses.forEach((address, index) => {
-        cadena += `
-          <div class="input-group mb-2">
-            <input type="hidden" name="parroquia_id[]" value="${address.parroquia_id}" />
-            <input type="hidden" name="zona_postal[]" value="${address.zona_postal}" />
-            <input type="text" class="form-control" name="address[]" value="${address.address}" readonly />
-            <div class="input-group-append">
-              <a class="delAddress btn btn-danger btn-sm" id="${index}"><i class="fas fa-trash-alt"></i></a>
-            </div>
-          </div>`
+      ruta = ruta.replace('valor', ccp_id);
+      fetch(ruta)
+      .then(response => response.json())
+      .then(r => {
+        $("#selectCcpEspecifico").empty();
+        $("#selectCcpEspecifico").append('<option value="0">SELECCIONE UN C.C.P.</option>');
+        r.ccpse.forEach(element => {
+          $("#selectCcpEspecifico").append(`<option value="${element.id}">${element.name}</option>`);
+        });
       });
-
-      $("#divAddresses").html(cadena);
-    };
-
-    ///////////////////////////////////////////////////////////////////
-    // agregar una imagen
-    ///////////////////////////////////////////////////////////////////
-
-    $('#inputImage').on('change', function(e) {
-      formData.append('images[]', e.target.files[0]);
-      imprimirImagenes();
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar una imagen
+    // agregar un empleado 
     ///////////////////////////////////////////////////////////////////
 
-    $(document).on('click', '.deleteImagenNueva', function() {
-      let imagesArray = Array.from(formData.getAll('images[]'));
+    $("#btnGrabar").click(function() {
+      const data = new FormData(empleadoForm);
 
-      imagesArray.splice($(this).attr('id'), 1);
-      formData.delete('images[]');
-      imagesArray.forEach(image => formData.append('images[]', image));
-      imprimirImagenes();
-    });
+      emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
+      phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));
+      phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
+      addressesDT.column(4).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
+      addressesDT.column(6).data().each(address => data.append('addresses[]', address));
 
-    ///////////////////////////////////////////////////////////////////
-    // imprimir imagenes
-    ///////////////////////////////////////////////////////////////////
-
-    function imprimirImagenes() {
-      let contenedor = $("#divNewImages");
-
-      contenedor.empty();
-      for (let i = 0; i < formData.getAll('images[]').length; i++) {
-        let div = $('<div class="col-3 text-center"></div>');
-        let img = $('<img class="img-fluid img-thumbnail mt-2" width="200" height="250">');
-        let botonEliminar = $(`<button class="deleteImagenNueva form-control btn-danger p-2" id="${i}">Eliminar</button>`);
-
-        img.attr('src', URL.createObjectURL(formData.getAll('images[]')[i]));
-        div.append(img);
-        div.append(botonEliminar);
-        contenedor.append(div);
+      if(! data.has('emails[]')) {
+        lib_toastr("Error: Debe ingresar al menos un correo personal!");
+        return;
       }
-    };
 
-    ///////////////////////////////////////////////////////////////////
-    // agregar/editar un empleado 
-    ///////////////////////////////////////////////////////////////////
-
-    $("#empleadoForm").submit(function(e) {
-      e.preventDefault();
-
-      if(phones.length < 1) {
+      if(! data.has('phones[]')) {
         lib_toastr("Error: Debe ingresar al menos un número de teléfono!");
         return;
       }
 
-      if(addresses.length < 1) {
+      if(! data.has('addresses[]')) {
         lib_toastr("Error: Debe ingresar al menos una dirección de ubicación!");
         return;
       }
 
-      const data = new FormData(empleadoForm);
-
       fetch("{{ route('employees-police.store') }}", {
         headers: {
-          'Accept'        : 'application/json'
+          'Accept' : 'application/json'
         },
-        method  : 'POST',
-        body    : data
+        method  : "POST",
+        body: data
       })
       .then(response => {
         if(response.ok) {
-          response.json().then(responseData => {
-            if(formData.has('images[]')) {
-              let postImagesRoute = "{{ route('employees-police.add-images', ['id' => 'valor1', 'cedula' => 'valor2']) }}";
-
-              postImagesRoute = postImagesRoute.replace('valor1', responseData.id);
-              postImagesRoute = postImagesRoute.replace('valor2', responseData.cedula);
-
-              fetch(postImagesRoute, {
-                method  : "POST",
-                headers : {
-                  'X-CSRF-TOKEN'  : $('meta[name="csrf-token"]').attr('content')
-                },
-                body : formData
-              });
-            }
-          });
-
-          lib_ShowMensaje("Empleado Polcial agregado!", 'mensaje')
+          lib_ShowMensaje("Empleado Uniformado agregado!", 'mensaje')
           .then(response => window.close());
         }
         else {
@@ -757,6 +956,14 @@
           });
         }
       })
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // cerrar pestaña de edicion
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnSalir").click(function() {
+      window.close();
     });
   });
 </script>

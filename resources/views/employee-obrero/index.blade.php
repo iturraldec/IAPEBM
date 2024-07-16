@@ -60,8 +60,8 @@
           {"data":null,
            "className" : "dt-body-center",
            "render": function ( data, type, row, meta ) {
-                  let rutaView = "{{ route('employees-adm.show', ['employees_adm' => 'valor']) }}";
-                  let rutaEdit = "{{ route('employees-adm.edit', ['employees_adm' => 'valor']) }}";
+                  let rutaView = "{{ route('employees-obrero.show', ['employees_obrero' => 'valor']) }}";
+                  let rutaEdit = "{{ route('employees-obrero.edit', ['employees_obrero' => 'valor']) }}";
 
                   rutaView = rutaView.replace('valor', data.id);
                   rutaEdit = rutaEdit.replace('valor', data.id);

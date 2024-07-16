@@ -42,10 +42,16 @@
           {"data": "id", visible: false},
           {"data": "codigo_nomina"},
           {"data": "person.cedula"},
-          {"data": "person.name"},
+          {"data": null,
+           "render": function(data, type, row, meta) {
+                  let nombre = `${data.person.first_last_name} ${data.person.second_last_name}, ${data.person.first_name} ${data.person.second_name}`;
+
+                  return nombre;
+            }
+          },
           {"data": null,
             "render": function(data, type, row, meta) {              
-              let imagen = "{{ asset('') }}" + data.person.image;
+              let imagen = "{{ asset('') }}" + data.person.imagef;
 
               return `<img src="${imagen}" class="img-thumbnail border border-dark" width="80" height="auto">`;
             },

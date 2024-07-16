@@ -40,7 +40,6 @@ Route::resource('employees-obrero', EmployeeObreroController::class)->names('emp
 
 // empleados policiales
 Route::resource('employees-police', EmployeePoliceController::class)->names('employees-police');
-Route::post('employees-police/{id}/{cedula}', [EmployeePoliceController::class, 'addImages'])->name('employees-police.add-images');
 
 // ubicaciones (estados/municipios/parroquias)
 Route::get('ubicacion/municipios/{estado_id}', [UbicacionController::class, 'getMunicipios'])->name('ubicacion.municipios');
