@@ -1,11 +1,11 @@
 @extends('adminlte::page')
 
-@section('title', 'Empleado Administrativo')
+@section('title', 'Empleado Obrero')
 
 @section('content_header')
   <div class="row">
     <div class="col-6">
-      <h4>Agregar Datos del Empleado Administrativo</h4>
+      <h4>Agregar Datos del Empleado Obrero</h4>
     </div>
   
     <div class="col-6 d-flex justify-content-end">
@@ -792,7 +792,6 @@
       .then(response => response.json())
       .then(r => {
         $("#selectMunicipios").empty();
-        $("#selectParroquias").empty();
         $("#selectMunicipios").append('<option value="0">SELECCIONE UN MUNICIPIO</option>');
         r.municipios.forEach(element => {
           $("#selectMunicipios").append(`<option value="${element.id_municipio}">${element.municipio}</option>`);
@@ -904,7 +903,7 @@
         return;
       }
 
-      fetch("{{ route('employees-adm.store') }}", {
+      fetch("{{ route('employees-obrero.store') }}", {
         headers: {
           'Accept' : 'application/json'
         },
@@ -913,7 +912,7 @@
       })
       .then(response => {
         if(response.ok) {
-          lib_ShowMensaje("Empleado Administrativo agregado!", 'mensaje')
+          lib_ShowMensaje("Empleado Obrero agregado!", 'mensaje')
           .then(response => window.close());
         }
         else {

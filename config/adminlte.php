@@ -352,7 +352,7 @@ return [
                 ],
                 [
                     'text'    => 'Obreros',
-                    'url'     => '#'
+                    'route'     => 'employees-obrero.index'
                 ],
                 [
                     'text'    => 'Uniformados',

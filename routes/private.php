@@ -8,6 +8,7 @@ use App\Http\Controllers\CargoController;
 use App\Http\Controllers\RangoController;
 use App\Http\Controllers\EmployeeStatusController;
 use App\Http\Controllers\EmployeeAdmController;
+use App\Http\Controllers\EmployeeObreroController;
 use App\Http\Controllers\EmployeePoliceController;
 use App\Http\Controllers\UbicacionController;
 use App\Http\Controllers\CcpController;
@@ -33,7 +34,9 @@ Route::resource('employee-status', EmployeeStatusController::class)
 
 // empleados administrativos
 Route::resource('employees-adm', EmployeeAdmController::class)->names('employees-adm');
-//Route::post('employees-adm/{id}/{cedula}', [EmployeeAdmController::class, 'addImages'])->name('employees-adm.add-images');
+
+// empleados obreros
+Route::resource('employees-obrero', EmployeeObreroController::class)->names('employees-obrero');
 
 // empleados policiales
 Route::resource('employees-police', EmployeePoliceController::class)->names('employees-police');
