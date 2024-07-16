@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('escuela', 100)->nullable();
             $table->date('fecha_graduacion')->nullable();
             $table->string('curso', 10)->nullable();
+            $table->string('curso_duracion', 50)->nullable();
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

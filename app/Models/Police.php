@@ -12,7 +12,8 @@ class Police extends Model
     'employee_id',
     'escuela',
     'fecha_graduacion',
-    'curso'
+    'curso',
+    'curso_duracion',
   ];
 
   //
