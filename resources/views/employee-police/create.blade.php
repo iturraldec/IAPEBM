@@ -571,12 +571,22 @@
           </div>
 
           <div class="col-4 form-group">
-            <label for="inputCursoDuracion">Duración de la formación</label>
+            <label for="inputCursoDuracion">Duración de formación</label>
             <input type="text"
                   class="form-control"
                   id="inputCursoDuracion"
                   name="curso_duracion"
                   placeholder="Ingrese duración del curso"
+            />
+          </div>
+
+          <div class="col-4 form-group">
+            <label for="inputCUP">Credencial Unica Policial</label>
+            <input type="text"
+                  class="form-control"
+                  id="inputCUP"
+                  name="cup"
+                  placeholder="Ingrese la C.U.P."
             />
           </div>
         </div>

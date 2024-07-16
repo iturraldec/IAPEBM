@@ -14,6 +14,7 @@ class Police extends Model
     'fecha_graduacion',
     'curso',
     'curso_duracion',
+    'cup',
   ];
 
   //

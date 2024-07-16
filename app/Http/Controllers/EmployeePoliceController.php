@@ -91,6 +91,7 @@ class EmployeePoliceController extends Controller
       'fecha_graduacion'      => 'required|date',
       'curso'                 => 'required|max:10',
       'curso_duracion'        => 'required|max:50',
+      'cup'                   => 'required|max:10',
     ]);
 
     // agrego los datos personales
@@ -159,7 +160,7 @@ class EmployeePoliceController extends Controller
     $employee = Employee::create($employeeData);
 
     // agrego los datos policiales
-    $employeeData = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion');
+    $employeeData = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
     $employeeData['employee_id'] = $employee->id;
     Police::create($employeeData);
 
