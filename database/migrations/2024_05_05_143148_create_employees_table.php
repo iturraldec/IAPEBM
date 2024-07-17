@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('person_id');
             $table->unsignedSmallInteger('grupo_id');
-            $table->unsignedTinyInteger('status');
+            $table->unsignedTinyInteger('status')->default(1);
             $table->string('codigo_nomina', 20);
             $table->date('fecha_ingreso');
             $table->unsignedSmallInteger('cargo_id')->nullable();
@@ -29,7 +29,6 @@ return new class extends Migration
             $table->string('deporte', 100)->default('NO DEFINIDO');
             $table->string('licencia', 100)->default('NO DEFINIDO');
             $table->string('nro_cta_bancaria', 30)->default('NO DEFINIDO');
-            $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
 
             $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');

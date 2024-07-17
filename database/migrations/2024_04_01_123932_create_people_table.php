@@ -25,10 +25,9 @@ return new class extends Migration
             $table->unsignedTinyInteger('civil_status_id')->nullable();
             $table->string('blood_type', 5)->nullable();
             $table->text('notes')->nullable();
-            $table->string('imagef')->nullable();
-            $table->string('imageli')->nullable();
-            $table->string('imageld')->nullable();
-            $table->unsignedTinyInteger('status')->default(1);
+            $table->string('imagef')->nullable()->default('assets/images/avatar.png');
+            $table->string('imageli')->nullable()->default('assets/images/avatar.png');
+            $table->string('imageld')->nullable()->default('assets/images/avatar.png');
             $table->timestamps();
         });
     }

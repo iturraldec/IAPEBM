@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('police', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('employee_id');
-            $table->string('escuela', 100)->nullable();
+            $table->string('escuela', 100)->nullable()->default('NO DEFINIDO');
             $table->date('fecha_graduacion')->nullable();
             $table->string('curso', 10)->nullable();
-            $table->string('curso_duracion', 50)->nullable();
+            $table->string('curso_duracion', 50)->nullable()->default('NO DEFINIDO');
             $table->string('cup', 10)->nullable();
             $table->timestamps();
 

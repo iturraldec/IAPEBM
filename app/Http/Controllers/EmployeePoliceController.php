@@ -38,7 +38,14 @@ class EmployeePoliceController extends Controller
       return view('employee-police.index');
     }
     else {
-      return datatables()->of(Employee::where('grupo_id', $this->grupo_id)->with('person')->get())->toJson();
+      $employees = Employee::where('grupo_id', $this->grupo_id)
+                              ->join('people', 'employees.person_id', '=', 'people.id')
+                              ->orderBy('people.first_last_name')
+                              ->orderBy('people.second_last_name')
+                              ->with('person')
+                              ->get();
+
+      return datatables()->of($employees)->toJson();
     }
   }
 

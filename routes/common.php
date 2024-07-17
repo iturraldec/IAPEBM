@@ -15,36 +15,33 @@ Route::get('loadFromExcel', function() {
     Excel::import(new App\Imports\CargosImport, 'assets/documentos/cargos.csv');
 
     echo 'condiciones...<br>';
-    //Excel::import(new App\Imports\CondicionesImport, 'assets/documentos/condiciones.csv');
+    Excel::import(new App\Imports\CondicionesImport, 'assets/documentos/condiciones.csv');
 
     echo 'tipos...<br>';
     Excel::import(new App\Imports\TiposImport, 'assets/documentos/tipos_empleados.csv');
 
-    echo 'policias:jerarquias...<br>';
-    //Excel::import(new App\Imports\JerarquiasImport, 'assets/documentos/rangos.csv');
-
-    echo 'ubicaciones...<br>';
-    /* Excel::import(new App\Imports\UbicacionesGImport, 'assets/documentos/ccpg.csv');
+    echo 'ccps...<br>';
+    Excel::import(new App\Imports\UbicacionesGImport, 'assets/documentos/ccpg.csv');
     Excel::import(new App\Imports\UbicacionesEImport, 'assets/documentos/ccpe.csv');
- */
+
+    echo 'uniformados:jerarquias...<br>';
+    Excel::import(new App\Imports\JerarquiasImport, 'assets/documentos/rangos.csv');
+
+    echo 'administrativos...<br>';
+    Excel::import(new App\Imports\AdminImport, 'assets/documentos/administrativos.csv');
+
+    echo 'uniformados...<br>';
+    Excel::import(new App\Imports\PoliceImport, 'assets/documentos/uniformados.csv');
+
     //
     DB::commit();
+    echo 'carga de datos finalizada!';
   } 
   catch (\Exception $e) {
     DB::rollback();
 
     return $e->getMessage();
   }
-/*
-
-  echo 'administrativos...<br>';
-  Excel::import(new App\Imports\AdminImport, 'assets/documentos/administrativos.csv');
-
-  echo 'policias...<br>';
-  Excel::import(new App\Imports\PoliceImport, 'assets/documentos/uniformados.csv');
-
-*/
-  echo 'carga de datos finalizada!';
 });
 
 //
