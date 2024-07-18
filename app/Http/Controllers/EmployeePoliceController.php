@@ -52,12 +52,12 @@ class EmployeePoliceController extends Controller
   // vista para crear empleado
   public function create()
   {
-    $_estados = new UbicacionController();
-    $ccps = Ccps::OrderBy('name')->get();
-    $cargos = Cargo::OrderBy('name')->get();
-    $condiciones = Condicion::OrderBy('name')->get();
-    $tipos = Tipo::OrderBy('name')->get();
-    $estados = $_estados->getEstados();
+    $_estados     = new UbicacionController();
+    $ccps         = Ccps::OrderBy('name')->get();
+    $cargos       = Cargo::OrderBy('name')->get();
+    $condiciones  = Condicion::OrderBy('name')->get();
+    $tipos        = Tipo::OrderBy('name')->get();
+    $estados      = $_estados->getEstados();
 
     return view('employee-police.create', compact('cargos', 'condiciones', 'tipos', 'ccps', 'estados'));
   }
@@ -178,25 +178,17 @@ class EmployeePoliceController extends Controller
   // edicion de emplado
   public function edit(Employee $employees_polouse)
   {
-    $location     = new Location();
-    $phone_types  = PhoneType::get();
-    $municipios   = $location->getMunicipios();
-    $parroquias   = $location->getParroquias();
-    $edoCivil     = CivilStatus::get();
-    $tipoSangre   = BloodType::get();
-    $cargos       = Cargo::OrderBy('name')->get();
-    $status       = EmployeeStatus::OrderBy('name')->get();
-    $tipos        = EmployeeTipos::OrderBy('name')->get();
-    $ubicaciones  = EmployeeLocations::OrderBy('name')->get();
-    $data['person']                       = Person::getById($employees_polouse->person_id);
-    $data['employee']                     = $employees_polouse;
-    $police                               = Police::where('employee_id', $employees_polouse->id)->first();
-    $data['employee']['escuela']          = $police->escuela;
-    $data['employee']['fecha_graduacion'] = $police->fecha_graduacion;
-    $data['employee']['curso']            = $police->curso;
+    $_estados         = new UbicacionController();
+    $ccps             = Ccps::OrderBy('name')->get();
+    $cargos           = Cargo::OrderBy('name')->get();
+    $condiciones      = Condicion::OrderBy('name')->get();
+    $tipos            = Tipo::OrderBy('name')->get();
+    $estados          = $_estados->getEstados();
+    $data['person']   = Person::getById($employees_polouse->person_id);
+    $data['employee'] = $employees_polouse;
+    $data['police']  = Police::where('employee_id', $employees_polouse->id)->first();
     
-    return view('employee-police.edit', compact('phone_types', 'municipios', 
-                  'parroquias', 'edoCivil', 'tipoSangre', 'cargos', 'status', 'tipos', 'ubicaciones', 'data'));
+    return view('employee-police.edit', compact('estados', 'ccps', 'cargos', 'condiciones', 'tipos', 'data'));
   }
 
   /**

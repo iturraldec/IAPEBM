@@ -17,10 +17,10 @@ class Person extends Model
         'place_of_birth', 'civil_status_id', 'blood_type', 'notes', 'imagef', 'imageli', 'imageld'
     ];
 
-    // retorna los datos de un empleado
+    // retorna los datos de una persona
     public static function getById(int $id)
     {
-        return Person::with('employee', 'emails', 'phones.type', 'addresses')->find($id);
+        return Person::with('emails', 'phones', 'addresses')->find($id);
     }
 
     //
