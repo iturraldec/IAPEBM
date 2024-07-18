@@ -16,6 +16,11 @@
 @endsection
 
 @section('content')
+@php
+foreach ($data['person']['phones'] as $value) {
+  echo "Tipo de tlf : {$value->phone_type}; Tlf : {$value->number}";
+};
+@endphp
 <div class="card card-primary card-tabs">
   <!-- card-header -->
   <div class="card-header p-0 pt-1">
