@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum EmployeeBloodType: string
+enum BloodTypeEnum : string
 {
   case Ap = 'A+';
   case An = 'A-';

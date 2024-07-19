@@ -187,6 +187,11 @@ class EmployeePoliceController extends Controller
     $data['person']   = Person::getById($employees_polouse->person_id);
     $data['employee'] = $employees_polouse;
     $data['police']  = Police::where('employee_id', $employees_polouse->id)->first();
+    $fullAddresses = [];
+    foreach($data['person']['addresses'] as $address) {
+      $fullAddresses[] = $address->fullAddress;
+    }
+    $data['person']['fullAddresses'] = $fullAddresses;
     
     return view('employee-police.edit', compact('estados', 'ccps', 'cargos', 'condiciones', 'tipos', 'data'));
   }

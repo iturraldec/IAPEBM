@@ -192,7 +192,7 @@
                 <label for="selectEstadoCivil">Estado Civil</label>
                 <select id="selectEstadoCivil" class="form-control" name="civil_status_id">
                   <option value="0" selected>SELECCIONE ESTADO CIVIL</option>
-                  @foreach (App\Enums\EmployeeCivilStatus::cases() as $case)
+                  @foreach (App\Enums\CivilStatusEnum::cases() as $case)
                     <option value="{{ $case->value }}">{{ $case->label() }}</option>
                   @endforeach
                 </select>
@@ -202,7 +202,7 @@
                 <label for="selectSangre">Tipo de Sangre</label>
                 <select id="selectSangre" class="form-control" name="blood_type">
                   <option value="0" selected>SELECCIONE TIPO</option>
-                  @foreach (App\Enums\EmployeeBloodType::cases() as $case)
+                  @foreach (App\Enums\BloodTypeEnum::cases() as $case)
                     <option value="{{ $case->value }}">{{ $case->value }}</option>
                   @endforeach
                 </select>
@@ -262,13 +262,14 @@
               <div class="card-header bg-lightblue">
                 <h3 class="card-title">Teléfono(s) del Empleado</h3>
               </div>
+
               <!-- /.card-header -->
                 <div class="card-body">
                   <div class="row">
                     <div class="col-6">
                       <select id="selectPhoneType" class="form-control">
                         <option value="0" selected>SELECCIONE EL TIPO DE NÚMERO</option>
-                        @foreach (App\Enums\PhoneType::cases() as $case)
+                        @foreach (App\Enums\PhoneTypeEnum::cases() as $case)
                           <option value="{{ $case->value }}">{{ $case->label() }}</option>
                         @endforeach
                         </select>

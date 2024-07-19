@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum PhoneType: int
+enum PhoneTypeEnum : int
 {
   case Celular = 1;
   case Fijo = 2;

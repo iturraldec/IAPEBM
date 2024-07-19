@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Enums\PhoneType;
+use App\Enums\PhoneTypeEnum;
 
 //
 class Phone extends Model
@@ -23,14 +23,10 @@ class Phone extends Model
     }
 
     //
-    /* public function getPhoneTypeAttribute()
+    protected function PhoneType() : Attribute
     {
-        return PhoneType::from($this->phone_type_id)->label();
-    } */
-   protected function PhoneType() : Attribute
-   {
-    return new Attribute(
-        get: fn () => PhoneType::from($this->phone_type_id)->label(),
-    );
-   }
+        return new Attribute(
+            get: fn () => PhoneTypeEnum::from($this->phone_type_id)->label(),
+        );
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum EmployeeCivilStatus: int
+enum CivilStatusEnum : int
 {
   case Soltero = 1;
   case Casado = 2;

@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum EmployeeType: int
+enum EmployeeTypeEnum : int
 {
   case Administrativo = 1;
   case Obrero = 2;

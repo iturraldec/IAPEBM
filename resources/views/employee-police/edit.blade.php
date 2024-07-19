@@ -5,7 +5,7 @@
 @section('content_header')
   <div class="row">
     <div class="col-6">
-      <h4>Agregar Datos del Empleado Uniformado</h4>
+      <h4>Modificar Datos del Empleado Uniformado</h4>
     </div>
   
     <div class="col-6 d-flex justify-content-end">
@@ -16,11 +16,6 @@
 @endsection
 
 @section('content')
-@php
-foreach ($data['person']['phones'] as $value) {
-  echo "Tipo de tlf : {$value->phone_type}; Tlf : {$value->number}";
-};
-@endphp
 <div class="card card-primary card-tabs">
   <!-- card-header -->
   <div class="card-header p-0 pt-1">
@@ -40,13 +35,13 @@ foreach ($data['person']['phones'] as $value) {
     @csrf
 
     <div class="tab-content" id="custom-tabs-one-tabContent">      
-      <!-- tab principal -->
+      <!-- tab datos personales -->
       <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
 
         <!-- inicio de row -->
         <div class="row d-flex justify-content-around">
           <div class="col-4 form-group text-center">
-            <img src="{{ asset('assets/images/avatar.png') }}" 
+            <img src="{{ asset($data['person']['imagef']) }}" 
                   id="imgFotoFrente" 
                   class="img-thumbnail border border-dark"
                   width="200"
@@ -57,7 +52,7 @@ foreach ($data['person']['phones'] as $value) {
           </div>
 
           <div class="col-4 form-group text-center">
-            <img src="{{ asset('assets/images/avatar.png') }}" 
+            <img src="{{ asset($data['person']['imageli']) }}" 
                   id="imgFotoLIzquierdo" 
                   class="img-thumbnail border border-dark"
                   width="200"
@@ -68,7 +63,7 @@ foreach ($data['person']['phones'] as $value) {
           </div>
 
           <div class="col-4 form-group text-center">
-            <img src="{{ asset('assets/images/avatar.png') }}" 
+            <img src="{{ asset($data['person']['imageld']) }}" 
                   id="imgFotoLDerecho" 
                   class="img-thumbnail border border-dark"
                   width="200"
@@ -205,7 +200,7 @@ foreach ($data['person']['phones'] as $value) {
                 <label for="selectEstadoCivil">Estado Civil</label>
                 <select id="selectEstadoCivil" class="form-control" name="civil_status_id">
                   <option value="0" selected>SELECCIONE ESTADO CIVIL</option>
-                  @foreach (App\Enums\EmployeeCivilStatus::cases() as $case)
+                  @foreach (App\Enums\CivilStatusEnum::cases() as $case)
                     <option value="{{ $case->value }}" {{ $data['person']['civil_status_id'] == $case->value ? 'selected':''}}>{{ $case->label() }}</option>
                   @endforeach
                 </select>
@@ -215,7 +210,7 @@ foreach ($data['person']['phones'] as $value) {
                 <label for="selectSangre">Tipo de Sangre</label>
                 <select id="selectSangre" class="form-control" name="blood_type">
                   <option value="0" selected>SELECCIONE TIPO</option>
-                  @foreach (App\Enums\EmployeeBloodType::cases() as $case)
+                  @foreach (App\Enums\BloodTypeEnum::cases() as $case)
                     <option value="{{ $case->value }}" {{ $data['person']['blood_type'] == $case->value ? 'selected':''}}>{{ $case->value }}</option>
                   @endforeach
                 </select>
@@ -281,7 +276,7 @@ foreach ($data['person']['phones'] as $value) {
                     <div class="col-6">
                       <select id="selectPhoneType" class="form-control">
                         <option value="0" selected>SELECCIONE EL TIPO DE NÚMERO</option>
-                        @foreach (App\Enums\PhoneType::cases() as $case)
+                        @foreach (\App\Enums\PhoneTypeEnum::cases() as $case)
                           <option value="{{ $case->value }}">{{ $case->label() }}</option>
                         @endforeach
                         </select>
@@ -368,9 +363,7 @@ foreach ($data['person']['phones'] as $value) {
                       <table id="addressesDT" class="table table-hover border border-primary">
                         <thead>
                           <tr>
-                            <th scope="col">EstadoID</th>
                             <th scope="col">Estado</th>
-                            <th scope="col">MunicipioID</th>
                             <th scope="col">Municipio</th>
                             <th scope="col">ParroquiaID</th>
                             <th scope="col">Parroquia</th>
@@ -402,11 +395,10 @@ foreach ($data['person']['phones'] as $value) {
                   <textarea class="form-control"
                             id="inputNotas"
                             name="notes"
-                            value="{{ $data['person']['notes'] }}"
                             placeholder="Ingresa las observaciones"
                             rows="3"
                             onkeyup="this.value = this.value.toUpperCase();"
-                  /></textarea>
+                  />{{ $data['person']['notes'] }}</textarea>
                 </div>
               </div>
             </div>
@@ -415,7 +407,7 @@ foreach ($data['person']['phones'] as $value) {
         </div>
         <!-- fin de row -->
       </div>
-      <!-- fin de tab principal -->
+      <!-- fin de tab datos personales -->
 
       <!-- tab datos administrativos -->
       <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
@@ -426,6 +418,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control" 
                   id="inputCodigo" 
                   name="codigo_nomina"
+                  value="{{ $data['employee']['codigo_nomina'] }}"
                   placeholder="No. de código de nómina"
             />
           </div>
@@ -436,6 +429,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control" 
                   id="inputFechaIngreso" 
                   name="fecha_ingreso"
+                  value="{{ $data['employee']['fecha_ingreso'] }}"
             />
           </div>
 
@@ -444,7 +438,9 @@ foreach ($data['person']['phones'] as $value) {
             <select id="selectCargo" class="form-control" name="cargo_id">
               <option value="0" selected>SELECCIONE EL CARGO</option>
               @foreach($cargos as $cargo)
-                <option value="{{ $cargo->id }}">{{ $cargo->name }}</option>
+                <option value="{{ $cargo->id }}" {{ ($data['employee']['cargo_id'] == $cargo->id) ? 'selected' : '' }}>
+                  {{ $cargo->name }}
+                </option>
               @endforeach
             </select>
           </div>
@@ -454,7 +450,9 @@ foreach ($data['person']['phones'] as $value) {
             <select id="selectCondicion" class="form-control" name="condicion_id">
               <option value="0" selected>SELECCIONE LA CONDICIÓN</option>
               @foreach($condiciones as $condicion)
-                <option value="{{ $condicion->id }}">{{ $condicion->name }}</option>
+                <option value="{{$condicion->id}}" {{$data['employee']['condicion_id'] == $condicion->id ? 'selected' : ''}}>
+                  {{ $condicion->name }}
+                </option>
               @endforeach
             </select>
           </div>
@@ -464,7 +462,9 @@ foreach ($data['person']['phones'] as $value) {
             <select id="selectTipo" class="form-control" name="tipo_id">
               <option value="0" selected>SELECCIONE EL TIPO</option>
               @foreach($tipos as $tipo)
-                <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
+                <option value="{{ $tipo->id }}" {{ ($data['employee']['tipo_id'] == $tipo->id) ? 'selected' : '' }}>
+                  {{ $tipo->name }}
+                </option>
               @endforeach
             </select>
           </div>
@@ -491,7 +491,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control"
                   id="inputPatria"
                   name="codigo_patria"
-                  value="NO DEFINIDO"
+                  value="{{ $data['employee']['codigo_patria'] }}"
                   placeholder="Código del carnet patria"
             />
           </div>
@@ -502,7 +502,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control"
                   id="inputSerialPatria"
                   name="serial_patria"
-                  value="NO DEFINIDO"
+                  value="{{ $data['employee']['serial_patria'] }}"
                   placeholder="Serial del carnet patria"
             />
           </div>
@@ -513,7 +513,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control"
                   id="inputReligion"
                   name="religion"
-                  value="NO DEFINIDO"
+                  value="{{ $data['employee']['religion'] }}"
                   placeholder="Religión prefesada por el empleado"
                   onkeyup="this.value = this.value.toUpperCase();"
             />
@@ -525,7 +525,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control"
                   id="inputDeporte"
                   name="deporte"
-                  value="NO DEFINIDO"
+                  value="{{ $data['employee']['deporte'] }}"
                   placeholder="Deporte practicado por el empleado"
                   onkeyup="this.value = this.value.toUpperCase();"
             />
@@ -537,7 +537,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control"
                   id="inputLicencia"
                   name="licencia"
-                  value="NO DEFINIDO"
+                  value="{{ $data['employee']['licencia'] }}"
                   placeholder="Ingrese la licencia"
             />
           </div>
@@ -548,7 +548,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control"
                   id="inputCtaBancaria"
                   name="nro_cta_bancaria"
-                  value="NO DEFINIDO"
+                  value="{{ $data['employee']['nro_cta_bancaria'] }}"
                   placeholder="Nro. de cuenta bancaria"
             />
           </div>
@@ -559,6 +559,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control"
                   id="inputEscuela"
                   name="escuela"
+                  value="{{ $data['police']['escuela'] }}"
                   placeholder="Ingrese la escuela"
                   onkeyup="this.value = this.value.toUpperCase();"
             />
@@ -570,6 +571,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control"
                   id="inputFechaGrado"
                   name="fecha_graduacion"
+                  value="{{ $data['police']['fecha_graduacion'] }}"
                   placeholder="Ingrese fecha"
             />
           </div>
@@ -580,6 +582,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control"
                   id="inputCurso"
                   name="curso"
+                  value="{{ $data['police']['curso'] }}"
                   placeholder="Ingrese el curso"
             />
           </div>
@@ -590,6 +593,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control"
                   id="inputCursoDuracion"
                   name="curso_duracion"
+                  value="{{ $data['police']['curso_duracion'] }}"
                   placeholder="Ingrese duración del curso"
             />
           </div>
@@ -600,6 +604,7 @@ foreach ($data['person']['phones'] as $value) {
                   class="form-control"
                   id="inputCUP"
                   name="cup"
+                  value="{{ $data['police']['cup'] }}"
                   placeholder="Ingrese la C.U.P."
             />
           </div>
@@ -676,6 +681,50 @@ foreach ($data['person']['phones'] as $value) {
       ]
     });
 
+    ///////////////////////////////////////////////////////////////////
+    // tabla de direcciones
+    ///////////////////////////////////////////////////////////////////
+
+    var addressesDT = $('#addressesDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'estado',
+          orderable: false
+        },
+        {
+          data: 'municipio',
+          orderable: false
+        },
+        {
+          data: 'parroquiaId',
+          visible: false
+        },
+        {
+          data: 'parroquia',
+          orderable: false
+        },
+        {
+          data: 'direccion',
+          orderable: false
+        },
+        {
+          data: 'zona_postal',
+          orderable: false,
+          width: "5%"
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
+        }
+      ]
+    });
+
     // iniciamos el formulario
     initForm();
 
@@ -683,8 +732,9 @@ foreach ($data['person']['phones'] as $value) {
     // inicializar formulario
     ///////////////////////////////////////////////////////////////////
     function initForm() {
-      let emails = {{ Js::from($data['person']['emails']) }};        // emails del empleado
-      let phones = {{ Js::from($data['person']['phones']) }};        // telefonos del empleado
+      let emails    = {{ Js::from($data['person']['emails']) }};        // emails del empleado
+      let phones    = {{ Js::from($data['person']['phones']) }};        // telefonos del empleado
+      let addresses = {{ Js::from($data['person']['fullAddresses']) }}; // direcciones del empleado
 
       // configurar 'toastr'
       toastr.options.closeButton = true;
@@ -699,9 +749,26 @@ foreach ($data['person']['phones'] as $value) {
 
       // telefonos
       if(phones.length > 0) {
-        /* phones.forEach(item => emailsDT.row.add({'correo' : item.email}));
-        emailsDT.draw(); */
-        console.log(phones)
+        phones.forEach(item => phonesDT.row.add({
+                                'id'    : item.id,
+                                'tipo'  : item.phone_type,
+                                'numero': item.number
+                              })
+                      );
+        phonesDT.draw();
+      }
+
+      // direcciones
+      if(addresses.length > 0) {
+        addresses.forEach(item => addressesDT.row.add({
+                                    'estado'      : item.estado,
+                                    'municipio'   : item.municipio,
+                                    'parroquiaId' : item.parroquia_id,
+                                    'parroquia'   : item.parroquia,
+                                    'direccion'   : item.address,
+                                    'zona_postal' : `<input type="text" name="zona_postal[]" value="${item.zona_postal}" maxlength="4" size="4" />`
+                                  }));
+        addressesDT.draw();
       }
 
       // mascara para el nombre
@@ -807,58 +874,6 @@ foreach ($data['person']['phones'] as $value) {
       phonesDT.row($(this).parents())
               .remove()
               .draw();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // tabla de direcciones
-    ///////////////////////////////////////////////////////////////////
-
-    var addressesDT = $('#addressesDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'estadoId',
-          visible: false
-        },
-        {
-          data: 'estado',
-          orderable: false
-        },
-        {
-          data: 'municipioId',
-          visible: false
-        },
-        {
-          data: 'municipio',
-          orderable: false
-        },
-        {
-          data: 'parroquiaId',
-          visible: false
-        },
-        {
-          data: 'parroquia',
-          orderable: false
-        },
-        {
-          data: 'direccion',
-          orderable: false
-        },
-        {
-          data: 'zona_postal',
-          orderable: false,
-          width: "5%"
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
     });
 
     ///////////////////////////////////////////////////////////////////
