@@ -5,7 +5,7 @@
 @section('content_header')
   <div class="row">
     <div class="col-6">
-      <h4>Agregar Datos del Empleado Uniformado</h4>
+      <h4>Agregar Empleado Uniformado</h4>
     </div>
   
     <div class="col-6 d-flex justify-content-end">
@@ -35,7 +35,7 @@
     @csrf
 
     <div class="tab-content" id="custom-tabs-one-tabContent">      
-      <!-- tab principal -->
+      <!-- tab datos personales -->
       <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
 
         <!-- inicio de row -->
@@ -207,6 +207,18 @@
                   @endforeach
                 </select>
               </div>
+
+              <div class="col-3 form-group">
+                <label for="inputPassport">Pasaporte Nro.</label>
+                <input type="text"
+                      class="form-control"
+                      id="inputPassport"
+                      name="passport_nro"
+                      maxlength="20"
+                      placeholder="Ingresa número de pasaporte"
+                      onkeyup="this.value = this.value.toUpperCase();"
+                />
+              </div>
         </div>
         <!-- fin de row -->
 
@@ -356,9 +368,7 @@
                       <table id="addressesDT" class="table table-hover border border-primary">
                         <thead>
                           <tr>
-                            <th scope="col">EstadoID</th>
                             <th scope="col">Estado</th>
-                            <th scope="col">MunicipioID</th>
                             <th scope="col">Municipio</th>
                             <th scope="col">ParroquiaID</th>
                             <th scope="col">Parroquia</th>
@@ -402,7 +412,7 @@
         </div>
         <!-- fin de row -->
       </div>
-      <!-- fin de tab principal -->
+      <!-- fin tab datos personales -->
 
       <!-- tab datos administrativos -->
       <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
@@ -478,7 +488,6 @@
                   class="form-control"
                   id="inputPatria"
                   name="codigo_patria"
-                  value="NO DEFINIDO"
                   placeholder="Código del carnet patria"
             />
           </div>
@@ -489,7 +498,6 @@
                   class="form-control"
                   id="inputSerialPatria"
                   name="serial_patria"
-                  value="NO DEFINIDO"
                   placeholder="Serial del carnet patria"
             />
           </div>
@@ -500,7 +508,6 @@
                   class="form-control"
                   id="inputReligion"
                   name="religion"
-                  value="NO DEFINIDO"
                   placeholder="Religión prefesada por el empleado"
                   onkeyup="this.value = this.value.toUpperCase();"
             />
@@ -512,7 +519,6 @@
                   class="form-control"
                   id="inputDeporte"
                   name="deporte"
-                  value="NO DEFINIDO"
                   placeholder="Deporte practicado por el empleado"
                   onkeyup="this.value = this.value.toUpperCase();"
             />
@@ -524,19 +530,17 @@
                   class="form-control"
                   id="inputLicencia"
                   name="licencia"
-                  value="NO DEFINIDO"
                   placeholder="Ingrese la licencia"
             />
           </div>
 
           <div class="col-4 form-group">
-            <label for="inputCtaBancaria">Nro. Cuenta Bancaria</label>
+            <label for="inputCtaBancaria">Cuenta Bancaria Nro.</label>
             <input type="text"
                   class="form-control"
                   id="inputCtaBancaria"
-                  name="nro_cta_bancaria"
-                  value="NO DEFINIDO"
-                  placeholder="Nro. de cuenta bancaria"
+                  name="cta_bancaria_nro"
+                  placeholder="Ingresa número de cuenta bancaria"
             />
           </div>
 
@@ -592,7 +596,7 @@
           </div>
         </div>
       </div>
-      <!-- fin de datos administrativos -->
+      <!-- fin datos administrativos -->
     </div>
     <!-- fin de tab -->
   </form>
@@ -606,6 +610,109 @@
 @section('js')
 <script>
   $(document).ready(function () {
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de emails
+    ///////////////////////////////////////////////////////////////////
+
+    var emailsDT = $('#emailsDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'correo',
+          orderable: false,
+          width: '95%'
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
+        }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de telefonos
+    ///////////////////////////////////////////////////////////////////
+
+    var phonesDT = $('#phonesDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'id',
+          visible: false
+        },
+        {
+          data: 'tipo',
+          width: '50%',
+          orderable: false
+        },
+        {
+          data: 'numero',
+          width: '45%',
+          orderable: false
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
+        }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de direcciones
+    ///////////////////////////////////////////////////////////////////
+
+    var addressesDT = $('#addressesDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'estado',
+          orderable: false
+        },
+        {
+          data: 'municipio',
+          orderable: false
+        },
+        {
+          data: 'parroquiaId',
+          visible: false
+        },
+        {
+          data: 'parroquia',
+          orderable: false
+        },
+        {
+          data: 'direccion',
+          orderable: false
+        },
+        {
+          data: 'zona_postal',
+          orderable: false,
+          width: "5%"
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
+        }
+      ]
+    });
+
+    //
     initForm();
 
     ///////////////////////////////////////////////////////////////////
@@ -673,30 +780,6 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // tabla de emails
-    ///////////////////////////////////////////////////////////////////
-
-    var emailsDT = $('#emailsDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'correo',
-          orderable: false,
-          width: '95%'
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
-
-    ///////////////////////////////////////////////////////////////////
     // agregar un email
     ///////////////////////////////////////////////////////////////////
 
@@ -713,39 +796,6 @@
       emailsDT.row($(this).parents())
               .remove()
               .draw();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // tabla de telefonos
-    ///////////////////////////////////////////////////////////////////
-
-    var phonesDT = $('#phonesDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'id',
-          visible: false
-        },
-        {
-          data: 'tipo',
-          width: '50%',
-          orderable: false
-        },
-        {
-          data: 'numero',
-          width: '45%',
-          orderable: false
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -777,58 +827,6 @@
       phonesDT.row($(this).parents())
               .remove()
               .draw();
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // tabla de direcciones
-    ///////////////////////////////////////////////////////////////////
-
-    var addressesDT = $('#addressesDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'estadoId',
-          visible: false
-        },
-        {
-          data: 'estado',
-          orderable: false
-        },
-        {
-          data: 'municipioId',
-          visible: false
-        },
-        {
-          data: 'municipio',
-          orderable: false
-        },
-        {
-          data: 'parroquiaId',
-          visible: false
-        },
-        {
-          data: 'parroquia',
-          orderable: false
-        },
-        {
-          data: 'direccion',
-          orderable: false
-        },
-        {
-          data: 'zona_postal',
-          orderable: false,
-          width: "5%"
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -883,9 +881,7 @@
       }
       else {
         addressesDT.row.add({
-          'estadoId'    : $("#selectEstados :selected").val(),
           'estado'      : $("#selectEstados :selected").text(),
-          'municipioId' : $("#selectMunicipios :selected").val(),
           'municipio'   : $("#selectMunicipios :selected").text(),
           'parroquiaId' : $("#selectParroquias :selected").val(),
           'parroquia'   : $("#selectParroquias :selected").text(),
@@ -902,9 +898,7 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#addressesDT tbody").on("click",".eliminar",function() {
-      addressesDT.row($(this).parents())
-              .remove()
-              .draw();
+      addressesDT.row($(this).parents()).remove().draw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -937,23 +931,8 @@
       emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
       phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));
       phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
-      addressesDT.column(4).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
-      addressesDT.column(6).data().each(address => data.append('addresses[]', address));
-
-      if(! data.has('emails[]')) {
-        lib_toastr("Error: Debe ingresar al menos un correo personal!");
-        return;
-      }
-
-      if(! data.has('phones[]')) {
-        lib_toastr("Error: Debe ingresar al menos un número de teléfono!");
-        return;
-      }
-
-      if(! data.has('addresses[]')) {
-        lib_toastr("Error: Debe ingresar al menos una dirección de ubicación!");
-        return;
-      }
+      addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
+      addressesDT.column(4).data().each(address => data.append('addresses[]', address));
 
       fetch("{{ route('employees-police.store') }}", {
         headers: {

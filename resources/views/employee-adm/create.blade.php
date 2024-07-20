@@ -529,11 +529,11 @@
           </div>
 
           <div class="col-4 form-group">
-            <label for="inputCtaBancaria">Nro. Cuenta Bancaria</label>
+            <label for="inputCtaBancaria">Cuenta Bancaria Nro.</label>
             <input type="text"
                   class="form-control"
                   id="inputCtaBancaria"
-                  name="nro_cta_bancaria"
+                  name="cta_bancaria_nro"
                   value="NO DEFINIDO"
                   placeholder="Nro. de cuenta bancaria"
             />

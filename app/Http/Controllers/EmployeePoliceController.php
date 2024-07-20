@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EmployeePoliceStoreRequest;
 use Intervention\Image\ImageManagerStatic as Image;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
@@ -54,7 +55,7 @@ class EmployeePoliceController extends Controller
   {
     $_estados     = new UbicacionController();
     $ccps         = Ccps::OrderBy('name')->get();
-    $cargos       = Cargo::OrderBy('name')->get();
+    $cargos       = Cargo::OrderBy('name')->where('activo', TRUE)->get();
     $condiciones  = Condicion::OrderBy('name')->get();
     $tipos        = Tipo::OrderBy('name')->get();
     $estados      = $_estados->getEstados();
@@ -63,44 +64,8 @@ class EmployeePoliceController extends Controller
   }
 
   // agregar empleado
-  public function store(Request $request)
+  public function store(EmployeePoliceStoreRequest $request)
   {
-    // validacion de los datos
-    $request->validate([
-      'cedula'                => 'required|min:7|max:15|unique:people',
-      'rif'                   => 'required|max:20|unique:employees',
-      'first_name'            => 'required|max:50',
-      'second_name'           => 'max:50',
-      'first_last_name'       => 'required|max:50',
-      'second_last_name'      => 'max:50',
-      'sex'                   => 'required|max:1',
-      'birthday'              => 'required|date',
-      'place_of_birth'        => 'required|max:255',
-      'civil_status_id'       => 'required',
-      'blood_type'            => 'required|max:5',
-      'codigo_nomina'         => 'required|max:20',
-      'fecha_ingreso'         => 'required|date',
-      'cargo_id'              => 'required',
-      'condicion_id'          => 'required',
-      'tipo_id'               => 'required',
-      'ccp_id'                => 'required',
-      'codigo_patria'         => 'required|max:20',
-      'serial_patria'         => 'required|max:20',
-      'religion'              => 'required|max:100',
-      'deporte'               => 'required|max:100',
-      'licencia'              => 'required|max:100',
-      'nro_cta_bancaria'      => 'required|max:30',
-      'emails'                => 'required',
-      'phones'                => 'required',
-      'parroquias_id'         => 'required',
-      'addresses'             => 'required',
-      'escuela'               => 'required|max:100',
-      'fecha_graduacion'      => 'required|date',
-      'curso'                 => 'required|max:10',
-      'curso_duracion'        => 'required|max:50',
-      'cup'                   => 'required|max:10',
-    ]);
-
     // agrego los datos personales
     $data_person = $request->only([
       'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 
@@ -161,7 +126,7 @@ class EmployeePoliceController extends Controller
     // agrego los datos administrativos
     $employeeData = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
                                   'tipo_id', 'ccp_id', 'rif', 'codigo_patria', 'serial_patria',
-                                  'religion', 'deporte', 'licencia', 'nro_cta_bancaria');
+                                  'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro');
     $employeeData['person_id'] = $person->id;
     $employeeData['grupo_id'] = $this->grupo_id;
     $employee = Employee::create($employeeData);
@@ -187,11 +152,6 @@ class EmployeePoliceController extends Controller
     $data['person']   = Person::getById($employees_polouse->person_id);
     $data['employee'] = $employees_polouse;
     $data['police']  = Police::where('employee_id', $employees_polouse->id)->first();
-    $fullAddresses = [];
-    foreach($data['person']['addresses'] as $address) {
-      $fullAddresses[] = $address->fullAddress;
-    }
-    $data['person']['fullAddresses'] = $fullAddresses;
     
     return view('employee-police.edit', compact('estados', 'ccps', 'cargos', 'condiciones', 'tipos', 'data'));
   }

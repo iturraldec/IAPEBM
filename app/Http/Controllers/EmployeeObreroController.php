@@ -81,7 +81,7 @@ class EmployeeObreroController extends Controller
       'religion'              => 'required|max:100',
       'deporte'               => 'required|max:100',
       'licencia'              => 'required|max:100',
-      'nro_cta_bancaria'      => 'required|max:30',
+      'cta_bancaria_nro'      => 'required|max:30',
       'emails'                => 'required',
       'phones'                => 'required',
       'parroquias_id'         => 'required',

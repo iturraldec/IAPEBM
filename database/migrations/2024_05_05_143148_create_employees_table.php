@@ -28,7 +28,8 @@ return new class extends Migration
             $table->string('religion', 100)->default('NO DEFINIDO');
             $table->string('deporte', 100)->default('NO DEFINIDO');
             $table->string('licencia', 100)->default('NO DEFINIDO');
-            $table->string('nro_cta_bancaria', 30)->default('NO DEFINIDO');
+            $table->string('cta_bancaria_nro', 30)->default('NO DEFINIDO');
+            $table->string('passport_nro', 20)->nullable();
             $table->timestamps();
 
             $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');

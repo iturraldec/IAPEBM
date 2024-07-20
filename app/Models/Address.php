@@ -23,15 +23,15 @@ class Address extends Model
 
   //
   protected function fullAddress() : Attribute
-    {
-        return new Attribute(
-            get: fn () => DB::table('addresses')
-                                ->join('parroquias', 'addresses.parroquia_id', '=', 'parroquias.id_parroquia')
-                                ->join('municipios', 'parroquias.id_municipio', '=', 'municipios.id_municipio')
-                                ->join('estados', 'municipios.id_estado', '=', 'estados.id_estado')
-                                ->select('addresses.*', 'parroquias.parroquia', 'municipios.municipio', 'estados.estado')
-                                ->where('addresses.id', $this->id)
-                                ->first(),
-        );
-    }
+  {
+      return new Attribute(
+          get: fn () => DB::table('addresses')
+                              ->join('parroquias', 'addresses.parroquia_id', '=', 'parroquias.id_parroquia')
+                              ->join('municipios', 'parroquias.id_municipio', '=', 'municipios.id_municipio')
+                              ->join('estados', 'municipios.id_estado', '=', 'estados.id_estado')
+                              ->select('addresses.*', 'parroquias.parroquia', 'municipios.municipio', 'estados.estado')
+                              ->where('addresses.id', $this->id)
+                              ->first(),
+      );
+  }
 }

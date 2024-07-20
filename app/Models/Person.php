@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Person extends Model
 {
@@ -17,10 +18,20 @@ class Person extends Model
         'place_of_birth', 'civil_status_id', 'blood_type', 'notes', 'imagef', 'imageli', 'imageld'
     ];
 
+    /*
+    /* POR REFACTORIZAR!!!
+    */
     // retorna los datos de una persona
     public static function getById(int $id)
     {
-        return Person::with('emails', 'phones', 'addresses')->find($id);
+        $data = Person::with('emails', 'phones', 'addresses')->find($id);
+        $fullAddresses = [];
+        foreach($data['addresses'] as $address) {
+            $fullAddresses[] = $address->fullAddress;
+        }
+        $data['fullAddresses'] = $fullAddresses;
+
+        return $data;
     }
 
     //

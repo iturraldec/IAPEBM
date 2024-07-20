@@ -32,6 +32,7 @@
 
   <div class="card-body">
   <form id="empleadoForm">
+    @method('PUT')
     @csrf
 
     <div class="tab-content" id="custom-tabs-one-tabContent">      
@@ -214,6 +215,19 @@
                     <option value="{{ $case->value }}" {{ $data['person']['blood_type'] == $case->value ? 'selected':''}}>{{ $case->value }}</option>
                   @endforeach
                 </select>
+              </div>
+
+              <div class="col-3 form-group">
+                <label for="inputPassport">Pasaporte Nro.</label>
+                <input type="text"
+                      class="form-control"
+                      id="inputPassport"
+                      name="passport_nro"
+                      value = "{{ $data['employee']['passport_nro'] }}"
+                      maxlength="20"
+                      placeholder="Ingresa el numero de pasaporte"
+                      onkeyup="this.value = this.value.toUpperCase();"
+                />
               </div>
         </div>
         <!-- fin de row -->
@@ -543,12 +557,12 @@
           </div>
 
           <div class="col-4 form-group">
-            <label for="inputCtaBancaria">Nro. Cuenta Bancaria</label>
+            <label for="inputCtaBancaria">Cuenta Bancaria Nro.</label>
             <input type="text"
                   class="form-control"
                   id="inputCtaBancaria"
-                  name="nro_cta_bancaria"
-                  value="{{ $data['employee']['nro_cta_bancaria'] }}"
+                  name="cta_bancaria_nro"
+                  value="{{ $data['employee']['cta_bancaria_nro'] }}"
                   placeholder="Nro. de cuenta bancaria"
             />
           </div>
