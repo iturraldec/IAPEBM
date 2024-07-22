@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EmployeePoliceStoreRequest;
-use Intervention\Image\ImageManagerStatic as Image;
+use App\Http\Requests\EmployeePoliceUpdateRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
-use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
+use App\Clases\Image;
 
 use App\Models\Address;
 use App\Models\Employee;
@@ -23,11 +22,17 @@ use App\Models\Police;
 //
 class EmployeePoliceController extends Controller
 {
-  private $grupo_id;
 
-  public function __construct()
-  { 
-    $this->grupo_id = 3;
+  //
+  private $_imagen;
+
+  //
+  private $_employee_type_id = 3;
+
+  //
+  public function __construct(Image $imagen)
+  {
+    $this->_imagen = $imagen;
   }
 
   /**
@@ -39,7 +44,7 @@ class EmployeePoliceController extends Controller
       return view('employee-police.index');
     }
     else {
-      $employees = Employee::where('grupo_id', $this->grupo_id)
+      $employees = Employee::where('grupo_id', $this->_employee_type_id)
                               ->join('people', 'employees.person_id', '=', 'people.id')
                               ->orderBy('people.first_last_name')
                               ->orderBy('people.second_last_name')
@@ -69,17 +74,17 @@ class EmployeePoliceController extends Controller
     // agrego los datos personales
     $data_person = $request->only([
       'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 
-      'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes']);
+      'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes', 'passport_nro']);
+    $data_person['imagef'] = 'assets/images/avatar.png';
+    $data_person['imageli'] = 'assets/images/avatar.png';
+    $data_person['imageld'] = 'assets/images/avatar.png';
 
     // creo la carpeta del empleado
-    $employeeFolderPath = storage_path("app/public/employees/") . $data_person['cedula'] . '/';
+    $employeeFolderPath = storage_path("app/public/employees/") . $data_person['cedula'];
     mkdir($employeeFolderPath);
 
     // cambio de avatar frontal?
-    if(! $request->has('imagef')) {
-      $data_person['imagef'] = 'assets/images/avatar.png';
-    }
-    else {
+    if($request->has('imagef')) {
       $imageName = uniqid() . '.png';
       $data_person['imagef'] = "images/{$data_person['cedula']}/$imageName";
       Image::make($request->file('imagef')->getRealPath())
@@ -88,10 +93,7 @@ class EmployeePoliceController extends Controller
     }
 
     // cambio de avatar lado izquierdo?
-    if(! $request->has('imageli')) {
-      $data_person['imageli'] = 'assets/images/avatar.png';
-    }
-    else {
+    if($request->has('imageli')) {
       $imageName = uniqid() . '.png';
       $data_person['imageli'] = "images/{$data_person['cedula']}/$imageName";
       Image::make($request->file('imageli')->getRealPath())
@@ -100,10 +102,7 @@ class EmployeePoliceController extends Controller
     }
 
     // cambio de avatar lado derecho?
-    if(! $request->has('imageld')) {
-      $data_person['imageld'] = 'assets/images/avatar.png';
-    }
-    else {
+    if($request->has('imageld')) {
       $imageName = uniqid() . '.png';
       $data_person['imageld'] = "images/{$data_person['cedula']}/$imageName";
       Image::make($request->file('imageld')->getRealPath())
@@ -128,7 +127,7 @@ class EmployeePoliceController extends Controller
                                   'tipo_id', 'ccp_id', 'rif', 'codigo_patria', 'serial_patria',
                                   'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro');
     $employeeData['person_id'] = $person->id;
-    $employeeData['grupo_id'] = $this->grupo_id;
+    $employeeData['grupo_id'] = $this->_employee_type_id;
     $employee = Employee::create($employeeData);
 
     // agrego los datos policiales
@@ -159,81 +158,43 @@ class EmployeePoliceController extends Controller
   /**
    * Update the specified resource in storage.
    */
-  public function update(Request $request, Employee $employees_polouse)
+  public function update(EmployeePoliceUpdateRequest $request, Employee $employees_polouse)
   {
-    // validacion de los datos
-    $request->validate([
-      'cedula' => [
-        'required',
-        'min:7',
-        'max:15',
-        Rule::unique('people')->ignore($employees_polouse->person_id)
-      ],
-      'rif' => [
-        'required',
-        'max:20',
-        Rule::unique('employees')->ignore($employees_polouse->id)
-      ],
-      'name'                  => 'required|max:200',
-      'sex'                   => 'required|max:1',
-      'birthday'              => 'required|date',
-      'place_of_birth'        => 'required|max:255',
-      'civil_status_id'       => 'required',
-      'blood_type_id'         => 'required',
-      'email' => [
-        'required',
-        'email',
-        Rule::unique('people')->ignore($employees_polouse->person_id)
-      ],
-      'codigo_nomina'         => 'required|max:20',
-      'fecha_ingreso'         => 'required|date',
-      'employee_cargo_id'     => 'required',
-      'employee_condicion_id' => 'required',
-      'employee_tipo_id'      => 'required',
-      'employee_location_id'  => 'required',
-      'codigo_patria'         => 'required|max:20',
-      'serial_patria'         => 'required|max:20',
-      'religion'              => 'required|max:100',
-      'deporte'               => 'required|max:100',
-      'licencia'              => 'required|max:100',
-      'phone_type_id'         => 'required',
-      'phone_number'          => 'required',
-      'parroquia_id'          => 'required',
-      'address'               => 'required|max:255',
-      'escuela'               => 'required|max:100',
-      'fecha_graduacion'      => 'required|date',
-      'curso'                 => 'required|max:10',
-    ]);
-
     // actualizo la persona
-    $person                   = Person::find($employees_polouse->person_id);
-    $person->cedula           = $request->cedula;
-    $person->name             = $request->name;
-    $person->sex              = $request->sex;
-    $person->birthday         = $request->birthday;
-    $person->place_of_birth   = $request->place_of_birth;
-    $person->civil_status_id  = $request->civil_status_id;
-    $person->blood_type_id    = $request->blood_type_id;
-    $person->email            = $request->email;
-    $person->notes            = $request->notes;
+    $dataPerson = Person::select('imagef', 'imageli', 'imageld')->find($employees_polouse->person_id);
+    $inputPerson = $request->only(['cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name',
+                                  'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type',
+                                  'passport_nro', 'notes']);
 
-    // cambio de avatar?
-    if($request->has('imagen')) {
-      $employeeFolderPath = storage_path('app/public/employees/') . $person->cedula . '/';
-      $imageName = uniqid() . '.png';
-      if(! str_contains($person->image, 'avatar.png')) {
-        $file = str_replace('image/', $employeeFolderPath, $person->image);
-        if(file_exists($file)) unlink($file);
-      } 
-      Image::make($request->file('imagen')->getRealPath())
-              ->resize(200,200)
-              ->save($employeeFolderPath . $imageName, 0, 'png');
+    $employeeFolderPath = storage_path("app/public/employees/{$inputPerson['cedula']}/");
 
-      $person->image = "images/{$person->cedula}/" . $imageName;
+    if ($request->hasfile('imagef')) {
+      if(! str_contains($dataPerson->imagef, 'avatar.png')) {
+        $image = $employeeFolderPath . basename($dataPerson->imagef);
+        if(file_exists($image)) unlink($image);
+      }
+      $inputPerson['imagef'] = "images/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imagef'), $employeeFolderPath);
     }
 
-    $person->save();
+    if ($request->hasfile('imageli')) {
+      if(! str_contains($dataPerson->imageli, 'avatar.png')) {
+        $image = $employeeFolderPath . basename($dataPerson->imageli);
+        if(file_exists($image)) unlink($image);
+      }
+      $inputPerson['imageli'] = "images/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageli'), $employeeFolderPath);
+    }
 
+    if ($request->hasfile('imageld')) {
+      if(! str_contains($dataPerson->imageld, 'avatar.png')) {
+        $image = $employeeFolderPath . basename($dataPerson->imageld);
+        if(file_exists($image)) unlink($image);
+      }
+      $inputPerson['imageld'] = "images/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageld'), $employeeFolderPath);
+    }
+
+    Person::where('id', $employees_polouse->person_id)->update($inputPerson);
+
+return response($employees_polouse);
     // actualizo sus telefonos
     $this->_addPhones($person, $request->phone_type_id, $request->phone_number);
 

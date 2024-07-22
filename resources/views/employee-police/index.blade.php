@@ -34,7 +34,7 @@
     // datatable
     ///////////////////////////////////////////////////////////
 
-    let datatable = $('#dtEmpleados').DataTable({
+    var datatable = $('#dtEmpleados').DataTable({
         "dom": '<"d-flex justify-content-between"l<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
         serverSide: true,
         "ajax": "{{ route('employees-police.index') }}",
@@ -94,7 +94,7 @@
     $("#dtEmpleados tbody").on("click",".eliminar",function() {
       let data = datatable.row($(this).parents()).data();
 
-      lib_Confirmar("Seguro de ELIMINAR a: " + data.person.name + "?")
+      lib_Confirmar(`Seguro de ELIMINAR a: ${data.person.first_name} ${data.person.firts_last_name}?`)
       .then((result) => {
         if (result.isConfirmed) {
           let ruta = "{{ route('employees-police.destroy', ['employees_polouse' => 'valor']) }}";

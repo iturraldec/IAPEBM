@@ -26,7 +26,6 @@ class Employee extends Model
         'deporte',
         'licencia',
         'cta_bancaria_nro',
-        'passport_nro'
     ];
 
     // datos personales

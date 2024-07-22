@@ -638,6 +638,9 @@
 @section('js')
 <script>
   $(document).ready(function () {
+    // ruta a actualizar
+    var ruta =  "{{ route('employees-police.update', ['employees_polouse' => $data['employee']['id']]) }}";
+
     ///////////////////////////////////////////////////////////////////
     // tabla de emails
     ///////////////////////////////////////////////////////////////////
@@ -991,7 +994,7 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnGrabar").click(function() {
-      const data = new FormData(empleadoForm);
+      let data = new FormData(empleadoForm);
 
       emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
       phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));
@@ -999,22 +1002,7 @@
       addressesDT.column(4).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
       addressesDT.column(6).data().each(address => data.append('addresses[]', address));
 
-      if(! data.has('emails[]')) {
-        lib_toastr("Error: Debe ingresar al menos un correo personal!");
-        return;
-      }
-
-      if(! data.has('phones[]')) {
-        lib_toastr("Error: Debe ingresar al menos un número de teléfono!");
-        return;
-      }
-
-      if(! data.has('addresses[]')) {
-        lib_toastr("Error: Debe ingresar al menos una dirección de ubicación!");
-        return;
-      }
-
-      fetch("{{ route('employees-police.store') }}", {
+      fetch(ruta, {
         headers: {
           'Accept' : 'application/json'
         },
@@ -1023,7 +1011,7 @@
       })
       .then(response => {
         if(response.ok) {
-          lib_ShowMensaje("Empleado Uniformado agregado!", 'mensaje')
+          lib_ShowMensaje("Empleado Uniformado modificado!", 'mensaje')
           .then(response => window.close());
         }
         else {
