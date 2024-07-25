@@ -65,14 +65,23 @@ class PoliceImport implements ToCollection, WithHeadingRow
             // empleado uniformado
             $record = [
                 'person_id'         => $person_id,
-                'grupo_id'          => 3,
+                'grupo_id'          => 1,
                 'codigo_nomina'     => $row['codigo_inst'],
+                'cargo_id'          => $row['codigo_cargo'],
+                'condicion_id'      => $row['condicion_usr'],
+                'unidad_id'         => 1,
                 'fecha_ingreso'     => date('Y-m-d', strtotime($row['fecha_ing'])),
                 'tipo_id'           => 1,
                 'rif'               => $row['rif_usr'],
                 'religion'          => $row['religion_usr'],
                 'deporte'           => $row['deportes_usr'],
                 'licencia'          => $row['gradolicen_usr'],
+                'codigo_patria'     => 'NO DEFINIDO',
+                'serial_patria'     => 'NO DEFINIDO',
+                'religion'          => 'NO DEFINIDO',
+                'deporte'           => 'NO DEFINIDO',
+                'licencia'          => $row['licen_usr'],
+                'cta_bancaria_nro'  => 'NO DEFINIDO',
             ];
             
             $empleado_id = DB::table('employees')->insertGetId($record);
@@ -82,7 +91,9 @@ class PoliceImport implements ToCollection, WithHeadingRow
               'employee_id'         => $empleado_id,
               'escuela'             => $row['escuela_usr'],
               'fecha_graduacion'    => date('Y-m-d', strtotime($row['fecha_grad_usr'])),
-              'curso'               => $row['curso_usr']
+              'curso'               => $row['curso_usr'],
+              'curso_duracion'      => 'NO DEFINIDO',
+              'cup'                 => 'N/D',
             ];
 
             $empleado_id = DB::table('police')->insertGetId($record);

@@ -767,7 +767,7 @@
       // telefonos
       if(phones.length > 0) {
         phones.forEach(item => phonesDT.row.add({
-                                'id'    : item.id,
+                                'id'    : item.phone_type_id,
                                 'tipo'  : item.phone_type,
                                 'numero': item.number
                               })
@@ -945,9 +945,7 @@
       }
       else {
         addressesDT.row.add({
-          'estadoId'    : $("#selectEstados :selected").val(),
           'estado'      : $("#selectEstados :selected").text(),
-          'municipioId' : $("#selectMunicipios :selected").val(),
           'municipio'   : $("#selectMunicipios :selected").text(),
           'parroquiaId' : $("#selectParroquias :selected").val(),
           'parroquia'   : $("#selectParroquias :selected").text(),
@@ -999,8 +997,8 @@
       emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
       phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));
       phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
-      addressesDT.column(4).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
-      addressesDT.column(6).data().each(address => data.append('addresses[]', address));
+      addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
+      addressesDT.column(4).data().each(address => data.append('addresses[]', address));
 
       fetch(ruta, {
         headers: {

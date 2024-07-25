@@ -329,12 +329,16 @@ return [
             'text'    => 'Definiciones',
             'submenu'   => [
                 [
-                    'text'    => 'Cargos',
-                    'route'   => 'cargos.index'
+                    'text'    => 'Unidades Operativas',
+                    'route'   => 'unidades.index'
                 ],
                 [
                     'text'    => 'Condiciones',
-                    'route'   => 'employee-status.index'
+                    'route'   => 'condiciones.index'
+                ],
+                [
+                    'text'    => 'Cargos',
+                    'route'   => 'cargos.index'
                 ],
                 [
                     'text'    => 'Rangos',

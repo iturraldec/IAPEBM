@@ -94,7 +94,7 @@
     $("#dtEmpleados tbody").on("click",".eliminar",function() {
       let data = datatable.row($(this).parents()).data();
 
-      lib_Confirmar(`Seguro de ELIMINAR a: ${data.person.first_name} ${data.person.firts_last_name}?`)
+      lib_Confirmar(`Seguro de ELIMINAR a:${data.person.first_last_name} ${data.person.first_name}?`)
       .then((result) => {
         if (result.isConfirmed) {
           let ruta = "{{ route('employees-police.destroy', ['employees_polouse' => 'valor']) }}";
@@ -108,7 +108,7 @@
             dataType:'json',
             success: function(resp){
               datatable.ajax.reload();
-              lib_ShowMensaje("Empleado Policial eliminado.");
+              lib_ShowMensaje("Empleado informado eliminado!");
             }
           });
         }

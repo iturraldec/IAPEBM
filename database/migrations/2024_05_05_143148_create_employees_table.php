@@ -18,24 +18,24 @@ return new class extends Migration
             $table->unsignedTinyInteger('status')->default(1);
             $table->string('codigo_nomina', 20);
             $table->date('fecha_ingreso');
-            $table->unsignedSmallInteger('cargo_id')->nullable();
-            $table->unsignedSmallInteger('condicion_id')->nullable();
-            $table->unsignedSmallInteger('tipo_id')->nullable();
-            $table->unsignedSmallInteger('ccp_id')->nullable();
+            $table->unsignedSmallInteger('cargo_id');
+            $table->unsignedSmallInteger('condicion_id');
+            $table->unsignedSmallInteger('tipo_id');
+            $table->unsignedSmallInteger('unidad_id');
             $table->string('rif', 20);
-            $table->string('codigo_patria', 20)->default('NO DEFINIDO');
-            $table->string('serial_patria', 20)->default('NO DEFINIDO');
-            $table->string('religion', 100)->default('NO DEFINIDO');
-            $table->string('deporte', 100)->default('NO DEFINIDO');
-            $table->string('licencia', 100)->default('NO DEFINIDO');
-            $table->string('cta_bancaria_nro', 30)->default('NO DEFINIDO');
+            $table->string('codigo_patria', 20);
+            $table->string('serial_patria', 20);
+            $table->string('religion', 100);
+            $table->string('deporte', 100);
+            $table->string('licencia', 100);
+            $table->string('cta_bancaria_nro', 30);
             $table->string('passport_nro', 20)->nullable();
             $table->timestamps();
 
             $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');
             $table->foreign('condicion_id')->references('id')->on('condiciones')->nullOnDelete();
             $table->foreign('tipo_id')->references('id')->on('tipos')->nullOnDelete();
-            $table->foreign('ccp_id')->references('id')->on('ccps_e')->nullOnDelete();
+            $table->foreign('unidad_id')->references('id')->on('unidades')->nullOnDelete();
         });
     }
 

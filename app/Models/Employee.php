@@ -18,7 +18,7 @@ class Employee extends Model
         'cargo_id',
         'condicion_id',
         'tipo_id',
-        'ccp_id',
+        'unidad_id',
         'rif',
         'codigo_patria',
         'serial_patria',

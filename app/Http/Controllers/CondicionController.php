@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
 
-class EmployeeStatusController extends Controller
+class CondicionController extends Controller
 {
     /**
      * Display a listing of the resource.

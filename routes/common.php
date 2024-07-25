@@ -20,11 +20,11 @@ Route::get('loadFromExcel', function() {
     echo 'tipos...<br>';
     Excel::import(new App\Imports\TiposImport, 'assets/documentos/tipos_empleados.csv');
 
-    echo 'ccps...<br>';
-    Excel::import(new App\Imports\UbicacionesGImport, 'assets/documentos/ccpg.csv');
-    Excel::import(new App\Imports\UbicacionesEImport, 'assets/documentos/ccpe.csv');
+    echo 'unidades...<br>';
+    Excel::import(new App\Imports\UnidadesGImport, 'assets/documentos/uo_g.csv');
+    Excel::import(new App\Imports\UnidadesEImport, 'assets/documentos/uo_e.csv');
 
-    echo 'uniformados:jerarquias...<br>';
+    echo 'uniformados:rangos...<br>';
     Excel::import(new App\Imports\JerarquiasImport, 'assets/documentos/rangos.csv');
 
     echo 'administrativos...<br>';

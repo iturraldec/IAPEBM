@@ -16,7 +16,7 @@ use App\Models\Phone;
 use App\Models\Cargo;
 use App\Models\Condicion;
 use App\Models\Tipo;
-use App\Models\Ccps;
+use App\Models\Unidad;
 use App\Models\Police;
 
 //
@@ -35,6 +35,14 @@ class EmployeePoliceController extends Controller
     $this->_imagen = $imagen;
   }
 
+  //
+  private function _makeEmployeeFolder(string $cedula, bool $crear = FALSE) {
+    $path = storage_path("app/public/employees/$cedula/");
+    if ($crear) mkdir($path);
+
+    return $path;
+  }
+
   /**
    * Display a listing of the resource.
    */
@@ -44,12 +52,7 @@ class EmployeePoliceController extends Controller
       return view('employee-police.index');
     }
     else {
-      $employees = Employee::where('grupo_id', $this->_employee_type_id)
-                              ->join('people', 'employees.person_id', '=', 'people.id')
-                              ->orderBy('people.first_last_name')
-                              ->orderBy('people.second_last_name')
-                              ->with('person')
-                              ->get();
+      $employees = Employee::where('grupo_id', $this->_employee_type_id)->with('person')->get();
 
       return datatables()->of($employees)->toJson();
     }
@@ -79,80 +82,70 @@ class EmployeePoliceController extends Controller
     $data_person['imageli'] = 'assets/images/avatar.png';
     $data_person['imageld'] = 'assets/images/avatar.png';
 
-    // creo la carpeta del empleado
-    $employeeFolderPath = storage_path("app/public/employees/") . $data_person['cedula'];
-    mkdir($employeeFolderPath);
+    // creo la carpeta del empleado  
+    $employeeFolder = $this->_makeEmployeeFolder($data_person['cedula'], TRUE);
 
     // cambio de avatar frontal?
-    if($request->has('imagef')) {
-      $imageName = uniqid() . '.png';
+    if($request->hasFile('imagef')) {
+      $imageName = $this->_imagen->store($request->file('imagef'), $employeeFolder);
       $data_person['imagef'] = "images/{$data_person['cedula']}/$imageName";
-      Image::make($request->file('imagef')->getRealPath())
-                ->resize(200,200)
-                ->save($employeeFolderPath . $imageName, 0, 'png');
     }
 
     // cambio de avatar lado izquierdo?
-    if($request->has('imageli')) {
-      $imageName = uniqid() . '.png';
+    if($request->hasFile('imageli')) {
+      $imageName = $this->_imagen->store($request->file('imageli'), $employeeFolder);
       $data_person['imageli'] = "images/{$data_person['cedula']}/$imageName";
-      Image::make($request->file('imageli')->getRealPath())
-                ->resize(200,200)
-                ->save($employeeFolderPath . $imageName, 0, 'png');
     }
 
     // cambio de avatar lado derecho?
-    if($request->has('imageld')) {
-      $imageName = uniqid() . '.png';
+    if($request->hasFile('imageld')) {
+      $imageName = $this->_imagen->store($request->file('imageld'), $employeeFolder);
       $data_person['imageld'] = "images/{$data_person['cedula']}/$imageName";
-      Image::make($request->file('imageld')->getRealPath())
-              ->resize(200,200)
-              ->save($employeeFolderPath . $imageName, 0, 'png');
     }
 
     // agrego la persona
     $person = Person::create($data_person);
 
     // agrego los correos del empleado
-    $this->_addEmails($person, $request->input('emails'));
+    $this->_addEmails($person, $request->emails);
 
     // agrego los telefonos del empleado
-    $this->_addPhones($person, $request->input('phones_type_id'), $request->input('phones'));
+    $this->_addPhones($person, $request->phones_type_id, $request->phones);
 
     // agrego las direcciones del empleado
-    $this->_addAddresses($person, $request->input('parroquias_id'), $request->input('addresses'), $request->input('zona_postal'));
+    $this->_addAddresses($person, $request->parroquias_id, $request->addresses, $request->zona_postal);
 
     // agrego los datos administrativos
-    $employeeData = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
-                                  'tipo_id', 'ccp_id', 'rif', 'codigo_patria', 'serial_patria',
-                                  'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro');
-    $employeeData['person_id'] = $person->id;
-    $employeeData['grupo_id'] = $this->_employee_type_id;
-    $employee = Employee::create($employeeData);
+    $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
+                                    'tipo_id', 'ccp_id', 'rif', 'codigo_patria', 'serial_patria',
+                                    'religion', 'deporte', 'licencia', 'cta_bancaria_nro');
+    $inputEmployee['person_id'] = $person->id;
+    $inputEmployee['grupo_id'] = $this->_employee_type_id;
+    $employee = Employee::create($inputEmployee);
 
     // agrego los datos policiales
-    $employeeData = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
-    $employeeData['employee_id'] = $employee->id;
-    Police::create($employeeData);
+    $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
+    $inputPolice['employee_id'] = $employee->id;
+    Police::create($inputPolice);
 
     //
-    return response($person, Response::HTTP_CREATED);
+    return response(Response::HTTP_CREATED);
   }
 
   // edicion de emplado
   public function edit(Employee $employees_polouse)
   {
     $_estados         = new UbicacionController();
-    $ccps             = Ccps::OrderBy('name')->get();
+    $unidades         = Unidad::OrderBy('name')->get();
     $cargos           = Cargo::OrderBy('name')->get();
     $condiciones      = Condicion::OrderBy('name')->get();
     $tipos            = Tipo::OrderBy('name')->get();
     $estados          = $_estados->getEstados();
     $data['person']   = Person::getById($employees_polouse->person_id);
     $data['employee'] = $employees_polouse;
-    $data['police']  = Police::where('employee_id', $employees_polouse->id)->first();
+    $data['police']   = Police::where('employee_id', $employees_polouse->id)->first();
     
-    return view('employee-police.edit', compact('estados', 'ccps', 'cargos', 'condiciones', 'tipos', 'data'));
+    return view('employee-police.edit', compact('estados', 'unidaddes', 'cargos', 'condiciones', 'tipos', 'data'));
   }
 
   /**
@@ -161,12 +154,12 @@ class EmployeePoliceController extends Controller
   public function update(EmployeePoliceUpdateRequest $request, Employee $employees_polouse)
   {
     // actualizo la persona
-    $dataPerson = Person::select('imagef', 'imageli', 'imageld')->find($employees_polouse->person_id);
+    $dataPerson = Person::select('id', 'imagef', 'imageli', 'imageld')->find($employees_polouse->person_id);
     $inputPerson = $request->only(['cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name',
                                   'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type',
                                   'passport_nro', 'notes']);
 
-    $employeeFolderPath = storage_path("app/public/employees/{$inputPerson['cedula']}/");
+    $employeeFolderPath = $this->_makeEmployeeFolder($inputPerson['cedula']);
 
     if ($request->hasfile('imagef')) {
       if(! str_contains($dataPerson->imagef, 'avatar.png')) {
@@ -192,49 +185,28 @@ class EmployeePoliceController extends Controller
       $inputPerson['imageld'] = "images/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageld'), $employeeFolderPath);
     }
 
-    Person::where('id', $employees_polouse->person_id)->update($inputPerson);
+    $dataPerson->update($inputPerson);
 
-return response($employees_polouse);
+    // actualizo sus correos
+    $this->_addEmails($dataPerson, $request->emails);
+
     // actualizo sus telefonos
-    $this->_addPhones($person, $request->phone_type_id, $request->phone_number);
+    $this->_addPhones($dataPerson, $request->phones_type_id, $request->phones);
 
     // actualizo sus direcciones
-    $this->_addAddresses($person, 
-                        $request->input('address'),
-                        $request->input('parroquia_id'),
-                        $request->input('zona_postal'));
+    $this->_addAddresses($dataPerson, $request->parroquias_id, $request->addresses, $request->zona_postal);
 
-    // eliminar las imagenes que el usuario elimino
-    if($request->has('imagesDeleted')) {
-      foreach($request->imagesDeleted as $id) {
-        $employeeImage = PersonImage::find($id);
-        $employeeImage->delete();
-        unlink(storage_path('app/public/employee') . str_replace('image', '', $employeeImage->file));
-      }
-    }
-    // modifico los datos del administrativos
-    $employees_polouse->codigo_nomina         = $request->input('codigo_nomina');
-    $employees_polouse->fecha_ingreso         = $request->input('fecha_ingreso');
-    $employees_polouse->employee_cargo_id     = $request->input('employee_cargo_id');
-    $employees_polouse->employee_condicion_id = $request->input('employee_condicion_id');
-    $employees_polouse->employee_tipo_id      = $request->input('employee_tipo_id');
-    $employees_polouse->employee_location_id  = $request->input('employee_location_id');
-    $employees_polouse->rif                   = $request->input('rif');
-    $employees_polouse->codigo_patria         = $request->input('codigo_patria');
-    $employees_polouse->serial_patria         = $request->input('serial_patria');
-    $employees_polouse->religion              = $request->input('religion');
-    $employees_polouse->deporte               = $request->input('deporte');
-    $employees_polouse->licencia              = $request->input('licencia');
-    $employees_polouse->nro_cta_bancaria      = $request->input('nro_cta_bancaria');
-    $employees_polouse->save();
+    // actualizo los datos del administrativos
+    $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id',
+                                    'ccp_id', 'rif', 'codigo_patria', 'serial_patria', 'religion', 'deporte',
+                                    'licencia', 'cta_bancaria_nro');
 
-    // modifico los datos policiales
-    $police = Police::where('employee_id', $employees_polouse->id)->first();
-    $police->escuela               = $request->input('escuela');
-    $police->fecha_graduacion      = $request->input('fecha_graduacion');
-    $police->curso                 = $request->input('curso');
-    $police->save();
-    
+    $employees_polouse->update($inputEmployee);
+
+    // actualizo los datos policiales
+    $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
+    Police::where('employee_id', $employees_polouse->id)->update($inputPolice);
+
     //
     return response(Response::HTTP_OK);
   }
