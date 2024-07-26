@@ -7,11 +7,11 @@
 @endsection
 
 @section('content')
-<form id="formAddUnidad">
-  @csrf
-
   <div class="row justify-content-center">
     <div class="col-6">
+      <form id="formAddUnidad">
+        @csrf
+
       <div class="row">
         <div class="col-3">
           <input type="text"
@@ -44,8 +44,9 @@
             </div>
           </div>
         </div>
-  
       </div>
+
+      </form>
 
       <table id="dt-unidades" class="table table-hover border border-dark">
         <thead class="thead-dark text-center">
@@ -56,24 +57,35 @@
             <th scope="col" class="col-sm-2">Acción</th>
           </tr>
         </thead>
-        <tbody>
-  
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
-  </div>
-</form>  
+  </div> 
 
-@include('unidades.edit')
+  @include('unidades.edit')
 
 @endsection
 
 @section('js')
 <script>
   $(document).ready(function () {
-    // datatable
+    //////////////////////////////////////////////    
+    // mascara: latitud
+    //////////////////////////////////////////////
+
+    $("#inputELatitud").inputmask(lib_decimalMask());
+
+    //////////////////////////////////////////////
+    // mascara: longitud
+    //////////////////////////////////////////////
+
+    $("#inputELongitud").inputmask(lib_decimalMask());
+
+    //////////////////////////////////////////////
+    // datatable: unidades operativas
+    //////////////////////////////////////////////
+
     var datatable = $('#dt-unidades').DataTable({
-        "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
         "ajax": "{{ route('unidades.index') }}",
         "columns": [
           {"data": "id", visible: false},
@@ -92,7 +104,35 @@
         ]
     });
 
-    // boton agregar unidad operativa
+    //////////////////////////////////////////////
+    // datatable: unidades operativas especificas
+    //////////////////////////////////////////////
+
+    var datatable2 = $('#dt-unidades-e').DataTable({
+        info:false,
+        paging: false,
+        searching: false,
+        "ajax": "{{ route('unidades.index') }}",
+        "columns": [
+          {"data": "id", visible: false},
+          {"data": "code", "width": '20%'},
+          {"data": "name", "width": '55%'},
+          {"data":null,
+           "className" : "dt-body-center",  
+           "render": function ( data, type, row, meta ) {
+                  let btn_eliminar = '<button class="eliminar btn btn-danger btn-sm"  title="Eliminar Unidad Operativa"><i class="fas fa-trash-alt"></i></button>';
+                  
+                  return  btn_eliminar;
+                },
+           "orderable": false
+          }
+        ]
+    });
+
+    //////////////////////////////////////////////
+    // agregar unidad operativa
+    //////////////////////////////////////////////
+
     $("#formAddUnidad").submit(function(e) {
       e.preventDefault();
 
@@ -124,15 +164,64 @@
       });
     });
 
-    // boton editar condicion
-    $("#dt-employee-status tbody").on("click", ".editar", function() {
+    //////////////////////////////////////////////
+    // editar unidad operativa
+    //////////////////////////////////////////////
+
+    $("#dt-unidades tbody").on("click", ".editar", function() {
       let data = datatable.row($(this).parents()).data();
-      
-      $("#modalTitle").html("Modificar Condición");
-      $("#inputCondicion").val(data.name);
-      $("#inputCondicion").data("id", data.id);
-      $("#inputCondicion").attr('placeholder', 'Modificar Condición');
-      $('#modalForm').modal('show');
+      let ruta = "{{ route('unidades.edit', ['unidade' => '.valor']) }}";
+
+      ruta = ruta.replace('.valor', data.id);
+      fetch(ruta, {
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+      })
+      .then(response => response.json())
+      .then(r => {
+        console.log(r);
+        $("#modalTitle").html("U.O.: " + data.name);
+        $("#padreId").val(data.id);
+        $("#inputECode").val("");
+        $("#inputEName").val("");
+        $("#inputELatitud").val("");
+        $("#inputELongitud").val("");
+        $('#modalForm').modal('show');
+      });
+    });
+
+    //////////////////////////////////////////////
+    // agregar unidad operativa especifica
+    //////////////////////////////////////////////
+
+    $("#formEditUnidad").submit(function(e) {
+      e.preventDefault();
+
+      let formData = new FormData(this);
+console.log(formData)
+/*       fetch("{{ route('unidades.store') }}", {
+        headers: {
+          'Accept' : 'application/json'
+        },
+        method: 'POST',
+        body: formData
+      })
+      .then(function(response) {
+        if(response.ok) {
+          $("#inputCode").val("");
+          $("#inputName").val("");
+          datatable.ajax.reload();  
+          response.json().then(r => lib_ShowMensaje(r.message));
+        }
+        else {
+          response.text().then(r => {
+            let errores = JSON.parse(r);
+
+            for (let propiedad in errores.errors) {
+              lib_toastr(errores.errors[propiedad]);
+            }
+          });
+        }
+      }); */
     });
 
     // validacion de form
@@ -175,35 +264,18 @@
         $(element).removeClass('is-invalid');
       }
     });
- */
-    // funcion para grabar los datos al agregar/modificar
-    function grabar_datos(_url, _type, _data) {
-      $.ajax({
-        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        url: _url,
-        type: _type,
-        data: _data,
-        dataType:'json'
-      })
-      .done(function(resp){
-        datatable.ajax.reload();
-        lib_ShowMensaje(resp.message);
-      })
-      .fail(function(resp){
-        lib_ShowMensaje(resp.responseJSON.message, 'error');
-      });
-    }
-    
-    // boton eliminar condicion
-    $("#dt-employee-status tbody").on("click",".eliminar",function() {
+ */    
+    // boton eliminar unidad operativa
+    $("#dt-unidades tbody").on("click",".eliminar",function() {
       let data = datatable.row($(this).parents()).data();
+      let message = 'Los empleados asignados a: ' + data.name + ', quedaran sin asignación.';
 
-      lib_Confirmar("Seguro de ELIMINAR la condición: " + data.name + "?")
+      lib_Confirmar(message + "\nSeguro de ELIMINAR: " + data.name + "?")
       .then((result) => {
         if (result.isConfirmed) {
-          let ruta = "{{ route('unidades.destroy', ['unidade' => 'valor']) }}";
+          let ruta = "{{ route('unidades.destroy', ['unidade' => '.valor']) }}";
 
-          ruta = ruta.replace('valor', data.id);
+          ruta = ruta.replace('.valor', data.id);
           
           $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -212,11 +284,11 @@
             dataType:'json',
             success: function(resp){
               datatable.ajax.reload();
-              lib_ShowMensaje("Condición eliminada.");
+              lib_ShowMensaje(resp.message);
             }
           });
         }
-      })
+      });
     });
   });
 </script>

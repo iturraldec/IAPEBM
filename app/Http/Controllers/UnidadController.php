@@ -9,17 +9,21 @@ use App\Clases\ResquestResponse;
 
 class UnidadController extends Controller
 {
+    //
+    private $_requestResponse;
+
+    //
+    public function __construct(ResquestResponse $resquestResponse)
+    {
+        $this->_requestResponse = $resquestResponse;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        if(request()->ajax()) {
-            return datatables()->of(Unidad::unidades())->toJson();
-        }
-        else {
-            return view('unidades.index');
-        }
+        return request()->ajax() ? datatables()->of(Unidad::unidades())->toJson() : view('unidades.index');
     }
 
     /**
@@ -33,28 +37,17 @@ class UnidadController extends Controller
         ]);
 
         $unidad = Unidad::Create($request->all());
-        $response = new ResquestResponse();
-        $response->success = true;
-        $response->message = 'Unidad Operativa creada!';
-        $response->data    = $unidad;
+        $this->_requestResponse->success = true;
+        $this->_requestResponse->message = 'Unidad Operativa creada!';
+        $this->_requestResponse->data    = $unidad;
 
-        return response(json_encode($response), Response::HTTP_CREATED);
+        return response(json_encode($this->_requestResponse), Response::HTTP_CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    //
+    public function edit(int $unidade)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return response(Unidad::especificas($unidade));
     }
 
     /**
@@ -62,14 +55,28 @@ class UnidadController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'code'  => 'required|string|max:20|unique:unidades',
+            'name'  => 'required|string|max:255'
+        ]);
+
+        $unidad = Unidad::Create($request->all());
+        $this->_requestResponse->success = true;
+        $this->_requestResponse->message = 'Unidad Operativa creada!';
+        $this->_requestResponse->data    = $unidad;
+
+        return response(json_encode($this->_requestResponse), Response::HTTP_CREATED);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Unidad $unidade)
     {
-        //
+        $unidade->delete();
+        $this->_requestResponse->success = true;
+        $this->_requestResponse->message = 'Unidad Operativa eliminada!';
+
+        return response()->json($this->_requestResponse, Response::HTTP_OK);
     }
 }

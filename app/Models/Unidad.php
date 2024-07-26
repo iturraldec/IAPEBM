@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Unidad extends Model
 {
@@ -20,8 +19,8 @@ class Unidad extends Model
     }
 
     //
-    public function especificas() : HasMany
+    public static function especificas(int $padreId)
     {
-        return $this->hasMany(Unidad::class, 'padre_id');
+        return Unidad::where('padre_id', $padreId)->orderBy('name')->get();
     }
 }

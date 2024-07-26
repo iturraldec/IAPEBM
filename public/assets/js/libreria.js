@@ -53,17 +53,22 @@ function lib_Confirmar(titulo) {
          });
 }
 
-// objeto solo letras y espacio
+// input solo letras y espacio en blanco
 function lib_characterMask() {
    return {regex:"[A-Za-z\\s]+"};
 }
 
-// objeto solo numeros
+// input solo numeros
 function lib_digitMask() {
    return {regex:"\\d+"};
 }
 
-// filtro para telefonos
+// input decimal
+function lib_decimalMask() {
+   return {regex:"[\\d\\-.]+"};
+}
+
+// input para telefonos
 function lib_phoneMask() {
    return {regex:"[\\d\\s-]+"};
 }

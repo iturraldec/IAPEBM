@@ -22,6 +22,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['code', 'name']);
+            $table->foreign('padre_id')->references('id')->on('unidades')->onDelete('cascade');
         });
     }
 

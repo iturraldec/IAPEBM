@@ -22,7 +22,7 @@ Route::match(['get', 'post'],'users/password/change', [UserController::class, 'p
 
 // rutas de las unidades operativas
 Route::resource('unidades', UnidadController::class)
-  ->only(['index', 'store', 'update', 'destroy'])
+  ->except(['create', 'show'])
   ->names('unidades');
 
 // rutas de las condiciones de los trabajadores
