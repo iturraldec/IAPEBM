@@ -330,7 +330,19 @@ return [
             'submenu'   => [
                 [
                     'text'    => 'Unidades Operativas',
-                    'route'   => 'unidades.index'
+                    'url'   => '#',
+                    'submenu' => [
+                        [
+                            'text'      => 'Unidades Generales',
+                            'route'     => 'unidades.index',
+                            'icon'      => 'fas fa-circle nav-icon'
+                        ],
+                        [
+                            'text'      => 'Unidades Específicas',
+                            'url'       => '#',
+                            'icon'      => 'fas fa-circle nav-icon'
+                        ]
+                    ]
                 ],
                 [
                     'text'    => 'Condiciones',

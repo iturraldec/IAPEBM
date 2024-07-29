@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Unidad;
 use App\Clases\ResquestResponse;
+use Illuminate\Validation\Rule;
 
 class UnidadController extends Controller
 {
@@ -36,7 +37,7 @@ class UnidadController extends Controller
             'name'  => 'required|string|max:255'
         ]);
 
-        $unidad = Unidad::Create($request->all());
+        $unidad = Unidad::Create($request->only(['code', 'name']));
         $this->_requestResponse->success = true;
         $this->_requestResponse->message = 'Unidad Operativa creada!';
         $this->_requestResponse->data    = $unidad;
@@ -53,19 +54,28 @@ class UnidadController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Unidad $unidade)
     {
         $request->validate([
-            'code'  => 'required|string|max:20|unique:unidades',
+            'code'  => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('unidades')->ignore($unidade->id),
+            ],
             'name'  => 'required|string|max:255'
         ]);
 
-        $unidad = Unidad::Create($request->all());
-        $this->_requestResponse->success = true;
-        $this->_requestResponse->message = 'Unidad Operativa creada!';
-        $this->_requestResponse->data    = $unidad;
+        if ($unidade->update($request->only(['code', 'name']))) {
+            $this->_requestResponse->success = true;
+            $this->_requestResponse->message = 'Unidad Operativa actualizada!';
+        }
+        else {
+            $this->_requestResponse->success = false;
+            $this->_requestResponse->message = 'Error al actualizar la Unidad Operativa!';
+        }
 
-        return response(json_encode($this->_requestResponse), Response::HTTP_CREATED);
+        return response(json_encode($this->_requestResponse), Response::HTTP_OK);
     }
 
     /**
