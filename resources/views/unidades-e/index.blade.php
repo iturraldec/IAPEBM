@@ -236,7 +236,6 @@
       else {                                              // modifico unidad operativa
         ruta = "{{ route('unidades-e.update', ['unidades_e' => '.valor']) }}";
         ruta = ruta.replace('.valor', unidadId);
-        console.log(ruta);
         formData.append('_method', 'PUT');
       }
 

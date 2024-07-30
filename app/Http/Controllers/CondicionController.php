@@ -2,25 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EmployeeStatus;
+use App\Models\Condicion;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
+use App\Clases\ResquestResponse;
 
 class CondicionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-      if(request()->ajax()) {
-        return datatables()->of(EmployeeStatus::orderBy('name')->get())->toJson();
-      }
-      else {
-        return view('employee-status.index');
-      }
-    }
+  //
+  private $_requestResponse;
+
+  //
+  public function __construct(ResquestResponse $resquestResponse)
+  {
+    $this->_requestResponse = $resquestResponse;
+  }
+
+  /**
+   * Display a listing of the resource.
+   */
+  public function index()
+  {
+    return request()->ajax() ? datatables()->of(Condicion::orderBy('name')->get())->toJson() : view('condiciones.index');
+  }
 
     /**
      * Store a newly created resource in storage.
@@ -28,46 +33,52 @@ class CondicionController extends Controller
     public function store(Request $request)
     {
       $validator = $request->validate([
-        'name' => 'required|string|max:255|unique:employee_condiciones'
+        'name' => 'required|string|max:255|unique:condiciones'
       ]);
 
-      EmployeeStatus::Create($request->all());
-      $mensaje['success'] = true;
-      $mensaje['msg'] = 'Condición creada!';
+      $condicion = Condicion::Create($request->all());
+      $this->_requestResponse->success = true;
+      $this->_requestResponse->message = 'Condición creada!';
+      $this->_requestResponse->data    = $condicion;
 
-      return response($mensaje, Response::HTTP_CREATED);
+      return response()->json($this->_requestResponse, Response::HTTP_CREATED);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, EmployeeStatus $employeeStatus)
+    public function update(Request $request, Condicion $condicione)
     {
       $request->validate([
         'name' => [
             'required',
             'string',
-            'max:255',
-            Rule::unique('employee_condiciones')->ignore($employeeStatus->id),
+            'max:200',
+            Rule::unique('condiciones')->ignore($condicione->id),
         ]
       ]);
 
-      $employeeStatus->name = $request->name;
-      $employeeStatus->save();
-      $data['success'] = true;
-      $data['message'] = 'Condición actualizada......';
-
-      return response($data, Response::HTTP_OK);
+      if ($condicione->update($request->all())) {
+        $this->_requestResponse->success = true;
+        $this->_requestResponse->message = 'Condición actualizada!';
+      }
+      else {
+        $this->_requestResponse->success = false;
+        $this->_requestResponse->message = 'Error al actualizar condición!';
+      }
+      
+      return response()->json($this->_requestResponse, Response::HTTP_OK);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(EmployeeStatus $employeeStatus)
+    public function destroy(Condicion $condicione)
     {
-      $employeeStatus->delete();
-      $data['success'] = true;
-      $data['message'] = 'Condición elminada.';
-      return response($data, Response::HTTP_NO_CONTENT);
+      $condicione->delete();
+      $this->_requestResponse->success = true;
+      $this->_requestResponse->message = 'Condición eliminada!';
+
+      return response()->json($this->_requestResponse, Response::HTTP_OK);
     }
 }
