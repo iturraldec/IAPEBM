@@ -6,38 +6,44 @@ use App\Models\Rango;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response ;
 use Illuminate\Validation\Rule;
+use App\Clases\RequestResponse;
 
 //
 class RangoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-      if(request()->ajax()) {
-        return datatables()->of(Rango::orderBy('name')->get())->toJson();
-      }
-      else {
-        return view('rangos.index');
-      }
-    }
+  //
+  private $_requestResponse;
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-      $validator = $request->validate([
-        'name' => 'required|string|max:200|unique:police_jerarquias'
-      ]);
+  //
+  public function __construct(RequestResponse $requestResponse)
+  {
+    $this->_requestResponse = $requestResponse;
+  }
 
-      Rango::Create($request->all());
-      $mensaje['success'] = true;
-      $mensaje['msg'] = 'Rango creado!';
+  /**
+   * Display a listing of the resource.
+   */
+  public function index()
+  {
+    return request()->ajax() ? datatables()->of(Rango::orderBy('name')->get())->toJson() : view('rangos.index');
+  }
 
-      return response($mensaje, Response::HTTP_CREATED);
-    }
+  /**
+   * Store a newly created resource in storage.
+   */
+  public function store(Request $request)
+  {
+    $request->validate([
+      'name' => 'required|string|max:200|unique:jerarquias'
+    ]);
+
+    $rango = Rango::Create($request->all());
+    $this->_requestResponse->success = true;
+    $this->_requestResponse->message = 'Rango creado!';
+    $this->_requestResponse->data    = $rango;
+
+    return response(json_encode($this->_requestResponse), Response::HTTP_CREATED);
+  }
 
     /**
      * Update the specified resource in storage.
@@ -49,16 +55,15 @@ class RangoController extends Controller
             'required',
             'string',
             'max:200',
-            Rule::unique('police_jerarquias')->ignore($rango->id),
+            Rule::unique('jerarquias')->ignore($rango->id),
         ]
       ]);
 
-      $rango->name = $request->name;
-      $rango->save();
-      $data['success'] = true;
-      $data['message'] = 'Rango actualizado......';
+      $rango->update($request->all());
+      $this->_requestResponse->success = true;
+      $this->_requestResponse->message = 'Rango actualizado!';
 
-      return response($data, Response::HTTP_OK);
+      return response()->json($this->_requestResponse, Response::HTTP_OK);
     }
 
     /**
@@ -67,8 +72,9 @@ class RangoController extends Controller
     public function destroy(Rango $rango)
     {
       $rango->delete();
-      $data['success'] = true;
-      $data['message'] = 'Rango elminado.';
-      return response($data, Response::HTTP_NO_CONTENT);
+      $this->_requestResponse->success = true;
+      $this->_requestResponse->message = 'Rango eliminado!';
+
+      return response()->json($this->_requestResponse, Response::HTTP_OK);
     }
 }

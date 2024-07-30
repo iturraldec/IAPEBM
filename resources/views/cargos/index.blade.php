@@ -38,51 +38,52 @@
   </div>
 
   <!-- agregar/editar cargo -->
+  <div class="modal fade" id="modalForm" 
+      data-backdrop="static"
+      tabindex="-1" 
+      aria-labelledby="staticBackdropLabel" 
+      aria-hidden="true"
+  >
   <form id="formCargo">
     @csrf
 
-    <div class="modal fade" id="modalForm" 
-        data-backdrop="static"
-        tabindex="-1" 
-        aria-labelledby="staticBackdropLabel" 
-        aria-hidden="true"
-    >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="modalTitle">?</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="inputCargo">Cargo</label>
+              <input type="text" 
+                    id="inputCargo" 
+                    name="name"
+                    class="form-control"
+                    placeholder="Ingresa el cargo"
+                    title="Nombre del cargo"
+                    onkeyup="this.value = this.value.toUpperCase();"
+                    required
+              >
             </div>
 
-            <div class="modal-body">		
-              <div class="form-group">
-                <label for="inputCargo">Cargo</label>
-                <input type="text" 
-                      id="inputCargo" 
-                      name="name"
-                      class="form-control @error('name') is-invalid @enderror" 
-                      onkeyup="this.value = this.value.toUpperCase();"
-                      required
-                >
-              </div>
-              
-              <div class="icheck-primary d-inline">
-                <input type="checkbox" id="chkActivo" name="activo">
-                <label for="chkActivo">Activo</label>
-              </div>
-            
-            </div>
+            <div class="icheck-primary d-inline">
+              <input type="checkbox" id="chkActivo" name="activo">
+              <label for="chkActivo">Activo</label>
+            </div>            
+          </div>
 
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
-              <button class="btn btn-danger">Grabar</button>
-            </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+            <button class="btn btn-danger">Grabar</button>
           </div>
         </div>
-    </div>
-  </form>
+      </div>
+      </form>
+  </div>
 
 @endsection
 

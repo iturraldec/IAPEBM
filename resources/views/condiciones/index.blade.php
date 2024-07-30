@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <!-- agregar condicion -->
+  <!-- agregar/editar condicion -->
   <div class="modal fade" id="modalForm" 
       data-backdrop="static"
       tabindex="-1" 
@@ -55,22 +55,18 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="row">    
-            <div class="col">
-              <div class="form-group mb-2">
-                <label for="inputName">Condición</label>
-                <input type="text"
-                    id="inputCondicion"
-                    name="name"
-                    class="form-control"
-                    maxlength="200"
-                    placeholder="Ingresa la nueva condición"
-                    onkeyup="this.value = this.value.toUpperCase();"
-                    title="Nombre de la condición"
-                    required
-                />
-              </div>
-            </div>
+          <div class="form-group">
+            <label for="inputName">Condición</label>
+            <input type="text"
+                id="inputCondicion"
+                name="name"
+                class="form-control"
+                maxlength="200"
+                placeholder="Ingresa la nueva condición"
+                onkeyup="this.value = this.value.toUpperCase();"
+                title="Nombre de la condición"
+                required
+            />
           </div>
         </div>
 
@@ -83,7 +79,7 @@
     </div>
   </form>
   </div>
-  <!-- fin de agregar unidad operativa -->
+  <!-- fin de agregar condicion -->
 
 @endsection
 

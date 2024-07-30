@@ -1,13 +1,25 @@
 @extends('adminlte::page')
 
-@section('title', 'Listado de Rangos Policiales')
+@section('title', 'Listado de Rangos')
 
 @section('content_header')
-  <h1>Listado de Rangos Policiales.</h1>
+  <div class="row">
+    <div class="col-6">
+      <h3>Listado de Rangos.</h3>
+    </div>
+  
+    <div class="col-6 d-flex justify-content-end">
+      <button type="button" 
+              id="btnAgregar" 
+              class="btn btn-sm btn-primary mr-2">
+        <i class="fas fa-plus-square"></i> Agregar Rango
+      </button>
+    </div>
+  </div>
 @endsection
 
 @section('content')
-  <div class="col-8 mx-auto">
+  <div class="col-6 mx-auto">
     <table id="dt-rangos" class="table table-hover border border-dark">
       <thead class="thead-dark text-center">
         <tr>
@@ -22,27 +34,68 @@
     </table>
   </div>
 
-@include('rangos.edit')
+  <!-- agregar/editar rango -->
+  <div class="modal fade" id="modalForm" 
+      data-backdrop="static"
+      tabindex="-1" 
+      aria-labelledby="staticBackdropLabel" 
+      aria-hidden="true"
+  >
+    <form id="formRango">
+      @csrf
 
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalTitle">?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body">		
+              <div class="form-group">
+                <label for="inputRango">Rango</label>
+                <input type="text" 
+                      id="inputRango" 
+                      name="name"
+                      class="form-control"
+                      placeholder="Ingresa el rango"
+                      title="Nombre del rango"
+                      onkeyup="this.value = this.value.toUpperCase();"
+                      required
+                >
+              </div>            
+            </div>
+
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+              <button class="btn btn-danger">Grabar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+  </form>
 @endsection
 
 @section('js')
 <script>
   $(document).ready(function () {
+    var rangoId = 0;
+
     // macara del cargo
     $("#inputRango").inputmask(lib_characterMask())
 
     // datatable
     let datatable = $('#dt-rangos').DataTable({
-        "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
         "ajax": "{{ route('rangos.index') }}",
         "columns": [
-          {"data": "id", "orderable": false},
-          {"data": "name"},
+          {"data": "id", "visible": false},
+          {"data": "name", width: "70%"},
           {"data":null,
            "className" : "dt-body-center",
            "render": function ( data, type, row, meta ) {
-                  let btn_editar = '<button type="button" class="editar btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></button>';
+                  let btn_editar = '<button type="button" class="editar btn btn-secondary btn-sm mr-1"><i class="fas fa-edit"></i></button>';
                   let btn_eliminar = '<button class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
                   
                   return  btn_editar + btn_eliminar;
@@ -52,88 +105,64 @@
         ]
     });
 
-    $("#dt-add-button").html('<button id="btn-agregar" class="btn btn-primary">Agregar Rango</button>');
-
     // boton agregar rango
-    $("#btn-agregar").click(function() {
+    $("#btnAgregar").click(function() {
+      rangoId = 0;
       $("#modalTitle").html("Agregar Rango");
       $("#inputRango").val("");
-      $("#inputRango").data("id", "");
-      $("#inputRango").attr("placeholder", "Ingrese nombre del Rango");
       $('#modalForm').modal('show');
     });
 
-    // boton editar rango
+    // boton editar cargrango
     $("#dt-rangos tbody").on("click", ".editar", function() {
       let data = datatable.row($(this).parents()).data();
       
+      rangoId = data.id;
       $("#modalTitle").html("Modificar Rango");
       $("#inputRango").val(data.name);
-      $("#inputRango").data("id", data.id);
-      $("#inputRango").attr('placeholder', 'Modificar Rango');
       $('#modalForm').modal('show');
     });
 
-    // validacion de form
-    $('#rangoForm').validate({
-      rules: {
-        name: {
-          required: true,
-          maxlength:255
-        },
-      },
-      messages: {
-        name: {
-          required: "Debes ingresar el nombre del rango.",
-          maxlength: "Debes ingresar máximo 255 caracteres."
-        },
-      },
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-      },
-      submitHandler: function (form) {
-        let formData = $(form).serializeArray();
-        let id = $("#inputRango").data("id");
+    // grabar los datos al agregar/modificar
+    $("#formRango").submit(function(e) {
+      e.preventDefault();
 
-        if (id === "") {                          // agregar rango
-          grabar_datos("{{ route('rangos.store') }}", 'POST', formData);
+      let ruta = '';
+      let formData = new FormData(this);
+
+      if (rangoId == 0) {                                   // agrego rango
+        ruta = "{{ route('rangos.store') }}";
+      }
+      else {                                                // modifico rango
+        ruta = "{{ route('rangos.update', ['rango' => '.valor']) }}";
+        ruta = ruta.replace('.valor', rangoId);
+        formData.append('_method', 'PUT');
+      }
+
+      fetch(ruta, {
+        headers: {
+          'Accept' : 'application/json'
+        },
+        method: 'POST',
+        body: formData
+      })
+      .then(function(response) {
+        if(response.ok) {
+          $('#modalForm').modal('hide');
+          datatable.ajax.reload();  
+          response.json().then(r => lib_ShowMensaje(r.message));
         }
-        else {                                    // editar cargo
-          let ruta = "{{ route('rangos.update', ['rango' => 'valor']) }}";
+        else {
+          response.text().then(r => {
+            let errores = JSON.parse(r);
 
-          ruta = ruta.replace('valor', id);
-          grabar_datos(ruta, 'PUT', formData);
-        };
-
-        $('#modalForm').modal('hide');
-      },
-    });
-
-    // funcion para grabar los datos al agregar/modificar
-    function grabar_datos(_url, _type, _data) {
-      $.ajax({
-        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        url: _url,
-        type: _type,
-        data: _data,
-        dataType:'json'
-      })
-      .done(function(resp){
-        datatable.ajax.reload();
-        lib_ShowMensaje(resp.message);
-      })
-      .fail(function(resp){
-        lib_ShowMensaje(resp.responseJSON.message, 'error');
+            for (let propiedad in errores.errors) {
+              lib_toastr(errores.errors[propiedad]);
+            }
+          });
+        }
       });
-    }
+    });
     
     // boton eliminar rango
     $("#dt-rangos tbody").on("click",".eliminar",function() {
@@ -153,7 +182,7 @@
             dataType:'json',
             success: function(resp){
               datatable.ajax.reload();
-              lib_ShowMensaje("Cargo eliminado.");
+              lib_ShowMensaje(resp.message);
             }
           });
         }

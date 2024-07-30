@@ -55,7 +55,7 @@ function lib_Confirmar(titulo) {
 
 // input solo letras y espacio en blanco
 function lib_characterMask() {
-   return {regex:"[A-Za-z\\s]+"};
+   return {regex:"[A-Za-z\\sñÑ]+"};
 }
 
 // input solo numeros
