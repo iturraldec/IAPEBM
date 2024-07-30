@@ -6,22 +6,27 @@ use App\Models\Cargo;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
+use App\Clases\RequestResponse;
 
 //
 class CargoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-      if(request()->ajax()) {
-        return datatables()->of(Cargo::orderBy('name')->get())->toJson();
-      }
-      else {
-        return view('cargos.index');
-      }
-    }
+  //
+  private $_requestResponse;
+
+  //
+  public function __construct(RequestResponse $requestResponse)
+  {
+    $this->_requestResponse = $requestResponse;
+  }
+
+  /**
+   * Display a listing of the resource.
+   */
+  public function index()
+  {
+    return request()->ajax() ? datatables()->of(Cargo::orderBy('name')->get())->toJson() : view('cargos.index');
+  }
 
     /**
      * Store a newly created resource in storage.
@@ -32,14 +37,15 @@ class CargoController extends Controller
         'name' => 'required|string|max:200|unique:cargos'
       ]);
 
-      Cargo::Create([
+      $cargo = Cargo::Create([
         'name'    => $request->input('name'),
         'activo'  => $request->has('activo')
       ]);
-      $mensaje['success'] = true;
-      $mensaje['msg'] = 'Cargo creado!';
+      $this->_requestResponse->success = true;
+      $this->_requestResponse->message = 'Cargo creado!';
+      $this->_requestResponse->data    = $cargo;
 
-      return response($mensaje, Response::HTTP_CREATED);
+      return response()->json($this->_requestResponse, Response::HTTP_CREATED);
     }
 
     /**
@@ -55,14 +61,11 @@ class CargoController extends Controller
             Rule::unique('cargos')->ignore($cargo->id),
         ]
       ]);
+      $cargo->update(['name' => $request->name, 'activo' => $request->has('activo')]);
+      $this->_requestResponse->success = true;
+      $this->_requestResponse->message = 'Cargo actualizado!';
 
-      $cargo->name    = $request->name;
-      $cargo->activo  = $request->has('activo');
-      $cargo->save();
-      $data['success'] = true;
-      $data['message'] = 'Cargo actualizado......';
-
-      return response($data, Response::HTTP_OK);
+      return response()->json($this->_requestResponse, Response::HTTP_OK);
     }
 
     /**
@@ -71,9 +74,9 @@ class CargoController extends Controller
     public function destroy(Cargo $cargo)
     {
       $cargo->delete();
-      $data['success'] = true;
-      $data['message'] = 'Cargo elminado.';
-      
-      return response($data, Response::HTTP_NO_CONTENT);
+      $this->_requestResponse->success = true;
+      $this->_requestResponse->message = 'Cargo eliminado!';
+
+      return response()->json($this->_requestResponse, Response::HTTP_OK);
     }
 }

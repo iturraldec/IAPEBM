@@ -3,12 +3,24 @@
 @section('title', 'Listado de Cargos')
 
 @section('content_header')
-  <h1>Listado de Cargos de Empleados.</h1>
+  <div class="row">
+    <div class="col-6">
+      <h3>Listado de Cargos.</h3>
+    </div>
+
+    <div class="col-6 d-flex justify-content-end">
+      <button type="button" 
+              id="btnAgregar" 
+              class="btn btn-sm btn-primary mr-2">
+        <i class="fas fa-plus-square"></i> Agregar Cargo
+      </button>
+    </div>
+  </div>
 @endsection
 
 @section('content')
   <div class="row justify-content-center">
-    <div class="col-8">
+    <div class="col-7">
       <table id="dt-cargos" class="table table-hover border border-dark">
         <thead class="thead-dark text-center">
           <tr>
@@ -25,30 +37,76 @@
     </div>
   </div>
 
-@include('cargos.edit')
+  <!-- agregar/editar cargo -->
+  <form id="formCargo">
+    @csrf
+
+    <div class="modal fade" id="modalForm" 
+        data-backdrop="static"
+        tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" 
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalTitle">?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body">		
+              <div class="form-group">
+                <label for="inputCargo">Cargo</label>
+                <input type="text" 
+                      id="inputCargo" 
+                      name="name"
+                      class="form-control @error('name') is-invalid @enderror" 
+                      onkeyup="this.value = this.value.toUpperCase();"
+                      required
+                >
+              </div>
+              
+              <div class="icheck-primary d-inline">
+                <input type="checkbox" id="chkActivo" name="activo">
+                <label for="chkActivo">Activo</label>
+              </div>
+            
+            </div>
+
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+              <button class="btn btn-danger">Grabar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+  </form>
 
 @endsection
 
 @section('js')
 <script>
   $(document).ready(function () {
+    var cargoId = 0;
+
     // mascara del cargo
     $("#inputCargo").inputmask(lib_characterMask())
 
     // datatable
-    let customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Cargo</button>';
-    let datatable = $('#dt-cargos').DataTable({
-        "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
+    var datatable = $('#dt-cargos').DataTable({
         "ajax": "{{ route('cargos.index') }}",
         "columns": [
-          {"data": "id", "orderable": false},
-          {"data": "name"},
+          {"data": "id", "visible": false},
+          {"data": "name", width: "55%"},
           {"data":null,
            "className" : "dt-body-center",
            "render": function ( data, type, row, meta ) {              
               return  data.activo ? "SI" : "NO";
             },
-           "orderable": false 
+           "orderable": false,
+           width: "15%"
           },
           {"data":null,
            "className" : "dt-body-center",  
@@ -58,19 +116,18 @@
                   
                   return  btn_editar + btn_eliminar;
                 },
-           "orderable": false
+           "orderable": false,
+           width: "30%"
           }
         ]
     });
 
-    $("#dt-add-button").html(customButton);
-
     // boton agregar cargo
-    $("#btn-agregar").click(function() {
+    $("#btnAgregar").click(function() {
+      cargoId = 0;
       $("#modalTitle").html("Agregar Cargo");
       $("#inputCargo").val("");
       $("#chkActivo").prop("checked", true);
-      $("#inputCargo").data("id", "");
       $("#inputCargo").attr("placeholder", "Ingrese nombre del Cargo");
       $('#modalForm').modal('show');
     });
@@ -79,72 +136,54 @@
     $("#dt-cargos tbody").on("click", ".editar", function() {
       let data = datatable.row($(this).parents()).data();
       
+      cargoId = data.id;
       $("#modalTitle").html("Modificar Cargo");
       $("#inputCargo").val(data.name);
       $("#chkActivo").prop("checked", data.activo);
-      $("#inputCargo").data("id", data.id);
       $("#inputCargo").attr('placeholder', 'Modificar Cargo');
       $('#modalForm').modal('show');
     });
 
-    // validacion de form
-    $('#cargoForm').validate({
-      submitHandler: function (form) {
-        let formData = $(form).serializeArray();
-        let id = $("#inputCargo").data("id");
+    // grabar los datos al agregar/modificar
+    $("#formCargo").submit(function(e) {
+      e.preventDefault();
 
-        if (id === "") {                          // agregar cargo
-          grabar_datos("{{ route('cargos.store') }}", 'POST', formData);
-        }
-        else {                                    // editar cargo
-          let ruta = "{{ route('cargos.update', ['cargo' => 'valor']) }}";
+      let ruta = '';
+      let formData = new FormData(this);
 
-          ruta = ruta.replace('valor', id);
-          grabar_datos(ruta, 'PUT', formData);
-        };
-
-        $('#modalForm').modal('hide');
-      },
-      rules: {
-        name: {
-          required: true
-        },
-      },
-      messages: {
-        name: {
-          required: "Debes ingresar el nombre del cargo."
-        },
-      },
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
+      if (cargoId == 0) {                                   // agrego cargo
+        ruta = "{{ route('cargos.store') }}";
       }
-    });
+      else {                                                // modifico cargo
+        ruta = "{{ route('cargos.update', ['cargo' => '.valor']) }}";
+        ruta = ruta.replace('.valor', cargoId);
+        formData.append('_method', 'PUT');
+      }
 
-    // funcion para grabar los datos al agregar/modificar
-    function grabar_datos(_url, _type, _data) {
-      $.ajax({
-        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        url: _url,
-        type: _type,
-        data: _data,
-        dataType:'json'
+      fetch(ruta, {
+        headers: {
+          'Accept' : 'application/json'
+        },
+        method: 'POST',
+        body: formData
       })
-      .done(function(resp){
-        datatable.ajax.reload();
-        lib_ShowMensaje(resp.message);
-      })
-      .fail(function(resp){
-        lib_ShowMensaje(resp.responseJSON.message, 'error');
+      .then(function(response) {
+        if(response.ok) {
+          $('#modalForm').modal('hide');
+          datatable.ajax.reload();  
+          response.json().then(r => lib_ShowMensaje(r.message));
+        }
+        else {
+          response.text().then(r => {
+            let errores = JSON.parse(r);
+
+            for (let propiedad in errores.errors) {
+              lib_toastr(errores.errors[propiedad]);
+            }
+          });
+        }
       });
-    }
+    });
     
     // boton eliminar cargo
     $("#dt-cargos tbody").on("click",".eliminar",function() {
@@ -164,7 +203,7 @@
             dataType:'json',
             success: function(resp){
               datatable.ajax.reload();
-              lib_ShowMensaje("Cargo eliminado.");
+              lib_ShowMensaje(resp.message);
             }
           });
         }

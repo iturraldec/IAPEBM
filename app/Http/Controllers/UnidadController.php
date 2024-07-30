@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Unidad;
-use App\Clases\ResquestResponse;
+use App\Clases\RequestResponse;
 use Illuminate\Validation\Rule;
 
 class UnidadController extends Controller
@@ -14,9 +14,9 @@ class UnidadController extends Controller
     private $_requestResponse;
 
     //
-    public function __construct(ResquestResponse $resquestResponse)
+    public function __construct(RequestResponse $requestResponse)
     {
-        $this->_requestResponse = $resquestResponse;
+        $this->_requestResponse = $requestResponse;
     }
 
     /**

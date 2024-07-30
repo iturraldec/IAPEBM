@@ -2,7 +2,7 @@
 
 namespace App\Clases;
 
-class ResquestResponse
+class RequestResponse
 {
   public $success = false;
   public $message = '';

@@ -191,7 +191,7 @@
             dataType:'json',
             success: function(resp){
               datatable.ajax.reload();
-              lib_ShowMensaje("Condición eliminada.");
+              lib_ShowMensaje("Condición eliminada!");
             }
           });
         }
