@@ -45,12 +45,6 @@ class UnidadController extends Controller
         return response(json_encode($this->_requestResponse), Response::HTTP_CREATED);
     }
 
-    //
-    public function edit(int $unidade)
-    {
-        return response(Unidad::especificas($unidade));
-    }
-
     /**
      * Update the specified resource in storage.
      */

@@ -8,6 +8,7 @@ use App\Http\Controllers\CondicionController;
 use App\Http\Controllers\CargoController;
 use App\Http\Controllers\RangoController;
 use App\Http\Controllers\UnidadController;
+use App\Http\Controllers\UnidadEspecificaController;
 use App\Http\Controllers\EmployeeAdmController;
 use App\Http\Controllers\EmployeeObreroController;
 use App\Http\Controllers\EmployeePoliceController;
@@ -22,8 +23,14 @@ Route::match(['get', 'post'],'users/password/change', [UserController::class, 'p
 
 // rutas de las unidades operativas
 Route::resource('unidades', UnidadController::class)
-  ->except(['create', 'show'])
+  ->only(['index', 'store', 'update', 'destroy'])
   ->names('unidades');
+
+// rutas de las unidades operativas especificas
+Route::resource('unidades-e', UnidadEspecificaController::class)
+  ->only(['index', 'store', 'update', 'destroy'])
+  ->names('unidades-e');
+Route::get('unidades-e/getAll/{padre_id}', [UnidadEspecificaController::class, 'getAll'])->name('unidades-e.getAll');
 
 // rutas de las condiciones de los trabajadores
 Route::resource('condiciones', CondicionController::class)

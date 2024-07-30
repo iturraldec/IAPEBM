@@ -339,7 +339,7 @@ return [
                         ],
                         [
                             'text'      => 'Unidades Específicas',
-                            'url'       => '#',
+                            'route'       => 'unidades-e.index',
                             'icon'      => 'fas fa-circle nav-icon'
                         ]
                     ]
