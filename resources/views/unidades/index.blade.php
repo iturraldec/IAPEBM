@@ -44,12 +44,11 @@
   >
   <form id="formUnidad">
     @csrf
-    <input type="hidden" id="inputId" name="id">
 
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 id="modalTitle" class="modal-title">Default Modal</h4>
+          <h4 id="modalTitle" class="modal-title">?</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
@@ -104,17 +103,7 @@
 @section('js')
 <script>
   $(document).ready(function () {
-    //////////////////////////////////////////////    
-    // mascara: latitud
-    //////////////////////////////////////////////
-
-    $("#inputELatitud").inputmask(lib_decimalMask());
-
-    //////////////////////////////////////////////
-    // mascara: longitud
-    //////////////////////////////////////////////
-
-    $("#inputELongitud").inputmask(lib_decimalMask());
+    var unidadId = 0;
 
     //////////////////////////////////////////////
     // datatable: unidades operativas
@@ -144,8 +133,8 @@
     //////////////////////////////////////////////
 
     $("#btnAgregar").click(function() {
+      unidadId = 0;
       $("#modalTitle").html("Agregar Unidad Operativa")
-      $("#inputId").val("0");
       $("#inputCode").val("");
       $("#inputName").val("");
       $('#modalForm').modal('show');
@@ -158,8 +147,8 @@
     $("#dt-unidades tbody").on("click", ".editar", function() {
       let data = datatable.row($(this).parents()).data();
 
+      unidadId = data.id;
       $("#modalTitle").html("Modificar Unidad Operativa");
-      $("#inputId").val(data.id);
       $("#inputCode").val(data.code);
       $("#inputName").val(data.name);
       $('#modalForm').modal('show');
@@ -175,12 +164,12 @@
       let formData  = new FormData(this);
       let ruta = '';
 
-      if (formData.get("id") == '0') {                    // agrego unidad operativa
+      if (unidadId == 0) {                                // agrego unidad operativa
         ruta = "{{ route('unidades.store') }}";
       }
       else {                                              // modifico unidad operativa
         ruta = "{{ route('unidades.update', ['unidade' => '.valor']) }}";
-        ruta = ruta.replace('.valor', formData.get("id"));
+        ruta = ruta.replace('.valor', unidadId);
         formData.append('_method', 'PUT');
       }
 

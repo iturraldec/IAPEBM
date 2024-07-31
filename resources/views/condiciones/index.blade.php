@@ -20,7 +20,7 @@
 
 @section('content')
   <div class="row justify-content-center">
-    <div class="col-6">
+    <div class="col-7">
       <table id="dt-condiciones" class="table table-hover border border-dark">
         <thead class="thead-dark text-center">
           <tr>
@@ -49,7 +49,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 id="modalTitle" class="modal-title">Default Modal</h4>
+          <h4 id="modalTitle" class="modal-title">?</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
@@ -92,7 +92,7 @@
     $("#inputCondicion").inputmask(lib_characterMask());
 
     // datatable
-    let datatable = $('#dt-condiciones').DataTable({
+    var datatable = $('#dt-condiciones').DataTable({
         "ajax": "{{ route('condiciones.index') }}",
         "columns": [
           {"data": "id", visible: false},
@@ -176,9 +176,9 @@
       lib_Confirmar("Seguro de ELIMINAR la condición: " + data.name + "?")
       .then((result) => {
         if (result.isConfirmed) {
-          let ruta = "{{ route('condiciones.destroy', ['condicione' => 'valor']) }}";
+          let ruta = "{{ route('condiciones.destroy', ['condicione' => '.valor']) }}";
 
-          ruta = ruta.replace('valor', data.id);
+          ruta = ruta.replace('.valor', data.id);
           
           $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},

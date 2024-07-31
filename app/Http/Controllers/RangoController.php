@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Rango;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response ;
 use Illuminate\Validation\Rule;
 use App\Clases\RequestResponse;
+use App\Models\Rango;
 
 //
 class RangoController extends Controller
@@ -45,36 +45,36 @@ class RangoController extends Controller
     return response(json_encode($this->_requestResponse), Response::HTTP_CREATED);
   }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Rango $rango)
-    {
-      $request->validate([
-        'name' => [
-            'required',
-            'string',
-            'max:200',
-            Rule::unique('jerarquias')->ignore($rango->id),
-        ]
-      ]);
+  /**
+   * Update the specified resource in storage.
+   */
+  public function update(Request $request, Rango $rango)
+  {
+    $request->validate([
+      'name' => [
+          'required',
+          'string',
+          'max:200',
+          Rule::unique('jerarquias')->ignore($rango->id),
+      ]
+    ]);
 
-      $rango->update($request->all());
-      $this->_requestResponse->success = true;
-      $this->_requestResponse->message = 'Rango actualizado!';
+    $rango->update($request->all());
+    $this->_requestResponse->success = true;
+    $this->_requestResponse->message = 'Rango actualizado!';
 
-      return response()->json($this->_requestResponse, Response::HTTP_OK);
-    }
+    return response()->json($this->_requestResponse, Response::HTTP_OK);
+  }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Rango $rango)
-    {
-      $rango->delete();
-      $this->_requestResponse->success = true;
-      $this->_requestResponse->message = 'Rango eliminado!';
+  /**
+   * Remove the specified resource from storage.
+   */
+  public function destroy(Rango $rango)
+  {
+    $rango->delete();
+    $this->_requestResponse->success = true;
+    $this->_requestResponse->message = 'Rango eliminado!';
 
-      return response()->json($this->_requestResponse, Response::HTTP_OK);
-    }
+    return response()->json($this->_requestResponse, Response::HTTP_OK);
+  }
 }

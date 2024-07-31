@@ -123,7 +123,7 @@
         ]
     });
 
-    // boton agregar cargo
+    // agregar cargo
     $("#btnAgregar").click(function() {
       cargoId = 0;
       $("#modalTitle").html("Agregar Cargo");
@@ -133,7 +133,7 @@
       $('#modalForm').modal('show');
     });
 
-    // boton editar cargo
+    // editar cargo
     $("#dt-cargos tbody").on("click", ".editar", function() {
       let data = datatable.row($(this).parents()).data();
       
@@ -186,7 +186,7 @@
       });
     });
     
-    // boton eliminar cargo
+    // eliminar cargo
     $("#dt-cargos tbody").on("click",".eliminar",function() {
       let data = datatable.row($(this).parents()).data();
 

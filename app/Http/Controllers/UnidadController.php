@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\Unidad;
 use App\Clases\RequestResponse;
 use Illuminate\Validation\Rule;
+use App\Models\Unidad;
 
+//
 class UnidadController extends Controller
 {
     //
@@ -37,7 +38,7 @@ class UnidadController extends Controller
             'name'  => 'required|string|max:255'
         ]);
 
-        $unidad = Unidad::Create($request->only(['code', 'name']));
+        $unidad = Unidad::Create($request->all());
         $this->_requestResponse->success = true;
         $this->_requestResponse->message = 'Unidad Operativa creada!';
         $this->_requestResponse->data    = $unidad;

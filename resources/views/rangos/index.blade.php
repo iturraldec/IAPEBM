@@ -87,7 +87,7 @@
     $("#inputRango").inputmask(lib_characterMask())
 
     // datatable
-    let datatable = $('#dt-rangos').DataTable({
+    var datatable = $('#dt-rangos').DataTable({
         "ajax": "{{ route('rangos.index') }}",
         "columns": [
           {"data": "id", "visible": false},
@@ -105,7 +105,7 @@
         ]
     });
 
-    // boton agregar rango
+    // agregar rango
     $("#btnAgregar").click(function() {
       rangoId = 0;
       $("#modalTitle").html("Agregar Rango");
@@ -113,7 +113,7 @@
       $('#modalForm').modal('show');
     });
 
-    // boton editar cargrango
+    // editar cargrango
     $("#dt-rangos tbody").on("click", ".editar", function() {
       let data = datatable.row($(this).parents()).data();
       
@@ -164,7 +164,7 @@
       });
     });
     
-    // boton eliminar rango
+    // eliminar rango
     $("#dt-rangos tbody").on("click",".eliminar",function() {
       let data = datatable.row($(this).parents()).data();
 

@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\Unidad;
 use App\Clases\RequestResponse;
 use Illuminate\Validation\Rule;
+use App\Models\Unidad;
 
+//
 class UnidadEspecificaController extends Controller
 {
     //
@@ -29,6 +30,7 @@ class UnidadEspecificaController extends Controller
         return view('unidades-e.index', compact('unidades'));
     }
 
+    //
     public function getAll(int $padre_id)
     {
         return datatables()->of(Unidad::especificas($padre_id))->toJson();
