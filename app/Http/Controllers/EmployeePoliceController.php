@@ -7,17 +7,19 @@ use App\Http\Requests\EmployeePoliceUpdateRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
 use App\Clases\Image;
+use App\Clases\RequestResponse;
 
 use App\Models\Address;
-use App\Models\Employee;
-use App\Models\Person;
 use App\Models\Email;
 use App\Models\Phone;
 use App\Models\Cargo;
 use App\Models\Condicion;
 use App\Models\Tipo;
 use App\Models\Unidad;
+use App\Models\Person;
+use App\Models\Employee;
 use App\Models\Police;
+use Yajra\DataTables\DataTables;
 
 //
 class EmployeePoliceController extends Controller
@@ -27,12 +29,16 @@ class EmployeePoliceController extends Controller
   private $_imagen;
 
   //
-  private $_employee_type_id = 3;
+  private $_type_id = 3;
 
   //
-  public function __construct(Image $imagen)
+  private $_requestResponse;
+
+  //
+  public function __construct(Image $imagen, RequestResponse $requestResponse)
   {
     $this->_imagen = $imagen;
+    $this->_requestResponse = $requestResponse;
   }
 
   //
@@ -48,27 +54,21 @@ class EmployeePoliceController extends Controller
    */
   public function index()
   {
-    if(! request()->ajax()) {
-      return view('employee-police.index');
-    }
-    else {
-      $employees = Employee::where('grupo_id', $this->_employee_type_id)->with('person')->get();
-
-      return datatables()->of($employees)->toJson();
-    }
+    return request()->ajax() ? datatables()->of(Employee::where('type_id', $this->_type_id)->with('person'))->toJson()
+                             : view('employee-police.index');              
   }
 
   // vista para crear empleado
   public function create()
   {
     $_estados     = new UbicacionController();
-    $ccps         = Ccps::OrderBy('name')->get();
+    $unidades     = Unidad::unidades();
     $cargos       = Cargo::OrderBy('name')->where('activo', TRUE)->get();
     $condiciones  = Condicion::OrderBy('name')->get();
     $tipos        = Tipo::OrderBy('name')->get();
     $estados      = $_estados->getEstados();
 
-    return view('employee-police.create', compact('cargos', 'condiciones', 'tipos', 'ccps', 'estados'));
+    return view('employee-police.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados'));
   }
 
   // agregar empleado
@@ -77,7 +77,7 @@ class EmployeePoliceController extends Controller
     // agrego los datos personales
     $data_person = $request->only([
       'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 
-      'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes', 'passport_nro']);
+      'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes']);
     $data_person['imagef'] = 'assets/images/avatar.png';
     $data_person['imageli'] = 'assets/images/avatar.png';
     $data_person['imageld'] = 'assets/images/avatar.png';
@@ -117,26 +117,29 @@ class EmployeePoliceController extends Controller
 
     // agrego los datos administrativos
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
-                                    'tipo_id', 'ccp_id', 'rif', 'codigo_patria', 'serial_patria',
-                                    'religion', 'deporte', 'licencia', 'cta_bancaria_nro');
+                                    'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
+                                    'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro');
     $inputEmployee['person_id'] = $person->id;
-    $inputEmployee['grupo_id'] = $this->_employee_type_id;
+    $inputEmployee['type_id'] = $this->_type_id;
     $employee = Employee::create($inputEmployee);
 
     // agrego los datos policiales
     $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
     $inputPolice['employee_id'] = $employee->id;
-    Police::create($inputPolice);
+    $police = Police::create($inputPolice);
 
-    //
-    return response(Response::HTTP_CREATED);
+    $this->_requestResponse->success = true;
+    $this->_requestResponse->message = 'Uniformado creado!';
+    $this->_requestResponse->data    = $police;
+
+    return response()->json($this->_requestResponse, Response::HTTP_CREATED);
   }
 
   // edicion de emplado
   public function edit(Employee $employees_polouse)
   {
     $_estados         = new UbicacionController();
-    $unidades         = Unidad::OrderBy('name')->get();
+    $unidades         = Unidad::unidades();
     $cargos           = Cargo::OrderBy('name')->get();
     $condiciones      = Condicion::OrderBy('name')->get();
     $tipos            = Tipo::OrderBy('name')->get();
@@ -145,7 +148,7 @@ class EmployeePoliceController extends Controller
     $data['employee'] = $employees_polouse;
     $data['police']   = Police::where('employee_id', $employees_polouse->id)->first();
     
-    return view('employee-police.edit', compact('estados', 'unidaddes', 'cargos', 'condiciones', 'tipos', 'data'));
+    return view('employee-police.edit', compact('estados', 'unidades', 'cargos', 'condiciones', 'tipos', 'data'));
   }
 
   /**

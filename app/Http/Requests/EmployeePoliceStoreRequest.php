@@ -38,7 +38,7 @@ class EmployeePoliceStoreRequest extends FormRequest
             'cargo_id'              => 'required',
             'condicion_id'          => 'required',
             'tipo_id'               => 'required',
-            'ccp_id'                => 'required',
+            'unidad_id'             => 'required',
             'codigo_patria'         => 'required|max:20',
             'serial_patria'         => 'required|max:20',
             'religion'              => 'required|max:100',

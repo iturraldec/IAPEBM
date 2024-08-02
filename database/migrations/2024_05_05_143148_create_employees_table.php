@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('person_id');
-            $table->unsignedSmallInteger('grupo_id');
+            $table->unsignedSmallInteger('type_id');
             $table->unsignedTinyInteger('status')->default(1);
             $table->string('codigo_nomina', 20);
             $table->date('fecha_ingreso');
