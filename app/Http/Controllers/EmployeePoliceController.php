@@ -19,7 +19,6 @@ use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
 use App\Models\Police;
-use Yajra\DataTables\DataTables;
 
 //
 class EmployeePoliceController extends Controller
@@ -128,6 +127,7 @@ class EmployeePoliceController extends Controller
     $inputPolice['employee_id'] = $employee->id;
     $police = Police::create($inputPolice);
 
+    //
     $this->_requestResponse->success = true;
     $this->_requestResponse->message = 'Uniformado creado!';
     $this->_requestResponse->data    = $police;
@@ -159,8 +159,7 @@ class EmployeePoliceController extends Controller
     // actualizo la persona
     $dataPerson = Person::select('id', 'imagef', 'imageli', 'imageld')->find($employees_polouse->person_id);
     $inputPerson = $request->only(['cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name',
-                                  'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type',
-                                  'passport_nro', 'notes']);
+                                  'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes']);
 
     $employeeFolderPath = $this->_makeEmployeeFolder($inputPerson['cedula']);
 
@@ -201,8 +200,8 @@ class EmployeePoliceController extends Controller
 
     // actualizo los datos del administrativos
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id',
-                                    'ccp_id', 'rif', 'codigo_patria', 'serial_patria', 'religion', 'deporte',
-                                    'licencia', 'cta_bancaria_nro');
+                                    'unidad_id', 'rif', 'codigo_patria', 'serial_patria', 'religion', 'deporte',
+                                    'licencia', 'cta_bancaria_nro', 'passport_nro');
 
     $employees_polouse->update($inputEmployee);
 
@@ -211,7 +210,10 @@ class EmployeePoliceController extends Controller
     Police::where('employee_id', $employees_polouse->id)->update($inputPolice);
 
     //
-    return response(Response::HTTP_OK);
+    $this->_requestResponse->success = true;
+    $this->_requestResponse->message = 'Uniformado actualizado!';
+
+    return response()->json($this->_requestResponse, Response::HTTP_OK);
   }
 
   // agregar los correos del empleado
@@ -276,6 +278,10 @@ class EmployeePoliceController extends Controller
       $person->delete();
     }
     
-    return Response::HTTP_NO_CONTENT;
+    //
+    $this->_requestResponse->success = true;
+    $this->_requestResponse->message = 'Uniformado eliminado!';
+
+    return response()->json($this->_requestResponse, Response::HTTP_OK);
   }
 }

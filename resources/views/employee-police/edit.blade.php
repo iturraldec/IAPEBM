@@ -187,7 +187,8 @@
                         name="birthday"
                         value = "{{ $data['person']['birthday'] }}"
                         title="Fecha de nacimiento del empleado"
-                        required />
+                        required 
+                  />
                 </div>
       
                 <div class="col-3 form-group">
@@ -529,6 +530,7 @@
             <div class="col-4 form-group">
               <label for="selectUnidadEspecifica">Unidad Operativa específica</label>
               <select id="selectUnidadEspecifica" class="form-control" name="unidad_id" title="Ubicación específica del empleado">
+                <option value="{{ $data['employee']['unidad_id'] }}">{{ $data['employee']['unidadEspecifica']->name }}</option>
               </select>
             </div>
             
@@ -792,6 +794,7 @@
     ///////////////////////////////////////////////////////////////////
     // inicializar formulario
     ///////////////////////////////////////////////////////////////////
+
     function initForm() {
       let emails    = {{ Js::from($data['person']['emails']) }};        // emails del empleado
       let phones    = {{ Js::from($data['person']['phones']) }};        // telefonos del empleado
@@ -833,13 +836,17 @@
       }
 
       // mascara para el nombre
-      $("#inputNombre").inputmask(lib_characterMask());
+      $("#inputPNombre").inputmask(lib_characterMask());
+      $("#inputSNombre").inputmask(lib_characterMask());
+      $("#inputPApellido").inputmask(lib_characterMask());
+      $("#inputSApellido").inputmask(lib_characterMask());
 
       // mascara para el numero de telefono
       $("#inputPhone").inputmask(lib_phoneMask());
 
       // mascara la zona postal
-      $("#inputZonaPostal").inputmask(lib_digitMask());
+      // POR REVISAR, COMO ASIGNAR MASCARA A ARRAY
+      //$("#inputZonaPostal[]").inputmask(lib_digitMask());
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -1025,7 +1032,7 @@
       .then(r => {
         $("#selectUnidadEspecifica").empty();
         $("#selectUnidadEspecifica").append('<option value="0">SELECCIONE LA U.O.E.</option>');
-        r.ccpse.forEach(element => {
+        r.data.forEach(element => {
           $("#selectUnidadEspecifica").append(`<option value="${element.id}">${element.name}</option>`);
         });
       });
@@ -1036,7 +1043,7 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnGrabar").click(function() {
-      let data = new FormData(empleadoForm);
+      let data = new FormData(formEmpleado);
 
       emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
       phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));

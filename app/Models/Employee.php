@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Person;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
+//
 class Employee extends Model
 {
     //
@@ -26,6 +28,7 @@ class Employee extends Model
         'deporte',
         'licencia',
         'cta_bancaria_nro',
+        'passport_nro'
     ];
 
     // datos personales
@@ -38,5 +41,13 @@ class Employee extends Model
     public function police() : HasOne
     {
         return $this->hasOne(Police::class);
+    }
+
+    // unidad especifica
+    protected function unidadEspecifica() : Attribute
+    {
+        return new Attribute(
+            get: fn () => Unidad::find($this->unidad_id),
+        );
     }
 }

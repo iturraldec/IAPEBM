@@ -14,8 +14,7 @@ class Person extends Model
     //
     protected $fillable = [
         'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 'sex', 'birthday', 
-        'place_of_birth', 'civil_status_id', 'blood_type', 'notes', 'imagef', 'imageli', 'imageld',
-        'passport_nro'
+        'place_of_birth', 'civil_status_id', 'blood_type', 'notes', 'imagef', 'imageli', 'imageld'
     ];
 
     /*
