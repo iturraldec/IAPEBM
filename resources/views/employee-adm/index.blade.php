@@ -3,11 +3,23 @@
 @section('title', 'Empleados Administrativos')
 
 @section('content_header')
-  <h1>Listado de Empleados Administrativos.</h1>
+  <div class="row">
+    <div class="col-6">
+      <h3>Listado de Empleados Administrativos.</h3>
+    </div>
+
+    <div class="col-6 d-flex justify-content-end">
+      <button type="button" 
+              id="btnAgregar" 
+              class="btn btn-sm btn-primary mr-2">
+        <i class="fas fa-plus-square"></i> Agregar E. Administrativo
+      </button>
+    </div>
+  </div>
 @endsection
 
 @section('content')
-  <div class="col-8 mx-auto">
+  <div class="col-10 mx-auto">
     <table id="dtEmpleados" class="table table-hover border border-dark">
       <thead class="thead-dark text-center">
         <tr>
@@ -34,8 +46,7 @@
     // datatable
     ///////////////////////////////////////////////////////////
 
-    let datatable = $('#dtEmpleados').DataTable({
-        "dom": '<"d-flex justify-content-between"l<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
+    var datatable = $('#dtEmpleados').DataTable({
         serverSide: true,
         "ajax": "{{ route('employees-adm.index') }}",
         "columns": [
@@ -77,29 +88,27 @@
         ]
     });
 
-    $("#dt-add-button").html(`<a href="#" id="btnAgregarEmpleado" class="btn btn-primary">Agregar Empleado Administrativo</a>`);
-
     ///////////////////////////////////////////////////////////////////
-    // agregar empleado
+    // agregar empleado administrativo
     ///////////////////////////////////////////////////////////////////
 
-    $("#btnAgregarEmpleado").on('click', function() {
+    $("#btnAgregar").on('click', function() {
       window.open("{{ route('employees-adm.create') }}");
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar empleado
+    // eliminar empleado administrativo
     ///////////////////////////////////////////////////////////////////
 
     $("#dtEmpleados tbody").on("click",".eliminar",function() {
       let data = datatable.row($(this).parents()).data();
 
-      lib_Confirmar("Seguro de ELIMINAR a: " + data.person.name + "?")
+      lib_Confirmar(`Seguro de ELIMINAR a:${data.person.first_last_name} ${data.person.first_name}?`)
       .then((result) => {
         if (result.isConfirmed) {
-          let ruta = "{{ route('employees-adm.destroy', ['employees_adm' => 'valor']) }}";
+          let ruta = "{{ route('employees-adm.destroy', ['employees_adm' => '.valor']) }}";
 
-          ruta = ruta.replace('valor', data.id);
+          ruta = ruta.replace('.valor', data.id);
           
           $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -108,7 +117,7 @@
             dataType:'json',
             success: function(resp){
               datatable.ajax.reload();
-              lib_ShowMensaje("Empleado Administrativo eliminado.");
+              lib_ShowMensaje(resp.message);
             }
           });
         }

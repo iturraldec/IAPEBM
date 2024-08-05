@@ -25,9 +25,9 @@ return new class extends Migration
             $table->string('rif', 20);
             $table->string('codigo_patria', 20);
             $table->string('serial_patria', 20);
-            $table->string('religion', 100);
-            $table->string('deporte', 100);
-            $table->string('licencia', 100);
+            $table->string('religion', 100)->nullable();
+            $table->string('deporte', 100)->nullable();
+            $table->string('licencia', 100)->nullable();
             $table->string('cta_bancaria_nro', 30);
             $table->string('passport_nro', 20)->nullable();
             $table->timestamps();
