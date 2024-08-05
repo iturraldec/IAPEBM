@@ -12,27 +12,30 @@ Route::get('loadFromExcel', function() {
 
   try {
     echo 'cargos...<br>';
-    Excel::import(new App\Imports\CargosImport, 'assets/documentos/cargos.csv');
+    Excel::import(new App\Imports\CargosImport, '/home/iturraldec/Documentos/iapebm/cargos.csv');
 
     echo 'condiciones...<br>';
-    Excel::import(new App\Imports\CondicionesImport, 'assets/documentos/condiciones.csv');
-
-    echo 'tipos...<br>';
-    Excel::import(new App\Imports\TiposImport, 'assets/documentos/tipos_empleados.csv');
-
-    echo 'unidades...<br>';
-    Excel::import(new App\Imports\UnidadesGImport, 'assets/documentos/uo_g.csv');
-    Excel::import(new App\Imports\UnidadesEImport, 'assets/documentos/uo_e.csv');
+    Excel::import(new App\Imports\CondicionesImport, '/home/iturraldec/Documentos/iapebm/condiciones.csv');
 
     echo 'uniformados:rangos...<br>';
-    Excel::import(new App\Imports\JerarquiasImport, 'assets/documentos/rangos.csv');
+    Excel::import(new App\Imports\JerarquiasImport, '/home/iturraldec/Documentos/iapebm/rangos.csv');
+
+    echo 'tipos...<br>';
+    Excel::import(new App\Imports\TiposImport, '/home/iturraldec/Documentos/iapebm/tipos_empleados.csv');
+
+    echo 'unidades...<br>';
+    Excel::import(new App\Imports\UnidadesGImport, '/home/iturraldec/Documentos/iapebm/uo_g.csv');
+    Excel::import(new App\Imports\UnidadesEImport, '/home/iturraldec/Documentos/iapebm/uo_e.csv');
 
     echo 'administrativos...<br>';
-    Excel::import(new App\Imports\AdminImport, 'assets/documentos/administrativos.csv');
+    Excel::import(new App\Imports\AdminImport, '/home/iturraldec/Documentos/iapebm/administrativos-copia.csv');
 
-    echo 'uniformados...<br>';
+    echo 'obreros...<br>';
+    Excel::import(new App\Imports\ObreroImport, '/home/iturraldec/Documentos/iapebm/administrativos-copia.csv');
+
+    /*echo 'uniformados...<br>';
     Excel::import(new App\Imports\PoliceImport, 'assets/documentos/uniformados.csv');
-
+ */
     //
     DB::commit();
     echo 'carga de datos finalizada!';

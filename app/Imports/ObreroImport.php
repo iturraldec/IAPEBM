@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
     1. reemplazo de caracter especial por 'Ñ'
     2. reemplazo de los tipos sanguineos por: 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'
-    3. aceptar 'cod_tipoemp': 2, 5, 8, 9, 11
+    3. aceptar 'cod_tipoemp': 3, 7, 10
     4. eliminar columna 'zona_postal_usr
     5. eliminar columna 'cod_car_pol'
     6. eliminar columna 'cod_car_patr'
@@ -21,11 +21,11 @@ use Illuminate\Support\Facades\DB;
 */
 
 //
-class AdminImport implements ToCollection, WithHeadingRow
+class ObreroImport implements ToCollection, WithHeadingRow
 {
     public function collection(Collection $rows)
     {
-        $administrativos = [2, 5, 8, 9, 11];
+        $administrativos = [3, 7, 10];
         foreach ($rows as $row) {
             if (array_search($row['cod_tipoemp'], $administrativos)) {
                 $civil_status_id = null;
@@ -80,10 +80,10 @@ class AdminImport implements ToCollection, WithHeadingRow
                     ]);
                 }
 
-                // empleado administrativo
+                // empleado obrero
                 $record = [
                     'person_id'         => $person_id,
-                    'type_id'           => 1,
+                    'type_id'           => 2,
                     'codigo_nomina'     => $row['codigo_isnt'],
                     'cargo_id'          => $row['codigo_cargo'],
                     'condicion_id'      => $row['condicion_usr'],
