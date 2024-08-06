@@ -24,11 +24,15 @@ class PoliceImport implements ToCollection, WithHeadingRow
             // datos de la persona
             $record = [
                 'cedula'            => $row['cedula_id'],
-                'first_name'        => substr($row['nom_ape'], 0, 50),
-                'first_last_name'   => substr($row['nom_ape'], 0, 50),
-                'sex'               => $row['sexo'],
+                'first_name'        => substr($row['nombre_1'], 0, 50),
+                'second_name'        => substr($row['nombre_2'], 0, 50),
+                'first_last_name'   => substr($row['apellido_1'], 0, 50),
+                'second_last_name'  => substr($row['apellido_2'], 0, 50),
+                //'sex'               => $row['sex'],
+                'sex'               => 'M',
                 'birthday'          => date('Y-m-d', strtotime($row['fecha_nac'])),
-                'place_of_birth'    => $row['lugar_nac'],
+                //'place_of_birth'    => $row['lugar_nac'],
+                'place_of_birth'    => 'POR DEFINIR',
                 'civil_status_id'   => $civil_status_id,
                 'blood_type'        => $row['grupo_sang_usr'],
             ];
@@ -57,7 +61,7 @@ class PoliceImport implements ToCollection, WithHeadingRow
                 DB::table('addresses')->insert([
                     'person_id'     => $person_id,
                     'parroquia_id'  => 556,
-                    'address'       => $row['ult_direcc'],
+                    'address'       => substr($row['ult_direcc'], 0, 250),
                     'zona_postal'   => $row['zona_postal_usr']
                 ]);
             }
@@ -65,17 +69,17 @@ class PoliceImport implements ToCollection, WithHeadingRow
             // empleado uniformado
             $record = [
                 'person_id'         => $person_id,
-                'grupo_id'          => 1,
-                'codigo_nomina'     => $row['codigo_inst'],
+                'type_id'           => 3,
+                'codigo_nomina'     => $row['codigo_isnt'],
                 'cargo_id'          => $row['codigo_cargo'],
                 'condicion_id'      => $row['condicion_usr'],
                 'unidad_id'         => 1,
                 'fecha_ingreso'     => date('Y-m-d', strtotime($row['fecha_ing'])),
-                'tipo_id'           => 1,
+                'tipo_id'           => $row['cod_tipoemp'],
                 'rif'               => $row['rif_usr'],
                 'religion'          => $row['religion_usr'],
                 'deporte'           => $row['deportes_usr'],
-                'licencia'          => $row['gradolicen_usr'],
+                'licencia'          => $row['licen_usr'],
                 'codigo_patria'     => 'NO DEFINIDO',
                 'serial_patria'     => 'NO DEFINIDO',
                 'religion'          => 'NO DEFINIDO',

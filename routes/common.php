@@ -32,10 +32,10 @@ Route::get('loadFromExcel', function() {
 
     echo 'obreros...<br>';
     Excel::import(new App\Imports\ObreroImport, '/home/iturraldec/Documentos/iapebm/administrativos-copia.csv');
+ 
+    echo 'uniformados...<br>';
+    Excel::import(new App\Imports\PoliceImport, '/home/iturraldec/Documentos/iapebm/uniformados-copia.csv');
 
-    /*echo 'uniformados...<br>';
-    Excel::import(new App\Imports\PoliceImport, 'assets/documentos/uniformados.csv');
- */
     //
     DB::commit();
     echo 'carga de datos finalizada!';
