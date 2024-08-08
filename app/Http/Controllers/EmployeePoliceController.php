@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EmployeePoliceStoreRequest;
 use App\Http\Requests\EmployeePoliceUpdateRequest;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Request;
 use Barryvdh\DomPDF\Facade;
 use App\Clases\Image;
 use App\Clases\RequestResponse;
@@ -19,6 +20,8 @@ use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
 use App\Models\Police;
+use App\Models\PoliceRango;
+use App\Models\Rango;
 
 //
 class EmployeePoliceController extends Controller
@@ -66,8 +69,9 @@ class EmployeePoliceController extends Controller
     $condiciones  = Condicion::OrderBy('name')->get();
     $tipos        = Tipo::OrderBy('name')->get();
     $estados      = $_estados->getEstados();
+    $rangos       = Rango::orderBy('name')->get();
 
-    return view('employee-police.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados'));
+    return view('employee-police.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados', 'rangos'));
   }
 
   // agregar empleado
@@ -127,6 +131,9 @@ class EmployeePoliceController extends Controller
     $inputPolice['employee_id'] = $employee->id;
     $police = Police::create($inputPolice);
 
+    // agrego el rango
+    $this->_addRangos($police, $request->rango_id, $request->rango_fecha);
+
     //
     $this->_requestResponse->success = true;
     $this->_requestResponse->message = 'Uniformado creado!';
@@ -144,11 +151,12 @@ class EmployeePoliceController extends Controller
     $condiciones      = Condicion::OrderBy('name')->get();
     $tipos            = Tipo::OrderBy('name')->get();
     $estados          = $_estados->getEstados();
+    $rangos           = Rango::orderBy('name')->get();
     $data['person']   = Person::getById($employees_polouse->person_id);
     $data['employee'] = $employees_polouse;
     $data['police']   = Police::where('employee_id', $employees_polouse->id)->first();
     
-    return view('employee-police.edit', compact('estados', 'unidades', 'cargos', 'condiciones', 'tipos', 'data'));
+    return view('employee-police.edit', compact('estados', 'unidades', 'cargos', 'condiciones', 'tipos', 'rangos', 'data'));
   }
 
   /**
@@ -207,7 +215,11 @@ class EmployeePoliceController extends Controller
 
     // actualizo los datos policiales
     $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
-    Police::where('employee_id', $employees_polouse->id)->update($inputPolice);
+    $police = Police::where('employee_id', $employees_polouse->id);
+    $police->update($inputPolice);
+
+    // actualizo el rango
+    $this->_addRangos($police, $request->rango_id, $request->rango_fecha);
 
     //
     $this->_requestResponse->success = true;
@@ -256,6 +268,21 @@ class EmployeePoliceController extends Controller
     };
     $person->addresses()->delete();
     $person->addresses()->saveMany($_addresses);
+  }
+
+  // agregar los rangos
+  private function _addRangos(Police $police, $rango_id, $rango_fecha)
+  {
+    $rangos = [];
+    foreach($rango_id as $indice => $rango) {
+      $rangos[] = new PoliceRango([
+                        'police_id'       => $police->id,
+                        'rango_id'        => $rango,
+                        'documento_fecha' => $rango_fecha[$indice],
+                      ]);
+    };
+    $police->rangos()->delete();
+    $police->rangos()->saveMany($rangos);
   }
 
   //

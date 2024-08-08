@@ -64,7 +64,8 @@ class EmployeePoliceUpdateRequest extends FormRequest
             'fecha_graduacion'      => 'required|date',
             'curso'                 => 'required|max:10',
             'curso_duracion'        => 'required|max:50',
-            'cup'                   => 'required|max:10',            
+            'cup'                   => 'required|max:10',
+            'rangos_id'             => 'required',
         ];
     }
 }

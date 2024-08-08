@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Police extends Model
 {
@@ -20,6 +21,12 @@ class Police extends Model
   //
   public function employee() : BelongsTo
   {
-      return $this->belongsTo(Police::class);
+    return $this->belongsTo(Police::class);
+  }
+
+  //
+  public function rangos() : HasMany 
+  {
+    return $this->hasMany(PoliceRango::class);
   }
 }

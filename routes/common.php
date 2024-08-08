@@ -5,8 +5,6 @@ use App\Http\Controllers\AuthController;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 
-use App\Enums\EmployeeBloodType;
-
 Route::get('loadFromExcel', function() {
   DB::beginTransaction();
 
@@ -18,7 +16,7 @@ Route::get('loadFromExcel', function() {
     Excel::import(new App\Imports\CondicionesImport, '/home/iturraldec/Documentos/iapebm/condiciones.csv');
 
     echo 'uniformados:rangos...<br>';
-    Excel::import(new App\Imports\JerarquiasImport, '/home/iturraldec/Documentos/iapebm/rangos.csv');
+    Excel::import(new App\Imports\RangosImport, '/home/iturraldec/Documentos/iapebm/rangos.csv');
 
     echo 'tipos...<br>';
     Excel::import(new App\Imports\TiposImport, '/home/iturraldec/Documentos/iapebm/tipos_empleados.csv');

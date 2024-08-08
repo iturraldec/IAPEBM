@@ -640,6 +640,40 @@
                     title="C.U.P. del uniformado"
               />
             </div>
+
+            <div class="col-4 form-group">
+              <label for="selectRango">Rango*</label>
+              <select id="selectRango" class="form-control" title="Rango del uniformado" name='rango_id[]'>
+                <option value="0" selected>SELECCIONE EL RANGO</option>
+                @foreach($rangos as $rango)
+                  <option value="{{ $rango->id }}">{{ $rango->name }}</option>
+                @endforeach
+              </select>
+            </div>
+
+            <div class="col-4 form-group">
+              <label for="inputRangoFecha">Fecha*</label>
+              <input type="date"
+                    class="form-control"
+                    id="inputRangoFecha"
+                    name="rango_fecha[]"
+                    value="{{ date('Y-m-d') }}"
+                    title="Fecha del documento"
+                    required
+              />
+            </div>
+
+            <div class="col-4 form-group">
+              <label for="inputRangoFile"></label>
+              <input type="file"
+                    class="form-control"
+                    id="inputRangoFile"
+                    name="rango_file[]"
+                    placeholder="Ingrese documento"
+                    title="Rango->Documento"
+              />
+            </div>
+
           </div>
           <!-- fin de row -->
         </div>

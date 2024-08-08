@@ -54,6 +54,8 @@ class EmployeePoliceStoreRequest extends FormRequest
             'curso'                 => 'required|max:10',
             'curso_duracion'        => 'required|max:50',
             'cup'                   => 'required|max:10',
+            'rango_id'              => 'required',
+            'rango_fecha'           => 'required',
         ];
     }
 }

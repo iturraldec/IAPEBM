@@ -6,13 +6,13 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\DB;
 
-class JerarquiasImport implements ToCollection, WithHeadingRow
+class RangosImport implements ToCollection, WithHeadingRow
 {
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) 
         {   
-          DB::table('jerarquias')->insert(['name' => $row['name']]);
+          DB::table('rangos')->insert(['name' => $row['name']]);
         }
     }
 }

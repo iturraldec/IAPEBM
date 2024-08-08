@@ -669,6 +669,85 @@
               />
             </div>
           </div>
+
+          <!-- rangos del empleado -->
+          <div class="col-12">
+            <div class="card bg-light">
+              <div class="card-header bg-lightblue">
+                <h3 class="card-title">Rangos del Uniformado*</h3>
+              </div>
+              <!-- /.card-header -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-4 mb-1">
+                      <select id="selectRangos" class="form-control" title="Rangos del uniformado">
+                        <option value="0" selected>SELECCIONE EL RANGO</option>
+                        @foreach ($rangos as $rango)
+                          <option value="{{ $rango->id }}">{{ $rango->name }}</option>
+                        @endforeach
+                        </select>
+                      </select>
+                    </div>
+                    
+                    <div class="col-4">
+                      <div class="input-group">
+                        <input type="date"
+                            class="form-control"
+                            id="inputRangoFecha"
+                            placeholder="Ingresa la fecha"
+                            title="Fecha de designación del rango"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="col-4">
+                      <div class="input-group mb-2">
+                        <label for="inputRangoFiile" class="form-control btn border"  title="Documento de designación de rango">Archivo</label>
+                        <input type="file" id="inputRangoFiile" style="display: none;" />
+  
+                        <div class="input-group-append">
+                          <button type="button"
+                                  id="btnAddressAdd"
+                                  class="input-group-text btn btn-primary btn-sm"
+                                  title="Agregar rango del empleado"
+                          >
+                            <i class="fas fa-plus-square"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-12">
+                      <table id="rangosDT" class="table table-hover border border-primary">
+                        <thead>
+                          <tr>
+                            <th scope="col">id</th>
+                            <th scope="col">Rango</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Documento</th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+          
+                        <tbody>
+                          @foreach ($data['police']->rangos as $rango)
+                            <tr>
+                              <td>{{ $rango->rango_id }}</td>
+                              <td>{{ $rango->rango->name }}</td>
+                              <td>{{ $rango->documento_fecha }}</td>
+                              <td>archivo</td>
+                              <td>eliminar</td>
+                            </tr>
+                          @endforeach
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>  
+                </div>
+                <!-- /.card-body -->
+            </div>
+          </div>
+          <!-- fin de rangos del uniformado -->
         </div>
         <!-- fin de datos administrativos -->
       </div>
@@ -678,7 +757,6 @@
     <!-- fin de card-body -->  
   </div>
   <!-- fin de card -->
-
 @endsection
 
 @section('js')
@@ -784,7 +862,41 @@
         {
           data: null,
           render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
+            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar dirección"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
+        }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de rangos
+    ///////////////////////////////////////////////////////////////////
+
+    var rangosDT = $('#rangosDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'id',
+          visible: false
+        },
+        {
+          data: 'rango',
+          orderable: false
+        },
+        {
+          data: 'fecha'
+        },
+        {
+          data: 'documento',
+          orderable: false
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar dirección"><i class="fas fa-trash-alt"></i></button>';
           },
           orderable: false
         }
