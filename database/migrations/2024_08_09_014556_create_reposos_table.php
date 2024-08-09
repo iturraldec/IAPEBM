@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('desde');
             $table->date('hasta');
             $table->text('motivo');
-            $table->string('file');
+            $table->string('file')->nullable();
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

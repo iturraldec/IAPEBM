@@ -26,6 +26,18 @@
         <li class="nav-item">
           <a class="nav-link" id="custom-tabs-one-admin-tab" data-toggle="pill" href="#custom-tabs-one-admin" role="tab" aria-controls="custom-tabs-one-admin" aria-selected="false">Administrativos</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" id="custom-tabs-one-fisionomia-tab" data-toggle="pill" href="#custom-tabs-one-fisionomia" role="tab" aria-controls="custom-tabs-one-fisionomia" aria-selected="false">Fisionomia</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="custom-tabs-one-estudios-tab" data-toggle="pill" href="#custom-tabs-one-estudios" role="tab" aria-controls="custom-tabs-one-estudios" aria-selected="false">Estudios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="custom-tabs-one-reposos-tab" data-toggle="pill" href="#custom-tabs-one-reposos" role="tab" aria-controls="custom-tabs-one-reposos" aria-selected="false">Reposos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="custom-tabs-one-vacaciones-tab" data-toggle="pill" href="#custom-tabs-one-vacaciones" role="tab" aria-controls="custom-tabs-one-vacaciones" aria-selected="false">Vacaciones</a>
+        </li>
       </ul>
     </div>
     <!-- fin de card-header -->
@@ -610,6 +622,30 @@
           </div>
         </div>
         <!-- fin de datos administrativos -->
+
+        <!-- datos fisionomicos -->
+        <div class="tab-pane fade" id="custom-tabs-one-fisionomia" role="tabpanel">
+          datos fisionomicos
+        </div>
+        <!-- fin de datos fisionomicos -->
+
+        <!-- datos estudiantiles -->
+        <div class="tab-pane fade" id="custom-tabs-one-estudios" role="tabpanel">
+          datos academicos
+        </div>
+        <!-- fin de datos estudiantiles -->
+
+        <!-- reposos -->
+        <div class="tab-pane fade" id="custom-tabs-one-reposos" role="tabpanel">
+          datos reposos
+        </div>
+        <!-- fin de reposos -->
+
+        <!-- datos vacaciones -->
+        <div class="tab-pane fade" id="custom-tabs-one-vacaciones" role="tabpanel">
+          datos vacaciones
+        </div>
+        <!-- fin de vacaciones -->
       </div>
       <!-- fin de tab -->
     </form>
