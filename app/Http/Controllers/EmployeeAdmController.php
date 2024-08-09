@@ -18,6 +18,7 @@ use App\Models\Tipo;
 use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
+use App\Models\Reposo;
 
 //
 class EmployeeAdmController extends Controller
@@ -197,6 +198,21 @@ class EmployeeAdmController extends Controller
                                     'licencia', 'cta_bancaria_nro', 'passport_nro');
 
     $employees_adm->update($inputEmployee);
+
+    // actualizo sus reposos
+    $employees_adm->reposos()->delete();
+    if($request->has('reposos_desde')) {
+      $reposos = [];
+      foreach($request->reposos_desde as $indice => $desde) {
+        $reposos[] = new Reposo([
+                        'employee_id' => $employees_adm->id,
+                        'desde'       => $desde,
+                        'hasta'       => $request->reposos_hasta[$indice],
+                        'motivo'      => $request->reposos_motivo[$indice],
+                    ]);
+      };
+      $employees_adm->reposos()->saveMany($reposos);
+    };
 
     //
     $this->_requestResponse->success = true;

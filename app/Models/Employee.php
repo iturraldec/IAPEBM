@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Person;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 //
 class Employee extends Model
@@ -49,5 +50,11 @@ class Employee extends Model
         return new Attribute(
             get: fn () => Unidad::find($this->unidad_id),
         );
+    }
+
+    // reposos
+    public function reposos() : HasMany 
+    {
+        return $this->hasMany(Reposo::class);
     }
 }
