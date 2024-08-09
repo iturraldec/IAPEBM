@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reposos', function (Blueprint $table) {
+        Schema::create('vacaciones', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('employee_id');
             $table->date('desde');
             $table->date('hasta');
-            $table->string('motivo');
-            $table->string('file')->nullable();
+            $table->string('periodo', 50);
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reposos');
+        Schema::dropIfExists('vacaciones');
     }
 };
