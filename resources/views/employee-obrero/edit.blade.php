@@ -26,6 +26,18 @@
         <li class="nav-item">
           <a class="nav-link" id="custom-tabs-one-admin-tab" data-toggle="pill" href="#custom-tabs-one-admin" role="tab" aria-controls="custom-tabs-one-admin" aria-selected="false">Administrativos</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" id="custom-tabs-one-fisionomia-tab" data-toggle="pill" href="#custom-tabs-one-fisionomia" role="tab" aria-controls="custom-tabs-one-fisionomia" aria-selected="false">Fisionomia</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="custom-tabs-one-estudios-tab" data-toggle="pill" href="#custom-tabs-one-estudios" role="tab" aria-controls="custom-tabs-one-estudios" aria-selected="false">Estudios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="custom-tabs-one-reposos-tab" data-toggle="pill" href="#custom-tabs-one-reposos" role="tab" aria-controls="custom-tabs-one-reposos" aria-selected="false">Reposos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="custom-tabs-one-vacaciones-tab" data-toggle="pill" href="#custom-tabs-one-vacaciones" role="tab" aria-controls="custom-tabs-one-vacaciones" aria-selected="false">Vacaciones</a>
+        </li>
       </ul>
     </div>
     <!-- fin de card-header -->
@@ -610,6 +622,100 @@
           </div>
         </div>
         <!-- fin de datos administrativos -->
+
+        <!-- datos fisionomicos -->
+        <div class="tab-pane fade" id="custom-tabs-one-fisionomia" role="tabpanel">
+          datos fisionomicos
+        </div>
+        <!-- fin de datos fisionomicos -->
+
+        <!-- datos estudiantiles -->
+        <div class="tab-pane fade" id="custom-tabs-one-estudios" role="tabpanel">
+          datos academicos
+        </div>
+        <!-- fin de datos estudiantiles -->
+
+        <!-- reposos -->
+        <div class="tab-pane fade" id="custom-tabs-one-reposos" role="tabpanel">
+          <div class="card card-primary">
+            <div class="card-header bg-lightblue">
+              <h3 class="card-title">Reposos del Empleado</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="row">
+                <div class="col-2 form-group">
+                  <label for="inputReposoDesde">Desde*</label>
+                  <input type="date" 
+                        class="form-control" 
+                        id="inputReposoDesde" 
+                        value="{{ date('Y-d-m') }}"
+                        title="Fecha inicial del reposo"
+                  />
+                </div>
+
+                <div class="col-2 form-group">
+                  <label for="inputReposoHasta">Hasta*</label>
+                  <input type="date" 
+                        class="form-control" 
+                        id="inputReposoHasta"
+                        value="{{ date('Y-d-m') }}"
+                        title="Fecha final del reposo"
+                  />
+                </div>
+
+                <div class="col-8 form-group">
+                  <label>Motivo*</label>
+                    <div class="input-group">
+                        <input type="text" 
+                              class="form-control" 
+                              id="inputReposoMotivo" 
+                              placeholder="Ingrese motivo del reposo"
+                              onkeyup="this.value = this.value.toUpperCase();"
+                        >
+
+                        <div class="input-group-append">
+                            <div id="btnReposoAdd" class="input-group-text" title="Agregar reposo"><i class="fas fa-plus-square"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                  <table id="repososDT" class="table table-hover border border-primary" width="100%">
+                    <thead class="text-center">
+                      <tr>
+                        <th scope="col">Desde</th>
+                        <th scope="col">Hasta</th>
+                        <th scope="col">Motivo</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+      
+                    <tbody>
+                      @foreach ($data['employee']->reposos as $reposo)
+                        <tr>
+                          <td>{{ $reposo->desde }}</td>
+                          <td>{{ $reposo->hasta }}</td>
+                          <td>{{ $reposo->motivo }}</td>
+                          <td></td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+        </div>
+        <!-- fin de reposos -->
+
+        <!-- datos vacaciones -->
+        <div class="tab-pane fade" id="custom-tabs-one-vacaciones" role="tabpanel">
+          datos vacaciones
+        </div>
+        <!-- fin de vacaciones -->
+
       </div>
       <!-- fin de tab -->
     </form>
@@ -627,7 +733,7 @@
     // ruta de la entidad a actualizar
     ///////////////////////////////////////////////////////////////////
 
-    var ruta =  "{{ route('employees-obrero.update', ['employees_obrero' => $data['employee']['id']]) }}";
+    var ruta =  "{{ route('employees-obrero.update', ['employees_obrero' => $data['employee']]) }}";
 
     ///////////////////////////////////////////////////////////////////
     // tabla de emails
@@ -726,6 +832,39 @@
             return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
           },
           orderable: false
+        }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de reposos
+    ///////////////////////////////////////////////////////////////////
+
+    var repososDT = $('#repososDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'desde',
+          width: '10%'
+        },
+        {
+          data: 'hasta',
+          width: '10%'
+        },
+        {
+          data: 'motivo',
+          width: '70%',
+          orderable: false,
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar reposo"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false,
+          width: '10%'
         }
       ]
     });
@@ -981,6 +1120,43 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // agregar reposos
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnReposoAdd").click(function() {
+      let desde   = $("#inputReposoDesde").val();
+      let hasta   = $("#inputReposoHasta").val();
+      let motivo  = $("#inputReposoMotivo").val();
+      
+      if(lib_isEmpty(desde)) {
+        lib_toastr("Error: Debe ingresar la fecha de inicio del reposo!");
+      }
+      else if(lib_isEmpty(hasta)) {
+        lib_toastr("Error: Debe ingresar la fecha de finalizacion del reposo!");
+      }
+      else if(lib_isEmpty(motivo)) {
+        lib_toastr("Error: Debe ingresar el motivo del reposo!");
+      }
+      else {
+        repososDT.row.add({
+          'desde'   : desde,
+          'hasta'   : hasta,
+          'motivo'  : motivo
+        })
+        .draw();
+        $("#inputReposoMotivo").val("");
+      }
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar reposos
+    ///////////////////////////////////////////////////////////////////
+
+    $("#repososDT tbody").on("click",".eliminar",function() {
+      repososDT.row($(this).parents()).remove().draw();
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // actualizar un empleado 
     ///////////////////////////////////////////////////////////////////
 
@@ -992,6 +1168,9 @@
       phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
       addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
       addressesDT.column(4).data().each(address => data.append('addresses[]', address));
+      repososDT.column(0).data().each(desde => data.append('reposos_desde[]', desde));
+      repososDT.column(1).data().each(hasta => data.append('reposos_hasta[]', hasta));
+      repososDT.column(2).data().each(motivo => data.append('reposos_motivo[]', motivo));
 
       fetch(ruta, {
         headers: {
