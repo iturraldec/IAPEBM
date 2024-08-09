@@ -215,11 +215,11 @@ class EmployeePoliceController extends Controller
 
     // actualizo los datos policiales
     $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
-    $police = Police::where('employee_id', $employees_polouse->id);
+    $police = Police::where('employee_id', $employees_polouse->id)->first();
     $police->update($inputPolice);
 
     // actualizo el rango
-    $this->_addRangos($police, $request->rango_id, $request->rango_fecha);
+    $this->_addRangos($police, $request->rangos_id, $request->rangos_fecha);
 
     //
     $this->_requestResponse->success = true;

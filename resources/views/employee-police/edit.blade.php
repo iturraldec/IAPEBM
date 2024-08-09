@@ -668,86 +668,86 @@
                     title="C.U.P. del uniformado"
               />
             </div>
-          </div>
 
-          <!-- rangos del empleado -->
-          <div class="col-12">
-            <div class="card bg-light">
-              <div class="card-header bg-lightblue">
-                <h3 class="card-title">Rangos del Uniformado*</h3>
-              </div>
-              <!-- /.card-header -->
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-4 mb-1">
-                      <select id="selectRangos" class="form-control" title="Rangos del uniformado">
-                        <option value="0" selected>SELECCIONE EL RANGO</option>
-                        @foreach ($rangos as $rango)
-                          <option value="{{ $rango->id }}">{{ $rango->name }}</option>
-                        @endforeach
+            <!-- rangos -->
+            <div class="col-12">
+              <div class="card bg-light">
+                <div class="card-header bg-lightblue">
+                  <h3 class="card-title">Rangos del Uniformado*</h3>
+                </div>
+                <!-- /.card-header -->
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-4 mb-1">
+                        <select id="selectRangos" class="form-control" title="Rangos del uniformado">
+                          <option value="0" selected>SELECCIONE EL RANGO</option>
+                          @foreach ($rangos as $rango)
+                            <option value="{{ $rango->id }}">{{ $rango->name }}</option>
+                          @endforeach
+                          </select>
                         </select>
-                      </select>
-                    </div>
-                    
-                    <div class="col-4">
-                      <div class="input-group">
-                        <input type="date"
-                            class="form-control"
-                            id="inputRangoFecha"
-                            placeholder="Ingresa la fecha"
-                            title="Fecha de designación del rango"
-                        />
                       </div>
-                    </div>
-
-                    <div class="col-4">
-                      <div class="input-group mb-2">
-                        <label for="inputRangoFiile" class="form-control btn border"  title="Documento de designación de rango">Archivo</label>
-                        <input type="file" id="inputRangoFiile" style="display: none;" />
-  
-                        <div class="input-group-append">
-                          <button type="button"
-                                  id="btnAddressAdd"
-                                  class="input-group-text btn btn-primary btn-sm"
-                                  title="Agregar rango del empleado"
-                          >
-                            <i class="fas fa-plus-square"></i>
-                          </button>
+                      
+                      <div class="col-4">
+                        <div class="input-group">
+                          <input type="date"
+                              class="form-control"
+                              id="inputRangoFecha"
+                              placeholder="Ingresa la fecha"
+                              title="Fecha de designación del rango"
+                          />
                         </div>
                       </div>
-                    </div>
-  
-                    <div class="col-12">
-                      <table id="rangosDT" class="table table-hover border border-primary">
-                        <thead>
-                          <tr>
-                            <th scope="col">id</th>
-                            <th scope="col">Rango</th>
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Documento</th>
-                            <th scope="col"></th>
-                          </tr>
-                        </thead>
-          
-                        <tbody>
-                          @foreach ($data['police']->rangos as $rango)
+
+                      <div class="col-4">
+                        <div class="input-group mb-2">
+                          <label for="inputRangoFile" class="form-control btn border"  title="Documento de designación de rango">Archivo</label>
+                          <input type="file" id="inputRangoFile" style="display: none;" />
+    
+                          <div class="input-group-append">
+                            <button type="button"
+                                    id="btnAddRango"
+                                    class="input-group-text btn btn-primary btn-sm"
+                                    title="Agregar rango del empleado"
+                            >
+                              <i class="fas fa-plus-square"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="col-12">
+                        <table id="rangosDT" class="table table-hover border border-primary" width="80%">
+                          <thead>
                             <tr>
-                              <td>{{ $rango->rango_id }}</td>
-                              <td>{{ $rango->rango->name }}</td>
-                              <td>{{ $rango->documento_fecha }}</td>
-                              <td>archivo</td>
-                              <td>eliminar</td>
+                              <th scope="col">id</th>
+                              <th scope="col">Rango</th>
+                              <th scope="col">Fecha</th>
+                              <th scope="col">Documento</th>
+                              <th scope="col"></th>
                             </tr>
-                          @endforeach
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>  
-                </div>
-                <!-- /.card-body -->
+                          </thead>
+            
+                          <tbody>
+                            @foreach ($data['police']->rangos as $rango)
+                              <tr>
+                                <td>{{ $rango->rango_id }}</td>
+                                <td>{{ $rango->rango->name }}</td>
+                                <td>{{ $rango->documento_fecha }}</td>
+                                <td>archivo</td>
+                                <td></td>
+                              </tr>
+                            @endforeach
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>  
+                  </div>
+                  <!-- /.card-body -->
+              </div>
             </div>
+            <!-- fin de rangos -->
           </div>
-          <!-- fin de rangos del uniformado -->
         </div>
         <!-- fin de datos administrativos -->
       </div>
@@ -896,7 +896,7 @@
         {
           data: null,
           render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar dirección"><i class="fas fa-trash-alt"></i></button>';
+            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar rango"><i class="fas fa-trash-alt"></i></button>';
           },
           orderable: false
         }
@@ -1134,6 +1134,36 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // agregar rango
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnAddRango").click(function() {
+      let fecha = $("#inputRangoFecha").val();
+      
+      if(lib_isEmpty(fecha)) {
+        lib_toastr("Error: Debe ingresar fecha de designación del Rango!");
+      }
+      else {
+        rangosDT.row.add({
+          'id'        : $("#selectRangos :selected").val(),
+          'rango'     : $("#selectRangos :selected").text(),
+          'fecha'     : fecha,
+          'documento' : 'archivo'
+        })
+        .draw();
+        $("#inputRangoFecha").val("");
+      }
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar rango
+    ///////////////////////////////////////////////////////////////////
+
+    $("#rangosDT tbody").on("click",".eliminar",function() {
+      rangosDT.row($(this).parents()).remove().draw();
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // cargar unidades especificas de una unidad general
     ///////////////////////////////////////////////////////////////////
 
@@ -1165,6 +1195,8 @@
       phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
       addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
       addressesDT.column(4).data().each(address => data.append('addresses[]', address));
+      rangosDT.column(0).data().each(rango => data.append('rangos_id[]', rango));
+      rangosDT.column(2).data().each(fecha => data.append('rangos_fecha[]', fecha));
 
       fetch(ruta, {
         headers: {
