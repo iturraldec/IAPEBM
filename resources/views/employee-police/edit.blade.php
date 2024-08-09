@@ -812,6 +812,7 @@
                               id="inputReposoMotivo" 
                               placeholder="Ingrese motivo del reposo"
                               onkeyup="this.value = this.value.toUpperCase();"
+                              title="Motivo del reposo"
                         >
 
                         <div class="input-group-append">

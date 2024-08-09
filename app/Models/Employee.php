@@ -57,4 +57,10 @@ class Employee extends Model
     {
         return $this->hasMany(Reposo::class);
     }
+
+    // vacaciones
+    public function vacaciones() : HasMany 
+    {
+        return $this->hasMany(Vacacione::class);
+    }
 }
