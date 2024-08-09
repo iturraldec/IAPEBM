@@ -22,6 +22,7 @@ use App\Models\Employee;
 use App\Models\Police;
 use App\Models\PoliceRango;
 use App\Models\Rango;
+use App\Models\Reposo;
 
 //
 class EmployeePoliceController extends Controller
@@ -212,6 +213,21 @@ class EmployeePoliceController extends Controller
                                     'licencia', 'cta_bancaria_nro', 'passport_nro');
 
     $employees_polouse->update($inputEmployee);
+
+    // actualizo sus reposos
+    $employees_polouse->reposos()->delete();
+    if($request->has('reposos_desde')) {
+      $reposos = [];
+      foreach($request->reposos_desde as $indice => $desde) {
+        $reposos[] = new Reposo([
+                        'employee_id' => $employees_polouse->id,
+                        'desde'       => $desde,
+                        'hasta'       => $request->reposos_hasta[$indice],
+                        'motivo'      => $request->reposos_motivo[$indice],
+                    ]);
+      };
+      $employees_polouse->reposos()->saveMany($reposos);
+    };
 
     // actualizo los datos policiales
     $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
