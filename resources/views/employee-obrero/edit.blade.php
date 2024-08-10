@@ -713,7 +713,77 @@
 
         <!-- datos vacaciones -->
         <div class="tab-pane fade" id="custom-tabs-one-vacaciones" role="tabpanel">
-          datos vacaciones
+          <div class="card card-primary">
+            <div class="card-header bg-lightblue">
+              <h3 class="card-title">Vacaciones del Empleado</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="row">
+                <div class="col-2 form-group">
+                  <label for="inputVacacionDesde">Desde*</label>
+                  <input type="date" 
+                        class="form-control" 
+                        id="inputVacacionDesde" 
+                        value="{{ date('Y-d-m') }}"
+                        title="Fecha inicial de las vacaciónes"
+                  />
+                </div>
+
+                <div class="col-2 form-group">
+                  <label for="inputVacacionHasta">Hasta*</label>
+                  <input type="date" 
+                        class="form-control" 
+                        id="inputVacacionHasta"
+                        value="{{ date('Y-d-m') }}"
+                        title="Fecha final de las vacaciones"
+                  />
+                </div>
+
+                <div class="col-8 form-group">
+                  <label>Periodo*</label>
+                    <div class="input-group">
+                        <input type="text" 
+                              class="form-control" 
+                              id="inputVacacionPeriodo" 
+                              placeholder="Ingrese periodo de las vacaciones"
+                              onkeyup="this.value = this.value.toUpperCase();"
+                              title="Periodo de las vacaciones"
+                        >
+
+                        <div class="input-group-append">
+                            <div id="btnVacacionAdd" class="input-group-text" title="Agregar vacación"><i class="fas fa-plus-square"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                  <table id="vacacionesDT" class="table table-hover border border-primary" width="100%">
+                    <thead class="text-center">
+                      <tr>
+                        <th scope="col">Desde</th>
+                        <th scope="col">Hasta</th>
+                        <th scope="col">Periodo</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+      
+                    <tbody>
+                      @foreach ($data['employee']->vacaciones as $vacacion)
+                        <tr>
+                          <td>{{ $vacacion->desde }}</td>
+                          <td>{{ $vacacion->hasta }}</td>
+                          <td>{{ $vacacion->periodo }}</td>
+                          <td></td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
         </div>
         <!-- fin de vacaciones -->
 
@@ -863,6 +933,39 @@
           data: null,
           render: function ( data, type, row, meta ) {
             return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar reposo"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false,
+          width: '10%'
+        }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de vacaciones
+    ///////////////////////////////////////////////////////////////////
+
+    var vacacionesDT = $('#vacacionesDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'desde',
+          width: '10%'
+        },
+        {
+          data: 'hasta',
+          width: '10%'
+        },
+        {
+          data: 'periodo',
+          width: '70%',
+          orderable: false,
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar vacación"><i class="fas fa-trash-alt"></i></button>';
           },
           orderable: false,
           width: '10%'
@@ -1158,6 +1261,43 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // agregar vacaciones
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnVacacionAdd").click(function() {
+      let desde   = $("#inputVacacionDesde").val();
+      let hasta   = $("#inputVacacionHasta").val();
+      let periodo  = $("#inputVacacionPeriodo").val();
+      
+      if(lib_isEmpty(desde)) {
+        lib_toastr("Error: Debe ingresar la fecha de inicio de las vacaciones!");
+      }
+      else if(lib_isEmpty(hasta)) {
+        lib_toastr("Error: Debe ingresar la fecha de finalizacion de las vacaciones!");
+      }
+      else if(lib_isEmpty(periodo)) {
+        lib_toastr("Error: Debe ingresar el periodo de las vacaciones!");
+      }
+      else {
+        vacacionesDT.row.add({
+          'desde'   : desde,
+          'hasta'   : hasta,
+          'periodo'  : periodo
+        })
+        .draw();
+        $("#inputVacacionPeriodo").val("");
+      }
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar vacaciones
+    ///////////////////////////////////////////////////////////////////
+
+    $("#vacacionesDT tbody").on("click",".eliminar",function() {
+      vacacionesDT.row($(this).parents()).remove().draw();
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // actualizar un empleado 
     ///////////////////////////////////////////////////////////////////
 
@@ -1172,6 +1312,9 @@
       repososDT.column(0).data().each(desde => data.append('reposos_desde[]', desde));
       repososDT.column(1).data().each(hasta => data.append('reposos_hasta[]', hasta));
       repososDT.column(2).data().each(motivo => data.append('reposos_motivo[]', motivo));
+      vacacionesDT.column(0).data().each(desde => data.append('vacaciones_desde[]', desde));
+      vacacionesDT.column(1).data().each(hasta => data.append('vacaciones_hasta[]', hasta));
+      vacacionesDT.column(2).data().each(periodo => data.append('vacaciones_periodo[]', periodo));
 
       fetch(ruta, {
         headers: {

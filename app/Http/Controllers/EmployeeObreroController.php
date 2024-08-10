@@ -19,6 +19,7 @@ use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
 use App\Models\Reposo;
+use App\Models\Vacacione;
 
 //
 class EmployeeObreroController extends Controller
@@ -212,6 +213,21 @@ class EmployeeObreroController extends Controller
                     ]);
       };
       $employees_obrero->reposos()->saveMany($reposos);
+    };
+
+    // actualizo sus vacaciones
+    $employees_obrero->vacaciones()->delete();
+    if($request->has('vacaciones_desde')) {
+      $vacaciones = [];
+      foreach($request->vacaciones_desde as $indice => $desde) {
+        $vacaciones[] = new Vacacione([
+                        'employee_id' => $employees_obrero->id,
+                        'desde'       => $desde,
+                        'hasta'       => $request->vacaciones_hasta[$indice],
+                        'periodo'     => $request->vacaciones_periodo[$indice],
+                    ]);
+      };
+      $employees_obrero->vacaciones()->saveMany($vacaciones);
     };
 
     //
