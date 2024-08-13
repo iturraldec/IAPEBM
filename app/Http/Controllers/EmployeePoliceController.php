@@ -59,7 +59,7 @@ class EmployeePoliceController extends Controller
   public function index()
   {
     return request()->ajax() ? datatables()->of(Employee::where('type_id', $this->_type_id)->with('person'))->toJson()
-                             : view('employee-police.index');              
+                             : view('employee-police.index');
   }
 
   // vista para crear empleado

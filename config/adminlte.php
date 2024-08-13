@@ -377,6 +377,15 @@ return [
             ]
         ],
         [
+            'text'  => 'Consultas',
+            'submenu'   => [
+                [
+                    'text'    => 'Empleados',
+                    'route'   => 'query.employees'
+                ],
+            ]
+        ],
+        [
             'text'    => 'Mantenimiento',
             'icon'    => 'fas fa-tools',
             'url'   => '/',

@@ -12,6 +12,7 @@ use App\Http\Controllers\UnidadEspecificaController;
 use App\Http\Controllers\EmployeeAdmController;
 use App\Http\Controllers\EmployeeObreroController;
 use App\Http\Controllers\EmployeePoliceController;
+use App\Http\Controllers\QueryEmployeeController;
 use App\Http\Controllers\UbicacionController;
 
 //
@@ -59,3 +60,7 @@ Route::resource('employees-obrero', EmployeeObreroController::class)->names('emp
 
 // empleados policiales
 Route::resource('employees-police', EmployeePoliceController::class)->names('employees-police');
+
+// consultas
+Route::get('query/empleados/{tipo?}', [QueryEmployeeController::class, 'index'])->name('query.employees');
+Route::get('query/empleados/lst-por-unidad/{tipo}/{unidad}', [QueryEmployeeController::class, 'lstPorUnidad'])->name('query.employees.lst-por-unidad');
