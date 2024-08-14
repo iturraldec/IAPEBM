@@ -80,6 +80,10 @@ class ObreroImport implements ToCollection, WithHeadingRow
                     ]);
                 }
 
+                // busco su unidad operativa
+                $unidad = DB::select("SELECT id FROM unidades WHERE code = '{$row['codigo_ub']}';");
+                $unidad_id = (empty($unidad)) ? 1 : $unidad[0]->id;
+
                 // empleado obrero
                 $record = [
                     'person_id'         => $person_id,
@@ -87,7 +91,7 @@ class ObreroImport implements ToCollection, WithHeadingRow
                     'codigo_nomina'     => $row['codigo_isnt'],
                     'cargo_id'          => $row['codigo_cargo'],
                     'condicion_id'      => $row['condicion_usr'],
-                    'unidad_id'         => 1,
+                    'unidad_id'         => $unidad_id,
                     'fecha_ingreso'     => date('Y-m-d', strtotime($row['fecha_ing'])),
                     'tipo_id'           => $row['cod_tipoemp'],
                     'rif'               => $row['rif_usr'],

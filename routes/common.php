@@ -9,7 +9,7 @@ Route::get('loadFromExcel', function() {
   DB::beginTransaction();
 
   try {
-    echo 'cargos...<br>';
+    /* echo 'cargos...<br>';
     Excel::import(new App\Imports\CargosImport, '/home/iturraldec/Documentos/iapebm/cargos.csv');
 
     echo 'condiciones...<br>';
@@ -27,13 +27,13 @@ Route::get('loadFromExcel', function() {
 
     echo 'administrativos...<br>';
     Excel::import(new App\Imports\AdminImport, '/home/iturraldec/Documentos/iapebm/administrativos-copia.csv');
-
+ */
     echo 'obreros...<br>';
     Excel::import(new App\Imports\ObreroImport, '/home/iturraldec/Documentos/iapebm/administrativos-copia.csv');
  
     echo 'uniformados...<br>';
     Excel::import(new App\Imports\PoliceImport, '/home/iturraldec/Documentos/iapebm/uniformados-copia.csv');
-
+ 
     //
     DB::commit();
     echo 'carga de datos finalizada!';
