@@ -31,7 +31,8 @@ class QueryEmployeeController extends Controller
                     c.name as unidad_especifica,
                     a.cedula,
                     CONCAT(a.first_last_name, ' ', a.second_last_name) apellidos,
-                    CONCAT(a.first_name, ' ', a.second_name) nombres
+                    CONCAT(a.first_name, ' ', a.second_name) nombres,
+                    a.imagef
               FROM people a 
                           INNER JOIN employees b ON a.id = b.person_id
                           INNER JOIN unidades c ON b.unidad_id = c.id
@@ -47,7 +48,8 @@ class QueryEmployeeController extends Controller
                     c.name as unidad_especifica,
                     a.cedula,
                     CONCAT(a.first_last_name, ' ', a.second_last_name) apellidos,
-                    CONCAT(a.first_name, ' ', a.second_name) nombres
+                    CONCAT(a.first_name, ' ', a.second_name) nombres,
+                    a.imagef
               FROM people a 
                           INNER JOIN employees b ON a.id = b.person_id
                           INNER JOIN unidades c ON b.unidad_id = c.id
