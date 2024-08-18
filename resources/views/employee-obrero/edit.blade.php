@@ -597,13 +597,13 @@
             </div>
 
             <div class="col-4 form-group">
-              <label for="inputLicencia">Licencia</label>
+              <label for="inputLicencia">Licencia de conducir</label>
               <input type="text"
                     class="form-control"
                     id="inputLicencia"
                     name="licencia"
                     value="{{ $data['employee']['licencia'] }}"
-                    placeholder="Ingrese la licencia"
+                    placeholder="Ingrese la licencia de conducir"
                     title="Licencia de conducir del empleado"
               />
             </div>

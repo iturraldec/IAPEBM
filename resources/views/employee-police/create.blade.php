@@ -564,12 +564,12 @@
             </div>
 
             <div class="col-4 form-group">
-              <label for="inputLicencia">Licencia</label>
+              <label for="inputLicencia">Licencia de conducir</label>
               <input type="text"
                     class="form-control"
                     id="inputLicencia"
                     name="licencia"
-                    placeholder="Ingrese la licencia"
+                    placeholder="Ingrese la licencia de conducir"
                     title="Licencia de conducir del empleado"
               />
             </div>
@@ -652,7 +652,7 @@
             </div>
 
             <div class="col-4 form-group">
-              <label for="inputRangoFecha">Fecha*</label>
+              <label for="inputRangoFecha">Fecha de asignación de rango*</label>
               <input type="date"
                     class="form-control"
                     id="inputRangoFecha"

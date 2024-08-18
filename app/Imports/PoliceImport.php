@@ -39,6 +39,10 @@ class PoliceImport implements ToCollection, WithHeadingRow
 
             $person_id = DB::table('people')->insertGetId($record);
 
+            // creo su carpeta de documentos
+            $path = storage_path("app/public/employees/{$row['cedula_id']}/");
+            mkdir($path);
+
             // datos de los telefonos
             if(substr($row['tlf_movil'], 0, 4) != '0000') {
                 DB::table('phones')->insert([
