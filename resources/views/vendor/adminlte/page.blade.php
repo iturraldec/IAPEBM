@@ -33,7 +33,6 @@
         @endif
 
         {{-- Content Wrapper --}}
-        
         @empty($iFrameEnabled)
             @include('adminlte::partials.cwrapper.cwrapper-default')
         @else

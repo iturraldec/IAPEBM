@@ -18,6 +18,9 @@
     {{-- Content Header --}}
     @hasSection('content_header')
         <div class="content-header">
+            @if (env('APP_ENV') == 'test')
+                <p class="bg-danger text-center h2">SISTEMA EN MODO TESTING</p>
+            @endif
             <div class="{{ config('adminlte.classes_content_header') ?: $def_container_class }}">
                 @yield('content_header')
             </div>
