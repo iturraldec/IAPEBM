@@ -1,4 +1,4 @@
-@extends('layouts.pdf')
+@extends('layouts.pdf.pdf')
 
 @section('title', 'Listado de Empleados por Unidades Operativas')
 
