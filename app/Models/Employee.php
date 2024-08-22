@@ -55,7 +55,7 @@ class Employee extends Model
     // reposos
     public function reposos() : HasMany 
     {
-        return $this->hasMany(Reposo::class);
+        return $this->hasMany(EmpleadoReposo::class);
     }
 
     // vacaciones

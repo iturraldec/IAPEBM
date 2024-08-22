@@ -6,6 +6,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use Illuminate\Support\Str;
 
 
 Route::get('loadFromExcel', function() {
@@ -13,7 +14,7 @@ Route::get('loadFromExcel', function() {
   DB::beginTransaction();
 
   try {
-    echo 'cargos...<br>';
+    /* echo 'cargos...<br>';
     Excel::import(new App\Imports\CargosImport, '/home/iturraldec/Documentos/iapebm/cargos.csv');
 
     echo 'condiciones...<br>';
@@ -38,9 +39,12 @@ Route::get('loadFromExcel', function() {
     echo 'uniformados...<br>';
     Excel::import(new App\Imports\PoliceImport, '/home/iturraldec/Documentos/iapebm/uniformados-copia.csv');
 
+    echo 'cargar reposos...<br>';
+    Excel::import(new App\Imports\RepososImport, '/home/iturraldec/Documentos/iapebm/codigo-ivss.csv');
 
     getPhotos();
-    
+     */
+
     //
     DB::commit();
     echo 'carga de datos finalizada!';

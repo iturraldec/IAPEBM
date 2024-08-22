@@ -664,31 +664,54 @@
                   />
                 </div>
 
-                <div class="col-8 form-group">
-                  <label>Motivo*</label>
-                    <div class="input-group">
-                        <input type="text" 
-                              class="form-control" 
-                              id="inputReposoMotivo" 
-                              placeholder="Ingrese motivo del reposo"
-                              onkeyup="this.value = this.value.toUpperCase();"
-                              title="Motivo del reposo"
-                        >
+                <div class="col-2 form-group">
+                  <label>Código*</label>
+                  <input type="text" 
+                        class="form-control" 
+                        id="inputReposoCodigo" 
+                        placeholder="Código del reposo"
+                        onkeyup="this.value = this.value.toUpperCase();"
+                        title="Código del reposo"
+                  >
+                </div>
 
-                        <div class="input-group-append">
-                            <div id="btnReposoAdd" class="input-group-text" title="Agregar reposo"><i class="fas fa-plus-square"></i></div>
-                        </div>
+                <div class="col-6 form-group">
+                  <label for="selectReposo">Reposo</label>
+                  <select id="selectReposo" class="form-control" title="Reposo">
+                    <option value="0" selected>SELECCIONE EL REPOSO</option>
+                    @foreach($reposos as $reposo)
+                      <option value="{{ $reposo->id }}">
+                        {{ $reposo->codigo }}|{{ $reposo->diagnostico }}
+                      </option>
+                    @endforeach
+                  </select>
+                </div>
+
+                <div class="col-12 form-group">
+                  <label for="inputReposoObservacion">Observación</label>
+                  <div class="input-group">
+                    <input type="text" 
+                          class="form-control" 
+                          id="inputReposoObservacion"
+                          placeholder="Ingrese observaciones"
+                          title="Observaciones"
+                    />
+
+                    <div class="input-group-append">
+                      <div id="btnReposoAdd" class="input-group-text" title="Agregar reposo"><i class="fas fa-plus-square"></i></div>
                     </div>
+                  </div>
                 </div>
 
                 <div class="col">
                   <table id="repososDT" class="table table-hover border border-primary" width="100%">
                     <thead class="text-center">
                       <tr>
-                        <th scope="col">Desde</th>
-                        <th scope="col">Hasta</th>
-                        <th scope="col">Motivo</th>
-                        <th scope="col"></th>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                        <th>id</th>
+                        <th>Diagnóstico</th>
+                        <th></th>
                       </tr>
                     </thead>
       
@@ -697,7 +720,8 @@
                         <tr>
                           <td>{{ $reposo->desde }}</td>
                           <td>{{ $reposo->hasta }}</td>
-                          <td>{{ $reposo->motivo }}</td>
+                          <td>{{ $reposo->reposo_id }}</td>
+                          <td>{{ $reposo->reposo->diagnostico }}</td>
                           <td></td>
                         </tr>
                       @endforeach
@@ -918,15 +942,16 @@
       columns: [
         {
           data: 'desde',
-          width: '10%'
         },
         {
           data: 'hasta',
-          width: '10%'
         },
         {
-          data: 'motivo',
-          width: '70%',
+          data: 'id',
+          visible: false
+        },
+        {
+          data: 'diagnostico',
           orderable: false,
         },
         {
@@ -935,7 +960,6 @@
             return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar reposo"><i class="fas fa-trash-alt"></i></button>';
           },
           orderable: false,
-          width: '10%'
         }
       ]
     });
@@ -1224,13 +1248,32 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // buscar reposos por su codigo
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputReposoCodigo").change(function() {
+      let ruta = "{{ route('reposos.get-by-code', ['search' => '.valor']) }}";
+
+      fetch(ruta.replace('.valor', $(this).val()))
+      .then(response => response.json())
+      .then(r => {
+        $("#selectReposo").empty();
+        $("#selectReposo").append('<option value="0">SELECCIONE EL REPOSO</option>');
+        r.forEach(element => {
+          $("#selectReposo").append(`<option value="${element.id}">${element.codigo}|${element.diagnostico}</option>`);
+        });
+      });
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // agregar reposos
     ///////////////////////////////////////////////////////////////////
 
     $("#btnReposoAdd").click(function() {
-      let desde   = $("#inputReposoDesde").val();
-      let hasta   = $("#inputReposoHasta").val();
-      let motivo  = $("#inputReposoMotivo").val();
+      let desde       = $("#inputReposoDesde").val();
+      let hasta       = $("#inputReposoHasta").val();
+      let id          = $("#selectReposo :selected").val();
+      let diagnostico = $("#selectReposo :selected").text();
       
       if(lib_isEmpty(desde)) {
         lib_toastr("Error: Debe ingresar la fecha de inicio del reposo!");
@@ -1238,17 +1281,18 @@
       else if(lib_isEmpty(hasta)) {
         lib_toastr("Error: Debe ingresar la fecha de finalizacion del reposo!");
       }
-      else if(lib_isEmpty(motivo)) {
-        lib_toastr("Error: Debe ingresar el motivo del reposo!");
+      else if(id == '0') {
+        lib_toastr("Error: Debe ingresar el diagnóstico del reposo!");
       }
       else {
         repososDT.row.add({
-          'desde'   : desde,
-          'hasta'   : hasta,
-          'motivo'  : motivo
+          'desde'       : desde,
+          'hasta'       : hasta,
+          'id'          : id,
+          'diagnostico' : diagnostico
         })
         .draw();
-        $("#inputReposoMotivo").val("");
+        $("#inputReposoObservacion").val("");
       }
     });
 
@@ -1311,11 +1355,11 @@
       addressesDT.column(4).data().each(address => data.append('addresses[]', address));
       repososDT.column(0).data().each(desde => data.append('reposos_desde[]', desde));
       repososDT.column(1).data().each(hasta => data.append('reposos_hasta[]', hasta));
-      repososDT.column(2).data().each(motivo => data.append('reposos_motivo[]', motivo));
+      repososDT.column(2).data().each(id => data.append('reposos_id[]', id));
       vacacionesDT.column(0).data().each(desde => data.append('vacaciones_desde[]', desde));
       vacacionesDT.column(1).data().each(hasta => data.append('vacaciones_hasta[]', hasta));
       vacacionesDT.column(2).data().each(periodo => data.append('vacaciones_periodo[]', periodo));
-
+      
       fetch(ruta, {
         headers: {
           'Accept' : 'application/json'

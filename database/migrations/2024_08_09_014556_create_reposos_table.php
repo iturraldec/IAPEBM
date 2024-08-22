@@ -13,14 +13,9 @@ return new class extends Migration
     {
         Schema::create('reposos', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('employee_id');
-            $table->date('desde');
-            $table->date('hasta');
-            $table->string('motivo');
-            $table->string('file')->nullable();
+            $table->string('codigo', 20)->uniqid();
+            $table->string('diagnostico');
             $table->timestamps();
-
-            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
         });
     }
 

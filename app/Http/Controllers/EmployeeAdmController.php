@@ -14,6 +14,7 @@ use App\Models\Email;
 use App\Models\Phone;
 use App\Models\Cargo;
 use App\Models\Condicion;
+use App\Models\EmpleadoReposo;
 use App\Models\Tipo;
 use App\Models\Unidad;
 use App\Models\Person;
@@ -140,10 +141,11 @@ class EmployeeAdmController extends Controller
     $condiciones      = Condicion::OrderBy('name')->get();
     $tipos            = Tipo::OrderBy('name')->get();
     $estados          = $_estados->getEstados();
+    $reposos          = Reposo::orderBy('codigo')->take(100)->get();
     $data['person']   = Person::getById($employees_adm->person_id);
     $data['employee'] = $employees_adm;
     
-    return view('employee-adm.edit', compact('estados', 'unidades', 'cargos', 'condiciones', 'tipos', 'data'));
+    return view('employee-adm.edit', compact('estados', 'unidades', 'cargos', 'condiciones', 'tipos', 'reposos', 'data'));
   }
 
   /**
@@ -200,16 +202,17 @@ class EmployeeAdmController extends Controller
 
     $employees_adm->update($inputEmployee);
 
-    // actualizo sus reposos
+    // actualizo reposos
     $employees_adm->reposos()->delete();
     if($request->has('reposos_desde')) {
       $reposos = [];
       foreach($request->reposos_desde as $indice => $desde) {
-        $reposos[] = new Reposo([
+        $reposos[] = new EmpleadoReposo([
                         'employee_id' => $employees_adm->id,
+                        'reposo_id'   => $request->reposos_id[$indice],
                         'desde'       => $desde,
                         'hasta'       => $request->reposos_hasta[$indice],
-                        'motivo'      => $request->reposos_motivo[$indice],
+                        'observacion' => 'observacion',
                     ]);
       };
       $employees_adm->reposos()->saveMany($reposos);
