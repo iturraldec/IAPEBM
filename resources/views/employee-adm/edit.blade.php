@@ -678,12 +678,6 @@
                 <div class="col-6 form-group">
                   <label for="selectReposo">Reposo</label>
                   <select id="selectReposo" class="form-control" title="Reposo">
-                    <option value="0" selected>SELECCIONE EL REPOSO</option>
-                    @foreach($reposos as $reposo)
-                      <option value="{{ $reposo->id }}">
-                        {{ $reposo->codigo }}|{{ $reposo->diagnostico }}
-                      </option>
-                    @endforeach
                   </select>
                 </div>
 
@@ -694,7 +688,8 @@
                           class="form-control" 
                           id="inputReposoObservacion"
                           placeholder="Ingrese observaciones"
-                          title="Observaciones"
+                          onkeyup="this.value = this.value.toUpperCase();"
+                          title="Observaciones del reposo"
                     />
 
                     <div class="input-group-append">
@@ -711,6 +706,7 @@
                         <th>Hasta</th>
                         <th>id</th>
                         <th>Diagnóstico</th>
+                        <th>observacion</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -722,6 +718,7 @@
                           <td>{{ $reposo->hasta }}</td>
                           <td>{{ $reposo->reposo_id }}</td>
                           <td>{{ $reposo->reposo->diagnostico }}</td>
+                          <td></td>
                           <td></td>
                         </tr>
                       @endforeach
@@ -953,6 +950,10 @@
         {
           data: 'diagnostico',
           orderable: false,
+        },
+        {
+          data: 'observacion',
+          visible: false,
         },
         {
           data: null,
@@ -1274,6 +1275,7 @@
       let hasta       = $("#inputReposoHasta").val();
       let id          = $("#selectReposo :selected").val();
       let diagnostico = $("#selectReposo :selected").text();
+      let observacion = $("#inputReposoObservacion").val();
       
       if(lib_isEmpty(desde)) {
         lib_toastr("Error: Debe ingresar la fecha de inicio del reposo!");
@@ -1281,7 +1283,7 @@
       else if(lib_isEmpty(hasta)) {
         lib_toastr("Error: Debe ingresar la fecha de finalizacion del reposo!");
       }
-      else if(id == '0') {
+      else if(lib_isEmpty(id) || id == '0') {
         lib_toastr("Error: Debe ingresar el diagnóstico del reposo!");
       }
       else {
@@ -1289,7 +1291,8 @@
           'desde'       : desde,
           'hasta'       : hasta,
           'id'          : id,
-          'diagnostico' : diagnostico
+          'diagnostico' : diagnostico,
+          'observacion' : observacion
         })
         .draw();
         $("#inputReposoObservacion").val("");
@@ -1356,6 +1359,7 @@
       repososDT.column(0).data().each(desde => data.append('reposos_desde[]', desde));
       repososDT.column(1).data().each(hasta => data.append('reposos_hasta[]', hasta));
       repososDT.column(2).data().each(id => data.append('reposos_id[]', id));
+      repososDT.column(4).data().each(observacion => data.append('reposos_observacion[]', observacion));
       vacacionesDT.column(0).data().each(desde => data.append('vacaciones_desde[]', desde));
       vacacionesDT.column(1).data().each(hasta => data.append('vacaciones_hasta[]', hasta));
       vacacionesDT.column(2).data().each(periodo => data.append('vacaciones_periodo[]', periodo));

@@ -141,11 +141,11 @@ class EmployeeAdmController extends Controller
     $condiciones      = Condicion::OrderBy('name')->get();
     $tipos            = Tipo::OrderBy('name')->get();
     $estados          = $_estados->getEstados();
-    $reposos          = Reposo::orderBy('codigo')->take(100)->get();
+    //$reposos          = Reposo::orderBy('codigo')->take(100)->get();
     $data['person']   = Person::getById($employees_adm->person_id);
     $data['employee'] = $employees_adm;
     
-    return view('employee-adm.edit', compact('estados', 'unidades', 'cargos', 'condiciones', 'tipos', 'reposos', 'data'));
+    return view('employee-adm.edit', compact('estados', 'unidades', 'cargos', 'condiciones', 'tipos', 'data'));
   }
 
   /**
@@ -212,7 +212,7 @@ class EmployeeAdmController extends Controller
                         'reposo_id'   => $request->reposos_id[$indice],
                         'desde'       => $desde,
                         'hasta'       => $request->reposos_hasta[$indice],
-                        'observacion' => 'observacion',
+                        'observacion' => $request->reposos_observacion[$indice],
                     ]);
       };
       $employees_adm->reposos()->saveMany($reposos);
