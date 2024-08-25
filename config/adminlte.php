@@ -356,6 +356,10 @@ return [
                     'text'    => 'Rangos',
                     'route'   => 'rangos.index'
                 ],
+                [
+                    'text'    => 'Reposos',
+                    'route'   => 'reposos.index'
+                ],
             ]
         ],
         [

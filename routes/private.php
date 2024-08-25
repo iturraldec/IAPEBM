@@ -15,6 +15,7 @@ use App\Http\Controllers\EmployeePoliceController;
 use App\Http\Controllers\QueryEmployeeController;
 use App\Http\Controllers\UbicacionController;
 use App\Http\Controllers\ReposoController;
+use App\Models\Reposo;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -44,17 +45,20 @@ Route::resource('cargos', CargoController::class)
   ->only(['index', 'store', 'update', 'destroy'])
   ->names('cargos');
 
-// rutas de los reangos (jerarquias) de los uniformados
+// rutas de los rangos (jerarquias) de los uniformados
 Route::resource('rangos', RangoController::class)
   ->only(['index', 'store', 'update', 'destroy'])
   ->names('rangos');
 
+// rutas de los reposos
+Route::resource('reposos', ReposoController::class)
+  ->only(['index', 'store', 'update', 'destroy'])
+  ->names('reposos');
+Route::get('reposos/get-by-code/{search?}', [ReposoController::class, 'getByCode'])->name('reposos.get-by-code');
+
 // rutas de las ubicaciones (estados/municipios/parroquias)
 Route::get('ubicacion/municipios/{estado_id}', [UbicacionController::class, 'getMunicipios'])->name('ubicacion.municipios');
 Route::get('ubicacion/parroquias/{municipio_id}', [UbicacionController::class, 'getParroquias'])->name('ubicacion.parroquias');
-
-// reposos
-Route::get('reposos/get-by-code/{search?}', [ReposoController::class, 'getByCode'])->name('reposos.get-by-code');
 
 // empleados administrativos
 Route::resource('employees-adm', EmployeeAdmController::class)->names('employees-adm');
