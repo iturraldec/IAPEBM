@@ -19,7 +19,6 @@ use App\Models\Tipo;
 use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
-use App\Models\Reposo;
 use App\Models\Vacacione;
 
 //
@@ -141,7 +140,6 @@ class EmployeeAdmController extends Controller
     $condiciones      = Condicion::OrderBy('name')->get();
     $tipos            = Tipo::OrderBy('name')->get();
     $estados          = $_estados->getEstados();
-    //$reposos          = Reposo::orderBy('codigo')->take(100)->get();
     $data['person']   = Person::getById($employees_adm->person_id);
     $data['employee'] = $employees_adm;
     

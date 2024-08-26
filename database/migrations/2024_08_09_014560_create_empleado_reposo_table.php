@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedInteger('reposo_id');
             $table->date('desde');
             $table->date('hasta');
-            $table->string('observacion');
+            $table->string('observacion')->nullable();
             $table->string('file')->nullable();
             $table->timestamps();
 

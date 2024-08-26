@@ -22,7 +22,7 @@ use App\Models\Employee;
 use App\Models\Police;
 use App\Models\PoliceRango;
 use App\Models\Rango;
-use App\Models\Reposo;
+use App\Models\EmpleadoReposo;
 use App\Models\Vacacione;
 
 //
@@ -215,16 +215,17 @@ class EmployeePoliceController extends Controller
 
     $employees_polouse->update($inputEmployee);
 
-    // actualizo sus reposos
+    // actualizo reposos
     $employees_polouse->reposos()->delete();
     if($request->has('reposos_desde')) {
       $reposos = [];
       foreach($request->reposos_desde as $indice => $desde) {
-        $reposos[] = new Reposo([
+        $reposos[] = new EmpleadoReposo([
                         'employee_id' => $employees_polouse->id,
+                        'reposo_id'   => $request->reposos_id[$indice],
                         'desde'       => $desde,
                         'hasta'       => $request->reposos_hasta[$indice],
-                        'motivo'      => $request->reposos_motivo[$indice],
+                        'observacion' => $request->reposos_observacion[$indice],
                     ]);
       };
       $employees_polouse->reposos()->saveMany($reposos);

@@ -18,7 +18,7 @@ use App\Models\Tipo;
 use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
-use App\Models\Reposo;
+use App\Models\EmpleadoReposo;
 use App\Models\Vacacione;
 
 //
@@ -200,16 +200,17 @@ class EmployeeObreroController extends Controller
 
     $employees_obrero->update($inputEmployee);
 
-    // actualizo sus reposos
+    // actualizo reposos
     $employees_obrero->reposos()->delete();
     if($request->has('reposos_desde')) {
       $reposos = [];
       foreach($request->reposos_desde as $indice => $desde) {
-        $reposos[] = new Reposo([
+        $reposos[] = new EmpleadoReposo([
                         'employee_id' => $employees_obrero->id,
+                        'reposo_id'   => $request->reposos_id[$indice],
                         'desde'       => $desde,
                         'hasta'       => $request->reposos_hasta[$indice],
-                        'motivo'      => $request->reposos_motivo[$indice],
+                        'observacion' => $request->reposos_observacion[$indice],
                     ]);
       };
       $employees_obrero->reposos()->saveMany($reposos);
