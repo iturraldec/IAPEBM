@@ -116,6 +116,63 @@ class ObreroImport implements ToCollection, WithHeadingRow
                 ];
 
                 DB::table('emails')->insert($record);
+
+                // datos fisionomicos
+                $fisionomia = DB::select('SELECT * FROM fisionomia;');
+                foreach($fisionomia as $item) {
+                    $record = [
+                        'employee_id'   => $empleado_id,
+                        'fisionomia_id' => $item->id,
+                    ];
+                    switch($item->id) {
+                        case 1 : $record['info'] = $row['estatura_usr'];
+                                 break;
+                        case 2 : $record['info'] = $row['color_tez_usr'];
+                                break;
+                        case 3 : $record['info'] = $row['cabello_usr'];
+                                break;
+                        case 4 : $record['info'] = $row['cara_usr'];
+                                break;
+                        case 5 : $record['info'] = $row['frente_usr'];
+                                break;
+                        case 6 : $record['info'] = $row['cejas_usr'];
+                                break;
+                        case 7 : $record['info'] = $row['ojos_usr'];
+                                 break;
+                        case 8 : $record['info'] = $row['nariz_usr'];
+                                 break;
+                        case 9 : $record['info'] = $row['boca_usr'];
+                                 break;
+                        case 10 : $record['info'] = $row['labios_usr'];
+                                 break;
+                        case 11 : $record['info'] = $row['barba_usr'];
+                                 break;
+                        case 12 : $record['info'] = $row['bigote_usr'];
+                                 break;
+                        case 13 : $record['info'] = $row['contextura_usr'];
+                                 break;
+                        case 14 : $record['info'] = $row['dentadura_usr'];
+                                 break;
+                        case 15 : $record['info'] = $row['peso_usr'];
+                                 break;
+                        case 16 : $record['info'] = $row['senales_part_usr'];
+                                 break;
+                        case 17 : $record['info'] = $row['lentes_usr'];
+                                 break;
+                        case 18 : $record['info'] = $row['talla_camisa_usr'];
+                                 break;
+                        case 19 : $record['info'] = $row['talla_pantalon_usr'];
+                                 break;
+                        case 20 : $record['info'] = $row['talla_calzado_usr'];
+                                 break;
+                        case 21 : $record['info'] = $row['talla_gorra_usr'];
+                                 break;
+                        default: $record['info'] = '?';
+                                 break;
+                    }
+
+                    DB::table('empleado_fisionomia')->insert($record);
+                }
             }
         }
     }

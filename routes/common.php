@@ -8,42 +8,41 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use Illuminate\Support\Str;
 
-
 Route::get('loadFromExcel', function() {
   set_time_limit(3000);
   DB::beginTransaction();
+  $dataPath = '/home/iturraldec/Documentos/informatica/iapebm/';
 
   try {
-    /* echo 'cargos...<br>';
-    Excel::import(new App\Imports\CargosImport, '/home/iturraldec/Documentos/iapebm/cargos.csv');
+    echo 'cargos...<br>';
+    Excel::import(new App\Imports\CargosImport, $dataPath . 'cargos.csv');
 
     echo 'condiciones...<br>';
-    Excel::import(new App\Imports\CondicionesImport, '/home/iturraldec/Documentos/iapebm/condiciones.csv');
+    Excel::import(new App\Imports\CondicionesImport, $dataPath . 'condiciones.csv');
 
-    echo 'uniformados:rangos...<br>';
-    Excel::import(new App\Imports\RangosImport, '/home/iturraldec/Documentos/iapebm/rangos.csv');
+    echo 'rangos...<br>';
+    Excel::import(new App\Imports\RangosImport, $dataPath . 'rangos.csv');
 
     echo 'tipos...<br>';
-    Excel::import(new App\Imports\TiposImport, '/home/iturraldec/Documentos/iapebm/tipos_empleados.csv');
+    Excel::import(new App\Imports\TiposImport, $dataPath . 'tipos_empleados.csv');
 
-    echo 'unidades...<br>';
-    Excel::import(new App\Imports\UnidadesGImport, '/home/iturraldec/Documentos/iapebm/uo_g.csv');
-    Excel::import(new App\Imports\UnidadesEImport, '/home/iturraldec/Documentos/iapebm/uo_e.csv');
-
-    echo 'administrativos...<br>';
-    Excel::import(new App\Imports\AdminImport, '/home/iturraldec/Documentos/iapebm/administrativos-copia.csv');
- 
-    echo 'obreros...<br>';
-    Excel::import(new App\Imports\ObreroImport, '/home/iturraldec/Documentos/iapebm/administrativos-copia.csv');
- 
-    echo 'uniformados...<br>';
-    Excel::import(new App\Imports\PoliceImport, '/home/iturraldec/Documentos/iapebm/uniformados-copia.csv');
+    echo 'unidades operativas...<br>';
+    Excel::import(new App\Imports\UnidadesGImport, $dataPath . 'uo_g.csv');
+    Excel::import(new App\Imports\UnidadesEImport, $dataPath . 'uo_e.csv');
 
     echo 'cargar reposos...<br>';
-    Excel::import(new App\Imports\RepososImport, '/home/iturraldec/Documentos/iapebm/codigo-ivss.csv');
+    Excel::import(new App\Imports\RepososImport, $dataPath . 'codigo-ivss.csv');
+
+    echo 'administrativos...<br>';
+    Excel::import(new App\Imports\AdminImport, $dataPath . 'administrativos-copia.csv');
+ 
+    echo 'obreros...<br>';
+    Excel::import(new App\Imports\ObreroImport, $dataPath . 'administrativos-copia.csv');
+ 
+    echo 'uniformados...<br>';
+    Excel::import(new App\Imports\PoliceImport, $dataPath . 'uniformados-copia.csv');
 
     getPhotos();
-     */
 
     //
     DB::commit();
@@ -63,10 +62,11 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 // cargar fotos
 function getPhotos()
 {
+    $dataPath = '/home/iturraldec/Documentos/informatica/iapebm/';
     echo 'cargando fotos de uniformados...<br>';
     
     // cargar archivo
-    $archivoExcel = '/home/iturraldec/Documentos/iapebm/uniformados-fotos.xlsx';
+    $archivoExcel = $dataPath . 'uniformados-fotos.xlsx';
     $spreadsheet = IOFactory::load($archivoExcel);
 
     // cargar hoja activa

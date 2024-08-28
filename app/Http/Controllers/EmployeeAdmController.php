@@ -19,7 +19,9 @@ use App\Models\Tipo;
 use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
+use App\Models\Fisionomia;
 use App\Models\Vacacione;
+use Illuminate\Http\Request;
 
 //
 class EmployeeAdmController extends Controller
@@ -67,13 +69,16 @@ class EmployeeAdmController extends Controller
     $condiciones  = Condicion::OrderBy('name')->get();
     $tipos        = Tipo::OrderBy('name')->get();
     $estados      = $_estados->getEstados();
+    $fisionomia   = Fisionomia::orderBy('descripcion')->get();
 
-    return view('employee-adm.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados'));
+    return view('employee-adm.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados', 'fisionomia'));
   }
 
   // agregar empleado
-  public function store(EmployeeAdmStoreRequest $request)
+  //public function store(EmployeeAdmStoreRequest $request)
+  public function store(Request $request)
   {
+    return response($request->all());
     // agrego los datos personales
     $data_person = $request->only([
       'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 

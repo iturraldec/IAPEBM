@@ -23,8 +23,13 @@
         <li class="nav-item">
           <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Personales</a>
         </li>
+        
         <li class="nav-item">
           <a class="nav-link" id="custom-tabs-one-admin-tab" data-toggle="pill" href="#custom-tabs-one-admin" role="tab" aria-controls="custom-tabs-one-admin" aria-selected="false">Administrativos</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" id="custom-tabs-one-fisio-tab" data-toggle="pill" href="#custom-tabs-one-fisio" role="tab" aria-controls="custom-tabs-one-fisio" aria-selected="false">Fisionomía</a>
         </li>
       </ul>
     </div>
@@ -588,6 +593,23 @@
           <!-- fin de row -->
         </div>
         <!-- fin datos administrativos -->
+
+        <!-- tab datos fisionomicos -->
+        <div class="tab-pane fade active show" id="custom-tabs-one-fisio" role="tabpanel" aria-labelledby="custom-tabs-one-fisio-tab">
+          <div class="row">
+            @forEach($fisionomia as $item)
+              <div class="col-3 form-group">
+                <label>{{ $item->descripcion }}</label>
+                <input type="text" 
+                      class="form-control" 
+                      name="fisionomia[]"
+                      title="Datos fisionómicos"
+                />
+            </div>
+            @endforeach
+          </div>
+        </div>
+        <!-- fin de datos fisionomicos -->
       </div>
       <!-- fin de tab -->
     </form>
