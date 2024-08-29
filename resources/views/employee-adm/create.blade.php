@@ -595,14 +595,16 @@
         <!-- fin datos administrativos -->
 
         <!-- tab datos fisionomicos -->
-        <div class="tab-pane fade active show" id="custom-tabs-one-fisio" role="tabpanel" aria-labelledby="custom-tabs-one-fisio-tab">
+        <div class="tab-pane fade" id="custom-tabs-one-fisio" role="tabpanel" aria-labelledby="custom-tabs-one-fisio-tab">
           <div class="row">
             @forEach($fisionomia as $item)
               <div class="col-3 form-group">
                 <label>{{ $item->descripcion }}</label>
+                <input type="hidden" name="fisionomia_id[]" value="{{ $item->id }}">
                 <input type="text" 
                       class="form-control" 
                       name="fisionomia[]"
+                      value="?"
                       title="Datos fisionómicos"
                 />
             </div>
@@ -610,6 +612,7 @@
           </div>
         </div>
         <!-- fin de datos fisionomicos -->
+
       </div>
       <!-- fin de tab -->
     </form>

@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EmpleadoReposo extends Model
 {
+  //
   protected $fillable = ['employee_id', 'reposo_id', 'desde', 'hasta', 'observacion'];
-
+    
   // reposo
   public function reposo() : BelongsTo
   {

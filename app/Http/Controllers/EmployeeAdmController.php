@@ -20,8 +20,8 @@ use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
 use App\Models\Fisionomia;
+use App\Models\EmpleadoFisionomia;
 use App\Models\Vacacione;
-use Illuminate\Http\Request;
 
 //
 class EmployeeAdmController extends Controller
@@ -75,10 +75,8 @@ class EmployeeAdmController extends Controller
   }
 
   // agregar empleado
-  //public function store(EmployeeAdmStoreRequest $request)
-  public function store(Request $request)
+  public function store(EmployeeAdmStoreRequest $request)
   {
-    return response($request->all());
     // agrego los datos personales
     $data_person = $request->only([
       'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 
@@ -128,9 +126,20 @@ class EmployeeAdmController extends Controller
     $inputEmployee['type_id'] = $this->_type_id;
     $employee = Employee::create($inputEmployee);
 
+    // agrego los datos fisionomicos
+    $fisionomia_id = $request->fisionomia_id;
+    $fisionomia = $request->fisionomia;
+    foreach($fisionomia_id as $indice => $item) {
+      EmpleadoFisionomia::create([
+        'employee_id'   => $employee->id, 
+        'fisionomia_id' => $item, 
+        'info'          => $fisionomia[$indice]
+      ]);
+    };
+
     //
     $this->_requestResponse->success = true;
-    $this->_requestResponse->message = 'Uniformado creado!';
+    $this->_requestResponse->message = 'Empleado Administrativo creado!';
     $this->_requestResponse->data    = $employee;
 
     return response()->json($this->_requestResponse, Response::HTTP_CREATED);
@@ -227,14 +236,28 @@ class EmployeeAdmController extends Controller
       $vacaciones = [];
       foreach($request->vacaciones_desde as $indice => $desde) {
         $vacaciones[] = new Vacacione([
-                        'employee_id' => $employees_adm->id,
-                        'desde'       => $desde,
-                        'hasta'       => $request->vacaciones_hasta[$indice],
-                        'periodo'     => $request->vacaciones_periodo[$indice],
-                    ]);
+                            'employee_id' => $employees_adm->id,
+                            'desde'       => $desde,
+                            'hasta'       => $request->vacaciones_hasta[$indice],
+                            'periodo'     => $request->vacaciones_periodo[$indice],
+                        ]);
       };
       $employees_adm->vacaciones()->saveMany($vacaciones);
     };
+
+    // actualizo los datos fisionomicos
+    $fisionomia_id = $request->fisionomia_id;
+    $fisionomia = $request->fisionomia;
+    $employees_adm->fisionomia()->delete();
+    $_fisionomia = [];
+    foreach($fisionomia_id as $indice => $item) {
+      $_fisionomia[] = new EmpleadoFisionomia([
+                        'employee_id'   => $employees_adm->id, 
+                        'fisionomia_id' => $item, 
+                        'info'          => $fisionomia[$indice]
+                      ]);
+    };
+    $employees_adm->fisionomia()->saveMany($_fisionomia);
 
     //
     $this->_requestResponse->success = true;
