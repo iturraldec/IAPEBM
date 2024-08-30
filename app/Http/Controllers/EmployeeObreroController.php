@@ -20,6 +20,8 @@ use App\Models\Person;
 use App\Models\Employee;
 use App\Models\EmpleadoReposo;
 use App\Models\Vacacione;
+use App\Models\Fisionomia;
+use App\Models\EmpleadoFisionomia;
 
 //
 class EmployeeObreroController extends Controller
@@ -67,8 +69,9 @@ class EmployeeObreroController extends Controller
     $condiciones  = Condicion::OrderBy('name')->get();
     $tipos        = Tipo::OrderBy('name')->get();
     $estados      = $_estados->getEstados();
+    $fisionomia   = Fisionomia::orderBy('descripcion')->get();
 
-    return view('employee-obrero.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados'));
+    return view('employee-obrero.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados', 'fisionomia'));
   }
 
   // agregar empleado
@@ -122,6 +125,17 @@ class EmployeeObreroController extends Controller
     $inputEmployee['person_id'] = $person->id;
     $inputEmployee['type_id'] = $this->_type_id;
     $employee = Employee::create($inputEmployee);
+
+    // agrego los datos fisionomicos
+    $fisionomia_id = $request->fisionomia_id;
+    $fisionomia = $request->fisionomia;
+    foreach($fisionomia_id as $indice => $item) {
+      EmpleadoFisionomia::create([
+        'employee_id'   => $employee->id, 
+        'fisionomia_id' => $item, 
+        'info'          => $fisionomia[$indice]
+      ]);
+    };
 
     //
     $this->_requestResponse->success = true;
@@ -230,6 +244,20 @@ class EmployeeObreroController extends Controller
       };
       $employees_obrero->vacaciones()->saveMany($vacaciones);
     };
+
+    // actualizo los datos fisionomicos
+    $fisionomia_id = $request->fisionomia_id;
+    $fisionomia = $request->fisionomia;
+    $employees_obrero->fisionomia()->delete();
+    $_fisionomia = [];
+    foreach($fisionomia_id as $indice => $item) {
+      $_fisionomia[] = new EmpleadoFisionomia([
+                        'employee_id'   => $employees_obrero->id, 
+                        'fisionomia_id' => $item, 
+                        'info'          => $fisionomia[$indice]
+                      ]);
+    };
+    $employees_obrero->fisionomia()->saveMany($_fisionomia);
 
     //
     $this->_requestResponse->success = true;

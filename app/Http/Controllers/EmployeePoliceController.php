@@ -24,6 +24,8 @@ use App\Models\PoliceRango;
 use App\Models\Rango;
 use App\Models\EmpleadoReposo;
 use App\Models\Vacacione;
+use App\Models\Fisionomia;
+use App\Models\EmpleadoFisionomia;
 
 //
 class EmployeePoliceController extends Controller
@@ -72,8 +74,9 @@ class EmployeePoliceController extends Controller
     $tipos        = Tipo::OrderBy('name')->get();
     $estados      = $_estados->getEstados();
     $rangos       = Rango::orderBy('name')->get();
+    $fisionomia   = Fisionomia::orderBy('descripcion')->get();
 
-    return view('employee-police.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados', 'rangos'));
+    return view('employee-police.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados', 'rangos', 'fisionomia'));
   }
 
   // agregar empleado
@@ -127,6 +130,17 @@ class EmployeePoliceController extends Controller
     $inputEmployee['person_id'] = $person->id;
     $inputEmployee['type_id'] = $this->_type_id;
     $employee = Employee::create($inputEmployee);
+
+    // agrego los datos fisionomicos
+    $fisionomia_id = $request->fisionomia_id;
+    $fisionomia = $request->fisionomia;
+    foreach($fisionomia_id as $indice => $item) {
+      EmpleadoFisionomia::create([
+        'employee_id'   => $employee->id, 
+        'fisionomia_id' => $item, 
+        'info'          => $fisionomia[$indice]
+      ]);
+    };
 
     // agrego los datos policiales
     $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
@@ -245,6 +259,20 @@ class EmployeePoliceController extends Controller
       };
       $employees_polouse->vacaciones()->saveMany($vacaciones);
     };
+
+    // actualizo los datos fisionomicos
+    $fisionomia_id = $request->fisionomia_id;
+    $fisionomia = $request->fisionomia;
+    $employees_polouse->fisionomia()->delete();
+    $_fisionomia = [];
+    foreach($fisionomia_id as $indice => $item) {
+      $_fisionomia[] = new EmpleadoFisionomia([
+                        'employee_id'   => $employees_polouse->id, 
+                        'fisionomia_id' => $item, 
+                        'info'          => $fisionomia[$indice]
+                      ]);
+    };
+    $employees_polouse->fisionomia()->saveMany($_fisionomia);
 
     // actualizo los datos policiales
     $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');

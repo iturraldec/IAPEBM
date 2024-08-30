@@ -23,18 +23,23 @@
         <li class="nav-item">
           <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Personales</a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link" id="custom-tabs-one-admin-tab" data-toggle="pill" href="#custom-tabs-one-admin" role="tab" aria-controls="custom-tabs-one-admin" aria-selected="false">Administrativos</a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link" id="custom-tabs-one-fisionomia-tab" data-toggle="pill" href="#custom-tabs-one-fisionomia" role="tab" aria-controls="custom-tabs-one-fisionomia" aria-selected="false">Fisionomia</a>
+          <a class="nav-link" id="custom-tabs-one-fisio-tab" data-toggle="pill" href="#custom-tabs-one-fisio" role="tab" aria-controls="custom-tabs-one-fisio" aria-selected="false">Fisionomía</a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link" id="custom-tabs-one-estudios-tab" data-toggle="pill" href="#custom-tabs-one-estudios" role="tab" aria-controls="custom-tabs-one-estudios" aria-selected="false">Estudios</a>
         </li>
+ 
         <li class="nav-item">
           <a class="nav-link" id="custom-tabs-one-reposos-tab" data-toggle="pill" href="#custom-tabs-one-reposos" role="tab" aria-controls="custom-tabs-one-reposos" aria-selected="false">Reposos</a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link" id="custom-tabs-one-vacaciones-tab" data-toggle="pill" href="#custom-tabs-one-vacaciones" role="tab" aria-controls="custom-tabs-one-vacaciones" aria-selected="false">Vacaciones</a>
         </li>
@@ -763,9 +768,22 @@
         </div>
         <!-- fin de datos administrativos -->
 
-        <!-- datos fisionomicos -->
-        <div class="tab-pane fade" id="custom-tabs-one-fisionomia" role="tabpanel">
-          datos fisionomicos
+        <!-- tab datos fisionomicos -->
+        <div class="tab-pane fade" id="custom-tabs-one-fisio" role="tabpanel" aria-labelledby="custom-tabs-one-fisio-tab">
+          <div class="row">
+            @forEach($data['employee']->fisionomia as $item)
+              <div class="col-3 form-group">
+                <label>{{ $item->fisionomia->descripcion }}</label>
+                <input type="hidden" name="fisionomia_id[]" value="{{ $item->fisionomia_id }}">
+                <input type="text" 
+                      class="form-control" 
+                      name="fisionomia[]"
+                      value="{{ $item->info }}"
+                      title="Datos fisionómicos"
+                />
+            </div>
+            @endforeach
+          </div>
         </div>
         <!-- fin de datos fisionomicos -->
 
