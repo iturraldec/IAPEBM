@@ -24,7 +24,6 @@
                   id="input-name" 
                   name="name" 
                   class="form-control"
-                  onkeyup="this.value = this.value.toUpperCase();"
             >
           </div>
 

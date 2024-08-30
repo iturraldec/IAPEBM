@@ -32,9 +32,6 @@
 @section('js')
   <script>
     $(document).ready(function () {
-      // mascara 
-      $("#input-name").inputmask(lib_characterMask());
-
       // datatable
       let customButton = '<button id="btn-agregar" class="btn btn-primary">Agregar Rol</button>';
       let datatable = $('#dt-roles').DataTable({

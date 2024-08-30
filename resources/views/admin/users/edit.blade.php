@@ -20,7 +20,7 @@
 
         <div class="modal-body">
           <div class="form-group">
-            <label for="documentInput">Documento de Cédula</label>
+            <label for="documentInput">Número de Cédula</label>
             <input type="text" id="documentInput" name="code" class="form-control">
           </div>
 

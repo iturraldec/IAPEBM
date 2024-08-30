@@ -17,7 +17,6 @@
                 name="permission" 
                 class="form-control" 
                 placeholder="Ingresa nuevo Permiso"
-                onkeyup="this.value = this.value.toUpperCase();"
           >
         </div>
         
@@ -52,12 +51,6 @@
 @section('js')
   <script>
     $(document).ready(function () {
-      // mascara  de 'inputPermission' (agregar)
-      $("#inputPermission").inputmask(lib_characterMask());
-
-      // mascara  de 'input_permission' (editar)
-      $("#input_permission").inputmask(lib_characterMask());
-
       // validacion de form para agregar
       $('#permissionForm').validate({
         submitHandler: function () {

@@ -18,15 +18,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        // crear roles
+        $this->_creaPermiso('Editar');
+        $this->_creaPermiso('Consultar');
+        $this->_creaPermiso('Imprimir');
+        $this->_creaPermiso('Web');        
 
         // create roles and assign created permissions
         $role = Role::create(['name' => 'Administrador']);
@@ -34,61 +33,16 @@ class DatabaseSeeder extends Seeder
 
         // creo el administrador de usuarios
         $user = User::create([
-            'code'      => '12345678',
-            'name'      => 'Jean Pier',
-            'email'     => 'jeanpier@gmail.com',
-            'password'  => Hash::make('12345678')
+            'code'      => '15075601',
+            'name'      => 'Carlos Iturralde',
+            'email'     => 'iturraldec@gmail.com',
+            'password'  => Hash::make(config('app_config.user_password')),
         ]);
 
         // le asigno el rol de administrador de usuarios
         $user->assignRole('Administrador');
-        
-        // permisos de prueba
-        for($i = 1; $i <= 10; $i++) {
-            $permissions = new Permission;
 
-            $permissions->name = Str::random(20);
-            $permissions->guard_name = 'web';
-            $permissions->save();
-        }
-
-        // roles de prueba
-        for($i = 1; $i <= 10; $i++) {
-            $roles = new Role;
-
-            $roles->name = Str::random(20);
-            $roles->guard_name = 'web';
-            $roles->save();
-        }
-
-        // usuarios de prueba
-        User::factory(10)->create();
-
-        // datos fisionomicos
-        $datos_fisionomicos = [
-            ['descripcion' => 'ESTATURA'],
-            ['descripcion' => 'COLOR DE TEZ'],
-            ['descripcion' => 'CABELLO'],
-            ['descripcion' => 'CARA'],
-            ['descripcion' => 'FRENTE'],
-            ['descripcion' => 'CEJAS'],
-            ['descripcion' => 'OJOS'],
-            ['descripcion' => 'NARIZ'],
-            ['descripcion' => 'BOCA'],
-            ['descripcion' => 'LABIOS'],
-            ['descripcion' => 'BARBA'],
-            ['descripcion' => 'BIGOTE'],
-            ['descripcion' => 'CONTEXTURA'],
-            ['descripcion' => 'DENTADURA'],
-            ['descripcion' => 'PESO'],
-            ['descripcion' => 'SEÑALES PARTICULARES'],
-            ['descripcion' => 'LENTES'],
-            ['descripcion' => 'TALLA DE CAMISA'],
-            ['descripcion' => 'TALLA DE PANTALON'],
-            ['descripcion' => 'TALLA DE CALZADO'],
-            ['descripcion' => 'TALLA DE GORRA'],
-        ];
-
+        // creo los datos fisionomicos
         Fisionomia::create(['descripcion' => 'ESTATURA']);
         Fisionomia::create(['descripcion' => 'COLOR DE TEZ']);
         Fisionomia::create(['descripcion' => 'CABELLO']);
@@ -110,5 +64,15 @@ class DatabaseSeeder extends Seeder
         Fisionomia::create(['descripcion' => 'TALLA DE PANTALON']);
         Fisionomia::create(['descripcion' => 'TALLA DE CALZADO']);
         Fisionomia::create(['descripcion' => 'TALLA DE GORRA']);
+    }
+
+    // crear permisos
+    private function _creaPermiso($nombre)
+    {
+        $permissions = new Permission;
+
+        $permissions->name = $nombre;
+        $permissions->guard_name = 'web';
+        $permissions->save();
     }
 }

@@ -83,9 +83,7 @@ class ReposoController extends Controller
   //
   public function getByCode(string $search = '')
   {
-      $reposos = Reposo::where('codigo', 'LIKE', "%$search%")
-                          ->orWhere('diagnostico', 'LIKE', "%$search%")
-                          ->orderBy('codigo')->get();
+      $reposos = Reposo::where('codigo', 'LIKE', "%$search%")->orderBy('codigo')->get();
 
       return response($reposos);
   }
