@@ -38,7 +38,7 @@
           "dom": '<"d-flex justify-content-between"lr<"#dt-add-button">f>t<"d-flex justify-content-between"ip>',
           "ajax": "{{ route('admin.roles.index') }}",
           "columns": [
-            {"data": "id", "orderable": false},
+            {"data": "id", "orderable": false, visible: false},
             {"data": "name"},
             {"data": null,
              "render": function(data, type, row, meta) {

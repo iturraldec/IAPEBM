@@ -101,7 +101,7 @@
       let datatable = $('#dt-permissions').DataTable({
           "ajax": "{{ route('admin.permissions.index') }}",
           "columns": [
-            {"data": "id", "orderable": false},
+            {"data": "id", "orderable": false, visible: false},
             {"data": "name"},
             {"data":null,
              "className" : "dt-body-center",

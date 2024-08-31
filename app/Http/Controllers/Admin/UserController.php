@@ -43,7 +43,7 @@ class UserController extends Controller
             'code'      => $request->code,
             'name'      => $request->name,
             'email'     => $request->email,
-            'password'  => Hash::make('password')
+            'password'  => Hash::make(config('app_config.user_password'))
         ]);
         $user->syncRoles($request->roles);
 

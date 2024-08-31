@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 return [
 
     /*
@@ -48,7 +50,7 @@ return [
     */
 
     'google_fonts' => [
-        'allowed' => true,
+        'allowed' => false,
     ],
 
     /*
@@ -295,7 +297,7 @@ return [
         [
             'text'      => 'Dashboard',
             'icon'      => 'fas fa-chart-line',
-            'url'       => '#'
+            'url'       => 'https://adminlte.io/themes/v3/index2.html'
         ],
         [
             'text'    => 'Usuarios',
@@ -304,15 +306,18 @@ return [
                 [
                     'text'    => 'Permisos',
                     'route'   => 'admin.permissions.index',
+                    'can'     => 'Administrador'
                 ],
                 [
                     'text'    => 'Roles',
-                    'route'   => 'admin.roles.index'
+                    'route'   => 'admin.roles.index',
+                    'can'     => 'Administrador'
                 ],
                 [
                     'text'  => 'Listado de Usuarios',
                     'route' => 'admin.users.index',
                     'icon'  => 'fas fa-table',
+                    'can'     => 'Administrador'
                 ],
                 [
                     'text'   => 'Cambio de clave',
@@ -321,7 +326,8 @@ return [
                 ],
                 [
                     'text'   => 'Resetear clave',
-                    'route'  => 'admin.users.password.reset'
+                    'route'  => 'admin.users.password.reset',
+                    'can'     => 'Administrador'
                 ],
             ],
         ],
@@ -368,7 +374,8 @@ return [
             'submenu'   => [
                 [
                     'text'    => 'Administrativos',
-                    'route'   => 'employees-adm.index'
+                    'route'   => 'employees-adm.index',
+                    'can'     => 'Personal Administrativo:Consultar'
                 ],
                 [
                     'text'    => 'Obreros',

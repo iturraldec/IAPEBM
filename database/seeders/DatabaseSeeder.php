@@ -22,10 +22,20 @@ class DatabaseSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // crear roles
-        $this->_creaPermiso('Editar');
-        $this->_creaPermiso('Consultar');
-        $this->_creaPermiso('Imprimir');
-        $this->_creaPermiso('Web');        
+        Permission::create(['name' => 'Administrador']);
+        Permission::create(['name' => 'Personal Administrativo:Crear']);
+        Permission::create(['name' => 'Personal Administrativo:Consultar']);
+        Permission::create(['name' => 'Personal Administrativo:Actualizar']);
+        Permission::create(['name' => 'Personal Administrativo:Eliminar']);
+        Permission::create(['name' => 'Personal Obrero:Crear']);
+        Permission::create(['name' => 'Personal Obrero:Consultar']);
+        Permission::create(['name' => 'Personal Obrero:Actualizar']);
+        Permission::create(['name' => 'Personal Obrero:Eliminar']);
+        Permission::create(['name' => 'Personal Uniformado:Crear']);
+        Permission::create(['name' => 'Personal Uniformado:Consultar']);
+        Permission::create(['name' => 'Personal Uniformado:Actualizar']);
+        Permission::create(['name' => 'Personal Uniformado:Eliminar']);
+        Permission::create(['name' => 'Web']);        
 
         // create roles and assign created permissions
         $role = Role::create(['name' => 'Administrador']);
@@ -67,7 +77,7 @@ class DatabaseSeeder extends Seeder
     }
 
     // crear permisos
-    private function _creaPermiso($nombre)
+    private function _crearPermiso($nombre)
     {
         $permissions = new Permission;
 
