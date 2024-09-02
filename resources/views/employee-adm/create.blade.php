@@ -31,6 +31,10 @@
         <li class="nav-item">
           <a class="nav-link" id="custom-tabs-one-fisio-tab" data-toggle="pill" href="#custom-tabs-one-fisio" role="tab" aria-controls="custom-tabs-one-fisio" aria-selected="false">Fisionomía</a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" id="custom-tabs-one-familia-tab" data-toggle="pill" href="#custom-tabs-one-familia" role="tab" aria-controls="custom-tabs-one-familia" aria-selected="false">Familia</a>
+        </li>
       </ul>
     </div>
     <!-- fin de card-header -->
@@ -41,7 +45,7 @@
 
       <div class="tab-content" id="custom-tabs-one-tabContent">      
         <!-- tab datos personales -->
-        <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+        <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel">
 
           <!-- inicio de row -->
           <div class="row d-flex justify-content-around">
@@ -125,19 +129,19 @@
               />
             </div>
 
-                <div class="col-3 form-group">
-                  <label for="inputSNombre">Segundo Nombre</label>
-                  <input type="text" 
-                        class="form-control" 
-                        id="inputSNombre"
-                        name="second_name"
-                        minlength="3"
-                        maxlength="50"
-                        placeholder="Ingresa su segundo nombre"
-                        onkeyup="this.value = this.value.toUpperCase();"
-                        title="Segundo nombre del empleado"
-                  />
-                </div>
+            <div class="col-3 form-group">
+              <label for="inputSNombre">Segundo Nombre</label>
+              <input type="text" 
+                    class="form-control" 
+                    id="inputSNombre"
+                    name="second_name"
+                    minlength="3"
+                    maxlength="50"
+                    placeholder="Ingresa su segundo nombre"
+                    onkeyup="this.value = this.value.toUpperCase();"
+                    title="Segundo nombre del empleado"
+              />
+            </div>
 
                 <div class="col-3 form-group">
                   <label for="inputPApellido">Primer Apellido*</label>
@@ -452,7 +456,7 @@
         <!-- fin tab datos personales -->
 
         <!-- tab datos administrativos -->
-        <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
+        <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel">
           <!-- inicio de row -->
           <div class="row">
             <div class="col-4 form-group">
@@ -595,7 +599,7 @@
         <!-- fin datos administrativos -->
 
         <!-- tab datos fisionomicos -->
-        <div class="tab-pane fade" id="custom-tabs-one-fisio" role="tabpanel" aria-labelledby="custom-tabs-one-fisio-tab">
+        <div class="tab-pane fade" id="custom-tabs-one-fisio" role="tabpanel">
           <div class="row">
             @forEach($fisionomia as $item)
               <div class="col-3 form-group">
@@ -612,6 +616,110 @@
           </div>
         </div>
         <!-- fin de datos fisionomicos -->
+
+        <!-- datos familiaries -->
+        <div class="tab-pane fade" id="custom-tabs-one-familia" role="tabpanel">
+          <div class="card card-primary">
+            <div class="card-header bg-lightblue">
+              <h3 class="card-title">Familiares</h3>
+            </div>
+            <!-- /.card-header -->
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-3 form-group">
+                  <label for="inputFPNombre">Primer Nombre*</label>
+                  <input type="text" 
+                        class="form-control" 
+                        id="inputFPNombre"
+                        minlength="3"
+                        maxlength="50"
+                        placeholder="Ingresa su primer nombre"
+                        onkeyup="this.value = this.value.toUpperCase();"
+                        title="Primer nombre del familiar"
+                  />
+                </div>
+
+                <div class="col-3 form-group">
+                  <label for="inputFSNombre">Segundo Nombre</label>
+                  <input type="text" 
+                        class="form-control" 
+                        id="inputFSNombre"
+                        minlength="3"
+                        maxlength="50"
+                        placeholder="Ingresa su segundo nombre"
+                        onkeyup="this.value = this.value.toUpperCase();"
+                        title="Segundo nombre del familiar"
+                  />
+                </div>
+
+                <div class="col-3 form-group">
+                  <label for="inputFPApellido">Primer Apellido*</label>
+                  <input type="text" 
+                        class="form-control" 
+                        id="inputFPApellido"
+                        minlength="3"
+                        maxlength="50"
+                        placeholder="Ingresa su primer apellido"
+                        onkeyup="this.value = this.value.toUpperCase();"
+                        title="Primer apellido del familiar"
+                  />
+                </div>
+
+                <div class="col-3 form-group">
+                  <label for="inputFSApellido">Segundo Apellido</label>
+                  <input type="text" 
+                        class="form-control" 
+                        id="inputFSApellido"
+                        minlength="3"
+                        maxlength="50"
+                        placeholder="Ingresa su segundo apellido"
+                        onkeyup="this.value = this.value.toUpperCase();"
+                        title="Segundo apellido del familiar"
+                  />
+                </div>
+
+                <div class="col-3 form-group">
+                  <label for="selectParentesco">Parentesco</label>
+                  <select id="selectParentesco" class="form-control" name="parentesco_id" title="Parentesco">
+                    <option value="0" selected>SELECCIONE</option>
+                    @foreach (App\Enums\ParentescoEnum::cases() as $case)
+                      <option value="{{ $case->value }}">{{ $case->label() }}</option>
+                    @endforeach
+                  </select>
+                </div>
+
+                <div class="col-3 form-group d-flex">
+                  <button type="button"
+                          id="btnFamiliarAdd"
+                          class="form-control btn btn-primary mt-auto" 
+                          title="Agregar familiar"
+                  >Agregar familiar</button>
+                </div>
+
+                <div class="col-12">
+                  <table id="familiaresDT" class="table table-hover border border-primary" width="100%">
+                    <thead class="text-center">
+                      <tr>
+                        <th>parentescoId</th>
+                        <th>Parentesco</th>
+                        <th>Primer Nombre</th>
+                        <th>Segundo Nombre</th>
+                        <th>Primer Apellido</th>
+                        <th>Segundo Apellido</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+      
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+        </div>
+        <!-- fin de datos familiares -->
 
       </div>
       <!-- fin de tab -->
@@ -719,6 +827,49 @@
           data: null,
           render: function ( data, type, row, meta ) {
             return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar dirección"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false
+        }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de familiares
+    ///////////////////////////////////////////////////////////////////
+
+    var familiaresDT = $('#familiaresDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'parentescoId',
+          visible: false
+        },
+        {
+          data: 'parentesco',
+          orderable: false
+        },
+        {
+          data: 'pnombre',
+          orderable: false
+        },
+        {
+          data: 'snombre',
+          orderable: false
+        },
+        {
+          data: 'papellido',
+          orderable: false
+        },
+        {
+          data: 'sapellido',
+          orderable: false
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar familiar"><i class="fas fa-trash-alt"></i></button>';
           },
           orderable: false
         }
@@ -936,6 +1087,55 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // agregar familiar
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnFamiliarAdd").click(function() {
+      let ok = true;
+      let pnombre = $("#inputFPNombre").val();
+      let snombre = $("#inputFSNombre").val();
+      let papellido = $("#inputFPApellido").val();
+      let sapellido = $("#inputFSApellido").val();
+      let parentesco = $("#selectParentesco").val();
+      
+      if(lib_isEmpty(pnombre)) {
+        lib_toastr("Error: Debe ingresar el primer nombre del familiar!");
+        ok = false;
+      }
+      if(lib_isEmpty(papellido)) {
+        lib_toastr("Error: Debe ingresar el primer apellido del familiar!");
+        ok = false;
+      }
+      if(parentesco == '0') {
+        lib_toastr("Error: Debe seleccionar el parentesco del familiar!");
+        ok = false;
+      }
+      if(ok) {
+        familiaresDT.row.add({
+          'parentescoId'  : parentesco,
+          'parentesco'    : $("#selectParentesco :selected").text(),
+          'pnombre'       : pnombre,
+          'snombre'       : snombre,
+          'papellido'     : papellido,
+          'sapellido'     : sapellido
+        })
+        .draw();
+        $("#inputFPNombre").val('');
+        $("#inputFSNombre").val('');
+        $("#inputFPApellido").val('');
+        $("#inputFSApellido").val('');
+      }
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar familiar
+    ///////////////////////////////////////////////////////////////////
+
+    $("#familiaresDT tbody").on("click",".eliminar",function() {
+      familiaresDT.row($(this).parents()).remove().draw();
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // agregar un empleado 
     ///////////////////////////////////////////////////////////////////
 
@@ -947,6 +1147,11 @@
       phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
       addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
       addressesDT.column(4).data().each(address => data.append('addresses[]', address));
+      familiaresDT.column(0).data().each(parentesco_id => data.append('parentesco_id[]', parentesco_id));
+      familiaresDT.column(2).data().each(pnombre => data.append('pnombre[]', pnombre));
+      familiaresDT.column(3).data().each(snombre => data.append('snombre[]', snombre));
+      familiaresDT.column(4).data().each(papellido => data.append('papellido[]', papellido));
+      familiaresDT.column(5).data().each(sapellido => data.append('sapellido[]', sapellido));
 
       fetch("{{ route('employees-adm.store') }}", {
         headers: {
@@ -958,7 +1163,7 @@
       .then(response => {
         if(response.ok) {
           lib_ShowMensaje("Empleado Administrativo agregado!", 'mensaje')
-          .then(response => window.close());
+          //.then(response => window.close());
         }
         else {
           response.text().then(r => {

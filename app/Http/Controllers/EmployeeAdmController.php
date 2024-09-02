@@ -21,6 +21,7 @@ use App\Models\Person;
 use App\Models\Employee;
 use App\Models\Fisionomia;
 use App\Models\EmpleadoFisionomia;
+use App\Models\Familia;
 use App\Models\Vacacione;
 
 //
@@ -127,15 +128,42 @@ class EmployeeAdmController extends Controller
     $employee = Employee::create($inputEmployee);
 
     // agrego los datos fisionomicos
-    $fisionomia_id = $request->fisionomia_id;
-    $fisionomia = $request->fisionomia;
-    foreach($fisionomia_id as $indice => $item) {
-      EmpleadoFisionomia::create([
-        'employee_id'   => $employee->id, 
-        'fisionomia_id' => $item, 
-        'info'          => $fisionomia[$indice]
-      ]);
-    };
+    if($request->has('fisionomia_id')) {
+      $fisionomia_id = $request->fisionomia_id;
+      $fisionomia = $request->fisionomia;
+      
+      foreach($fisionomia_id as $indice => $item) {
+        EmpleadoFisionomia::create([
+          'employee_id'   => $employee->id, 
+          'fisionomia_id' => $item, 
+          'info'          => $fisionomia[$indice]
+        ]);
+      };
+    }
+
+    // agrego los datos familiares
+    if($request->has('parentesco_id')) {
+      $parentesco_id  = $request->parentesco_id;
+      $pnombre        = $request->pnombre;
+      $snombre        = $request->snombre;
+      $papellido      = $request->papellido;
+      $sapellido      = $request->sapellido;
+    
+      foreach($parentesco_id as $indice => $item) {
+        $person = Person::create([
+          'first_name'        => $pnombre[$indice], 
+          'second_name'       => $snombre[$indice], 
+          'first_last_name'   => $papellido[$indice], 
+          'second_last_name'  => $sapellido[$indice]
+        ]);
+
+        Familia::create([
+          'employee_id'   => $employee->id,
+          'person_id'     => $person->id,
+          'parentesco_id' => $item,
+        ]);
+      };
+    }
 
     //
     $this->_requestResponse->success = true;

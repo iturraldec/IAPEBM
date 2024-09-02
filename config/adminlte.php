@@ -306,18 +306,18 @@ return [
                 [
                     'text'    => 'Permisos',
                     'route'   => 'admin.permissions.index',
-                    'can'     => 'Administrador'
+                    'can'     => 'Usuarios'
                 ],
                 [
                     'text'    => 'Roles',
                     'route'   => 'admin.roles.index',
-                    'can'     => 'Administrador'
+                    'can'     => 'Usuarios'
                 ],
                 [
                     'text'  => 'Listado de Usuarios',
                     'route' => 'admin.users.index',
                     'icon'  => 'fas fa-table',
-                    'can'     => 'Administrador'
+                    'can'     => 'Usuarios'
                 ],
                 [
                     'text'   => 'Cambio de clave',
@@ -327,12 +327,13 @@ return [
                 [
                     'text'   => 'Resetear clave',
                     'route'  => 'admin.users.password.reset',
-                    'can'     => 'Administrador'
+                    'can'     => 'Usuarios'
                 ],
             ],
         ],
         [
             'text'    => 'Definiciones',
+            'can'     => 'Sistema',
             'submenu'   => [
                 [
                     'text'    => 'Unidades Operativas',
@@ -375,15 +376,17 @@ return [
                 [
                     'text'    => 'Administrativos',
                     'route'   => 'employees-adm.index',
-                    'can'     => 'Personal Administrativo:Consultar'
+                    'can'     => 'Personal Administrativo'
                 ],
                 [
                     'text'    => 'Obreros',
-                    'route'     => 'employees-obrero.index'
+                    'route'     => 'employees-obrero.index',
+                    'can'     => 'Personal Obrero'
                 ],
                 [
                     'text'    => 'Uniformados',
-                    'route'   => 'employees-police.index'
+                    'route'   => 'employees-police.index',
+                    'can'     => 'Personal Uniformado'
                 ],
             ]
         ],
@@ -400,6 +403,7 @@ return [
             'text'    => 'Mantenimiento',
             'icon'    => 'fas fa-tools',
             'url'   => '/',
+            'can'     => 'Sistema',
         ],
     ],
 

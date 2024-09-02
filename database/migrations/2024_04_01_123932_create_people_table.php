@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('second_name', 50)->nullable();
             $table->string('first_last_name', 50);
             $table->string('second_last_name', 50)->nullable();
-            $table->char('sex', 1);
+            $table->char('sex', 1)->nullable();
             $table->date('birthday')->nullable();
             $table->text('place_of_birth')->nullable();
             $table->unsignedTinyInteger('civil_status_id')->nullable();
