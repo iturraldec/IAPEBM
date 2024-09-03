@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Enums\ParentescoEnum;
 
+//
 class Familia extends Model
 {
   //
@@ -23,5 +26,13 @@ class Familia extends Model
   public function person() : BelongsTo
   {
     return $this->belongsTo(Person::class);
+  }
+
+  //
+  protected function Parentesco() : Attribute
+  {
+      return new Attribute(
+          get: fn () => ParentescoEnum::from($this->parentesco_id)->label(),
+      );
   }
 }

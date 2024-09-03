@@ -242,6 +242,12 @@ class EmployeeAdmController extends Controller
 
     $employees_adm->update($inputEmployee);
 
+    // actualizo los familiares
+    foreach($employees_adm->familiares as $item) {
+      Person::destroy($item->person_id);
+    }
+    $this->_addFamiliares($employees_adm, $request);
+
     // actualizo reposos
     $employees_adm->reposos()->delete();
     if($request->has('reposos_desde')) {
@@ -334,6 +340,33 @@ class EmployeeAdmController extends Controller
     };
     $person->addresses()->delete();
     $person->addresses()->saveMany($_addresses);
+  }
+
+  // agregar familiares del empleado
+  private function _addFamiliares($employee, $request)
+  {
+    if($request->parentesco_id) {
+      $parentesco_id  = $request->parentesco_id;
+      $pnombre        = $request->pnombre;
+      $snombre        = $request->snombre;
+      $papellido      = $request->papellido;
+      $sapellido      = $request->sapellido;
+    
+      foreach($parentesco_id as $indice => $item) {
+        $person = Person::create([
+          'first_name'        => $pnombre[$indice], 
+          'second_name'       => $snombre[$indice], 
+          'first_last_name'   => $papellido[$indice], 
+          'second_last_name'  => $sapellido[$indice]
+        ]);
+
+        Familia::create([
+          'employee_id'   => $employee->id,
+          'person_id'     => $person->id,
+          'parentesco_id' => $item,
+        ]);
+      }
+    }
   }
 
   //

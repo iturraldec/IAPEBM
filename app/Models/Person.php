@@ -56,4 +56,10 @@ class Person extends Model
     {
         return $this->hasMany(Address::class);
     }
+
+    //
+    public function familiares() : HasOne
+    {
+        return $this->hasOne(Familia::class);
+    }
 }

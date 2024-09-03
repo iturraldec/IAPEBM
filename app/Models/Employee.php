@@ -69,4 +69,10 @@ class Employee extends Model
     {
         return $this->hasMany(EmpleadoFisionomia::class);
     }
+
+    //
+    public function familiares() : HasMany
+    {
+        return $this->hasMany(Familia::class);
+    }
 }
