@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('familiares', function (Blueprint $table) {
             $table->integerIncrements('id');
             $table->unsignedInteger('employee_id');
-            $table->unsignedInteger('person_id');
             $table->unsignedSmallInteger('parentesco_id');
+            $table->string('first_name', 50);
+            $table->string('second_name', 50)->nullable();
+            $table->string('first_last_name', 50);
+            $table->string('second_last_name', 50)->nullable();
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
-            $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');
         });
     }
 

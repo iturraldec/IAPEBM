@@ -953,8 +953,15 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnEmailAdd").click(function () {
-      emailsDT.row.add({'correo' : $("#inputEmail").val()}).draw();
-      $("#inputEmail").val('');
+      let correo = $("#inputEmail").val();
+
+      if(lib_isEmpty(correo)) {
+        lib_toastr("Error: Debe ingresar la dirección de correo!");
+      }
+      else {
+        emailsDT.row.add({'correo' : correo}).draw();
+        $("#inputEmail").val('');
+      }
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -970,16 +977,20 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnPhoneAdd").click(function() {
-      let _number = $("#inputPhone").val();
+      let numeroTipo = $("#selectPhoneType :selected").val();
+      let numbero = $("#inputPhone").val();
       
-      if(lib_isEmpty(_number)) {
+      if(numeroTipo == '0') {
+        lib_toastr("Error: Debe seleccionar un tipo de número de teléfono!");
+      }
+      else if(lib_isEmpty(numbero)) {
         lib_toastr("Error: Debe ingresar un número de teléfono!");
       }
       else {
         phonesDT.row.add({
-          'id'    : $("#selectPhoneType :selected").val(),
+          'id'    : numeroTipo,
           'tipo'  : $("#selectPhoneType :selected").text(),
-          'numero': _number
+          'numero': numbero
         })
         .draw();
         $("#inputPhone").val("");

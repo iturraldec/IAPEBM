@@ -119,7 +119,7 @@ class EmployeeAdmController extends Controller
     // agrego las direcciones del empleado
     $this->_addAddresses($person, $request->parroquias_id, $request->addresses, $request->zona_postal);
 
-    // agrego los datos administrativos
+    // agrego el empleado
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
                                     'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
                                     'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro');
@@ -142,28 +142,7 @@ class EmployeeAdmController extends Controller
     }
 
     // agrego los datos familiares
-    if($request->has('parentesco_id')) {
-      $parentesco_id  = $request->parentesco_id;
-      $pnombre        = $request->pnombre;
-      $snombre        = $request->snombre;
-      $papellido      = $request->papellido;
-      $sapellido      = $request->sapellido;
-    
-      foreach($parentesco_id as $indice => $item) {
-        $person = Person::create([
-          'first_name'        => $pnombre[$indice], 
-          'second_name'       => $snombre[$indice], 
-          'first_last_name'   => $papellido[$indice], 
-          'second_last_name'  => $sapellido[$indice]
-        ]);
-
-        Familia::create([
-          'employee_id'   => $employee->id,
-          'person_id'     => $person->id,
-          'parentesco_id' => $item,
-        ]);
-      };
-    }
+    $this->_addFamiliares($employee, $request);
 
     //
     $this->_requestResponse->success = true;
@@ -243,9 +222,7 @@ class EmployeeAdmController extends Controller
     $employees_adm->update($inputEmployee);
 
     // actualizo los familiares
-    foreach($employees_adm->familiares as $item) {
-      Person::destroy($item->person_id);
-    }
+    $employees_adm->familiares()->delete();
     $this->_addFamiliares($employees_adm, $request);
 
     // actualizo reposos
@@ -346,24 +323,20 @@ class EmployeeAdmController extends Controller
   private function _addFamiliares($employee, $request)
   {
     if($request->parentesco_id) {
-      $parentesco_id  = $request->parentesco_id;
+      $parentesco_id  = $request->parentesco_id; 
       $pnombre        = $request->pnombre;
       $snombre        = $request->snombre;
       $papellido      = $request->papellido;
       $sapellido      = $request->sapellido;
     
       foreach($parentesco_id as $indice => $item) {
-        $person = Person::create([
+        Familia::create([
+          'employee_id'       => $employee->id,
+          'parentesco_id'     => $item,
           'first_name'        => $pnombre[$indice], 
           'second_name'       => $snombre[$indice], 
           'first_last_name'   => $papellido[$indice], 
           'second_last_name'  => $sapellido[$indice]
-        ]);
-
-        Familia::create([
-          'employee_id'   => $employee->id,
-          'person_id'     => $person->id,
-          'parentesco_id' => $item,
         ]);
       }
     }

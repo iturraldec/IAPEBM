@@ -14,18 +14,12 @@ class Familia extends Model
   protected $table = 'familiares';
 
   //
-  protected $fillable = ['employee_id', 'person_id', 'parentesco_id'];
+  protected $fillable = ['employee_id', 'parentesco_id', 'first_name', 'second_name', 'first_last_name', 'second_last_name'];
 
   // empleado
   public function empleado() : BelongsTo
   {
     return $this->belongsTo(Employee::class);
-  }
-
-  // persona
-  public function person() : BelongsTo
-  {
-    return $this->belongsTo(Person::class);
   }
 
   //
