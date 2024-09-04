@@ -26,6 +26,7 @@ use App\Models\EmpleadoReposo;
 use App\Models\Vacacione;
 use App\Models\Fisionomia;
 use App\Models\EmpleadoFisionomia;
+use App\Models\Familia;
 
 //
 class EmployeePoliceController extends Controller
@@ -142,6 +143,9 @@ class EmployeePoliceController extends Controller
       ]);
     };
 
+    // agrego los datos familiares
+    $this->_addFamiliares($employee, $request);
+
     // agrego los datos policiales
     $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
     $inputPolice['employee_id'] = $employee->id;
@@ -228,6 +232,10 @@ class EmployeePoliceController extends Controller
                                     'licencia', 'cta_bancaria_nro', 'passport_nro');
 
     $employees_polouse->update($inputEmployee);
+
+    // actualizo los familiares
+    $employees_polouse->familiares()->delete();
+    $this->_addFamiliares($employees_polouse, $request);
 
     // actualizo reposos
     $employees_polouse->reposos()->delete();
@@ -329,6 +337,29 @@ class EmployeePoliceController extends Controller
     };
     $person->addresses()->delete();
     $person->addresses()->saveMany($_addresses);
+  }
+
+  // agregar familiares del empleado
+  private function _addFamiliares($employee, $request)
+  {
+    if($request->parentesco_id) {
+      $parentesco_id  = $request->parentesco_id; 
+      $pnombre        = $request->pnombre;
+      $snombre        = $request->snombre;
+      $papellido      = $request->papellido;
+      $sapellido      = $request->sapellido;
+    
+      foreach($parentesco_id as $indice => $item) {
+        Familia::create([
+          'employee_id'       => $employee->id,
+          'parentesco_id'     => $item,
+          'first_name'        => $pnombre[$indice], 
+          'second_name'       => $snombre[$indice], 
+          'first_last_name'   => $papellido[$indice], 
+          'second_last_name'  => $sapellido[$indice]
+        ]);
+      }
+    }
   }
 
   // agregar los rangos

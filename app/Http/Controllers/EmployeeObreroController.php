@@ -22,6 +22,7 @@ use App\Models\EmpleadoReposo;
 use App\Models\Vacacione;
 use App\Models\Fisionomia;
 use App\Models\EmpleadoFisionomia;
+use App\Models\Familia;
 
 //
 class EmployeeObreroController extends Controller
@@ -137,6 +138,9 @@ class EmployeeObreroController extends Controller
       ]);
     };
 
+    // agrego los datos familiares
+    $this->_addFamiliares($employee, $request);
+
     //
     $this->_requestResponse->success = true;
     $this->_requestResponse->message = 'Uniformado creado!';
@@ -213,6 +217,10 @@ class EmployeeObreroController extends Controller
                                     'licencia', 'cta_bancaria_nro', 'passport_nro');
 
     $employees_obrero->update($inputEmployee);
+
+    // actualizo los familiares
+    $employees_obrero->familiares()->delete();
+    $this->_addFamiliares($employees_obrero, $request);
 
     // actualizo reposos
     $employees_obrero->reposos()->delete();
@@ -306,6 +314,29 @@ class EmployeeObreroController extends Controller
     };
     $person->addresses()->delete();
     $person->addresses()->saveMany($_addresses);
+  }
+
+  // agregar familiares del empleado
+  private function _addFamiliares($employee, $request)
+  {
+    if($request->parentesco_id) {
+      $parentesco_id  = $request->parentesco_id; 
+      $pnombre        = $request->pnombre;
+      $snombre        = $request->snombre;
+      $papellido      = $request->papellido;
+      $sapellido      = $request->sapellido;
+    
+      foreach($parentesco_id as $indice => $item) {
+        Familia::create([
+          'employee_id'       => $employee->id,
+          'parentesco_id'     => $item,
+          'first_name'        => $pnombre[$indice], 
+          'second_name'       => $snombre[$indice], 
+          'first_last_name'   => $papellido[$indice], 
+          'second_last_name'  => $sapellido[$indice]
+        ]);
+      }
+    }
   }
 
   //
