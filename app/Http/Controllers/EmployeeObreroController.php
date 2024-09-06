@@ -57,7 +57,7 @@ class EmployeeObreroController extends Controller
    */
   public function index()
   {
-    return request()->ajax() ? datatables()->of(Employee::where('type_id', $this->_type_id)->with('person'))->toJson()
+    return request()->ajax() ? datatables()->of(Employee::where('type_id', $this->_type_id)->with('person')->with('cargo'))->toJson()
                              : view('employee-obrero.index');              
   }
 

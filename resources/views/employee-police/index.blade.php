@@ -27,6 +27,7 @@
           <th scope="col">Nómina</th>
           <th scope="col">Cédula</th>
           <th scope="col">Nombres y Apellidos</th>
+          <th scope="col">Cargo</th>
           <th scope="col">Imagen</th>
           <th scope="col" class="col-sm-2">Acción</th>
         </tr>
@@ -60,6 +61,7 @@
                   return nombre;
             }
           },
+          {data: "cargo.name"},
           {"data": null,
             "render": function(data, type, row, meta) {              
               let imagen = "{{ asset('') }}" + data.person.imagef;

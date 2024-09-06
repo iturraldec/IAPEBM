@@ -13,5 +13,11 @@ return [
   'codigo'  => 'Ártax',
 
   // password inicial de usuarios
-  'user_password'  => '01234567',
+  'users_init_password'  => '01234567',
+
+  // path de la carpeta de los empleados
+  'employees_path' => 'employees',
+
+  // path de la carpeta de los usuarios
+  'users_path' => 'users',
 ];

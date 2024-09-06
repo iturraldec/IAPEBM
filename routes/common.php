@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PruebaFileController;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -58,6 +59,7 @@ Route::get('loadFromExcel', function() {
 //
 Route::view('/', 'auth.login');
 Route::post('login', [AuthController::class, 'login'])->name('login');
+//
 
 // cargar fotos
 function getPhotos()

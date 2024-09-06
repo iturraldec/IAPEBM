@@ -38,6 +38,12 @@ class Employee extends Model
         return $this->belongsTo(Person::class);
     }
 
+    // datos del cargo
+    public function cargo() : BelongsTo
+    {
+        return $this->belongsTo(Cargo::class);
+    }
+
     // datos policiales
     public function police() : HasOne
     {
