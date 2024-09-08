@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Clases\EmpleadoObrero;
 use App\Http\Requests\EmployeeObreroStoreRequest;
 use App\Http\Requests\EmployeeObreroUpdateRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,8 +39,12 @@ class EmployeeObreroController extends Controller
   private $_requestResponse;
 
   //
-  public function __construct(Image $imagen, RequestResponse $requestResponse)
+  private $_empleado;
+
+  //
+  public function __construct(EmpleadoObrero $empleado,  Image $imagen, RequestResponse $requestResponse)
   {
+    $this->_empleado = $empleado;
     $this->_imagen = $imagen;
     $this->_requestResponse = $requestResponse;
   }
@@ -221,6 +226,11 @@ class EmployeeObreroController extends Controller
     // actualizo los familiares
     $employees_obrero->familiares()->delete();
     $this->_addFamiliares($employees_obrero, $request);
+
+    // actualizo sus permisos
+    if($request->has('permisos_desde')) {
+      $this->_empleado->updPermisos($employees_obrero, $request->only(['permisos_desde', 'permisos_hasta', 'permisos_motivo']));
+    }
 
     // actualizo reposos
     $employees_obrero->reposos()->delete();

@@ -791,7 +791,7 @@
                   <input type="date" 
                         class="form-control" 
                         id="inputPermisoDesde" 
-                        value="{{ date('Y-d-m') }}"
+                        value="{{ date('Y-m-d') }}"
                         title="Fecha inicial del permiso"
                   />
                 </div>
@@ -801,7 +801,7 @@
                   <input type="date" 
                         class="form-control" 
                         id="inputPermisoHasta"
-                        value="{{ date('Y-d-m') }}"
+                        value="{{ date('Y-m-d') }}"
                         title="Fecha final del permiso"
                   />
                 </div>

@@ -42,8 +42,6 @@ class EmployeeAdmController extends Controller
   private $_empleado;
 
   //
-
-  //
   public function __construct(EmpleadoAdm $empleado,  Image $imagen, RequestResponse $requestResponse)
   {
     $this->_empleado = $empleado;
