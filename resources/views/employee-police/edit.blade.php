@@ -39,6 +39,10 @@
         <li class="nav-item">
           <a class="nav-link" id="custom-tabs-one-estudios-tab" data-toggle="pill" href="#custom-tabs-one-estudios" role="tab" aria-controls="custom-tabs-one-estudios" aria-selected="false">Estudios</a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" id="custom-tabs-one-permisos-tab" data-toggle="pill" href="#custom-tabs-one-permisos" role="tab" aria-controls="custom-tabs-one-permisos" aria-selected="false">Permisos</a>
+        </li>
  
         <li class="nav-item">
           <a class="nav-link" id="custom-tabs-one-reposos-tab" data-toggle="pill" href="#custom-tabs-one-reposos" role="tab" aria-controls="custom-tabs-one-reposos" aria-selected="false">Reposos</a>
@@ -913,6 +917,82 @@
         </div>
         <!-- fin de datos estudiantiles -->
 
+        <!-- permisos -->
+        <div class="tab-pane fade" id="custom-tabs-one-permisos" role="tabpanel">
+          <div class="card card-primary">
+            <div class="card-header bg-lightblue">
+              <h3 class="card-title">Permisos del Empleado</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="row">
+                <div class="col-2 form-group">
+                  <label for="inputPermisoDesde">Desde*</label>
+                  <input type="date" 
+                        class="form-control" 
+                        id="inputPermisoDesde" 
+                        value="{{ date('Y-m-d') }}"
+                        title="Fecha inicial del permiso"
+                  />
+                </div>
+
+                <div class="col-2 form-group">
+                  <label for="inputPermisoHasta">Hasta*</label>
+                  <input type="date" 
+                        class="form-control" 
+                        id="inputPermisoHasta"
+                        value="{{ date('Y-m-d') }}"
+                        title="Fecha final del permiso"
+                  />
+                </div>
+
+                <div class="col-8 form-group">
+                  <label for="inputPermisoMotivo">Motivo</label>
+                  <div class="input-group">
+                    <input type="text" 
+                          class="form-control" 
+                          id="inputPermisoMotivo"
+                          placeholder="Ingrese el motivo"
+                          onkeyup="this.value = this.value.toUpperCase();"
+                          title="Motivo del permiso"
+                    />
+
+                    <div class="input-group-append">
+                      <div id="btnPermisoAdd" class="input-group-text" title="Agregar permiso"><i class="fas fa-plus-square"></i></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col">
+                  <table id="permisosDT" class="table table-hover border border-primary" width="100%">
+                    <thead class="text-center">
+                      <tr>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                        <th>Motivo</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+      
+                    <tbody>
+                      @foreach ($data['employee']->permisos as $permiso)
+                        <tr>
+                          <td>{{ $permiso->desde }}</td>
+                          <td>{{ $permiso->hasta }}</td>
+                          <td>{{ $permiso->motivo }}</td>
+                          <td></td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+        </div>
+        <!-- fin de permisos -->
+
         <!-- reposos -->
         <div class="tab-pane fade" id="custom-tabs-one-reposos" role="tabpanel">
           <div class="card card-primary">
@@ -1278,6 +1358,35 @@
             return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar rango"><i class="fas fa-trash-alt"></i></button>';
           },
           orderable: false
+        }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de permisos
+    ///////////////////////////////////////////////////////////////////
+
+    var permisosDT = $('#permisosDT').DataTable({
+      info: false,
+      paging: false,
+      searching: false,
+      columns: [
+        {
+          data: 'desde',
+        },
+        {
+          data: 'hasta',
+        },
+        {
+          data: 'motivo',
+          orderable: false,
+        },
+        {
+          data: null,
+          render: function ( data, type, row, meta ) {
+            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar permiso"><i class="fas fa-trash-alt"></i></button>';
+          },
+          orderable: false,
         }
       ]
     });
@@ -1689,6 +1798,43 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // agregar permisos
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnPermisoAdd").click(function() {
+      let desde   = $("#inputPermisoDesde").val();
+      let hasta   = $("#inputPermisoHasta").val();
+      let motivo  = $("#inputPermisoMotivo").val();
+      
+      if(lib_isEmpty(desde)) {
+        lib_toastr("Error: Debe ingresar la fecha de inicio del permiso!");
+      }
+      else if(lib_isEmpty(hasta)) {
+        lib_toastr("Error: Debe ingresar la fecha de finalizacion del permiso!");
+      }
+      else if(lib_isEmpty(motivo)) {
+        lib_toastr("Error: Debe ingresar el motivo del permiso!");
+      }
+      else {
+        permisosDT.row.add({
+          'desde'       : desde,
+          'hasta'       : hasta,
+          'motivo'     : motivo
+        })
+        .draw();
+        $("#inputPermisoMotivo").val("");
+      }
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // eliminar permisos
+    ///////////////////////////////////////////////////////////////////
+
+    $("#permisosDT tbody").on("click",".eliminar",function() {
+      permisosDT.row($(this).parents()).remove().draw();
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // buscar reposos por su codigo
     ///////////////////////////////////////////////////////////////////
 
@@ -1803,6 +1949,9 @@
       familiaresDT.column(5).data().each(sapellido => data.append('sapellido[]', sapellido));
       rangosDT.column(0).data().each(rango => data.append('rangos_id[]', rango));
       rangosDT.column(2).data().each(fecha => data.append('rangos_fecha[]', fecha));
+      permisosDT.column(0).data().each(desde => data.append('permisos_desde[]', desde));
+      permisosDT.column(1).data().each(hasta => data.append('permisos_hasta[]', hasta));
+      permisosDT.column(2).data().each(motivo => data.append('permisos_motivo[]', motivo));
       repososDT.column(0).data().each(desde => data.append('reposos_desde[]', desde));
       repososDT.column(1).data().each(hasta => data.append('reposos_hasta[]', hasta));
       repososDT.column(2).data().each(id => data.append('reposos_id[]', id));

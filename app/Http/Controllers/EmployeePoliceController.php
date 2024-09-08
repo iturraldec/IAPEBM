@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Clases\EmpleadoPolicial;
 use App\Http\Requests\EmployeePoliceStoreRequest;
 use App\Http\Requests\EmployeePoliceUpdateRequest;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Request;
 use Barryvdh\DomPDF\Facade;
 use App\Clases\Image;
 use App\Clases\RequestResponse;
@@ -42,8 +42,12 @@ class EmployeePoliceController extends Controller
   private $_requestResponse;
 
   //
-  public function __construct(Image $imagen, RequestResponse $requestResponse)
+  private $_empleado;
+
+  //
+  public function __construct(EmpleadoPolicial $empleado, Image $imagen, RequestResponse $requestResponse)
   {
+    $this->_empleado = $empleado;
     $this->_imagen = $imagen;
     $this->_requestResponse = $requestResponse;
   }
@@ -236,6 +240,11 @@ class EmployeePoliceController extends Controller
     // actualizo los familiares
     $employees_polouse->familiares()->delete();
     $this->_addFamiliares($employees_polouse, $request);
+
+    // actualizo sus permisos
+    if($request->has('permisos_desde')) {
+      $this->_empleado->updPermisos($employees_polouse, $request->only(['permisos_desde', 'permisos_hasta', 'permisos_motivo']));
+    }
 
     // actualizo reposos
     $employees_polouse->reposos()->delete();

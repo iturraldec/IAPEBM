@@ -42,7 +42,7 @@ class EmployeeObreroController extends Controller
   private $_empleado;
 
   //
-  public function __construct(EmpleadoObrero $empleado,  Image $imagen, RequestResponse $requestResponse)
+  public function __construct(EmpleadoObrero $empleado, Image $imagen, RequestResponse $requestResponse)
   {
     $this->_empleado = $empleado;
     $this->_imagen = $imagen;
