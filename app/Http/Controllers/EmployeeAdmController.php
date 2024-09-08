@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Clases\EmpleadoAdm;
 use App\Http\Requests\EmployeeAdmStoreRequest;
 use App\Http\Requests\EmployeeAdmUpdateRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,8 +39,14 @@ class EmployeeAdmController extends Controller
   private $_requestResponse;
 
   //
-  public function __construct(Image $imagen, RequestResponse $requestResponse)
+  private $_empleado;
+
+  //
+
+  //
+  public function __construct(EmpleadoAdm $empleado,  Image $imagen, RequestResponse $requestResponse)
   {
+    $this->_empleado = $empleado;
     $this->_imagen = $imagen;
     $this->_requestResponse = $requestResponse;
   }
@@ -224,6 +231,11 @@ class EmployeeAdmController extends Controller
     // actualizo los familiares
     $employees_adm->familiares()->delete();
     $this->_addFamiliares($employees_adm, $request);
+
+    // actualizo sus permisos
+    if($request->has('permisos_desde')) {
+      $this->_empleado->updPermisos($employees_adm, $request->only(['permisos_desde', 'permisos_hasta', 'permisos_motivo']));
+    }
 
     // actualizo reposos
     $employees_adm->reposos()->delete();
