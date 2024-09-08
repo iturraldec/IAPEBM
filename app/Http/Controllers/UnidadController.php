@@ -38,7 +38,7 @@ class UnidadController extends Controller
             'name'  => 'required|string|max:255'
         ]);
 
-        $unidad = Unidad::Create($request->all());
+        $unidad = Unidad::Create($request->only(['eje_id', 'code', 'name']));
         $this->_requestResponse->success = true;
         $this->_requestResponse->message = 'Unidad Operativa creada!';
         $this->_requestResponse->data    = $unidad;

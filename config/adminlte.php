@@ -340,12 +340,12 @@ return [
                     'url'   => '#',
                     'submenu' => [
                         [
-                            'text'      => 'Unidades Generales',
+                            'text'      => 'Generales',
                             'route'     => 'unidades.index',
                             'icon'      => 'fas fa-circle nav-icon'
                         ],
                         [
-                            'text'      => 'Unidades Específicas',
+                            'text'      => 'Específicas',
                             'route'       => 'unidades-e.index',
                             'icon'      => 'fas fa-circle nav-icon'
                         ]

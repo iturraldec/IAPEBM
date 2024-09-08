@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\CcpsEjesEnum;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 //
 class Unidad extends Model
@@ -12,12 +12,18 @@ class Unidad extends Model
     protected $table = 'unidades';
 
     //
-    protected $fillable = ['padre_id', 'code', 'name', 'latitude', 'length'];
+    protected $fillable = ['eje_id', 'padre_id', 'code', 'name', 'latitude', 'length'];
 
     //
     public static function unidades()
     {
-        return Unidad::where('padre_id', null)->orderBy('name')->get();
+        $unidades = Unidad::where('padre_id', null)->orderBy('name')->get()->map(function ($unidad) {
+            $ejeEnum = CcpsEjesEnum::tryFrom($unidad->eje_id);
+            $unidad->eje = $ejeEnum ? CcpsEjesEnum::from($unidad->eje_id)->label() : 'NO DEFINIDO';
+
+            return $unidad;
+        });
+        return $unidades;
     }
 
     //

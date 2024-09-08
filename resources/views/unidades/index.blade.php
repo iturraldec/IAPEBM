@@ -20,14 +20,15 @@
 
 @section('content')
   <div class="row justify-content-center">
-    <div class="col-6">
+    <div class="col-8">
       <table id="dt-unidades" class="table table-hover border border-dark">
         <thead class="thead-dark text-center">
           <tr>
             <th scope="col">ID</th>
+            <th scope="col">Eje</th>
             <th scope="col">Código</th>
             <th scope="col">Nombre</th>
-            <th scope="col" class="col-sm-2">Acción</th>
+            <th scope="col" class="col-sm-2"></th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -55,6 +56,15 @@
         </div>
         <div class="modal-body">
           <div class="row">
+            <div class="col-12 form-group">
+              <label for="selectEje">Eje de la Unidad</label>
+              <select id="selectEje" class="form-control" name="eje_id" title="Eje de la Unidad">
+                @foreach (App\Enums\CcpsEjesEnum::cases() as $case)
+                  <option value="{{ $case->value }}">{{ $case->label() }}</option>
+                @endforeach
+              </select>
+            </div>
+
             <div class="col-3">
               <label for="inputCode">Código</label>
               <input type="text"
@@ -113,8 +123,9 @@
         "ajax": "{{ route('unidades.index') }}",
         "columns": [
           {"data": "id", visible: false},
-          {"data": "code", "width": '20%'},
-          {"data": "name", "width": '55%'},
+          {"data": "eje", "width": '20%'},
+          {"data": "code", "width": '10%'},
+          {"data": "name", "width": '50%'},
           {"data":null,
            "className" : "dt-body-center",  
            "render": function ( data, type, row, meta ) {

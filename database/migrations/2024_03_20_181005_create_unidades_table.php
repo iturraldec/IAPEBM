@@ -14,6 +14,7 @@ return new class extends Migration
         //
         Schema::create('unidades', function (Blueprint $table) {
             $table->smallIncrements('id');
+            $table->unsignedSmallInteger('eje_id')->nullable();
             $table->unsignedSmallInteger('padre_id')->nullable();
             $table->string('code', 20);
             $table->string('name');
