@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('permisos', function (Blueprint $table) {
-            $table->increments('id');
             $table->unsignedInteger('employee_id');
             $table->date('desde');
             $table->date('hasta');

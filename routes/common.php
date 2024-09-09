@@ -35,13 +35,13 @@ Route::get('loadFromExcel', function() {
     Excel::import(new App\Imports\RepososImport, $dataPath . 'codigo-ivss.csv');
 
     echo 'administrativos...<br>';
-    Excel::import(new App\Imports\AdminImport, $dataPath . 'administrativos-copia.csv');
+    Excel::import(new App\Imports\AdminImport, $dataPath . 'adm-obreros/administrativos-copia.csv');
  
     echo 'obreros...<br>';
-    Excel::import(new App\Imports\ObreroImport, $dataPath . 'administrativos-copia.csv');
- 
+    Excel::import(new App\Imports\ObreroImport, $dataPath . 'adm-obreros/administrativos-copia.csv');
+
     echo 'uniformados...<br>';
-    Excel::import(new App\Imports\PoliceImport, $dataPath . 'uniformados-copia.csv');
+    Excel::import(new App\Imports\PoliceImport, $dataPath . 'uniformados/uniformados-copia.csv');
 
     getPhotos();
 
@@ -64,7 +64,7 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 // cargar fotos
 function getPhotos()
 {
-    $dataPath = '/home/iturraldec/Documentos/informatica/iapebm/';
+    $dataPath = '/home/iturraldec/Documentos/informatica/iapebm/uniformados/';
     echo 'cargando fotos de uniformados...<br>';
     
     // cargar archivo
@@ -93,7 +93,7 @@ function getPhotos()
             if ($drawingCollection) {
                 foreach ($drawingCollection as $dibujo) {
                     if ($dibujo instanceof Drawing && $dibujo->getCoordinates() === 'L' . $row) {
-                        $storePath = public_path("images/$cedula");
+                        $storePath = public_path("employees/$cedula");
 
                         $xlsImagePath = $dibujo->getPath(); // Ruta de la imagen en excel
                         $imageContent = file_get_contents($xlsImagePath);
@@ -108,7 +108,7 @@ function getPhotos()
                         $imagen = uniqid() . $extension;
                         file_put_contents($storePath . '/' . $imagen, $imageContent);
 
-                        DB::update("update people set imagef = 'images/$cedula/$imagen' where cedula = ?", [$cedula]);
+                        DB::update("update people set imagef = 'employees/$cedula/$imagen' where cedula = ?", [$cedula]);
                         echo "foto de $cedula...actualizada...<br>";
                     }
                 }

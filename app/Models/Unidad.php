@@ -18,8 +18,7 @@ class Unidad extends Model
     public static function unidades()
     {
         $unidades = Unidad::where('padre_id', null)->orderBy('name')->get()->map(function ($unidad) {
-            $ejeEnum = CcpsEjesEnum::tryFrom($unidad->eje_id);
-            $unidad->eje = $ejeEnum ? CcpsEjesEnum::from($unidad->eje_id)->label() : 'NO DEFINIDO';
+            $unidad->eje = CcpsEjesEnum::from($unidad->eje_id)->label();
 
             return $unidad;
         });

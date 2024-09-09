@@ -13,6 +13,7 @@ class UnidadesGImport implements ToCollection, WithHeadingRow
         foreach ($rows as $row) 
         {   
           DB::table('unidades')->insert([
+            'eje_id'    => 1,
             'code'      => $row['code'],
             'name'      => $row['name']
           ]);

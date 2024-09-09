@@ -61,7 +61,7 @@ class UnidadController extends Controller
             'name'  => 'required|string|max:255'
         ]);
 
-        if ($unidade->update($request->only(['code', 'name']))) {
+        if ($unidade->update($request->only(['eje_id', 'code', 'name']))) {
             $this->_requestResponse->success = true;
             $this->_requestResponse->message = 'Unidad Operativa actualizada!';
         }

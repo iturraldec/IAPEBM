@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             'code'      => '15075601',
             'name'      => 'Carlos Iturralde',
             'email'     => 'iturraldec@gmail.com',
-            'password'  => Hash::make(config('app_config.user_password')),
+            'password'  => Hash::make(config('app_config.users_init_password')),
         ]);
 
         $user->assignRole('Administrador');

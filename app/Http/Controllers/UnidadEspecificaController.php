@@ -48,7 +48,7 @@ class UnidadEspecificaController extends Controller
             'length'    => 'required|decimal:6'
         ]);
 
-        $unidad = Unidad::Create($request->all());
+        $unidad = Unidad::Create($request->only(['padre_id', 'code', 'name', 'latitude', 'length']));
         $this->_requestResponse->success = true;
         $this->_requestResponse->message = 'Unidad Operativa Específica creada!';
         $this->_requestResponse->data    = $unidad;
@@ -73,7 +73,7 @@ class UnidadEspecificaController extends Controller
             'length'    => 'required|decimal:6'
         ]);
 
-        if ($unidades_e->update($request->all())) {
+        if ($unidades_e->update($request->only(['padre_id', 'code', 'name', 'latitude', 'length']))) {
             $this->_requestResponse->success = true;
             $this->_requestResponse->message = 'Unidad Operativa Específica actualizada!';
         }
