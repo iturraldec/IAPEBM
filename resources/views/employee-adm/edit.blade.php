@@ -1,17 +1,23 @@
-@extends('adminlte::page')
+@extends('layouts.edit-page')
 
-@section('title', 'Empleado Administrativo')
+@section('title', 'Empleados Administrativos')
+
+@section('css')
+<style>
+  .reposos-table {
+    font-size: 14px
+  }
+</style>
+@endsection
 
 @section('content_header')
-  <div class="row">
-    <div class="col-6">
-      <h4>Modificar Datos de Empleado Administrativo</h4>
-    </div>
-  
-    <div class="col-6 d-flex justify-content-end">
-      <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
-      <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
-    </div>
+  <div class="col-6">
+    <h4>Editar Datos del Empleado Administrativo</h4>
+  </div>
+
+  <div class="col-6 d-flex justify-content-end">
+    <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
+    <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
   </div>
 @endsection
 
@@ -840,7 +846,6 @@
                           <td>{{ $permiso->desde }}</td>
                           <td>{{ $permiso->hasta }}</td>
                           <td>{{ $permiso->motivo }}</td>
-                          <td></td>
                         </tr>
                       @endforeach
                     </tbody>
@@ -861,89 +866,57 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <div class="row">
-                <div class="col-2 form-group">
-                  <label for="inputReposoDesde">Desde*</label>
-                  <input type="date" 
-                        class="form-control" 
-                        id="inputReposoDesde" 
-                        value="{{ date('Y-d-m') }}"
-                        title="Fecha inicial del reposo"
-                  />
+              <div class="col">
+                <div class="d-flex justify-content-end">
+                  <button type="button" 
+                          class="btn btn-primary"
+                          id="btnReposoAdd"
+                  ><i class="fas fa-plus-square"></i> Agregar reposo</button>
                 </div>
 
-                <div class="col-2 form-group">
-                  <label for="inputReposoHasta">Hasta*</label>
-                  <input type="date" 
-                        class="form-control" 
-                        id="inputReposoHasta"
-                        value="{{ date('Y-d-m') }}"
-                        title="Fecha final del reposo"
-                  />
-                </div>
-
-                <div class="col-2 form-group">
-                  <label>Código*</label>
-                  <input type="text" 
-                        class="form-control" 
-                        id="inputReposoCodigo" 
-                        placeholder="Código del reposo"
-                        onkeyup="this.value = this.value.toUpperCase();"
-                        title="Código del reposo"
-                  >
-                </div>
-
-                <div class="col-6 form-group">
-                  <label for="selectReposo">Reposo</label>
-                  <select id="selectReposo" class="form-control" title="Reposo">
-                  </select>
-                </div>
-
-                <div class="col-12 form-group">
-                  <label for="inputReposoObservacion">Observación</label>
-                  <div class="input-group">
-                    <input type="text" 
-                          class="form-control" 
-                          id="inputReposoObservacion"
-                          placeholder="Ingrese observaciones"
-                          onkeyup="this.value = this.value.toUpperCase();"
-                          title="Observaciones del reposo"
-                    />
-
-                    <div class="input-group-append">
-                      <div id="btnReposoAdd" class="input-group-text" title="Agregar reposo"><i class="fas fa-plus-square"></i></div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col">
-                  <table id="repososDT" class="table table-hover border border-primary" width="100%">
-                    <thead class="text-center">
+                <table id="repososDT" class="table table-hover border border-primary reposos-table text-center">
+                  <thead>
+                    <tr>
+                      <th>id</th>
+                      <th>Desde</th>
+                      <th>Hasta</th>
+                      <th>Fecha Notificación</th>
+                      <th>Dr CI</th>
+                      <th>Dr Nombre</th>
+                      <th>Dr MPPS</th>
+                      <th>Dr CMS</th>
+                      <th>Fecha Convalidación</th>
+                      <th>Dr CI</th>
+                      <th>Dr Nombre</th>
+                      <th>Dr MPPS</th>
+                      <th>Dr CMS</th>
+                      <th>status</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+    
+                  <tbody>
+                    @foreach ($data['employee']->reposos as $reposo)
                       <tr>
-                        <th>Desde</th>
-                        <th>Hasta</th>
-                        <th>id</th>
-                        <th>Diagnóstico</th>
-                        <th>observacion</th>
-                        <th></th>
+                        <td>{{ $reposo->id}}</td>
+                        <td>{{ $reposo->desde }}</td>
+                        <td>{{ $reposo->hasta }}</td>
+                        <td>{{ $reposo->noti_fecha }}</td>
+                        <td>{{ $reposo->noti_dr_ci }}</td>
+                        <td>{{ $reposo->noti_dr_nombre }}</td>
+                        <td>{{ $reposo->noti_dr_mpps }}</td>
+                        <td>{{ $reposo->noti_dr_cms }}</td>
+                        <td>{{ $reposo->conva_fecha }}</td>
+                        <td>{{ $reposo->conva_dr_ci }}</td>
+                        <td>{{ $reposo->conva_dr_nombre }}</td>
+                        <td>{{ $reposo->conva_dr_mpps }}</td>
+                        <td>{{ $reposo->conva_dr_cms }}</td>
                       </tr>
-                    </thead>
-      
-                    <tbody>
-                      @foreach ($data['employee']->reposos as $reposo)
-                        <tr>
-                          <td>{{ $reposo->desde }}</td>
-                          <td>{{ $reposo->hasta }}</td>
-                          <td>{{ $reposo->reposo_id }}</td>
-                          <td>{{ $reposo->reposo->diagnostico }}</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      @endforeach
-                    </tbody>
-                  </table>
-                </div>
+                    @endforeach
+                  </tbody>
+                </table>
               </div>
+            </div>
             </div>
             <!-- /.card-body -->
           </div>
@@ -1226,25 +1199,22 @@
       info: false,
       paging: false,
       searching: false,
+      autofix:true,
       columns: [
-        {
-          data: 'desde',
-        },
-        {
-          data: 'hasta',
-        },
-        {
-          data: 'id',
-          visible: false
-        },
-        {
-          data: 'diagnostico',
-          orderable: false,
-        },
-        {
-          data: 'observacion',
-          visible: false,
-        },
+        {data: 'id', visible: false},
+        {data: 'desde'},
+        {data: 'hasta'},
+        {data: 'noti_fecha'},
+        {data: 'noti_dr_ci'},
+        {data: 'noti_dr_nombre'},
+        {data: 'noti_dr_mpps'},
+        {data: 'noti_dr_cms'},
+        {data: 'conva_fecha'},
+        {data: 'conva_dr_ci'},
+        {data: 'conva_dr_nombre'},
+        {data: 'conva_dr_mpps'},
+        {data: 'conva_dr_cms'},
+        {data: 'status'},
         {
           data: null,
           render: function ( data, type, row, meta ) {
@@ -1658,7 +1628,7 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnReposoAdd").click(function() {
-      let desde       = $("#inputReposoDesde").val();
+      /* let desde       = $("#inputReposoDesde").val();
       let hasta       = $("#inputReposoHasta").val();
       let id          = $("#selectReposo :selected").val();
       let diagnostico = $("#selectReposo :selected").text();
@@ -1672,14 +1642,24 @@
       }
       else if(lib_isEmpty(id) || id == '0') {
         lib_toastr("Error: Debe ingresar el diagnóstico del reposo!");
-      }
+      } */
+     if(5 < 2) {i = 1}
       else {
         repososDT.row.add({
-          'desde'       : desde,
-          'hasta'       : hasta,
-          'id'          : id,
-          'diagnostico' : diagnostico,
-          'observacion' : observacion
+          'id'              : '0',
+          'desde'           : '2024-09-10',
+          'hasta'           : '2024-09-10',
+          'noti_fecha'      : '2024-09-10',
+          'noti_dr_ci'      : '15075601',
+          'noti_dr_nombre'  : 'carlos',
+          'noti_dr_mpps'    : '12344444',
+          'noti_dr_cms'     : '12344444',
+          'conva_fecha'      : '2024-09-10',
+          'conva_dr_ci'      : '15075601',
+          'conva_dr_nombre'  : 'carlos',
+          'conva_dr_mpps'    : '12344444',
+          'conva_dr_cms'     : '12344444',
+          'status'          : 'C',
         })
         .draw();
         $("#inputReposoObservacion").val("");
@@ -1691,7 +1671,12 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#repososDT tbody").on("click",".eliminar",function() {
-      repososDT.row($(this).parents()).remove().draw();
+      let row = repososDT.row($(this).parents());
+      let data = row.data();
+
+      data.status = 'D';
+      row.data(data);
+      console.log(row.data());
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -1751,10 +1736,7 @@
       permisosDT.column(0).data().each(desde => data.append('permisos_desde[]', desde));
       permisosDT.column(1).data().each(hasta => data.append('permisos_hasta[]', hasta));
       permisosDT.column(2).data().each(motivo => data.append('permisos_motivo[]', motivo));
-      repososDT.column(0).data().each(desde => data.append('reposos_desde[]', desde));
-      repososDT.column(1).data().each(hasta => data.append('reposos_hasta[]', hasta));
-      repososDT.column(2).data().each(id => data.append('reposos_id[]', id));
-      repososDT.column(4).data().each(observacion => data.append('reposos_observacion[]', observacion));
+      data.append('repososDT', JSON.stringify(repososDT.rows().data().toArray()));
       vacacionesDT.column(0).data().each(desde => data.append('vacaciones_desde[]', desde));
       vacacionesDT.column(1).data().each(hasta => data.append('vacaciones_hasta[]', hasta));
       vacacionesDT.column(2).data().each(periodo => data.append('vacaciones_periodo[]', periodo));
@@ -1769,7 +1751,7 @@
       .then(response => {
         if(response.ok) {
           lib_ShowMensaje("Empleado Administrativo modificado!", 'mensaje')
-          .then(response => window.close());
+          //.then(response => window.close());
         }
         else {
           response.text().then(r => {

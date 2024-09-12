@@ -177,6 +177,7 @@ class EmployeeAdmController extends Controller
    */
   public function update(EmployeeAdmUpdateRequest $request, Employee $employees_adm)
   {
+    return response($request->repososDT);
     // actualizo la persona
     $dataPerson = Person::select('id', 'imagef', 'imageli', 'imageld')->find($employees_adm->person_id);
     $inputPerson = $request->only(['cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name',
