@@ -4,6 +4,7 @@ namespace App\Clases;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
+use App\Models\EmpleadoReposo;
 
 //
 abstract class EmpleadoAbstract
@@ -36,5 +37,35 @@ abstract class EmpleadoAbstract
       ];
     }
     return DB::table('permisos')->insert($permisos);
+  }
+
+  //
+  public function updReposos(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $reposo) {
+      switch($reposo->status) {
+        case 'C': DB::table('empleado_reposos')->insert([
+                            'employee_id'     => $empleado->id,
+                            'reposo_id'       => $reposo->reposo_id,
+                            'desde'           => $reposo->desde,
+                            'hasta'           => $reposo->hasta,
+                            'noti_fecha'      => $reposo->noti_fecha,
+                            'noti_dr_ci'      => $reposo->noti_dr_ci,
+                            'noti_dr_nombre'  => $reposo->noti_dr_nombre,
+                            'noti_dr_mpps'    => $reposo->noti_dr_mpps,
+                            'noti_dr_cms'     => $reposo->noti_dr_cms,
+                            'conva_fecha'     => $reposo->conva_fecha,
+                            'conva_dr_ci'     => $reposo->conva_dr_ci,
+                            'conva_dr_nombre' => $reposo->conva_dr_nombre,
+                            'conva_dr_mpps'   => $reposo->conva_dr_mpps,
+                            'conva_dr_cms'    => $reposo->conva_dr_cms,
+                  ]);
+                  break;
+        case 'D' :  EmpleadoReposo::find($reposo->id)->delete();
+                    break;
+      }
+    }
+
+    return true;
   }
 }

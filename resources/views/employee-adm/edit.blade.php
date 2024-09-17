@@ -5,7 +5,7 @@
 @section('css')
 <style>
   .reposos-table {
-    font-size: 14px
+    font-size: 12px
   }
 </style>
 @endsection
@@ -874,7 +874,7 @@
                   ><i class="fas fa-plus-square"></i> Agregar reposo</button>
                 </div>
 
-                <table id="repososDT" class="table table-hover border border-primary reposos-table text-center">
+                <table id="repososDT" class="table table-hover border border-primary reposos-table text-center" width="100%">
                   <thead>
                     <tr>
                       <th>id</th>
@@ -885,6 +885,9 @@
                       <th>Dr Nombre</th>
                       <th>Dr MPPS</th>
                       <th>Dr CMS</th>
+                      <th>reposo_id</th>
+                      <th>reposo_codigo</th>
+                      <th>reposo</th>
                       <th>Fecha Convalidación</th>
                       <th>Dr CI</th>
                       <th>Dr Nombre</th>
@@ -894,7 +897,7 @@
                       <th></th>
                     </tr>
                   </thead>
-    
+
                   <tbody>
                     @foreach ($data['employee']->reposos as $reposo)
                       <tr>
@@ -906,11 +909,16 @@
                         <td>{{ $reposo->noti_dr_nombre }}</td>
                         <td>{{ $reposo->noti_dr_mpps }}</td>
                         <td>{{ $reposo->noti_dr_cms }}</td>
+                        <td>{{ $reposo->reposo_id }}</td>
+                        <td>{{ $reposo->reposo->codigo }}</td>
+                        <td>{{ $reposo->reposo->diagnostico }}</td>
                         <td>{{ $reposo->conva_fecha }}</td>
                         <td>{{ $reposo->conva_dr_ci }}</td>
                         <td>{{ $reposo->conva_dr_nombre }}</td>
                         <td>{{ $reposo->conva_dr_mpps }}</td>
                         <td>{{ $reposo->conva_dr_cms }}</td>
+                        <td></td>
+                        <td></td>
                       </tr>
                     @endforeach
                   </tbody>
@@ -1007,16 +1015,26 @@
   </div>
   <!-- fin de card -->
 
+  <!-- modal de reposos -->
+  @include('employee-adm.reposos')
+
 @endsection
 
 @section('js')
 <script>
   $(document).ready(function () {
+
     ///////////////////////////////////////////////////////////////////
     // ruta de la entidad a actualizar
     ///////////////////////////////////////////////////////////////////
 
     var ruta =  "{{ route('employees-adm.update', ['employees_adm' => $data['employee']]) }}";
+
+    ///////////////////////////////////////////////////////////////////
+    // index del reposo a agregar/moodificar
+    ///////////////////////////////////////////////////////////////////
+
+    var reposoRow = -1;
 
     ///////////////////////////////////////////////////////////////////
     // tabla de emails
@@ -1196,10 +1214,17 @@
     ///////////////////////////////////////////////////////////////////
 
     var repososDT = $('#repososDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      autofix:true,
+      info        : false,
+      paging      : false,
+      searching   : false,
+      autofix     : true,
+      rowCallback : function(row, data, index) {
+                      if (data.status == 'D') {
+                        $(row).find('td').each(function() {
+                          $(this).html('<del class="bg-danger">' + $(this).html() + '</del>');
+                        });
+                      }
+                    },
       columns: [
         {data: 'id', visible: false},
         {data: 'desde'},
@@ -1209,18 +1234,28 @@
         {data: 'noti_dr_nombre'},
         {data: 'noti_dr_mpps'},
         {data: 'noti_dr_cms'},
+        {data: 'reposo_id', visible: false},
+        {data: 'reposo_codigo', visible: false},
+        {data: 'reposo', visible: false},
         {data: 'conva_fecha'},
         {data: 'conva_dr_ci'},
         {data: 'conva_dr_nombre'},
         {data: 'conva_dr_mpps'},
         {data: 'conva_dr_cms'},
-        {data: 'status'},
+        {data: 'status', visible:false},
         {
           data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar reposo"><i class="fas fa-trash-alt"></i></button>';
-          },
           orderable: false,
+          render: function ( data, type, row, meta ) {
+            let botones = `
+                  <div class="d-flex flex-row">
+                    <button type="button" class="editar btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></button>
+                    <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar reposo"><i class="fas fa-trash-alt"></i></button>
+                  </div>
+                `;
+            
+            return botones;
+          },
         }
       ]
     });
@@ -1317,6 +1352,12 @@
       // mascara la zona postal
       // POR REVISAR, COMO ASIGNAR MASCARA A ARRAY
       //$("#inputZonaPostal[]").inputmask(lib_digitMask());
+
+      // notificacion de reposos: mascara del nombre del dr 
+      $("#inputReposoNotiNombre").inputmask(lib_characterMask());
+
+      // convalidacion de reposos: mascara del nombre del dr 
+      $("#inputReposoConvaNombre").inputmask(lib_characterMask());
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -1606,28 +1647,90 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // buscar reposos por su codigo
+    // reposos: agregar
     ///////////////////////////////////////////////////////////////////
 
-    $("#inputReposoCodigo").change(function() {
+    $("#btnReposoAdd").click(function() {
+      reposoRow = -1;
+      $('#reposoModalTitle').html('Agregar reposo');
+      $('#inputReposoDesde').val('');
+      $('#inputReposoHasta').val('');
+      $('#inputReposoNotiFecha').val('');
+      $('#inputReposoNotiCi').val('');
+      $('#inputReposoNotiNombre').val('');
+      $('#inputReposoNotiMpps').val('');
+      $('#inputReposoNotiCms').val('');
+      $('#inputReposoCodigo').val(''),
+      $("#inputReposoId").val('');
+      $("#inputReposo").val('');
+      $('#inputReposoConvaCi').val('');
+      $('#inputReposoConvaNombre').val('');
+      $('#inputReposoConvaMpps').val('');
+      $('#inputReposoConvaCms').val('');
+      $('#reposoModal').modal('show');
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // reposos: editar
+    ///////////////////////////////////////////////////////////////////
+
+    $("#repososDT tbody").on("click", ".editar", function() {
+      let data = repososDT.row($(this).parents()).data();
+      
+      reposoRow = repososDT.row($(this).parents('tr')).index();
+      $('#reposoModalTitle').html('Editar reposo');
+      $('#inputReposoDesde').val(data.desde);
+      $('#inputReposoHasta').val(data.hasta);
+      $('#inputReposoNotiFecha').val(data.noti_fecha);
+      $('#inputReposoNotiCi').val(data.noti_dr_ci);
+      $('#inputReposoNotiNombre').val(data.noti_dr_nombre);
+      $('#inputReposoNotiMpps').val(data.noti_dr_mpps);
+      $('#inputReposoNotiCms').val(data.noti_dr_cms);
+      $('#inputReposoId').val(data.reposo_id);
+      $('#inputReposoCodigo').val(data.reposo_codigo);
+      $('#inputReposo').val(data.reposo);
+      $('#inputReposoConvaCi').val(data.conva_dr_ci);
+      $('#inputReposoConvaNombre').val(data.conva_dr_nombre);
+      $('#inputReposoConvaMpps').val(data.conva_dr_mpps);
+      $('#inputReposoConvaCms').val(data.conva_dr_cms);
+      $('#reposoModal').modal('show');
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // reposos: codigo
+    ///////////////////////////////////////////////////////////////////
+
+    $("#inputReposoCodigo").on('keypress', function() {
+      $("#inputReposo").val('');
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // reposos: buscar por codigo
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnReposoBuscar").click(function() {
       let ruta = "{{ route('reposos.get-by-code', ['search' => '.valor']) }}";
 
-      fetch(ruta.replace('.valor', $(this).val()))
+      fetch(ruta.replace('.valor', $("#inputReposoCodigo").val()))
       .then(response => response.json())
       .then(r => {
-        $("#selectReposo").empty();
-        $("#selectReposo").append('<option value="0">SELECCIONE EL REPOSO</option>');
-        r.forEach(element => {
-          $("#selectReposo").append(`<option value="${element.id}">${element.codigo}|${element.diagnostico}</option>`);
-        });
+        if(!r.success) {
+          lib_toastr("Error: Código de reposo inexistente!");
+        }
+        else {
+          $("#inputReposoId").val(r.data.id);
+          $("#inputReposo").val(r.data.diagnostico);
+          $("#inputReposo").attr('title', r.data.diagnostico);
+        }
       });
     });
 
     ///////////////////////////////////////////////////////////////////
-    // agregar reposos
+    // reposos: salvar en tabla
     ///////////////////////////////////////////////////////////////////
 
-    $("#btnReposoAdd").click(function() {
+    $("#btnReposoAceptar").click(function() {
+      let ok = true;
       /* let desde       = $("#inputReposoDesde").val();
       let hasta       = $("#inputReposoHasta").val();
       let id          = $("#selectReposo :selected").val();
@@ -1643,26 +1746,33 @@
       else if(lib_isEmpty(id) || id == '0') {
         lib_toastr("Error: Debe ingresar el diagnóstico del reposo!");
       } */
-     if(5 < 2) {i = 1}
-      else {
-        repososDT.row.add({
-          'id'              : '0',
-          'desde'           : '2024-09-10',
-          'hasta'           : '2024-09-10',
-          'noti_fecha'      : '2024-09-10',
-          'noti_dr_ci'      : '15075601',
-          'noti_dr_nombre'  : 'carlos',
-          'noti_dr_mpps'    : '12344444',
-          'noti_dr_cms'     : '12344444',
-          'conva_fecha'      : '2024-09-10',
-          'conva_dr_ci'      : '15075601',
-          'conva_dr_nombre'  : 'carlos',
-          'conva_dr_mpps'    : '12344444',
-          'conva_dr_cms'     : '12344444',
-          'status'          : 'C',
-        })
-        .draw();
-        $("#inputReposoObservacion").val("");
+      if(ok) {
+        if(reposoRow == -1) {
+          repososDT.row.add({
+            'id'              : '0',
+            'desde'           : $('#inputReposoDesde').val(),
+            'hasta'           : $('#inputReposoHasta').val(),
+            'noti_fecha'      : $('#inputReposoNotiFecha').val(),
+            'noti_dr_ci'      :  $('#inputReposoNotiCi').val(),
+            'noti_dr_nombre'  : $('#inputReposoNotiNombre').val(),
+            'noti_dr_mpps'    : $('#inputReposoNotiMpps').val(),
+            'noti_dr_cms'     : $('#inputReposoNotiCms').val(),
+            'reposo_id'       : $('#inputReposoId').val(),
+            'reposo_codigo'   : $('#inputReposoCodigo').val(),
+            'reposo'          : $('#inputReposo').val(),
+            'conva_fecha'     : $('#inputReposoConvaFecha').val(),
+            'conva_dr_ci'     : $('#inputReposoConvaCi').val(),
+            'conva_dr_nombre' : $('#inputReposoConvaNombre').val(),
+            'conva_dr_mpps'   : $('#inputReposoConvaMpps').val(),
+            'conva_dr_cms'    : $('#inputReposoConvaCms').val(),
+            'status'          : 'C',
+          })
+          .draw();
+          $('#reposoModal').modal('hide');
+        }
+        else {
+          alert('modifico: ' + reposoRow)
+        }
       }
     });
 
@@ -1676,7 +1786,7 @@
 
       data.status = 'D';
       row.data(data);
-      console.log(row.data());
+      repososDT.draw();
     });
 
     ///////////////////////////////////////////////////////////////////

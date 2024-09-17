@@ -83,8 +83,15 @@ class ReposoController extends Controller
   //
   public function getByCode(string $search = '')
   {
-      $reposos = Reposo::where('codigo', 'LIKE', "%$search%")->orderBy('codigo')->get();
+    $reposo = Reposo::where('codigo', $search)->first();
+    if($reposo) {
+      $this->_requestResponse->success  = true;
+      $this->_requestResponse->data     = $reposo;
+    }
+    else {
+      $this->_requestResponse->success = false;
+    }
 
-      return response($reposos);
+    return response()->json($this->_requestResponse, Response::HTTP_OK);
   }
 }
