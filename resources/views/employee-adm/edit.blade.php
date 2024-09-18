@@ -1663,6 +1663,7 @@
       $('#inputReposoCodigo').val(''),
       $("#inputReposoId").val('');
       $("#inputReposo").val('');
+      $("#inputReposoConvaFecha").val('');
       $('#inputReposoConvaCi').val('');
       $('#inputReposoConvaNombre').val('');
       $('#inputReposoConvaMpps').val('');
@@ -1689,6 +1690,7 @@
       $('#inputReposoId').val(data.reposo_id);
       $('#inputReposoCodigo').val(data.reposo_codigo);
       $('#inputReposo').val(data.reposo);
+      $('#inputReposoConvaFecha').val(data.conva_fecha);
       $('#inputReposoConvaCi').val(data.conva_dr_ci);
       $('#inputReposoConvaNombre').val(data.conva_dr_nombre);
       $('#inputReposoConvaMpps').val(data.conva_dr_mpps);
@@ -1711,18 +1713,23 @@
     $("#btnReposoBuscar").click(function() {
       let ruta = "{{ route('reposos.get-by-code', ['search' => '.valor']) }}";
 
-      fetch(ruta.replace('.valor', $("#inputReposoCodigo").val()))
-      .then(response => response.json())
-      .then(r => {
-        if(!r.success) {
-          lib_toastr("Error: Código de reposo inexistente!");
-        }
-        else {
-          $("#inputReposoId").val(r.data.id);
-          $("#inputReposo").val(r.data.diagnostico);
-          $("#inputReposo").attr('title', r.data.diagnostico);
-        }
-      });
+      if($("#inputReposoCodigo").val() == '') {
+        lib_toastr("Error: Debe ingresar el código del reposo!");
+      }
+      else {
+        fetch(ruta.replace('.valor', $("#inputReposoCodigo").val()))
+        .then(response => response.json())
+        .then(r => {
+          if(!r.success) {
+            lib_toastr("Error: Código de reposo inexistente!");
+          }
+          else {
+            $("#inputReposoId").val(r.data.id);
+            $("#inputReposo").val(r.data.diagnostico);
+            $("#inputReposo").attr('title', r.data.diagnostico);
+          }
+        });
+      }
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -1768,11 +1775,31 @@
             'status'          : 'C',
           })
           .draw();
-          $('#reposoModal').modal('hide');
         }
         else {
-          alert('modifico: ' + reposoRow)
+          let repososId = repososDT.row(reposoRow).data().id;
+
+          repososDT.row(reposoRow).data({
+            'id'              : repososId,
+            'desde'           : $('#inputReposoDesde').val(),
+            'hasta'           : $('#inputReposoHasta').val(),
+            'noti_fecha'      : $('#inputReposoNotiFecha').val(),
+            'noti_dr_ci'      :  $('#inputReposoNotiCi').val(),
+            'noti_dr_nombre'  : $('#inputReposoNotiNombre').val(),
+            'noti_dr_mpps'    : $('#inputReposoNotiMpps').val(),
+            'noti_dr_cms'     : $('#inputReposoNotiCms').val(),
+            'reposo_id'       : $('#inputReposoId').val(),
+            'reposo_codigo'   : $('#inputReposoCodigo').val(),
+            'reposo'          : $('#inputReposo').val(),
+            'conva_fecha'     : $('#inputReposoConvaFecha').val(),
+            'conva_dr_ci'     : $('#inputReposoConvaCi').val(),
+            'conva_dr_nombre' : $('#inputReposoConvaNombre').val(),
+            'conva_dr_mpps'   : $('#inputReposoConvaMpps').val(),
+            'conva_dr_cms'    : $('#inputReposoConvaCms').val(),
+            'status'          : 'U',
+          }).draw();
         }
+        $('#reposoModal').modal('hide');
       }
     });
 

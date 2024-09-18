@@ -177,13 +177,6 @@ class EmployeeAdmController extends Controller
    */
   public function update(EmployeeAdmUpdateRequest $request, Employee $employees_adm)
   {
-    $this->_empleado->updReposos($employees_adm, json_decode($request->repososDT));
-    //
-    $this->_requestResponse->success = true;
-    $this->_requestResponse->message = 'Empleado Administrativo actualizado!';
-
-    return response()->json($this->_requestResponse, Response::HTTP_OK);
-
     // actualizo la persona
     $dataPerson = Person::select('id', 'imagef', 'imageli', 'imageld')->find($employees_adm->person_id);
     $inputPerson = $request->only(['cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name',
@@ -243,20 +236,7 @@ class EmployeeAdmController extends Controller
     }
 
     // actualizo reposos
-    $employees_adm->reposos()->delete();
-    if($request->has('reposos_desde')) {
-      $reposos = [];
-      foreach($request->reposos_desde as $indice => $desde) {
-        $reposos[] = new EmpleadoReposo([
-                        'employee_id' => $employees_adm->id,
-                        'reposo_id'   => $request->reposos_id[$indice],
-                        'desde'       => $desde,
-                        'hasta'       => $request->reposos_hasta[$indice],
-                        'observacion' => $request->reposos_observacion[$indice],
-                    ]);
-      };
-      $employees_adm->reposos()->saveMany($reposos);
-    };
+    $this->_empleado->updReposos($employees_adm, json_decode($request->repososDT));
 
     // actualizo sus vacaciones
     $employees_adm->vacaciones()->delete();

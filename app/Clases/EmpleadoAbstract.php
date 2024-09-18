@@ -43,26 +43,46 @@ abstract class EmpleadoAbstract
   public function updReposos(Employee $empleado, array $data) : bool
   {
     foreach($data as $reposo) {
-      switch($reposo->status) {
-        case 'C': DB::table('empleado_reposos')->insert([
-                            'employee_id'     => $empleado->id,
-                            'reposo_id'       => $reposo->reposo_id,
-                            'desde'           => $reposo->desde,
-                            'hasta'           => $reposo->hasta,
-                            'noti_fecha'      => $reposo->noti_fecha,
-                            'noti_dr_ci'      => $reposo->noti_dr_ci,
-                            'noti_dr_nombre'  => $reposo->noti_dr_nombre,
-                            'noti_dr_mpps'    => $reposo->noti_dr_mpps,
-                            'noti_dr_cms'     => $reposo->noti_dr_cms,
-                            'conva_fecha'     => $reposo->conva_fecha,
-                            'conva_dr_ci'     => $reposo->conva_dr_ci,
-                            'conva_dr_nombre' => $reposo->conva_dr_nombre,
-                            'conva_dr_mpps'   => $reposo->conva_dr_mpps,
-                            'conva_dr_cms'    => $reposo->conva_dr_cms,
-                  ]);
-                  break;
-        case 'D' :  EmpleadoReposo::find($reposo->id)->delete();
-                    break;
+      if($reposo->id == '0' || $reposo->status == 'C') {
+        DB::table('empleado_reposos')->insert([
+                      'employee_id'     => $empleado->id,
+                      'reposo_id'       => $reposo->reposo_id,
+                      'desde'           => $reposo->desde,
+                      'hasta'           => $reposo->hasta,
+                      'noti_fecha'      => $reposo->noti_fecha,
+                      'noti_dr_ci'      => $reposo->noti_dr_ci,
+                      'noti_dr_nombre'  => $reposo->noti_dr_nombre,
+                      'noti_dr_mpps'    => $reposo->noti_dr_mpps,
+                      'noti_dr_cms'     => $reposo->noti_dr_cms,
+                      'conva_fecha'     => $reposo->conva_fecha,
+                      'conva_dr_ci'     => $reposo->conva_dr_ci,
+                      'conva_dr_nombre' => $reposo->conva_dr_nombre,
+                      'conva_dr_mpps'   => $reposo->conva_dr_mpps,
+                      'conva_dr_cms'    => $reposo->conva_dr_cms,
+        ]);
+      }
+      else if($reposo->status == 'U') {
+        DB::table('empleado_reposos')
+          ->where('id', $reposo->id)
+          ->update([
+              'reposo_id'       => $reposo->reposo_id,
+              'desde'           => $reposo->desde,
+              'hasta'           => $reposo->hasta,
+              'noti_fecha'      => $reposo->noti_fecha,
+              'noti_dr_ci'      => $reposo->noti_dr_ci,
+              'noti_dr_nombre'  => $reposo->noti_dr_nombre,
+              'noti_dr_mpps'    => $reposo->noti_dr_mpps,
+              'noti_dr_cms'     => $reposo->noti_dr_cms,
+              'conva_fecha'     => $reposo->conva_fecha,
+              'conva_dr_ci'     => $reposo->conva_dr_ci,
+              'conva_dr_nombre' => $reposo->conva_dr_nombre,
+              'conva_dr_mpps'   => $reposo->conva_dr_mpps,
+              'conva_dr_cms'    => $reposo->conva_dr_cms,
+          ]
+        );
+      }
+      else if($reposo->status == 'D' && $reposo->id != '0') {
+        EmpleadoReposo::find($reposo->id)->delete();
       }
     }
 
