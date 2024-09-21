@@ -17,10 +17,7 @@ abstract class EmpleadoAbstract
   //  ubicacion y nombre de la imagen guardada : string
   public function storeImage(string $cedula, $imagen) : string
   {
-    // echo asset("images/".basename($file));
-    $file = $imagen->store(config('app_config.employees_path').$cedula);
-
-    return $file;
+    return $imagen->store(config('app_config.employees_path').$cedula);
   }
 
   //
@@ -43,7 +40,7 @@ abstract class EmpleadoAbstract
   public function updReposos(Employee $empleado, array $data) : bool
   {
     foreach($data as $reposo) {
-      if($reposo->id == '0' || $reposo->status == 'C') {
+      if($reposo->id == '0' && $reposo->status != 'D') {
         DB::table('empleado_reposos')->insert([
                       'employee_id'     => $empleado->id,
                       'reposo_id'       => $reposo->reposo_id,
