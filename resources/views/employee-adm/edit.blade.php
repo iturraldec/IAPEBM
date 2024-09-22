@@ -781,7 +781,7 @@
   
           <!-- datos estudiantiles -->
           <div class="tab-pane fade" id="custom-tabs-one-estudios" role="tabpanel" aria-labelledby="custom-tabs-one-estudios-tab">
-            datos estudiantiles
+            datos estudiantiles en desarrollo
           </div>
           <!-- fin de datos estudiantiles -->
   

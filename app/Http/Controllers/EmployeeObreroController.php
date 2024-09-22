@@ -233,20 +233,7 @@ class EmployeeObreroController extends Controller
     }
 
     // actualizo reposos
-    $employees_obrero->reposos()->delete();
-    if($request->has('reposos_desde')) {
-      $reposos = [];
-      foreach($request->reposos_desde as $indice => $desde) {
-        $reposos[] = new EmpleadoReposo([
-                        'employee_id' => $employees_obrero->id,
-                        'reposo_id'   => $request->reposos_id[$indice],
-                        'desde'       => $desde,
-                        'hasta'       => $request->reposos_hasta[$indice],
-                        'observacion' => $request->reposos_observacion[$indice],
-                    ]);
-      };
-      $employees_obrero->reposos()->saveMany($reposos);
-    };
+    $this->_empleado->updReposos($employees_obrero, json_decode($request->repososDT));
 
     // actualizo sus vacaciones
     $employees_obrero->vacaciones()->delete();
