@@ -1015,7 +1015,7 @@
     <!-- fin de card -->
 
     <!-- modal de reposos -->
-    @include('employee-adm.reposos')
+    @include('employee-obrero.reposos')
 
   </div>
 

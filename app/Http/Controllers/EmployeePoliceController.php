@@ -247,20 +247,7 @@ class EmployeePoliceController extends Controller
     }
 
     // actualizo reposos
-    $employees_polouse->reposos()->delete();
-    if($request->has('reposos_desde')) {
-      $reposos = [];
-      foreach($request->reposos_desde as $indice => $desde) {
-        $reposos[] = new EmpleadoReposo([
-                        'employee_id' => $employees_polouse->id,
-                        'reposo_id'   => $request->reposos_id[$indice],
-                        'desde'       => $desde,
-                        'hasta'       => $request->reposos_hasta[$indice],
-                        'observacion' => $request->reposos_observacion[$indice],
-                    ]);
-      };
-      $employees_polouse->reposos()->saveMany($reposos);
-    };
+    $this->_empleado->updReposos($employees_polouse, json_decode($request->repososDT));
 
     // actualizo sus vacaciones
     $employees_polouse->vacaciones()->delete();
