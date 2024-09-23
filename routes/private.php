@@ -15,7 +15,7 @@ use App\Http\Controllers\EmployeePoliceController;
 use App\Http\Controllers\QueryEmployeeController;
 use App\Http\Controllers\UbicacionController;
 use App\Http\Controllers\ReposoController;
-use App\Models\Reposo;
+use App\Http\Controllers\EstudioTypeController;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -59,6 +59,11 @@ Route::get('reposos/get-by-code/{search?}', [ReposoController::class, 'getByCode
 // rutas de las ubicaciones (estados/municipios/parroquias)
 Route::get('ubicacion/municipios/{estado_id}', [UbicacionController::class, 'getMunicipios'])->name('ubicacion.municipios');
 Route::get('ubicacion/parroquias/{municipio_id}', [UbicacionController::class, 'getParroquias'])->name('ubicacion.parroquias');
+
+// rutas de los tipo de estudios
+Route::resource('estudios', EstudioTypeController::class)
+  ->only(['index', 'store', 'update', 'destroy'])
+  ->names('estudio-types');
 
 // empleados administrativos
 Route::resource('employees-adm', EmployeeAdmController::class)->names('employees-adm');

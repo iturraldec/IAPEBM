@@ -2,12 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PruebaFileController;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-use Illuminate\Support\Str;
 
 Route::get('loadFromExcel', function() {
   set_time_limit(3000);
@@ -42,11 +40,12 @@ Route::get('loadFromExcel', function() {
 
     echo 'uniformados...<br>';
     Excel::import(new App\Imports\PoliceImport, $dataPath . 'uniformados/uniformados-copia.csv');
+ 
+    //
+    DB::commit();
 
     getPhotos();
 
-    //
-    DB::commit();
     echo 'carga de datos finalizada!';
   } 
   catch (\Exception $e) {

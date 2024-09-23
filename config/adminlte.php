@@ -367,6 +367,10 @@ return [
                     'text'    => 'Reposos',
                     'route'   => 'reposos.index'
                 ],
+                [
+                    'text'    => 'Estudios',
+                    'route'   => 'estudio-types.index'
+                ],
             ]
         ],
         [
