@@ -15,9 +15,9 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('employee_id');
             $table->unsignedSmallInteger('estudio_type_id');
-            $table->string('descripcion', 150);
             $table->date('fecha');
-            $table->string('documento', 100);
+            $table->string('descripcion', 150);
+            $table->string('file', 100)->nullable();
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

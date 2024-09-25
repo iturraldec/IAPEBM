@@ -4,7 +4,7 @@
 
 @section('css')
 <style>
-  .reposos-table {
+  .min-table {
     font-size: 12px
   }
 </style>
@@ -45,7 +45,7 @@
           </li>
   
           <li class="nav-item">
-            <a class="nav-link" id="custom-tabs-one-estudios-tab" data-toggle="pill" href="#custom-tabs-one-estudios" role="tab" aria-controls="custom-tabs-one-estudios" aria-selected="false">Academicos</a>
+            <a class="nav-link" id="custom-tabs-one-estudios-tab" data-toggle="pill" href="#custom-tabs-one-estudios" role="tab" aria-controls="custom-tabs-one-estudios" aria-selected="false">Académicos</a>
           </li>
   
           <li class="nav-item">
@@ -781,7 +781,49 @@
   
           <!-- datos estudiantiles -->
           <div class="tab-pane fade" id="custom-tabs-one-estudios" role="tabpanel" aria-labelledby="custom-tabs-one-estudios-tab">
-            datos estudiantiles en desarrollo
+            <div class="card card-primary">
+              <div class="card-header bg-lightblue">
+                <h3 class="card-title">Estudios del Empleado</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="d-flex justify-content-end">
+                  <button type="button" 
+                          class="btn btn-primary"
+                          id="btnEstudioAdd"
+                  ><i class="fas fa-plus-square"></i> Agregar estudio</button>
+                </div>
+
+                <table id="estudiosDT" class="table table-hover border border-primary text-center" width="100%">
+                  <thead>
+                    <tr>
+                      <th>id</th>
+                      <th>estudio_tipo_id</th>
+                      <th>Tipo</th>
+                      <th>Fecha</th>
+                      <th>Descripción</th>
+                      <th>status</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    @foreach ($data['employee']->estudios as $item)
+                      <tr>
+                        <td>{{ $item->id}}</td>
+                        <td>{{ $item->estudio_type_id }}</td>
+                        <td>{{ $item->tipo->tipo }}</td>
+                        <td>{{ $item->fecha }}</td>
+                        <td>{{ $item->descripcion }}</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- /.card-body -->
           </div>
           <!-- fin de datos estudiantiles -->
   
@@ -875,7 +917,7 @@
                   ><i class="fas fa-plus-square"></i> Agregar reposo</button>
                 </div>
 
-                <table id="repososDT" class="table table-hover border border-primary reposos-table text-center" width="100%">
+                <table id="repososDT" class="table table-hover border border-primary min-table text-center" width="100%">
                   <thead>
                     <tr>
                       <th>id</th>
@@ -1014,6 +1056,9 @@
     </div>
     <!-- fin de card -->
 
+    <!-- modal de estudios -->
+    @include('common.modal-estudio')
+
     <!-- modal de reposos -->
     @include('employee-adm.reposos')
 
@@ -1036,6 +1081,12 @@
     ///////////////////////////////////////////////////////////////////
 
     var reposoRow = -1;
+
+    ///////////////////////////////////////////////////////////////////
+    // index de fila de tabla al agregar/modificar
+    ///////////////////////////////////////////////////////////////////
+
+    var datatableRow = -1;
 
     ///////////////////////////////////////////////////////////////////
     // tabla de emails
@@ -1177,6 +1228,46 @@
             return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar familiar"><i class="fas fa-trash-alt"></i></button>';
           },
           orderable: false
+        }
+      ]
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de estudios
+    ///////////////////////////////////////////////////////////////////
+
+    var estudiosDT = $('#estudiosDT').DataTable({
+      info        : false,
+      paging      : false,
+      searching   : false,
+      autofix     : true,
+      rowCallback : function(row, data, index) {
+                      if (data.status == 'D') {
+                        $(row).find('td').each(function() {
+                          $(this).html('<del class="bg-danger">' + $(this).html() + '</del>');
+                        });
+                      }
+                    },
+      columns: [
+        {data: 'id', visible: false},
+        {data: 'estudio_tipo_id', visible: false},
+        {data: 'tipo'},
+        {data: 'fecha'},
+        {data: 'descripcion'},
+        {data: 'status', visible:false},
+        {
+          data: null,
+          orderable: false,
+          render: function ( data, type, row, meta ) {
+            let botones = `
+                  <div class="d-flex flex-row">
+                    <button type="button" class="editar btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></button>
+                    <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar reposo"><i class="fas fa-trash-alt"></i></button>
+                  </div>
+                `;
+            
+            return botones;
+          },
         }
       ]
     });
@@ -1611,6 +1702,81 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // estudio: agregar
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnEstudioAdd").click(function() {
+      datatableRow = -1;
+      $("#estudioModalTitle").html("Agregar grado académico");
+      $("#selectEstudioTipo").val("0");
+      $('#inputEstudioFecha').val('');
+      $('#inputEstudioDescripcion').val('');
+      $("#estudioModal").modal("show");
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // estudio: editar
+    ///////////////////////////////////////////////////////////////////
+
+    $("#estudiosDT tbody").on("click", ".editar", function() {
+      let data = estudiosDT.row($(this).parents()).data();
+
+      datatableRow = estudiosDT.row($(this).parents('tr')).index();
+      $('#reposoModalTitle').html('Editar estudio');
+      $("#selectEstudioTipo").val(data.estudio_tipo_id);
+      $('#inputEstudioFecha').val(data.fecha);
+      $('#inputEstudioDescripcion').val(data.descripcion);
+      $('#estudioModal').modal('show');
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // estudio: salvar en tabla
+    ///////////////////////////////////////////////////////////////////
+
+    $("#btnEstudioAceptar").click(function() {
+      let ok = true;
+      if(ok) {
+        if(datatableRow == -1) {
+          estudiosDT.row.add({
+            'id'              : '0',
+            'estudio_tipo_id' : $('#selectEstudioTipo :selected').val(),
+            'tipo'            : $('#selectEstudioTipo :selected').text(),
+            'fecha'           : $('#inputEstudioFecha').val(),
+            'descripcion'     : $('#inputEstudioDescripcion').val(),
+            'status'          : 'C',
+          })
+          .draw();
+        }
+        else {
+          let id = estudiosDT.row(datatableRow).data().id;
+
+          estudiosDT.row(datatableRow).data({
+            'id'              : id,
+            'estudio_tipo_id' : $('#selectEstudioTipo :selected').val(),
+            'tipo'            : $('#selectEstudioTipo :selected').text(),
+            'fecha'           : $('#inputEstudioFecha').val(),
+            'descripcion'     : $('#inputEstudioDescripcion').val(),
+            'status'          : 'U',
+          }).draw();
+        }
+        $('#estudioModal').modal('hide');
+      }
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // estudios: eliminar
+    ///////////////////////////////////////////////////////////////////
+
+    $("#estudiosDT tbody").on("click",".eliminar",function() {
+      let row = estudiosDT.row($(this).parents());
+      let data = row.data();
+
+      data.status = 'D';
+      row.data(data);
+      estudiosDT.draw();
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // agregar permisos
     ///////////////////////////////////////////////////////////////////
 
@@ -1805,7 +1971,7 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar reposos
+    // reposos: eliminar
     ///////////////////////////////////////////////////////////////////
 
     $("#repososDT tbody").on("click",".eliminar",function() {
@@ -1871,6 +2037,7 @@
       familiaresDT.column(3).data().each(snombre => data.append('snombre[]', snombre));
       familiaresDT.column(4).data().each(papellido => data.append('papellido[]', papellido));
       familiaresDT.column(5).data().each(sapellido => data.append('sapellido[]', sapellido));
+      data.append('estudiosDT', JSON.stringify(estudiosDT.rows().data().toArray()));
       permisosDT.column(0).data().each(desde => data.append('permisos_desde[]', desde));
       permisosDT.column(1).data().each(hasta => data.append('permisos_hasta[]', hasta));
       permisosDT.column(2).data().each(motivo => data.append('permisos_motivo[]', motivo));
@@ -1889,7 +2056,7 @@
       .then(response => {
         if(response.ok) {
           lib_ShowMensaje("Empleado Administrativo modificado!", 'mensaje')
-          .then(response => window.close());
+          //.then(response => window.close());
         }
         else {
           response.text().then(r => {

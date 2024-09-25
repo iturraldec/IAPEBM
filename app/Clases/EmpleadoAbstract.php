@@ -2,6 +2,7 @@
 
 namespace App\Clases;
 
+use App\Models\EmpleadoEstudio;
 use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\EmpleadoReposo;
@@ -18,6 +19,37 @@ abstract class EmpleadoAbstract
   public function storeImage(string $cedula, $imagen) : string
   {
     return $imagen->store(config('app_config.employees_path').$cedula);
+  }
+
+  //
+  public function updEstudios(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $estudio) {
+      if($estudio->id == '0' && $estudio->status != 'D') {
+        DB::table('empleado_estudios')->insert([
+                      'employee_id'     => $empleado->id,
+                      'estudio_type_id' => $estudio->estudio_tipo_id,
+                      'fecha'           => $estudio->fecha,
+                      'descripcion'     => $estudio->descripcion,
+        ]);
+      }
+      else if($estudio->status == 'U') {
+        DB::table('empleado_estudios')
+          ->where('id', $estudio->id)
+          ->update([
+              'employee_id'     => $empleado->id,
+              'estudio_type_id' => $estudio->estudio_tipo_id,
+              'fecha'           => $estudio->fecha,
+              'descripcion'     => $estudio->descripcion,
+          ]
+        );
+      }
+      else if($estudio->status == 'D' && $estudio->id != '0') {
+        EmpleadoEstudio::find($estudio->id)->delete();
+      }
+    }
+
+    return true;
   }
 
   //

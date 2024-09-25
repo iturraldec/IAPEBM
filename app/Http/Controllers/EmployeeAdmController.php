@@ -15,7 +15,6 @@ use App\Models\Email;
 use App\Models\Phone;
 use App\Models\Cargo;
 use App\Models\Condicion;
-use App\Models\EmpleadoReposo;
 use App\Models\Tipo;
 use App\Models\Unidad;
 use App\Models\Person;
@@ -176,7 +175,7 @@ class EmployeeAdmController extends Controller
    * Update the specified resource in storage.
    */
   public function update(EmployeeAdmUpdateRequest $request, Employee $employees_adm)
-  {
+  {    
     // actualizo la persona
     $dataPerson = Person::select('id', 'imagef', 'imageli', 'imageld')->find($employees_adm->person_id);
     $inputPerson = $request->only(['cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name',
@@ -229,6 +228,9 @@ class EmployeeAdmController extends Controller
     // actualizo los familiares
     $employees_adm->familiares()->delete();
     $this->_addFamiliares($employees_adm, $request);
+
+    // actualizo estudio
+    $this->_empleado->updEstudios($employees_adm, json_decode($request->estudiosDT));
 
     // actualizo sus permisos
     if($request->has('permisos_desde')) {
