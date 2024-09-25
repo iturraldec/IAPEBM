@@ -953,8 +953,8 @@
                         <td>{{ $reposo->noti_dr_mpps }}</td>
                         <td>{{ $reposo->noti_dr_cms }}</td>
                         <td>{{ $reposo->reposo_id }}</td>
-                        <td>{{ $reposo->reposo->codigo }}</td>
-                        <td>{{ $reposo->reposo->diagnostico }}</td>
+                        <td>{{ is_null($reposo->reposo_id) ? '' : $reposo->reposo->codigo }}</td>
+                        <td>{{ is_null($reposo->reposo_id) ? '' : $reposo->reposo->diagnostico }}</td>
                         <td>{{ $reposo->conva_fecha }}</td>
                         <td>{{ $reposo->conva_dr_ci }}</td>
                         <td>{{ $reposo->conva_dr_nombre }}</td>
@@ -1075,12 +1075,6 @@
     ///////////////////////////////////////////////////////////////////
 
     var ruta =  "{{ route('employees-adm.update', ['employees_adm' => $data['employee']]) }}";
-
-    ///////////////////////////////////////////////////////////////////
-    // index del reposo a agregar/moodificar
-    ///////////////////////////////////////////////////////////////////
-
-    var reposoRow = -1;
 
     ///////////////////////////////////////////////////////////////////
     // index de fila de tabla al agregar/modificar
@@ -1818,7 +1812,7 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnReposoAdd").click(function() {
-      reposoRow = -1;
+      datatableRow = -1;
       $('#reposoModalTitle').html('Agregar reposo');
       $('#inputReposoDesde').val('');
       $('#inputReposoHasta').val('');
@@ -1845,7 +1839,7 @@
     $("#repososDT tbody").on("click", ".editar", function() {
       let data = repososDT.row($(this).parents()).data();
       
-      reposoRow = repososDT.row($(this).parents('tr')).index();
+      datatableRow = repososDT.row($(this).parents('tr')).index();
       $('#reposoModalTitle').html('Editar reposo');
       $('#inputReposoDesde').val(data.desde);
       $('#inputReposoHasta').val(data.hasta);
@@ -1921,7 +1915,7 @@
         lib_toastr("Error: Debe ingresar el diagnóstico del reposo!");
       } */
       if(ok) {
-        if(reposoRow == -1) {
+        if(datatableRow == -1) {
           repososDT.row.add({
             'id'              : '0',
             'desde'           : $('#inputReposoDesde').val(),
@@ -1944,9 +1938,9 @@
           .draw();
         }
         else {
-          let repososId = repososDT.row(reposoRow).data().id;
+          let repososId = repososDT.row(datatableRow).data().id;
 
-          repososDT.row(reposoRow).data({
+          repososDT.row(datatableRow).data({
             'id'              : repososId,
             'desde'           : $('#inputReposoDesde').val(),
             'hasta'           : $('#inputReposoHasta').val(),
