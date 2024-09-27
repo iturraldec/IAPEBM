@@ -1915,29 +1915,50 @@
 
     $("#btnReposoAceptar").click(function() {
       let ok = true;
-      /* let desde       = $("#inputReposoDesde").val();
-      let hasta       = $("#inputReposoHasta").val();
-      let id          = $("#selectReposo :selected").val();
-      let diagnostico = $("#selectReposo :selected").text();
-      let observacion = $("#inputReposoObservacion").val();
       
-      if(lib_isEmpty(desde)) {
+      if(lib_isEmpty($('#inputReposoDesde').val())) {
+        ok = false;
         lib_toastr("Error: Debe ingresar la fecha de inicio del reposo!");
       }
-      else if(lib_isEmpty(hasta)) {
-        lib_toastr("Error: Debe ingresar la fecha de finalizacion del reposo!");
+      
+      if(lib_isEmpty($('#inputReposoHasta').val())) {
+        ok = false;
+        lib_toastr("Error: Debe ingresar la fecha de finalización del reposo!");
       }
-      else if(lib_isEmpty(id) || id == '0') {
-        lib_toastr("Error: Debe ingresar el diagnóstico del reposo!");
-      } */
+      
+      if(lib_isEmpty($('#inputReposoNotiFecha').val())) {
+        ok = false;
+        lib_toastr("Error: Debe ingresar la fecha de notificación!");
+      }
+
+      if(lib_isEmpty($('#inputReposoNotiCi').val())) {
+        ok = false;
+        lib_toastr("Error: Debe ingresar la C.I. del Dr!");
+      }
+
+      if(lib_isEmpty($('#inputReposoNotiNombre').val())) {
+        ok = false;
+        lib_toastr("Error: Debe ingresar el nombre del Dr!");
+      }
+
+      if(lib_isEmpty($('#inputReposoNotiMpps').val())) {
+        ok = false;
+        lib_toastr("Error: Debe ingresar el M.P.P.S. del Dr!");
+      }
+
+      if(lib_isEmpty($('#inputReposoNotiCms').val())) {
+        ok = false;
+        lib_toastr("Error: Debe ingresar el C.M.S. del Dr!");
+      }
+
       if(ok) {
-        if(reposoRow == -1) {
+        if(datatableRow == -1) {
           repososDT.row.add({
             'id'              : '0',
             'desde'           : $('#inputReposoDesde').val(),
             'hasta'           : $('#inputReposoHasta').val(),
             'noti_fecha'      : $('#inputReposoNotiFecha').val(),
-            'noti_dr_ci'      :  $('#inputReposoNotiCi').val(),
+            'noti_dr_ci'      : $('#inputReposoNotiCi').val(),
             'noti_dr_nombre'  : $('#inputReposoNotiNombre').val(),
             'noti_dr_mpps'    : $('#inputReposoNotiMpps').val(),
             'noti_dr_cms'     : $('#inputReposoNotiCms').val(),
@@ -1954,9 +1975,9 @@
           .draw();
         }
         else {
-          let repososId = repososDT.row(reposoRow).data().id;
+          let repososId = repososDT.row(datatableRow).data().id;
 
-          repososDT.row(reposoRow).data({
+          repososDT.row(datatableRow).data({
             'id'              : repososId,
             'desde'           : $('#inputReposoDesde').val(),
             'hasta'           : $('#inputReposoHasta').val(),
