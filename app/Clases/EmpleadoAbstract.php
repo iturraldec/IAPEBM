@@ -94,7 +94,7 @@ abstract class EmpleadoAbstract
         DB::table('empleado_reposos')
           ->where('id', $reposo->id)
           ->update([
-              'reposo_id'       => $reposo->reposo_id,
+              'reposo_id'       => empty($reposo->reposo_id) ? null : $reposo->reposo_id,
               'desde'           => $reposo->desde,
               'hasta'           => $reposo->hasta,
               'noti_fecha'      => $reposo->noti_fecha,
@@ -102,11 +102,11 @@ abstract class EmpleadoAbstract
               'noti_dr_nombre'  => $reposo->noti_dr_nombre,
               'noti_dr_mpps'    => $reposo->noti_dr_mpps,
               'noti_dr_cms'     => $reposo->noti_dr_cms,
-              'conva_fecha'     => $reposo->conva_fecha,
-              'conva_dr_ci'     => $reposo->conva_dr_ci,
-              'conva_dr_nombre' => $reposo->conva_dr_nombre,
-              'conva_dr_mpps'   => $reposo->conva_dr_mpps,
-              'conva_dr_cms'    => $reposo->conva_dr_cms,
+              'conva_fecha'     => empty($reposo->conva_fecha) ? null : $reposo->conva_fecha,
+              'conva_dr_ci'     => empty($reposo->conva_dr_ci) ? null : $reposo->conva_dr_ci,
+              'conva_dr_nombre' => empty($reposo->conva_dr_nombre) ? null : $reposo->conva_dr_nombre,
+              'conva_dr_mpps'   => empty($reposo->conva_dr_mpps) ? null : $reposo->conva_dr_mpps,
+              'conva_dr_cms'    => empty($reposo->conva_dr_cms) ? null : $reposo->conva_dr_cms,
           ]
         );
       }

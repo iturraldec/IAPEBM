@@ -2087,7 +2087,7 @@
       .then(response => {
         if(response.ok) {
           lib_ShowMensaje("Empleado Administrativo modificado!", 'mensaje')
-          //.then(response => window.close());
+          .then(response => window.close());
         }
         else {
           response.text().then(r => {
