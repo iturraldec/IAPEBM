@@ -227,6 +227,9 @@ class EmployeeObreroController extends Controller
     $employees_obrero->familiares()->delete();
     $this->_addFamiliares($employees_obrero, $request);
 
+    // actualizo estudio
+    $this->_empleado->updEstudios($employees_obrero, json_decode($request->estudiosDT));
+
     // actualizo sus permisos
     if($request->has('permisos_desde')) {
       $this->_empleado->updPermisos($employees_obrero, $request->only(['permisos_desde', 'permisos_hasta', 'permisos_motivo']));
