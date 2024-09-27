@@ -1828,7 +1828,7 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnReposoAdd").click(function() {
-      reposoRow = -1;
+      datatableRow = -1;
       $('#reposoModalTitle').html('Agregar reposo');
       $('#inputReposoDesde').val('');
       $('#inputReposoHasta').val('');
@@ -1855,7 +1855,7 @@
     $("#repososDT tbody").on("click", ".editar", function() {
       let data = repososDT.row($(this).parents()).data();
       
-      reposoRow = repososDT.row($(this).parents('tr')).index();
+      datatableRow = repososDT.row($(this).parents('tr')).index();
       $('#reposoModalTitle').html('Editar reposo');
       $('#inputReposoDesde').val(data.desde);
       $('#inputReposoHasta').val(data.hasta);
@@ -2002,7 +2002,7 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar reposos
+    // reposos: eliminar
     ///////////////////////////////////////////////////////////////////
 
     $("#repososDT tbody").on("click",".eliminar",function() {

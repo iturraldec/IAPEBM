@@ -241,6 +241,9 @@ class EmployeePoliceController extends Controller
     $employees_polouse->familiares()->delete();
     $this->_addFamiliares($employees_polouse, $request);
 
+    // actualizo estudio
+    $this->_empleado->updEstudios($employees_polouse, json_decode($request->estudiosDT));
+
     // actualizo sus permisos
     if($request->has('permisos_desde')) {
       $this->_empleado->updPermisos($employees_polouse, $request->only(['permisos_desde', 'permisos_hasta', 'permisos_motivo']));
