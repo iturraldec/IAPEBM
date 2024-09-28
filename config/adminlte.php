@@ -399,7 +399,7 @@ return [
             'submenu'   => [
                 [
                     'text'    => 'Empleados',
-                    'route'   => 'query.employees'
+                    'route'   => 'pdf.employee'
                 ],
             ]
         ],

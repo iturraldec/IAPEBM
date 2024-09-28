@@ -43,7 +43,7 @@
       <table style="width: 100%">
         <thead>
           <tr>
-            <th scope="col"><img src="{{ public_path('assets/images/escudo.png') }}" width="120" height="auto"></th>
+            <th scope="col"><img src="{{ public_path('assets/images/logo-gobernacion.png') }}" width="120" height="auto"></th>
             <th scope="col" colspan="2">
               <p class="titulo">Dirección de Recursos Humanos</p>
               <p class="titulo">@yield('encabezado')</p>

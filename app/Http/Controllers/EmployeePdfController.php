@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\DateHelper;
 use App\Models\Unidad;
+use App\Models\Person;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 //
-class QueryEmployeeController extends Controller
+class EmployeePdfController extends Controller
 {
   //
-  public function index(int $tipo = 0)
+  public function index()
+  {
+    return view('pdf.employee.index');
+  }
+
+  //
+  public function index2(int $tipo = 0)
   {
     switch($tipo) {
       case 1: 
@@ -19,7 +27,7 @@ class QueryEmployeeController extends Controller
         return view('queries.employees.lst-por-unidad', compact('unidades'));
         break;
       default:
-        return view('queries.employees.index');   
+        return view('pdf.employee.index');   
     }
   }
 
@@ -64,5 +72,15 @@ class QueryEmployeeController extends Controller
     $empleados = DB::select($sql);
     $pdf = Pdf::loadView('queries.employees.lst-por-unidad-pdf', compact('empleados'));
     return $pdf->stream('empleados-por-unidad.pdf');
+  }
+
+  //
+  function constanciaLaboral(string $cedula, string $motivo)
+  {
+    $person = Person::where('cedula', $cedula)->first();
+    $hoy = DateHelper::fechaCadena(now());
+    $pdf = Pdf::loadView('pdf.employee.constancia-laboral', compact('person', 'motivo', 'hoy'));
+
+    return $pdf->stream('constancia-laboral.pdf');
   }
 }
