@@ -9,13 +9,14 @@
   <div class="row">
     <div class="col-6">
       <ul>
-        <li><a href="#">Empleados por unidad operativa</a></li>
+        <li><a href="{{ route('pdf.employee.listado') }}">Listados de Empleados</a></li>
         <li><a href="#" id="lnkConstanciaLaboral">Constancia de trabajo</a></li>
       </ul>
     </div>
   </div>
 
-  @include('pdf.employee.modal-constancia-laboral')
+  <!-- modal de las constancias laborales -->
+  @include('pdf.employee.views.modal-constancia-laboral')
 
 @endsection
 
@@ -28,7 +29,7 @@
     //
     $("#inputConstanciaLaboralMotivo").inputmask(lib_characterMask());
 
-    //
+    // modal show de constancias de trabajo
     $("#lnkConstanciaLaboral").click(function(e) {
       e.preventDefault();
 
@@ -37,7 +38,7 @@
       $("#constanciaLaboralModal").modal("show");
     });
 
-    //
+    // constancias de trabajo
     $("#btnConstanciaLaboralGenerar").click(function () {
       let ok = true;
       let ruta = "{{ route('pdf.employee.constancia-laboral', ['cedula' => '.cedula', 'motivo' => '.motivo']) }}";

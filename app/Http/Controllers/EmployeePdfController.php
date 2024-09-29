@@ -14,27 +14,21 @@ class EmployeePdfController extends Controller
   //
   public function index()
   {
-    return view('pdf.employee.index');
+    return view('pdf.employee.views.index');
   }
 
   //
-  public function index2(int $tipo = 0)
+  public function listado()
   {
-    switch($tipo) {
-      case 1: 
-        $unidades = Unidad::unidades();
+    $unidades = Unidad::unidades();
 
-        return view('queries.employees.lst-por-unidad', compact('unidades'));
-        break;
-      default:
-        return view('pdf.employee.index');   
-    }
+    return view('pdf.employee.views.listado', compact('unidades'));
   }
 
   //
   public function lstPorUnidad(int $tipo, int $unidad)
   {
-    if($tipo == 1) {
+    if($tipo == 1) {  // por unidad operativa
       $sql = "SELECT d.name as unidad,
                     c.name as unidad_especifica,
                     a.cedula,
@@ -51,7 +45,7 @@ class EmployeePdfController extends Controller
                        a.first_name,
                        a.second_name;";
     }
-    else {
+    else {            // por unidad operativa especifica
       $sql = "SELECT d.name as unidad,
                     c.name as unidad_especifica,
                     a.cedula,
@@ -70,7 +64,8 @@ class EmployeePdfController extends Controller
     }
 
     $empleados = DB::select($sql);
-    $pdf = Pdf::loadView('queries.employees.lst-por-unidad-pdf', compact('empleados'));
+    
+    $pdf = Pdf::loadView('pdf.employee.pdfs.lst-por-unidad', compact('empleados'));
     return $pdf->stream('empleados-por-unidad.pdf');
   }
 
@@ -79,7 +74,7 @@ class EmployeePdfController extends Controller
   {
     $person = Person::where('cedula', $cedula)->first();
     $hoy = DateHelper::fechaCadena(now());
-    $pdf = Pdf::loadView('pdf.employee.constancia-laboral', compact('person', 'motivo', 'hoy'));
+    $pdf = Pdf::loadView('pdf.employee.pdfs.constancia-laboral', compact('person', 'motivo', 'hoy'));
 
     return $pdf->stream('constancia-laboral.pdf');
   }

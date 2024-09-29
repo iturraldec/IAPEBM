@@ -3,7 +3,7 @@
 @section('title', 'Consulta de Empleados')
 
 @section('content_header')
-  <h4>Consulta de Empleados por Unidades Operativas</h4>
+  <h4>Listados de Empleados</h4>
 @endsection
 
 @section('content')
@@ -64,7 +64,7 @@
     $("#btnUnidad").click(function (e) {
       e.preventDefault();
 
-      let ruta = "{{ route('query.employees.lst-por-unidad', ['tipo' => 1, 'unidad' => '.valor']) }}";
+      let ruta = "{{ route('pdf.employee.lst-por-unidad', ['tipo' => 1, 'unidad' => '.valor']) }}";
 
       window.open(ruta.replace('.valor', $("#selectUnidad").val()), '_blank');
     });
@@ -76,7 +76,7 @@
     $("#btnUnidadEspecifica").click(function (e) {
       e.preventDefault();
 
-      let ruta = "{{ route('query.employees.lst-por-unidad', ['tipo' => 2, 'unidad' => '.valor']) }}";
+      let ruta = "{{ route('pdf.employee.lst-por-unidad', ['tipo' => 2, 'unidad' => '.valor']) }}";
 
       window.open(ruta.replace('.valor', $("#selectUnidadEspecifica").val()), '_blank');
     });

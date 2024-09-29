@@ -76,6 +76,8 @@ Route::resource('employees-police', EmployeePoliceController::class)->names('emp
 
 // pdf de empleados
 Route::get('pdf/employee', [EmployeePdfController::class, 'index'])->name('pdf.employee');
+Route::get('pdf/employee/listado', [EmployeePdfController::class, 'listado'])->name('pdf.employee.listado');
+Route::get('pdf/employee/listado/por-unidad/{tipo}/{unidad}', [EmployeePdfController::class, 'lstPorUnidad'])->name('pdf.employee.lst-por-unidad');
 Route::get('pdf/employee/constancia-laboral/{cedula}/{motivo}', [EmployeePdfController::class, 'constanciaLaboral'])->name('pdf.employee.constancia-laboral');
-/*Route::get('pdf/employee/{tipo?}', [EmployeePdfController::class, 'index'])->name('query.employees');
-Route::get('query/empleados/lst-por-unidad/{tipo}/{unidad}', [QueryEmployeeController::class, 'lstPorUnidad'])->name('query.employees.lst-por-unidad');*/
+
+/*Route::get('query/empleados/lst-por-unidad/{tipo}/{unidad}', [QueryEmployeeController::class, 'lstPorUnidad'])->name('query.employees.lst-por-unidad');*/
