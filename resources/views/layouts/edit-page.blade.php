@@ -50,6 +50,12 @@
     </div>
 
     <div class="row m-3">
+      @if (env('APP_ENV') === 'testing')
+          <div class="col bg-danger text-center h2">
+              SISTEMA EN MODO TESTING
+          </div>
+      @endif
+
       @yield('content')
     </div>
 

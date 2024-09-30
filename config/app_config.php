@@ -20,4 +20,12 @@ return [
 
   // path de la carpeta de los usuarios
   'users_path' => 'users',
+
+  // autoridades
+  'rrhh' => [
+    'director'  => 'José Ramón Márquez Méndez',
+    'rango'     => 'Comisario Jefe',
+    'documento' => 'Oficio Nro. 2840-2022',
+    'documento_fecha' => '01-11-2022'
+  ]
 ];

@@ -10,6 +10,7 @@
         font-family: DejaVu Sans;
         margin: 0; /* Elimina márgenes por defecto */
         padding: 0; /* Elimina relleno por defecto */
+        width: 100%; /* Asegura que el body ocupe el 100% de ancho */
         height: 100%; /* Asegura que el body ocupe el 100% de la altura */
       }
 
@@ -27,6 +28,20 @@
         text-align: center;
         font-size: 30px;
         font-weight: bold;
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+      }
+
+      .pre-footer {
+        text-align: center;
+        font-size: 20px;
+        margin: 0;
+        margin-top: 10rem;
+      }
+
+      .pre-footer p {
+        margin: 0;
+        margin-bottom: 0.5px;
       }
 
       footer {
@@ -60,7 +75,6 @@
               <p>Gobernación del Estado Bolivariano de Mérida</p>
               <p>Instituto Autónomo de Policía del Estado Bolivariano de Mérida</p>
               <p>Oficina de Recursos Humanos</p>
-              <p class="titulo">@yield('encabezado')</p>
             </th>
             <th scope="col"><img src="{{ public_path('assets/images/iapebm.png') }}" width="150" height="auto"></th>
           </tr>
@@ -76,13 +90,20 @@
     </footer>
 
     <main>
+      <p class="titulo">@yield('encabezado')</p>
+
       @yield('content')
-      Maivelyng Alzate Estupiñan
-      Abogada
-      Directora Oficial de Recursos Humanos
-      Designada mediante oficio ORH Nro. 7039-2020 
-      por el Director General del IAPEBM de fecha 01-02-2020
     </main>
+
+    <div class="pre-footer">
+      <strong>
+        <p>{{ config('app_config.rrhh.director') }}</p>
+        <p>{{ config('app_config.rrhh.rango') }}</p>
+        <p>Director de la Oficina de Recursos Humanos</p>
+        <p>del Instituto Autónomo de Policía del Estado Bolivariano de Mérida</p>
+      </strong>
+      <p>Designado mediante {{ config('app_config.rrhh.documento') }} del Director General del IAPEBM de fecha {{ config('app_config.rrhh.documento_fecha') }}</p>
+    </div>
 
   </body>
 </html>
