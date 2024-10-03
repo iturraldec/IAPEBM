@@ -12,7 +12,7 @@ use App\Http\Controllers\UnidadEspecificaController;
 use App\Http\Controllers\EmployeeAdmController;
 use App\Http\Controllers\EmployeeObreroController;
 use App\Http\Controllers\EmployeePoliceController;
-use App\Http\Controllers\EmployeePdfController;
+use App\Http\Controllers\EmployeeQryController;
 use App\Http\Controllers\UbicacionController;
 use App\Http\Controllers\ReposoController;
 use App\Http\Controllers\EstudioTypeController;
@@ -74,10 +74,9 @@ Route::resource('employees-obrero', EmployeeObreroController::class)->names('emp
 // empleados policiales
 Route::resource('employees-police', EmployeePoliceController::class)->names('employees-police');
 
-// pdf de empleados
-Route::get('pdf/employee', [EmployeePdfController::class, 'index'])->name('pdf.employee');
-Route::get('pdf/employee/listado', [EmployeePdfController::class, 'listado'])->name('pdf.employee.listado');
-Route::get('pdf/employee/listado/por-unidad/{tipo}/{unidad}', [EmployeePdfController::class, 'lstPorUnidad'])->name('pdf.employee.lst-por-unidad');
-Route::get('pdf/employee/constancia-laboral/{cedula}/{motivo}', [EmployeePdfController::class, 'constanciaLaboral'])->name('pdf.employee.constancia-laboral');
-
-/*Route::get('query/empleados/lst-por-unidad/{tipo}/{unidad}', [QueryEmployeeController::class, 'lstPorUnidad'])->name('query.employees.lst-por-unidad');*/
+// reportes de empleados
+Route::get('pdf/employee', [EmployeeQryController::class, 'index'])->name('pdf.employee');
+Route::get('pdf/employee/listado', [EmployeeQryController::class, 'listado'])->name('pdf.employee.listado');
+Route::get('pdf/employee/listado/por-unidad/{tipo}/{unidad}', [EmployeeQryController::class, 'lstPorUnidad'])->name('pdf.employee.lst-por-unidad');
+Route::get('pdf/employee/constancia-laboral-check/{cedula}', [EmployeeQryController::class, 'constanciaLaboralCheck'])->name('pdf.employee.constancia-laboral-check');
+Route::get('pdf/employee/constancia-laboral/{cedula}/{motivo}', [EmployeeQryController::class, 'constanciaLaboral'])->name('pdf.employee.constancia-laboral');

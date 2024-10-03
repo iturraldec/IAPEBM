@@ -41,7 +41,6 @@
     // constancias de trabajo
     $("#btnConstanciaLaboralGenerar").click(function () {
       let ok = true;
-      let ruta = "{{ route('pdf.employee.constancia-laboral', ['cedula' => '.cedula', 'motivo' => '.motivo']) }}";
       let cedula = $("#inputConstanciaLaboralCedula").val();
       let motivo = $("#inputConstanciaLaboralMotivo").val();
 
@@ -49,15 +48,28 @@
         ok = false;
         lib_toastr("Error: Debe ingresar el número de cédula!");
       }
+
       if(lib_isEmpty(motivo)) {
         ok = false;
         lib_toastr("Error: Debe ingresar el motivo de la constancia!");
       }
+
       if(ok) {
-        $("#constanciaLaboralModal").modal("hide");
-        ruta = ruta.replace('.cedula', cedula);
-        ruta = ruta.replace('.motivo', motivo);
-        window.open(ruta, '_blank');
+        let rutaCheck = "{{ route('pdf.employee.constancia-laboral-check', ['cedula' => '.cedula']) }}";
+        let ruta = "{{ route('pdf.employee.constancia-laboral', ['cedula' => '.cedula', 'motivo' => '.motivo']) }}";
+        
+        rutaCheck = rutaCheck.replace('.cedula', cedula);
+        fetch(rutaCheck)
+        .then(reponse => reponse.json())
+        .then(r => {
+          if(!r.success) lib_toastr(r.message);
+          else {
+            $("#constanciaLaboralModal").modal("hide");
+            ruta = ruta.replace('.cedula', cedula);
+            ruta = ruta.replace('.motivo', motivo);
+            window.open(ruta, '_blank');
+          }
+        });
       }
     });
   });

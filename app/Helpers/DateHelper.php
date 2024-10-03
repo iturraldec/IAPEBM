@@ -12,7 +12,7 @@ class DateHelper
 
     // Convertir el día a su representación en palabras
     $diasEnPalabras = [
-        '01' => 'UNO', '02' => 'DOS', '03' => 'TRES', '04' => 'CUATRO',
+        '01' => 'PRIMER', '02' => 'DOS', '03' => 'TRES', '04' => 'CUATRO',
         '05' => 'CINCO', '06' => 'SEIS', '07' => 'SIETE', '08' => 'OCHO',
         '09' => 'NUEVE', '10' => 'DIEZ', '11' => 'ONCE', '12' => 'DOCE',
         '13' => 'TRECE', '14' => 'CATORCE', '15' => 'QUINCE', '16' => 'DIECISEIS',
@@ -30,6 +30,14 @@ class DateHelper
     ];
     
     // Retornar la cadena formateada
-    return "{$diasEnPalabras[$dia]} ({$dia}) días del mes de {$mesesEnPalabras[$mes-1]} de {$anio}";
+    $cadena = '';
+    if($dia == '01') {
+      $cadena = "al PRIMER (01) día";
+    }
+    else {
+      $cadena = " a los {$diasEnPalabras[$dia]} ({$dia}) días";
+    }
+
+    return $cadena . " del mes de {$mesesEnPalabras[$mes-1]} de {$anio}";
   }
 }

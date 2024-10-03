@@ -6,6 +6,7 @@ use App\Models\EmpleadoEstudio;
 use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\EmpleadoReposo;
+use App\Models\Person;
 
 //
 abstract class EmpleadoAbstract
@@ -116,5 +117,11 @@ abstract class EmpleadoAbstract
     }
 
     return true;
+  }
+
+  //
+  static public function GetByCedula(string $cedula)
+  {
+    return Employee::with('person')->whereRelation('person', 'cedula', $cedula)->first();
   }
 }
