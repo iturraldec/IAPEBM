@@ -16,6 +16,7 @@ use App\Http\Controllers\EmployeeQryController;
 use App\Http\Controllers\UbicacionController;
 use App\Http\Controllers\ReposoController;
 use App\Http\Controllers\EstudioTypeController;
+use App\Http\Controllers\HorarioController;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -80,3 +81,6 @@ Route::get('pdf/employee/listado', [EmployeeQryController::class, 'listado'])->n
 Route::get('pdf/employee/listado/por-unidad/{tipo}/{unidad}', [EmployeeQryController::class, 'lstPorUnidad'])->name('pdf.employee.lst-por-unidad');
 Route::get('pdf/employee/constancia-laboral-check/{cedula}', [EmployeeQryController::class, 'constanciaLaboralCheck'])->name('pdf.employee.constancia-laboral-check');
 Route::get('pdf/employee/constancia-laboral/{cedula}/{motivo}', [EmployeeQryController::class, 'constanciaLaboral'])->name('pdf.employee.constancia-laboral');
+
+// registro de entrada/salida de personal
+Route::get('horario/registro', [HorarioController::class, 'index'])->name('horario.registro');

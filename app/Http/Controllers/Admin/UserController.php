@@ -123,7 +123,7 @@ class UserController extends Controller
         }
         else {
             $user = User::find($request->input('id'));
-            $user->password = Hash::make('password');
+            $user->password = Hash::make(config('app_config.users_init_password'));
             $user->save();
             $data['status'] = true;
             $data['message'] = 'Clave reseteada.';
@@ -137,9 +137,15 @@ class UserController extends Controller
     public function getByDocument(string $document)
     {
         $user = User::where('code', $document)->first();
-        $data['status'] = true;
-        $data['message'] = 'Usuario.';
-        $data['data'] = $user;
+        if(! $user) {
+            $data['status'] = false;
+            $data['message'] = 'Error: Usuario no registrado.';
+        }
+        else {
+            $data['status'] = true;
+            $data['message'] = 'Usuario.';
+            $data['data'] = $user;
+        }
 
         return response($data, 200);
     }

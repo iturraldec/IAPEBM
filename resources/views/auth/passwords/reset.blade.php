@@ -11,7 +11,7 @@
     <div class="col-6">
       <div class="card card-dark">
         <div class="card-header">
-          <h3 class="card-title">Resetear clave de usuario</h3>
+          <h3 class="card-title">Resetear clave de usuarios</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
@@ -43,22 +43,33 @@
       let user_id = 0;
 
       //
-      $("#btnSearch").click(function() {
+      $("#btnSearch").on('click', function() {
         let ruta = "{{ route('admin.users.getByDocument', ['document' => ':valor']) }}";
 
-        ruta = ruta.replace(':valor', $("#inputDocument").val());
-        fetch(ruta)
-        .then(response => response.json())
-        .then(json => {
-          $("#lblName").text("Usuario: " + json.data.name);
-          user_id = json.data.id;
-        })
+        if(lib_isEmpty($("#inputDocument").val())) {
+          lib_toastr('Error: Debe ingresar un número de cédula!')
+        }
+        else {
+          ruta = ruta.replace(':valor', $("#inputDocument").val());
+          fetch(ruta)
+          .then(response => response.json())
+          .then(json => {
+            if(json.status) {
+              $("#lblName").text("Usuario: " + json.data.name);
+              user_id = json.data.id;
+            }
+            else {
+              lib_toastr(json.message);
+              user_id = 0;
+            }
+          })
+        }
       });
 
       //
       $("#btnReset").click(function() {
         if(user_id == 0) {
-          alert("Debe seleccionar un usuario.");
+          lib_toastr('Error: Debe seleccionar un usuario!');;
         }
         else {
           $.ajax({

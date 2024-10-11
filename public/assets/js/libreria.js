@@ -78,7 +78,7 @@ function lib_getRandomInt(max) {
    return Math.floor(Math.random() * max);
 }
 
-// mensaje de tipos toastr
+// mensaje de error tipos toastr
 function lib_toastr(mensajes) {
    if(Array.isArray(mensajes)) {
       mensajes.forEach(mensaje => toastr.error(mensaje, 'Atención'));

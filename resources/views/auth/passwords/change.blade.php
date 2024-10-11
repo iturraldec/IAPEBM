@@ -38,22 +38,31 @@
 @section('js')
   <script>
     $(document).ready(function () {
-      $("#btnChange").click(function() {
-        let clave = $("#inputPwd1").val();
+      $("#btnChange").on('click', function() {
+        let pwd1 = $("#inputPwd1").val();
+        let pwd2 = $("#inputPwd2").val();
 
-        $.ajax({
-          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-          url: "{{ route('users.password.change') }}",
-          type: 'POST',
-          data: {'password': clave},
-          dataType:'json'
-        })
-        .done(function(resp){
-          lib_ShowMensaje(resp.message);
-        })
-        .fail(function(resp){
-          lib_ShowMensaje(resp.responseJSON.message, 'error');
-        });
+        if(lib_isEmpty(pwd1) || lib_isEmpty(pwd2)) {
+          lib_toastr('Error: Debe ingresar las nuevas claves!');
+        }
+        else if(pwd1 != pwd2) {
+          lib_toastr('Error: Las nuevas claves no coinciden!');
+        }
+        else {
+          $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            url: "{{ route('users.password.change') }}",
+            type: 'POST',
+            data: {'password': pwd1},
+            dataType:'json'
+          })
+          .done(function(resp){
+            lib_ShowMensaje(resp.message);
+          })
+          .fail(function(resp){
+            lib_ShowMensaje(resp.responseJSON.message, 'error');
+          });
+        }
       });
     });
   </script>

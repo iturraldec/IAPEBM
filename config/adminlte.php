@@ -375,7 +375,7 @@ return [
         ],
         [
             'text'  => 'Empleados',
-            'icon'  => 'fas fa-users',
+            'icon'  => 'fas fa-user-edit',
             'submenu'   => [
                 [
                     'text'    => 'Administrativos',
@@ -394,8 +394,23 @@ return [
                 ],
             ]
         ],
+        /* [
+            'text'  => 'Horario E/S',
+            'icon'  => 'fas fa-user-clock',
+            'submenu'   => [
+                [
+                    'text'  => 'Registro de E/S',
+                    'route' => 'horario.registro'
+                ],
+                [
+                    'text'  => 'Listado de E/S',
+                    'url'   => '#'
+                ],
+            ]
+        ], */
         [
             'text'  => 'Consultas',
+            'icon'  => 'fas fa-search',
             'submenu'   => [
                 [
                     'text'    => 'Empleados',
