@@ -275,7 +275,7 @@
                       </div>
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-12 mt-1 mb-0">
                       <table id="emailsDT" class="table table-hover border border-primary">
                         <thead class="text-center">
                           <tr>
@@ -732,11 +732,13 @@
 @section('js')
   <script>
   $(document).ready(function () {
+    // borrar filas con jquery: $("#tabla").empty();
+
     ///////////////////////////////////////////////////////////////////
     // tabla de emails
     ///////////////////////////////////////////////////////////////////
 
-    var emailsDT = $('#emailsDT').DataTable({
+    /* var emailsDT = $('#emailsDT').DataTable({
       info: false,
       paging: false,
       searching: false,
@@ -754,7 +756,8 @@
           orderable: false
         }
       ]
-    });
+    }); */
+    var emails = [];
 
     ///////////////////////////////////////////////////////////////////
     // tabla de telefonos
@@ -959,7 +962,15 @@
         lib_toastr("Error: Debe ingresar la dirección de correo!");
       }
       else {
-        emailsDT.row.add({'correo' : correo}).draw();
+        emails.push({'email' : correo, 'status' : 'C'});
+        let fila = `<tr>
+                      <td>${correo}</td>
+                      <td>
+                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                      </td>
+                    </tr>`;
+      
+        $('#emailsDT tbody').append(fila);
         $("#inputEmail").val('');
       }
     });
@@ -968,8 +979,22 @@
     // eliminar un email
     ///////////////////////////////////////////////////////////////////
 
-    $("#emailsDT tbody").on("click",".eliminar",function() {
-      emailsDT.row($(this).parents()).remove().draw();
+    $("#emailsDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let correo = fila.find("td").eq(0).text();
+
+      emails = emails.filter(item => item.email != correo);
+      $("#emailsDT tbody").empty();
+      emails.forEach(item => {
+        let fila = `<tr>
+                      <td>${item.email}</td>
+                      <td>
+                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                      </td>
+                    </tr>`;
+      
+        $('#emailsDT tbody').append(fila);
+      })
     });
 
     ///////////////////////////////////////////////////////////////////

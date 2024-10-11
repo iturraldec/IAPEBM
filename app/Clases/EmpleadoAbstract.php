@@ -11,15 +11,30 @@ use App\Models\Person;
 //
 abstract class EmpleadoAbstract
 {
-  //
-  // parametros:
-  //  string $cedula
-  //  $imagen
-  // retorna
-  //  ubicacion y nombre de la imagen guardada : string
+  /*
+    parametros:
+      string $cedula
+      $imagen
+    retorna
+      string ubicacion y nombre de la imagen guardada
+  */
   public function storeImage(string $cedula, $imagen) : string
   {
     return $imagen->store(config('app_config.employees_path').$cedula);
+  }
+
+  // actualizacion de los correos del usuario
+  public function updEmails(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $email) {
+      if($email->status == 'C') {    // crear
+        DB::table('emails')->insert([
+          'person_id' => $empleado->person_id,
+          'email'     => $data->email
+        ]);
+      }
+    }
+    return true;
   }
 
   //
