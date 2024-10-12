@@ -12,7 +12,7 @@
 
 @section('content_header')
   <div class="col-6">
-    <h4>Editar Datos del Empleado Administrativo</h4>
+    <h4>Editar Datos de Empleado Administrativo</h4>
   </div>
 
   <div class="col-6 d-flex justify-content-end">
@@ -309,7 +309,7 @@
                         </div>
                       </div>
   
-                      <div class="col-12">
+                      <div class="col-12 mt-1">
                         <table id="emailsDT" class="table table-hover border border-primary">
                           <thead class="text-center">
                             <tr>
@@ -1077,34 +1077,20 @@
     var ruta =  "{{ route('employees-adm.update', ['employees_adm' => $data['employee']]) }}";
 
     ///////////////////////////////////////////////////////////////////
+    // tabla de emails
+    ///////////////////////////////////////////////////////////////////
+    
+    let temp = {{ Js::from($data['person']['emails']) }};
+
+    var emails = temp.map(item => {
+                    return {id: item.id, email: item.email, status: ''}
+                  });
+
+    ///////////////////////////////////////////////////////////////////
     // index de fila de tabla al agregar/modificar
     ///////////////////////////////////////////////////////////////////
 
     var datatableRow = -1;
-
-    ///////////////////////////////////////////////////////////////////
-    // tabla de emails
-    ///////////////////////////////////////////////////////////////////
-
-    var emailsDT = $('#emailsDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'correo',
-          orderable: false,
-          width: '95%'
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
 
     ///////////////////////////////////////////////////////////////////
     // tabla de telefonos
@@ -1387,7 +1373,6 @@
     ///////////////////////////////////////////////////////////////////
 
     function initForm() {
-      let emails    = {{ Js::from($data['person']['emails']) }};        // emails del empleado
       let phones    = {{ Js::from($data['person']['phones']) }};        // telefonos del empleado
       let addresses = {{ Js::from($data['person']['fullAddresses']) }}; // direcciones del empleado
 
@@ -1396,11 +1381,8 @@
       toastr.options.timeOut = 0;
       toastr.options.extendedTimeOut = 0;
 
-      // emails
-      if(emails.length > 0) {
-        emails.forEach(item => emailsDT.row.add({'correo' : item.email}));
-        emailsDT.draw();
-      }
+      // pintar emails
+      emailsDraw();
 
       // telefonos
       if(phones.length > 0) {
@@ -1492,6 +1474,26 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // pintar la tabla de emails
+    ///////////////////////////////////////////////////////////////////
+    
+    function emailsDraw() {
+      $("#emailsDT tbody").empty();
+      emails.forEach(item => {
+        if(item.status != 'D') {
+          let fila = `<tr>
+                      <td>${item.email}</td>
+                      <td>
+                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                      </td>
+                    </tr>`;
+      
+          $('#emailsDT tbody').append(fila);
+        }
+      });
+    }
+
+    ///////////////////////////////////////////////////////////////////
     // agregar un email
     ///////////////////////////////////////////////////////////////////
 
@@ -1502,8 +1504,9 @@
         lib_toastr("Error: Debe ingresar la dirección de correo!");
       }
       else {
-        emailsDT.row.add({'correo' : correo}).draw();
+        emails.push({'id': 0, 'email' : correo, 'status' : 'C'});
         $("#inputEmail").val('');
+        emailsDraw();
       }
     });
 
@@ -1511,10 +1514,18 @@
     // eliminar un email
     ///////////////////////////////////////////////////////////////////
 
-    $("#emailsDT tbody").on("click",".eliminar",function() {
-      emailsDT.row($(this).parents())
-              .remove()
-              .draw();
+    $("#emailsDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let correo = fila.find("td").eq(0).text();
+
+      emails = emails.map(item => {
+        if(item.email == correo) {
+          item.status = 'D';
+        }
+        
+        return item;
+      });
+      emailsDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -2056,9 +2067,10 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnGrabar").click(function() {
+      // validaciones
       let data = new FormData(formEmpleado);
 
-      emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
+      data.append('emails', JSON.stringify(emails));
       phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));
       phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
       addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));

@@ -26,12 +26,16 @@ abstract class EmpleadoAbstract
   // actualizacion de los correos del usuario
   public function updEmails(Employee $empleado, array $data) : bool
   {
-    foreach($data as $email) {
-      if($email->status == 'C') {    // crear
-        DB::table('emails')->insert([
-          'person_id' => $empleado->person_id,
-          'email'     => $data->email
-        ]);
+    foreach($data as $item) {
+      switch($item->status) {
+        // crear
+        case 'C': 
+          DB::table('emails')->insert(['person_id' => $empleado->person_id, 'email' => $item->email]);
+          break;
+        // eliminar
+        case 'D' && $item->id > 0:
+          DB::table('emails')->where('id', $item->id)->delete();
+          break;
       }
     }
     return true;

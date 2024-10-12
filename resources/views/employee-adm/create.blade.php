@@ -1,17 +1,15 @@
-@extends('adminlte::page')
+@extends('layouts.edit-page')
 
 @section('title', 'Empleado Administrativo')
 
 @section('content_header')
-  <div class="row">
-    <div class="col-6">
-      <h4>Agregar Datos del Empleado Administrativo</h4>
-    </div>
-  
-    <div class="col-6 d-flex justify-content-end">
-      <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
-      <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
-    </div>
+  <div class="col-6">
+    <h4>Agregar Datos del Empleado Administrativo</h4>
+  </div>
+
+  <div class="col-6 d-flex justify-content-end">
+    <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
+    <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
   </div>
 @endsection
 
@@ -275,7 +273,7 @@
                       </div>
                     </div>
 
-                    <div class="col-12 mt-1 mb-0">
+                    <div class="col-12 mt-1">
                       <table id="emailsDT" class="table table-hover border border-primary">
                         <thead class="text-center">
                           <tr>
@@ -732,31 +730,10 @@
 @section('js')
   <script>
   $(document).ready(function () {
-    // borrar filas con jquery: $("#tabla").empty();
-
     ///////////////////////////////////////////////////////////////////
     // tabla de emails
     ///////////////////////////////////////////////////////////////////
-
-    /* var emailsDT = $('#emailsDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'correo',
-          orderable: false,
-          width: '95%'
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    }); */
+    
     var emails = [];
 
     ///////////////////////////////////////////////////////////////////
@@ -952,6 +929,24 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // pintar la tabla de emails
+    ///////////////////////////////////////////////////////////////////
+    
+    function emailsDraw() {
+      $("#emailsDT tbody").empty();
+      emails.forEach(item => {
+        let fila = `<tr>
+                      <td>${item.email}</td>
+                      <td>
+                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                      </td>
+                    </tr>`;
+      
+        $('#emailsDT tbody').append(fila);
+      });
+    }
+
+    ///////////////////////////////////////////////////////////////////
     // agregar un email
     ///////////////////////////////////////////////////////////////////
 
@@ -963,15 +958,8 @@
       }
       else {
         emails.push({'email' : correo, 'status' : 'C'});
-        let fila = `<tr>
-                      <td>${correo}</td>
-                      <td>
-                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
-                      </td>
-                    </tr>`;
-      
-        $('#emailsDT tbody').append(fila);
         $("#inputEmail").val('');
+        emailsDraw();
       }
     });
 
@@ -984,17 +972,7 @@
       let correo = fila.find("td").eq(0).text();
 
       emails = emails.filter(item => item.email != correo);
-      $("#emailsDT tbody").empty();
-      emails.forEach(item => {
-        let fila = `<tr>
-                      <td>${item.email}</td>
-                      <td>
-                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
-                      </td>
-                    </tr>`;
-      
-        $('#emailsDT tbody').append(fila);
-      })
+      emailsDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -1176,9 +1154,11 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnGrabar").click(function() {
+      // validaciones
+      // emails.length > 0
       const data = new FormData(formEmpleado);
 
-      emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
+      data.append('emails', JSON.stringify(emails));
       phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));
       phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
       addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));

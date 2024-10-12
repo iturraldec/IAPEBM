@@ -23,6 +23,7 @@ use App\Models\Fisionomia;
 use App\Models\EmpleadoFisionomia;
 use App\Models\Familia;
 use App\Models\Vacacione;
+use Illuminate\Http\Request;
 
 //
 class EmployeeAdmController extends Controller
@@ -114,9 +115,6 @@ class EmployeeAdmController extends Controller
     // agrego la persona
     $person = Person::create($data_person);
 
-    // agrego los correos del empleado
-    $this->_addEmails($person, $request->emails);
-
     // agrego los telefonos del empleado
     $this->_addPhones($person, $request->phones_type_id, $request->phones);
 
@@ -130,6 +128,9 @@ class EmployeeAdmController extends Controller
     $inputEmployee['person_id'] = $person->id;
     $inputEmployee['type_id'] = $this->_type_id;
     $employee = Employee::create($inputEmployee);
+
+    // agrego los correos del empleado
+    $this->_empleado->updEmails($employee, json_decode($request->emails));
 
     // agrego los datos fisionomicos
     if($request->has('fisionomia_id')) {
@@ -209,8 +210,8 @@ class EmployeeAdmController extends Controller
 
     $dataPerson->update($inputPerson);
 
-    // actualizo sus correos
-    $this->_addEmails($dataPerson, $request->emails);
+    // actualizo los correos del empleado
+    $this->_empleado->updEmails($employees_adm, json_decode($request->emails));
 
     // actualizo sus telefonos
     $this->_addPhones($dataPerson, $request->phones_type_id, $request->phones);
@@ -274,18 +275,6 @@ class EmployeeAdmController extends Controller
     $this->_requestResponse->message = 'Empleado Administrativo actualizado!';
 
     return response()->json($this->_requestResponse, Response::HTTP_OK);
-  }
-
-  // agregar los correos del empleado
-  private function _addEmails($person, $emails)
-  {
-    $_emails = [];
-    foreach($emails as $email) {
-      $_emails[] = new Email(['email' => $email]);
-    };
-
-    $person->emails()->delete();
-    $person->emails()->saveMany($_emails);
   }
 
   // agregar los telefonos del empleado
