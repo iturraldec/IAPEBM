@@ -367,11 +367,10 @@
                           </div>
                         </div>
       
-                        <div class="col-12">
+                        <div class="col-12 mt-1">
                           <table id="phonesDT" class="table table-hover border border-primary">
                             <thead>
                               <tr>
-                                <th scope="col">TipoID</th>
                                 <th scope="col">Tipo</th>
                                 <th scope="col">Número</th>
                                 <th scope="col"></th>
@@ -1087,43 +1086,26 @@
                   });
 
     ///////////////////////////////////////////////////////////////////
+    // tabla de telefonos
+    ///////////////////////////////////////////////////////////////////
+    
+    temp = {{ Js::from($data['person']['phones']) }};
+
+    var phones = temp.map(item => {
+                    return {
+                            id: item.id,
+                            phone_type_id: item.phone_type_id,
+                            phone_type: item.phone_type,
+                            number: item.number,
+                            status: ''
+                          }
+                  });
+
+    ///////////////////////////////////////////////////////////////////
     // index de fila de tabla al agregar/modificar
     ///////////////////////////////////////////////////////////////////
 
     var datatableRow = -1;
-
-    ///////////////////////////////////////////////////////////////////
-    // tabla de telefonos
-    ///////////////////////////////////////////////////////////////////
-
-    var phonesDT = $('#phonesDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'id',
-          visible: false
-        },
-        {
-          data: 'tipo',
-          width: '50%',
-          orderable: false
-        },
-        {
-          data: 'numero',
-          width: '45%',
-          orderable: false
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
 
     ///////////////////////////////////////////////////////////////////
     // tabla de direcciones
@@ -1373,7 +1355,6 @@
     ///////////////////////////////////////////////////////////////////
 
     function initForm() {
-      let phones    = {{ Js::from($data['person']['phones']) }};        // telefonos del empleado
       let addresses = {{ Js::from($data['person']['fullAddresses']) }}; // direcciones del empleado
 
       // configurar 'toastr'
@@ -1384,16 +1365,8 @@
       // pintar emails
       emailsDraw();
 
-      // telefonos
-      if(phones.length > 0) {
-        phones.forEach(item => phonesDT.row.add({
-                                'id'    : item.phone_type_id,
-                                'tipo'  : item.phone_type,
-                                'numero': item.number
-                              })
-                      );
-        phonesDT.draw();
-      }
+      // pintar telefonos
+      phonesDraw();
 
       // direcciones
       if(addresses.length > 0) {
@@ -1529,38 +1502,69 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // agregar telefono
+    // pintar la tabla de telefonos
+    ///////////////////////////////////////////////////////////////////
+    
+    function phonesDraw() {
+      $("#phonesDT tbody").empty();
+      phones.forEach(item => {
+        if(item.status != 'D') {
+          let fila = `<tr>
+                        <td>${item.phone_type}</td>
+                        <td>${item.number}</td>
+                        <td>
+                          <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                      </tr>`;
+        
+          $('#phonesDT tbody').append(fila);
+        }
+      });
+    };
+
+    ///////////////////////////////////////////////////////////////////
+    // agregar telefonos
     ///////////////////////////////////////////////////////////////////
 
     $("#btnPhoneAdd").click(function() {
       let numeroTipo = $("#selectPhoneType :selected").val();
-      let numbero = $("#inputPhone").val();
+      let numero = $("#inputPhone").val();
       
       if(numeroTipo == '0') {
         lib_toastr("Error: Debe seleccionar un tipo de número de teléfono!");
       }
-      else if(lib_isEmpty(numbero)) {
+      else if(lib_isEmpty(numero)) {
         lib_toastr("Error: Debe ingresar un número de teléfono!");
       }
       else {
-        phonesDT.row.add({
-          'id'    : numeroTipo,
-          'tipo'  : $("#selectPhoneType :selected").text(),
-          'numero': numbero
-        })
-        .draw();
+        phones.push({
+          'id'            : 0,
+          'phone_type_id' : numeroTipo,
+          'phone_type'    : $("#selectPhoneType :selected").text(),
+          'number'        : numero,
+          'status'        : 'C'
+        });
+        phonesDraw();
         $("#inputPhone").val("");
       }
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar telefono
+    // eliminar un telefono
     ///////////////////////////////////////////////////////////////////
 
-    $("#phonesDT tbody").on("click",".eliminar",function() {
-      phonesDT.row($(this).parents())
-              .remove()
-              .draw();
+    $("#phonesDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let numero = fila.find("td").eq(1).text();
+
+      phones = phones.map(item => {
+        if(item.number == numero) {
+          item.status = 'D';
+        }
+        
+        return item;
+      });
+      phonesDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -2071,8 +2075,7 @@
       let data = new FormData(formEmpleado);
 
       data.append('emails', JSON.stringify(emails));
-      phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));
-      phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
+      data.append('phones', JSON.stringify(phones));
       addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
       addressesDT.column(4).data().each(address => data.append('addresses[]', address));
       familiaresDT.column(0).data().each(parentesco_id => data.append('parentesco_id[]', parentesco_id));

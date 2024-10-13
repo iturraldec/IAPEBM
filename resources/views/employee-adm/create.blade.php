@@ -332,11 +332,10 @@
                         </div>
                       </div>
     
-                      <div class="col-12">
+                      <div class="col-12 mt-1">
                         <table id="phonesDT" class="table table-hover border border-primary">
                           <thead>
                             <tr>
-                              <th scope="col">TipoID</th>
                               <th scope="col">Tipo</th>
                               <th scope="col">Número</th>
                               <th scope="col"></th>
@@ -740,34 +739,7 @@
     // tabla de telefonos
     ///////////////////////////////////////////////////////////////////
 
-    var phonesDT = $('#phonesDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'id',
-          visible: false
-        },
-        {
-          data: 'tipo',
-          width: '50%',
-          orderable: false
-        },
-        {
-          data: 'numero',
-          width: '45%',
-          orderable: false
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar teléfono"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
+    var phones = [];
 
     ///////////////////////////////////////////////////////////////////
     // tabla de direcciones
@@ -944,7 +916,7 @@
       
         $('#emailsDT tbody').append(fila);
       });
-    }
+    };
 
     ///////////////////////////////////////////////////////////////////
     // agregar un email
@@ -976,26 +948,46 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // pintar la tabla de telefonos
+    ///////////////////////////////////////////////////////////////////
+    
+    function phonesDraw() {
+      $("#phonesDT tbody").empty();
+      phones.forEach(item => {
+        let fila = `<tr>
+                      <td>${item.type}</td>
+                      <td>${item.number}</td>
+                      <td>
+                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                      </td>
+                    </tr>`;
+      
+        $('#phonesDT tbody').append(fila);
+      });
+    };
+
+    ///////////////////////////////////////////////////////////////////
     // agregar telefono
     ///////////////////////////////////////////////////////////////////
 
     $("#btnPhoneAdd").click(function() {
       let numeroTipo = $("#selectPhoneType :selected").val();
-      let numbero = $("#inputPhone").val();
+      let numero = $("#inputPhone").val();
       
       if(numeroTipo == '0') {
         lib_toastr("Error: Debe seleccionar un tipo de número de teléfono!");
       }
-      else if(lib_isEmpty(numbero)) {
+      else if(lib_isEmpty(numero)) {
         lib_toastr("Error: Debe ingresar un número de teléfono!");
       }
       else {
-        phonesDT.row.add({
-          'id'    : numeroTipo,
-          'tipo'  : $("#selectPhoneType :selected").text(),
-          'numero': numbero
-        })
-        .draw();
+        phones.push({
+          'phone_type_id' : numeroTipo,
+          'type'          : $("#selectPhoneType :selected").text(),
+          'number'        : numero,
+          'status'        : 'C'
+        });
+        phonesDraw();
         $("#inputPhone").val("");
       }
     });
@@ -1004,8 +996,12 @@
     // eliminar telefono
     ///////////////////////////////////////////////////////////////////
 
-    $("#phonesDT tbody").on("click",".eliminar",function() {
-      phonesDT.row($(this).parents()).remove().draw();
+    $("#phonesDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let numero = fila.find("td").eq(1).text();
+
+      phones = phones.filter(item => item.number != numero);
+      phonesDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -1159,8 +1155,7 @@
       const data = new FormData(formEmpleado);
 
       data.append('emails', JSON.stringify(emails));
-      phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));
-      phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
+      data.append('phones', JSON.stringify(phones));
       addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
       addressesDT.column(4).data().each(address => data.append('addresses[]', address));
       familiaresDT.column(0).data().each(parentesco_id => data.append('parentesco_id[]', parentesco_id));
@@ -1179,7 +1174,7 @@
       .then(response => {
         if(response.ok) {
           lib_ShowMensaje("Empleado Administrativo agregado!", 'mensaje')
-          .then(response => window.close());
+          //.then(response => window.close());
         }
         else {
           response.text().then(r => {

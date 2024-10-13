@@ -115,9 +115,6 @@ class EmployeeAdmController extends Controller
     // agrego la persona
     $person = Person::create($data_person);
 
-    // agrego los telefonos del empleado
-    $this->_addPhones($person, $request->phones_type_id, $request->phones);
-
     // agrego las direcciones del empleado
     $this->_addAddresses($person, $request->parroquias_id, $request->addresses, $request->zona_postal);
 
@@ -131,6 +128,9 @@ class EmployeeAdmController extends Controller
 
     // agrego los correos del empleado
     $this->_empleado->updEmails($employee, json_decode($request->emails));
+
+    // agrego los telefonos del empleado
+    $this->_empleado->updPhones($employee, json_decode($request->phones));
 
     // agrego los datos fisionomicos
     if($request->has('fisionomia_id')) {
@@ -213,8 +213,8 @@ class EmployeeAdmController extends Controller
     // actualizo los correos del empleado
     $this->_empleado->updEmails($employees_adm, json_decode($request->emails));
 
-    // actualizo sus telefonos
-    $this->_addPhones($dataPerson, $request->phones_type_id, $request->phones);
+    // actualizo los telefonos del empleado
+    $this->_empleado->updPhones($employees_adm, json_decode($request->phones));
 
     // actualizo sus direcciones
     $this->_addAddresses($dataPerson, $request->parroquias_id, $request->addresses, $request->zona_postal);
@@ -275,21 +275,6 @@ class EmployeeAdmController extends Controller
     $this->_requestResponse->message = 'Empleado Administrativo actualizado!';
 
     return response()->json($this->_requestResponse, Response::HTTP_OK);
-  }
-
-  // agregar los telefonos del empleado
-  private function _addPhones($person, $phonesTypeId, $phonesNumbers)
-  {
-    $phones = [];
-    foreach($phonesTypeId as $indice => $phoneTypeId) {
-      $phones[] = new Phone([
-                      'phone_type_id' => $phoneTypeId,
-                      'number'        => $phonesNumbers[$indice]
-                    ]);
-    };
-
-    $person->phones()->delete();
-    $person->phones()->saveMany($phones);
   }
 
   // agregar las direcciones del empleado

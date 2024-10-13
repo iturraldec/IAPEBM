@@ -6,7 +6,6 @@ use App\Models\EmpleadoEstudio;
 use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\EmpleadoReposo;
-use App\Models\Person;
 
 //
 abstract class EmpleadoAbstract
@@ -23,7 +22,7 @@ abstract class EmpleadoAbstract
     return $imagen->store(config('app_config.employees_path').$cedula);
   }
 
-  // actualizacion de los correos del usuario
+  // actualizacion de los correos del empleado
   public function updEmails(Employee $empleado, array $data) : bool
   {
     foreach($data as $item) {
@@ -35,6 +34,28 @@ abstract class EmpleadoAbstract
         // eliminar
         case 'D' && $item->id > 0:
           DB::table('emails')->where('id', $item->id)->delete();
+          break;
+      }
+    }
+    return true;
+  }
+
+  // actualizacion de los telefonos del empleado
+  public function updPhones(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $item) {
+      switch($item->status) {
+        // crear
+        case 'C': 
+          DB::table('phones')->insert([
+                                'person_id'     => $empleado->person_id, 
+                                'phone_type_id' => $item->phone_type_id,
+                                'number'        => $item->number
+                              ]);
+          break;
+        // eliminar
+        case 'D' && $item->id > 0:
+          DB::table('phones')->where('id', $item->id)->delete();
           break;
       }
     }
