@@ -4,7 +4,7 @@
 
 @section('content_header')
   <div class="col-6">
-    <h4>Agregar Datos del Empleado Administrativo</h4>
+    <h4>Agregar Datos de Empleado Administrativo</h4>
   </div>
 
   <div class="col-6 d-flex justify-content-end">
@@ -379,7 +379,7 @@
                         <select id="selectParroquias" class="form-control" title="Ubicación del empleado: Parroquia"></select>
                       </div>
 
-                      <div class="col-6">
+                      <div class="col-4">
                         <div class="input-group">
                           <input type="text"
                               class="form-control"
@@ -387,6 +387,19 @@
                               placeholder="Ingresa la dirección"
                               onkeyup="this.value = this.value.toUpperCase();"
                               title="Ubicación del empleado: Dirección"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-2">
+                        <div class="input-group">
+                          <input type="text"
+                              class="form-control"
+                              id="inputZonaPostal"
+                              value="5101"
+                              maxlength="4"
+                              placeholder="Z.P."
+                              title="Ubicación del empleado: Zona Postal"
                           />
     
                           <div class="input-group-append">
@@ -523,7 +536,7 @@
             </div>
             
             <div class="col-4 form-group">
-              <label for="inputPatria">Código del Carnet de la Patria*</label>
+              <label for="inputPatria">Carnet de la Patria: Código*</label>
               <input type="text"
                     class="form-control"
                     id="inputPatria"
@@ -534,7 +547,7 @@
             </div>
 
             <div class="col-4 form-group">
-              <label for="inputSerialPatria">Serial del Carnet de la Patria*</label>
+              <label for="inputSerialPatria">Carnet de la Patria: Serial*</label>
               <input type="text"
                     class="form-control"
                     id="inputSerialPatria"
@@ -1036,6 +1049,7 @@
       let municipio = $("#selectMunicipios :selected").val();
       let parroquia = $("#selectParroquias :selected").val();
       let address   = $("#inputAddress").val();
+      let zp        = $("#inputZonaPostal").val();
       
       if(estado == '0') {
         lib_toastr("Error: Debe seleccionar un Estado!");
@@ -1049,6 +1063,9 @@
       else if(lib_isEmpty(address)) {
         lib_toastr("Error: Debe ingresar una dirección!");
       }
+      else if(lib_isEmpty(zp)) {
+        lib_toastr("Error: Debe ingresar la zona postal de la dirección!");
+      }
       else {
         addresses.push({
           'estado'        : $("#selectEstados :selected").text(),
@@ -1056,10 +1073,12 @@
           'parroquia_id'  : $("#selectParroquias :selected").val(),
           'parroquia'     : $("#selectParroquias :selected").text(),
           'address'       : address,
-          'zona_postal'   : zona_postal
+          'zona_postal'   : zp,
+          'status'        : 'C'
         });
         addressesDraw();
         $("#inputAddress").val("");
+        $("#inputZonaPostal").val("5101");
       }
     });
 
@@ -1068,7 +1087,11 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#addressesDT tbody").on("click",".eliminar",function() {
-      addressesDT.row($(this).parents()).remove().draw();
+      let fila = $(this).closest("tr");
+      let address = fila.find("td").eq(3).text();
+
+      addresses = addresses.filter(item => item.address != address);
+      addressesDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -1151,8 +1174,7 @@
 
       data.append('emails', JSON.stringify(emails));
       data.append('phones', JSON.stringify(phones));
-      addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
-      addressesDT.column(4).data().each(address => data.append('addresses[]', address));
+      data.append('addresses', JSON.stringify(addresses));
       familiaresDT.column(0).data().each(parentesco_id => data.append('parentesco_id[]', parentesco_id));
       familiaresDT.column(2).data().each(pnombre => data.append('pnombre[]', pnombre));
       familiaresDT.column(3).data().each(snombre => data.append('snombre[]', snombre));
@@ -1169,7 +1191,7 @@
       .then(response => {
         if(response.ok) {
           lib_ShowMensaje("Empleado Administrativo agregado!", 'mensaje')
-          //.then(response => window.close());
+          .then(response => window.close());
         }
         else {
           response.text().then(r => {

@@ -115,9 +115,6 @@ class EmployeeAdmController extends Controller
     // agrego la persona
     $person = Person::create($data_person);
 
-    // agrego las direcciones del empleado
-    $this->_addAddresses($person, $request->parroquias_id, $request->addresses, $request->zona_postal);
-
     // agrego el empleado
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
                                     'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
@@ -131,6 +128,9 @@ class EmployeeAdmController extends Controller
 
     // agrego los telefonos del empleado
     $this->_empleado->updPhones($employee, json_decode($request->phones));
+
+    // agrego las direcciones del empleado
+    $this->_empleado->updAddresses($employee, json_decode($request->addresses));
 
     // agrego los datos fisionomicos
     if($request->has('fisionomia_id')) {
