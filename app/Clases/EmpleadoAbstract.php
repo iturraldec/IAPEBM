@@ -6,22 +6,85 @@ use App\Models\EmpleadoEstudio;
 use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\EmpleadoReposo;
-use App\Models\Person;
 
 //
 abstract class EmpleadoAbstract
 {
-  //
-  // parametros:
-  //  string $cedula
-  //  $imagen
-  // retorna
-  //  ubicacion y nombre de la imagen guardada : string
+  /*
+    parametros:
+      string $cedula
+      $imagen
+    retorna
+      string ubicacion y nombre de la imagen guardada
+  */
   public function storeImage(string $cedula, $imagen) : string
   {
     return $imagen->store(config('app_config.employees_path').$cedula);
   }
 
+  // actualizacion de los correos del empleado
+  public function updEmails(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $item) {
+      switch($item->status) {
+        // crear
+        case 'C': 
+          DB::table('emails')->insert(['person_id' => $empleado->person_id, 'email' => $item->email]);
+          break;
+        // eliminar
+        case 'D' && $item->id > 0:
+          DB::table('emails')->where('id', $item->id)->delete();
+          break;
+      }
+    }
+    return true;
+  }
+
+  // actualizacion de los telefonos del empleado
+  public function updPhones(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $item) {
+      switch($item->status) {
+        // crear
+        case 'C': 
+          DB::table('phones')->insert([
+                                'person_id'     => $empleado->person_id, 
+                                'phone_type_id' => $item->phone_type_id,
+                                'number'        => $item->number
+                              ]);
+          break;
+        // eliminar
+        case 'D' && $item->id > 0:
+          DB::table('phones')->where('id', $item->id)->delete();
+          break;
+      }
+    }
+    return true;
+  }
+
+  // actualizacion de las direcciones del empleado
+  public function updAddresses(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $item) {
+      switch($item->status) {
+        // crear
+        case 'C': 
+          DB::table('addresses')->insert([
+                                'person_id'     => $empleado->person_id, 
+                                'parroquia_id'  => $item->parroquia_id,
+                                'address'       => $item->address,
+                                'zona_postal'   => $item->zona_postal,
+                              ]);
+          break;
+        // eliminar
+        case 'D' && $item->id > 0:
+          DB::table('addresses')->where('id', $item->id)->delete();
+          break;
+      }
+    }
+    return true;
+  }
+  
   //
   public function updEstudios(Employee $empleado, array $data) : bool
   {

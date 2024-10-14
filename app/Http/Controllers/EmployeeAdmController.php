@@ -23,6 +23,7 @@ use App\Models\Fisionomia;
 use App\Models\EmpleadoFisionomia;
 use App\Models\Familia;
 use App\Models\Vacacione;
+use Illuminate\Http\Request;
 
 //
 class EmployeeAdmController extends Controller
@@ -114,15 +115,6 @@ class EmployeeAdmController extends Controller
     // agrego la persona
     $person = Person::create($data_person);
 
-    // agrego los correos del empleado
-    $this->_addEmails($person, $request->emails);
-
-    // agrego los telefonos del empleado
-    $this->_addPhones($person, $request->phones_type_id, $request->phones);
-
-    // agrego las direcciones del empleado
-    $this->_addAddresses($person, $request->parroquias_id, $request->addresses, $request->zona_postal);
-
     // agrego el empleado
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
                                     'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
@@ -130,6 +122,15 @@ class EmployeeAdmController extends Controller
     $inputEmployee['person_id'] = $person->id;
     $inputEmployee['type_id'] = $this->_type_id;
     $employee = Employee::create($inputEmployee);
+
+    // agrego los correos del empleado
+    $this->_empleado->updEmails($employee, json_decode($request->emails));
+
+    // agrego los telefonos del empleado
+    $this->_empleado->updPhones($employee, json_decode($request->phones));
+
+    // agrego las direcciones del empleado
+    $this->_empleado->updAddresses($employee, json_decode($request->addresses));
 
     // agrego los datos fisionomicos
     if($request->has('fisionomia_id')) {
@@ -209,11 +210,11 @@ class EmployeeAdmController extends Controller
 
     $dataPerson->update($inputPerson);
 
-    // actualizo sus correos
-    $this->_addEmails($dataPerson, $request->emails);
+    // actualizo los correos del empleado
+    $this->_empleado->updEmails($employees_adm, json_decode($request->emails));
 
-    // actualizo sus telefonos
-    $this->_addPhones($dataPerson, $request->phones_type_id, $request->phones);
+    // actualizo los telefonos del empleado
+    $this->_empleado->updPhones($employees_adm, json_decode($request->phones));
 
     // actualizo sus direcciones
     $this->_addAddresses($dataPerson, $request->parroquias_id, $request->addresses, $request->zona_postal);
@@ -274,33 +275,6 @@ class EmployeeAdmController extends Controller
     $this->_requestResponse->message = 'Empleado Administrativo actualizado!';
 
     return response()->json($this->_requestResponse, Response::HTTP_OK);
-  }
-
-  // agregar los correos del empleado
-  private function _addEmails($person, $emails)
-  {
-    $_emails = [];
-    foreach($emails as $email) {
-      $_emails[] = new Email(['email' => $email]);
-    };
-
-    $person->emails()->delete();
-    $person->emails()->saveMany($_emails);
-  }
-
-  // agregar los telefonos del empleado
-  private function _addPhones($person, $phonesTypeId, $phonesNumbers)
-  {
-    $phones = [];
-    foreach($phonesTypeId as $indice => $phoneTypeId) {
-      $phones[] = new Phone([
-                      'phone_type_id' => $phoneTypeId,
-                      'number'        => $phonesNumbers[$indice]
-                    ]);
-    };
-
-    $person->phones()->delete();
-    $person->phones()->saveMany($phones);
   }
 
   // agregar las direcciones del empleado

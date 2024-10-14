@@ -1,17 +1,15 @@
-@extends('adminlte::page')
+@extends('layouts.edit-page')
 
 @section('title', 'Empleado Administrativo')
 
 @section('content_header')
-  <div class="row">
-    <div class="col-6">
-      <h4>Agregar Datos del Empleado Administrativo</h4>
-    </div>
-  
-    <div class="col-6 d-flex justify-content-end">
-      <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
-      <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
-    </div>
+  <div class="col-6">
+    <h4>Agregar Datos de Empleado Administrativo</h4>
+  </div>
+
+  <div class="col-6 d-flex justify-content-end">
+    <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
+    <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
   </div>
 @endsection
 
@@ -275,7 +273,7 @@
                       </div>
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-12 mt-1">
                       <table id="emailsDT" class="table table-hover border border-primary">
                         <thead class="text-center">
                           <tr>
@@ -334,11 +332,10 @@
                         </div>
                       </div>
     
-                      <div class="col-12">
+                      <div class="col-12 mt-1">
                         <table id="phonesDT" class="table table-hover border border-primary">
                           <thead>
                             <tr>
-                              <th scope="col">TipoID</th>
                               <th scope="col">Tipo</th>
                               <th scope="col">Número</th>
                               <th scope="col"></th>
@@ -382,7 +379,7 @@
                         <select id="selectParroquias" class="form-control" title="Ubicación del empleado: Parroquia"></select>
                       </div>
 
-                      <div class="col-6">
+                      <div class="col-4">
                         <div class="input-group">
                           <input type="text"
                               class="form-control"
@@ -390,6 +387,19 @@
                               placeholder="Ingresa la dirección"
                               onkeyup="this.value = this.value.toUpperCase();"
                               title="Ubicación del empleado: Dirección"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-2">
+                        <div class="input-group">
+                          <input type="text"
+                              class="form-control"
+                              id="inputZonaPostal"
+                              value="5101"
+                              maxlength="4"
+                              placeholder="Z.P."
+                              title="Ubicación del empleado: Zona Postal"
                           />
     
                           <div class="input-group-append">
@@ -403,14 +413,13 @@
                           </div>
                         </div>
                       </div>
-    
-                      <div class="col-12">
+    <!-- '<input type="text" name="zona_postal[]" value="0000" maxlength="4" size="4" title="Zona Postal" />' -->
+                      <div class="col-12 mt-1">
                         <table id="addressesDT" class="table table-hover border border-primary">
                           <thead>
                             <tr>
                               <th scope="col">Estado</th>
                               <th scope="col">Municipio</th>
-                              <th scope="col">ParroquiaID</th>
                               <th scope="col">Parroquia</th>
                               <th scope="col">Dirección</th>
                               <th scope="col">Z. P.</th>
@@ -527,7 +536,7 @@
             </div>
             
             <div class="col-4 form-group">
-              <label for="inputPatria">Código del Carnet de la Patria*</label>
+              <label for="inputPatria">Carnet de la Patria: Código*</label>
               <input type="text"
                     class="form-control"
                     id="inputPatria"
@@ -538,7 +547,7 @@
             </div>
 
             <div class="col-4 form-group">
-              <label for="inputSerialPatria">Serial del Carnet de la Patria*</label>
+              <label for="inputSerialPatria">Carnet de la Patria: Serial*</label>
               <input type="text"
                     class="form-control"
                     id="inputSerialPatria"
@@ -735,103 +744,20 @@
     ///////////////////////////////////////////////////////////////////
     // tabla de emails
     ///////////////////////////////////////////////////////////////////
-
-    var emailsDT = $('#emailsDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'correo',
-          orderable: false,
-          width: '95%'
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
+    
+    var emails = [];
 
     ///////////////////////////////////////////////////////////////////
     // tabla de telefonos
     ///////////////////////////////////////////////////////////////////
 
-    var phonesDT = $('#phonesDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'id',
-          visible: false
-        },
-        {
-          data: 'tipo',
-          width: '50%',
-          orderable: false
-        },
-        {
-          data: 'numero',
-          width: '45%',
-          orderable: false
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar teléfono"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
+    var phones = [];
 
     ///////////////////////////////////////////////////////////////////
     // tabla de direcciones
     ///////////////////////////////////////////////////////////////////
 
-    var addressesDT = $('#addressesDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'estado',
-          orderable: false
-        },
-        {
-          data: 'municipio',
-          orderable: false
-        },
-        {
-          data: 'parroquiaId',
-          visible: false
-        },
-        {
-          data: 'parroquia',
-          orderable: false
-        },
-        {
-          data: 'direccion',
-          orderable: false
-        },
-        {
-          data: 'zona_postal',
-          orderable: false,
-          width: "5%"
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar dirección"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
+    var addresses = [];
 
     ///////////////////////////////////////////////////////////////////
     // tabla de familiares
@@ -949,6 +875,24 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // pintar la tabla de emails
+    ///////////////////////////////////////////////////////////////////
+    
+    function emailsDraw() {
+      $("#emailsDT tbody").empty();
+      emails.forEach(item => {
+        let fila = `<tr>
+                      <td>${item.email}</td>
+                      <td>
+                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                      </td>
+                    </tr>`;
+      
+        $('#emailsDT tbody').append(fila);
+      });
+    };
+
+    ///////////////////////////////////////////////////////////////////
     // agregar un email
     ///////////////////////////////////////////////////////////////////
 
@@ -959,8 +903,9 @@
         lib_toastr("Error: Debe ingresar la dirección de correo!");
       }
       else {
-        emailsDT.row.add({'correo' : correo}).draw();
+        emails.push({'email' : correo, 'status' : 'C'});
         $("#inputEmail").val('');
+        emailsDraw();
       }
     });
 
@@ -968,9 +913,32 @@
     // eliminar un email
     ///////////////////////////////////////////////////////////////////
 
-    $("#emailsDT tbody").on("click",".eliminar",function() {
-      emailsDT.row($(this).parents()).remove().draw();
+    $("#emailsDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let correo = fila.find("td").eq(0).text();
+
+      emails = emails.filter(item => item.email != correo);
+      emailsDraw();
     });
+
+    ///////////////////////////////////////////////////////////////////
+    // pintar la tabla de telefonos
+    ///////////////////////////////////////////////////////////////////
+    
+    function phonesDraw() {
+      $("#phonesDT tbody").empty();
+      phones.forEach(item => {
+        let fila = `<tr>
+                      <td>${item.type}</td>
+                      <td>${item.number}</td>
+                      <td>
+                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                      </td>
+                    </tr>`;
+      
+        $('#phonesDT tbody').append(fila);
+      });
+    };
 
     ///////////////////////////////////////////////////////////////////
     // agregar telefono
@@ -978,21 +946,22 @@
 
     $("#btnPhoneAdd").click(function() {
       let numeroTipo = $("#selectPhoneType :selected").val();
-      let numbero = $("#inputPhone").val();
+      let numero = $("#inputPhone").val();
       
       if(numeroTipo == '0') {
         lib_toastr("Error: Debe seleccionar un tipo de número de teléfono!");
       }
-      else if(lib_isEmpty(numbero)) {
+      else if(lib_isEmpty(numero)) {
         lib_toastr("Error: Debe ingresar un número de teléfono!");
       }
       else {
-        phonesDT.row.add({
-          'id'    : numeroTipo,
-          'tipo'  : $("#selectPhoneType :selected").text(),
-          'numero': numbero
-        })
-        .draw();
+        phones.push({
+          'phone_type_id' : numeroTipo,
+          'type'          : $("#selectPhoneType :selected").text(),
+          'number'        : numero,
+          'status'        : 'C'
+        });
+        phonesDraw();
         $("#inputPhone").val("");
       }
     });
@@ -1001,8 +970,12 @@
     // eliminar telefono
     ///////////////////////////////////////////////////////////////////
 
-    $("#phonesDT tbody").on("click",".eliminar",function() {
-      phonesDT.row($(this).parents()).remove().draw();
+    $("#phonesDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let numero = fila.find("td").eq(1).text();
+
+      phones = phones.filter(item => item.number != numero);
+      phonesDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -1046,26 +1019,66 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // pintar la tabla de direcciones
+    ///////////////////////////////////////////////////////////////////
+    
+    function addressesDraw() {
+      $("#addressesDT tbody").empty();
+      addresses.forEach(item => {
+        let fila = `<tr>
+                      <td>${item.estado}</td>
+                      <td>${item.municipio}</td>
+                      <td>${item.parroquia}</td>
+                      <td>${item.address}</td>
+                      <td>${item.zona_postal}</td>
+                      <td>
+                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                      </td>
+                    </tr>`;
+      
+        $('#addressesDT tbody').append(fila);
+      });
+    };
+
+    ///////////////////////////////////////////////////////////////////
     // agregar direccion
     ///////////////////////////////////////////////////////////////////
 
     $("#btnAddressAdd").click(function() {
-      let address = $("#inputAddress").val();
+      let estado    = $("#selectEstados :selected").val();
+      let municipio = $("#selectMunicipios :selected").val();
+      let parroquia = $("#selectParroquias :selected").val();
+      let address   = $("#inputAddress").val();
+      let zp        = $("#inputZonaPostal").val();
       
-      if(lib_isEmpty(address)) {
+      if(estado == '0') {
+        lib_toastr("Error: Debe seleccionar un Estado!");
+      }
+      else if(municipio == '0') {
+        lib_toastr("Error: Debe seleccionar un Municipio!");
+      }
+      else if(parroquia == '0') {
+        lib_toastr("Error: Debe seleccionar una Parroquia!");
+      }
+      else if(lib_isEmpty(address)) {
         lib_toastr("Error: Debe ingresar una dirección!");
       }
+      else if(lib_isEmpty(zp)) {
+        lib_toastr("Error: Debe ingresar la zona postal de la dirección!");
+      }
       else {
-        addressesDT.row.add({
-          'estado'      : $("#selectEstados :selected").text(),
-          'municipio'   : $("#selectMunicipios :selected").text(),
-          'parroquiaId' : $("#selectParroquias :selected").val(),
-          'parroquia'   : $("#selectParroquias :selected").text(),
-          'direccion'   : address,
-          'zona_postal' : '<input type="text" name="zona_postal[]" value="0000" maxlength="4" size="4" title="Zona Postal" />'
-        })
-        .draw();
+        addresses.push({
+          'estado'        : $("#selectEstados :selected").text(),
+          'municipio'     : $("#selectMunicipios :selected").text(),
+          'parroquia_id'  : $("#selectParroquias :selected").val(),
+          'parroquia'     : $("#selectParroquias :selected").text(),
+          'address'       : address,
+          'zona_postal'   : zp,
+          'status'        : 'C'
+        });
+        addressesDraw();
         $("#inputAddress").val("");
+        $("#inputZonaPostal").val("5101");
       }
     });
 
@@ -1074,7 +1087,11 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#addressesDT tbody").on("click",".eliminar",function() {
-      addressesDT.row($(this).parents()).remove().draw();
+      let fila = $(this).closest("tr");
+      let address = fila.find("td").eq(3).text();
+
+      addresses = addresses.filter(item => item.address != address);
+      addressesDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -1151,13 +1168,13 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#btnGrabar").click(function() {
+      // validaciones
+      // emails.length > 0
       const data = new FormData(formEmpleado);
 
-      emailsDT.column(0).data().each(correo => data.append('emails[]', correo));
-      phonesDT.column(0).data().each(phone_type_id => data.append('phones_type_id[]', phone_type_id));
-      phonesDT.column(2).data().each(phone => data.append('phones[]', phone));
-      addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
-      addressesDT.column(4).data().each(address => data.append('addresses[]', address));
+      data.append('emails', JSON.stringify(emails));
+      data.append('phones', JSON.stringify(phones));
+      data.append('addresses', JSON.stringify(addresses));
       familiaresDT.column(0).data().each(parentesco_id => data.append('parentesco_id[]', parentesco_id));
       familiaresDT.column(2).data().each(pnombre => data.append('pnombre[]', pnombre));
       familiaresDT.column(3).data().each(snombre => data.append('snombre[]', snombre));
