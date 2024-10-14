@@ -2,8 +2,7 @@
 /node_modules
 /public/build
 /public/assets/documentos
-/public/storage
-/storage/*.key
+/storage
 /vendor
 .env
 .env.backup

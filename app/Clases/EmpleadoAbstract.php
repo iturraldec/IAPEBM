@@ -62,6 +62,29 @@ abstract class EmpleadoAbstract
     return true;
   }
 
+  // actualizacion de las direcciones del empleado
+  public function updAddresses(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $item) {
+      switch($item->status) {
+        // crear
+        case 'C': 
+          DB::table('addresses')->insert([
+                                'person_id'     => $empleado->person_id, 
+                                'parroquia_id'  => $item->parroquia_id,
+                                'address'       => $item->address,
+                                'zona_postal'   => $item->zona_postal,
+                              ]);
+          break;
+        // eliminar
+        case 'D' && $item->id > 0:
+          DB::table('addresses')->where('id', $item->id)->delete();
+          break;
+      }
+    }
+    return true;
+  }
+  
   //
   public function updEstudios(Employee $empleado, array $data) : bool
   {
