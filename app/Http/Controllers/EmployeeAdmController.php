@@ -216,8 +216,8 @@ class EmployeeAdmController extends Controller
     // actualizo los telefonos del empleado
     $this->_empleado->updPhones($employees_adm, json_decode($request->phones));
 
-    // actualizo sus direcciones
-    $this->_addAddresses($dataPerson, $request->parroquias_id, $request->addresses, $request->zona_postal);
+    // actualizo las direcciones del empleado
+    $this->_empleado->updAddresses($employees_adm, json_decode($request->addresses));
 
     // actualizo los datos del administrativos
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id',
@@ -275,21 +275,6 @@ class EmployeeAdmController extends Controller
     $this->_requestResponse->message = 'Empleado Administrativo actualizado!';
 
     return response()->json($this->_requestResponse, Response::HTTP_OK);
-  }
-
-  // agregar las direcciones del empleado
-  private function _addAddresses($person, $parroquias_id, $addresses, $zona_postal)
-  {
-    $_addresses = [];
-    foreach($addresses as $indice => $address) {
-      $_addresses[] = new Address([
-                        'parroquia_id'  => $parroquias_id[$indice],
-                        'address'       => $address,
-                        'zona_postal'   => $zona_postal[$indice]
-                      ]);
-    };
-    $person->addresses()->delete();
-    $person->addresses()->saveMany($_addresses);
   }
 
   // agregar familiares del empleado

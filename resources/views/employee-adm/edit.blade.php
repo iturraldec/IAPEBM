@@ -414,7 +414,7 @@
                           <select id="selectParroquias" class="form-control" title="Ubicación del empleado: Parroquia"></select>
                         </div>
   
-                        <div class="col-6">
+                        <div class="col-4">
                           <div class="input-group">
                             <input type="text"
                                 class="form-control"
@@ -422,6 +422,19 @@
                                 placeholder="Ingresa la dirección"
                                 onkeyup="this.value = this.value.toUpperCase();"
                                 title="Ubicación del empleado: Dirección"
+                            />
+                          </div>
+                        </div>
+
+                        <div class="col-2">
+                          <div class="input-group">
+                            <input type="text"
+                                class="form-control"
+                                id="inputZonaPostal"
+                                value="5101"
+                                maxlength="4"
+                                placeholder="Z.P."
+                                title="Ubicación del empleado: Zona Postal"
                             />
       
                             <div class="input-group-append">
@@ -436,13 +449,12 @@
                           </div>
                         </div>
       
-                        <div class="col-12">
+                        <div class="col-12 mt-1">
                           <table id="addressesDT" class="table table-hover border border-primary">
                             <thead>
                               <tr>
                                 <th scope="col">Estado</th>
                                 <th scope="col">Municipio</th>
-                                <th scope="col">ParroquiaID</th>
                                 <th scope="col">Parroquia</th>
                                 <th scope="col">Dirección</th>
                                 <th scope="col">Z. P.</th>
@@ -1102,54 +1114,29 @@
                   });
 
     ///////////////////////////////////////////////////////////////////
+    // tabla de direcciones
+    ///////////////////////////////////////////////////////////////////
+
+    temp = {{ Js::from($data['person']['fullAddresses']) }};
+
+    var addresses = temp.map(item => {
+                      return {
+                        id            : item.id,
+                        estado        : item.estado,
+                        municipio     : item.municipio,
+                        parroquia_id  : item.parroquia_id,
+                        parroquia     : item.parroquia,
+                        address       : item.address,
+                        zona_postal   : item.zona_postal,
+                        status        : ''
+                      }                
+                    });
+
+    ///////////////////////////////////////////////////////////////////
     // index de fila de tabla al agregar/modificar
     ///////////////////////////////////////////////////////////////////
 
     var datatableRow = -1;
-
-    ///////////////////////////////////////////////////////////////////
-    // tabla de direcciones
-    ///////////////////////////////////////////////////////////////////
-
-    var addressesDT = $('#addressesDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'estado',
-          orderable: false
-        },
-        {
-          data: 'municipio',
-          orderable: false
-        },
-        {
-          data: 'parroquiaId',
-          visible: false
-        },
-        {
-          data: 'parroquia',
-          orderable: false
-        },
-        {
-          data: 'direccion',
-          orderable: false
-        },
-        {
-          data: 'zona_postal',
-          orderable: false,
-          width: "5%"
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
 
     ///////////////////////////////////////////////////////////////////
     // tabla de familiares
@@ -1368,19 +1355,9 @@
       // pintar telefonos
       phonesDraw();
 
-      // direcciones
-      if(addresses.length > 0) {
-        addresses.forEach(item => addressesDT.row.add({
-                                    'estado'      : item.estado,
-                                    'municipio'   : item.municipio,
-                                    'parroquiaId' : item.parroquia_id,
-                                    'parroquia'   : item.parroquia,
-                                    'direccion'   : item.address,
-                                    'zona_postal' : `<input type="text" name="zona_postal[]" value="${item.zona_postal}" maxlength="4" size="4" />`
-                                  }));
-        addressesDT.draw();
-      }
-
+      // pintar direcciones
+      addressesDraw();
+      
       // mascara para el nombre
       $("#inputPNombre").inputmask(lib_characterMask());
       $("#inputSNombre").inputmask(lib_characterMask());
@@ -1608,26 +1585,69 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // pintar la tabla de direcciones
+    ///////////////////////////////////////////////////////////////////
+    
+    function addressesDraw() {
+      $("#addressesDT tbody").empty();
+      addresses.forEach(item => {
+        if(item.status != 'D') {
+          let fila = `<tr>
+                        <td>${item.estado}</td>
+                        <td>${item.municipio}</td>
+                        <td>${item.parroquia}</td>
+                        <td>${item.address}</td>
+                        <td>${item.zona_postal}</td>
+                        <td>
+                          <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                      </tr>`;
+        
+          $('#addressesDT tbody').append(fila);
+        }
+      });
+    };
+
+    ///////////////////////////////////////////////////////////////////
     // agregar direccion
     ///////////////////////////////////////////////////////////////////
 
     $("#btnAddressAdd").click(function() {
-      let address = $("#inputAddress").val();
+      let estado    = $("#selectEstados :selected").val();
+      let municipio = $("#selectMunicipios :selected").val();
+      let parroquia = $("#selectParroquias :selected").val();
+      let address   = $("#inputAddress").val();
+      let zp        = $("#inputZonaPostal").val();
       
-      if(lib_isEmpty(address)) {
+      if(estado == '0') {
+        lib_toastr("Error: Debe seleccionar un Estado!");
+      }
+      else if(municipio == '0') {
+        lib_toastr("Error: Debe seleccionar un Municipio!");
+      }
+      else if(parroquia == '0') {
+        lib_toastr("Error: Debe seleccionar una Parroquia!");
+      }
+      else if(lib_isEmpty(address)) {
         lib_toastr("Error: Debe ingresar una dirección!");
       }
+      else if(lib_isEmpty(zp)) {
+        lib_toastr("Error: Debe ingresar la zona postal de la dirección!");
+      }
       else {
-        addressesDT.row.add({
-          'estado'      : $("#selectEstados :selected").text(),
-          'municipio'   : $("#selectMunicipios :selected").text(),
-          'parroquiaId' : $("#selectParroquias :selected").val(),
-          'parroquia'   : $("#selectParroquias :selected").text(),
-          'direccion'   : address,
-          'zona_postal' : '<input type="text" name="zona_postal[]" value="0000" maxlength="4" size="4" />'
-        })
-        .draw();
+        addresses.push({
+          'id'            : 0,
+          'estado'        : $("#selectEstados :selected").text(),
+          'municipio'     : $("#selectMunicipios :selected").text(),
+          'parroquia_id'  : $("#selectParroquias :selected").val(),
+          'parroquia'     : $("#selectParroquias :selected").text(),
+          'address'       : address,
+          'zona_postal'   : zp,
+          'status'        : 'C'
+        });
+        addressesDraw();
         $("#inputAddress").val("");
+        $("#inputZonaPostal").val("5101");
       }
     });
 
@@ -1635,10 +1655,18 @@
     // eliminar direccion
     ///////////////////////////////////////////////////////////////////
 
-    $("#addressesDT tbody").on("click",".eliminar",function() {
-      addressesDT.row($(this).parents())
-              .remove()
-              .draw();
+    $("#addressesDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let address = fila.find("td").eq(3).text();
+
+      addresses = addresses.map(item => {
+        if(item.address == address) {
+          item.status = 'D';
+        }
+        
+        return item;
+      });
+      addressesDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -2076,8 +2104,7 @@
 
       data.append('emails', JSON.stringify(emails));
       data.append('phones', JSON.stringify(phones));
-      addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
-      addressesDT.column(4).data().each(address => data.append('addresses[]', address));
+      data.append('addresses', JSON.stringify(addresses));
       familiaresDT.column(0).data().each(parentesco_id => data.append('parentesco_id[]', parentesco_id));
       familiaresDT.column(2).data().each(pnombre => data.append('pnombre[]', pnombre));
       familiaresDT.column(3).data().each(snombre => data.append('snombre[]', snombre));

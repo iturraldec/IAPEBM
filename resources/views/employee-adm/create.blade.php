@@ -413,7 +413,7 @@
                           </div>
                         </div>
                       </div>
-    <!-- '<input type="text" name="zona_postal[]" value="0000" maxlength="4" size="4" title="Zona Postal" />' -->
+    
                       <div class="col-12 mt-1">
                         <table id="addressesDT" class="table table-hover border border-primary">
                           <thead>
