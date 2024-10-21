@@ -84,6 +84,31 @@ abstract class EmpleadoAbstract
     }
     return true;
   }
+
+  // actualizacion de los familiares del empleado
+  public function updFamily(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $item) {
+      switch($item->status) {
+        // crear
+        case 'C': 
+          DB::table('familiares')->insert([
+                                'employee_id'       => $empleado->id, 
+                                'parentesco_id'     => $item->parentesco_id,
+                                'first_name'        => $item->first_name,
+                                'second_name'       => $item->second_name,
+                                'first_last_name'   => $item->first_last_name,
+                                'second_last_name'  => $item->second_last_name,
+                              ]);
+          break;
+        // eliminar
+        case 'D' && $item->id > 0:
+          DB::table('familiares')->where('id', $item->id)->delete();
+          break;
+      }
+    }
+    return true;
+  }
   
   //
   public function updEstudios(Employee $empleado, array $data) : bool

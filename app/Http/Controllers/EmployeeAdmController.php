@@ -146,8 +146,8 @@ class EmployeeAdmController extends Controller
       };
     }
 
-    // agrego los datos familiares
-    $this->_addFamiliares($employee, $request);
+    // agrego la familia del empleado
+    $this->_empleado->updFamily($employee, json_decode($request->familiy));
 
     //
     $this->_requestResponse->success = true;
