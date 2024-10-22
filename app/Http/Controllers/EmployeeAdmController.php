@@ -147,7 +147,7 @@ class EmployeeAdmController extends Controller
     }
 
     // agrego la familia del empleado
-    $this->_empleado->updFamily($employee, json_decode($request->familiy));
+    $this->_empleado->updFamily($employee, json_decode($request->family));
 
     //
     $this->_requestResponse->success = true;

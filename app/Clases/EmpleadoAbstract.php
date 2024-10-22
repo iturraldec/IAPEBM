@@ -109,7 +109,7 @@ abstract class EmpleadoAbstract
     }
     return true;
   }
-  
+
   //
   public function updEstudios(Employee $empleado, array $data) : bool
   {
