@@ -56,6 +56,7 @@ class EmployeeAdmUpdateRequest extends FormRequest
             'emails'                => 'required',
             'phones'                => 'required',
             'addresses'             => 'required',
+            'family'                => 'required',
         ];
     }
 }

@@ -83,6 +83,22 @@ class Employee extends Model
     }
 
     //
+    public function familiaresFull() : array
+    {
+        return $this->familiares->map(function ($familiar) {
+            return [
+                'id'                => $familiar->id,
+                'parentesco_id'     => $familiar->parentesco_id,
+                'parentesco'        => $familiar->parentesco,
+                'first_name'        => $familiar->first_name,
+                'second_name'       => $familiar->second_name,
+                'first_last_name'   => $familiar->first_last_name,
+                'second_last_name'  => $familiar->second_last_name,
+            ];
+        })->toArray();
+    }
+
+    //
     public function permisos() : HasMany
     {
         return $this->hasMany(Permiso::class);

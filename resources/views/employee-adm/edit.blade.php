@@ -758,7 +758,6 @@
                     <table id="familiaresDT" class="table table-hover border border-primary" width="100%">
                       <thead class="text-center">
                         <tr>
-                          <th>parentescoId</th>
                           <th>Parentesco</th>
                           <th>Primer Nombre</th>
                           <th>Segundo Nombre</th>
@@ -769,17 +768,6 @@
                       </thead>
         
                       <tbody>
-                        @foreach($data['employee']->familiares as $item)
-                          <tr>
-                            <td>{{ $item->parentesco_id }}</td>
-                            <td>{{ $item->parentesco }}</td>
-                            <td>{{ $item->first_name }}</td>
-                            <td>{{ $item->second_name }}</td>
-                            <td>{{ $item->first_last_name }}</td>
-                            <td>{{ $item->second_last_name }}</td>
-                            <td></td>
-                          </tr>                        
-                        @endforeach
                       </tbody>
                     </table>
                   </div>
@@ -1133,53 +1121,18 @@
                     });
 
     ///////////////////////////////////////////////////////////////////
+    // tabla de familiares
+    ///////////////////////////////////////////////////////////////////
+
+    temp = {{ Js::from($data['employee']->familiaresFull()) }};
+    
+    var familiares = temp.map(item => ({...item, status: ''}));
+
+    ///////////////////////////////////////////////////////////////////
     // index de fila de tabla al agregar/modificar
     ///////////////////////////////////////////////////////////////////
 
     var datatableRow = -1;
-
-    ///////////////////////////////////////////////////////////////////
-    // tabla de familiares
-    ///////////////////////////////////////////////////////////////////
-
-    var familiaresDT = $('#familiaresDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'parentescoId',
-          visible: false
-        },
-        {
-          data: 'parentesco',
-          orderable: false
-        },
-        {
-          data: 'pnombre',
-          orderable: false
-        },
-        {
-          data: 'snombre',
-          orderable: false
-        },
-        {
-          data: 'papellido',
-          orderable: false
-        },
-        {
-          data: 'sapellido',
-          orderable: false
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar familiar"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
 
     ///////////////////////////////////////////////////////////////////
     // tabla de estudios
@@ -1357,6 +1310,9 @@
 
       // pintar direcciones
       addressesDraw();
+
+      // pintar familiares
+      familyDraw();
       
       // mascara para el nombre
       $("#inputPNombre").inputmask(lib_characterMask());
@@ -1424,7 +1380,7 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // pintar la tabla de emails
+    // emails: pintar
     ///////////////////////////////////////////////////////////////////
     
     function emailsDraw() {
@@ -1444,7 +1400,7 @@
     }
 
     ///////////////////////////////////////////////////////////////////
-    // agregar un email
+    // emails: agregar
     ///////////////////////////////////////////////////////////////////
 
     $("#btnEmailAdd").click(function () {
@@ -1461,7 +1417,7 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar un email
+    // emails: eliminar
     ///////////////////////////////////////////////////////////////////
 
     $("#emailsDT tbody").on("click", ".eliminar", function() {
@@ -1479,7 +1435,7 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // pintar la tabla de telefonos
+    // telefonos: pintar
     ///////////////////////////////////////////////////////////////////
     
     function phonesDraw() {
@@ -1500,7 +1456,7 @@
     };
 
     ///////////////////////////////////////////////////////////////////
-    // agregar telefonos
+    // telefonos: agregar
     ///////////////////////////////////////////////////////////////////
 
     $("#btnPhoneAdd").click(function() {
@@ -1527,7 +1483,7 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar un telefono
+    // telefonos: eliminar
     ///////////////////////////////////////////////////////////////////
 
     $("#phonesDT tbody").on("click", ".eliminar", function() {
@@ -1585,7 +1541,7 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // pintar la tabla de direcciones
+    // direcciones: pintar
     ///////////////////////////////////////////////////////////////////
     
     function addressesDraw() {
@@ -1609,7 +1565,7 @@
     };
 
     ///////////////////////////////////////////////////////////////////
-    // agregar direccion
+    // direcciones: agregar
     ///////////////////////////////////////////////////////////////////
 
     $("#btnAddressAdd").click(function() {
@@ -1652,14 +1608,14 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar direccion
+    // direcciones: eliminar
     ///////////////////////////////////////////////////////////////////
 
     $("#addressesDT tbody").on("click", ".eliminar", function() {
       let fila = $(this).closest("tr");
       let address = fila.find("td").eq(3).text();
 
-      addresses = addresses.map(item => {
+      addresses.map(item => {
         if(item.address == address) {
           item.status = 'D';
         }
@@ -1670,27 +1626,31 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // cargar unidades especificas de una unidad general
+    // familiares: pintar
     ///////////////////////////////////////////////////////////////////
-
-    $("#selectUnidad").change(function() {
-      let unidad_id = $(this).val();
-      let ruta = "{{ route('unidades-e.getAll', ['padre_id' => '.valor']) }}";
-
-      ruta = ruta.replace('.valor', unidad_id);
-      fetch(ruta)
-      .then(response => response.json())
-      .then(r => {
-        $("#selectUnidadEspecifica").empty();
-        $("#selectUnidadEspecifica").append('<option value="0">SELECCIONE LA U.O.E.</option>');
-        r.data.forEach(element => {
-          $("#selectUnidadEspecifica").append(`<option value="${element.id}">${element.name}</option>`);
-        });
+    
+    function familyDraw() {
+      $("#familiaresDT tbody").empty();
+      familiares.forEach(item => {
+        if(item.status != 'D') {
+          let fila = `<tr>
+                        <td>${item.parentesco}</td>
+                        <td>${item.first_name}</td>
+                        <td>${item.second_name}</td>
+                        <td>${item.first_last_name}</td>
+                        <td>${item.second_last_name}</td>
+                        <td>
+                          <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                      </tr>`;
+        
+          $('#familiaresDT tbody').append(fila);
+        }
       });
-    });
+    };
 
     ///////////////////////////////////////////////////////////////////
-    // agregar familiar
+    // familiares: agregar
     ///////////////////////////////////////////////////////////////////
 
     $("#btnFamiliarAdd").click(function() {
@@ -1714,15 +1674,16 @@
         ok = false;
       }
       if(ok) {
-        familiaresDT.row.add({
-          'parentescoId'  : parentesco,
-          'parentesco'    : $("#selectParentesco :selected").text(),
-          'pnombre'       : pnombre,
-          'snombre'       : snombre,
-          'papellido'     : papellido,
-          'sapellido'     : sapellido
-        })
-        .draw();
+        familiares.push({
+          'parentesco_id'     : parentesco,
+          'parentesco'        : $("#selectParentesco :selected").text(),
+          'first_name'        : pnombre,
+          'second_name'       : snombre,
+          'first_last_name'   : papellido,
+          'second_last_name'  : sapellido,
+          'status'            : 'C'
+        });
+        familyDraw();
         $("#inputFPNombre").val('');
         $("#inputFSNombre").val('');
         $("#inputFPApellido").val('');
@@ -1731,11 +1692,21 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar familiar
+    // familiares: eliminar
     ///////////////////////////////////////////////////////////////////
 
-    $("#familiaresDT tbody").on("click",".eliminar",function() {
-      familiaresDT.row($(this).parents()).remove().draw();
+    $("#familiaresDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let nombre = fila.find("td").eq(1).text();
+
+      familiares.map(item => {
+        if(item.first_name == nombre) {
+          item.status = 'D';
+        }
+        
+        return item;
+      });
+      familyDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -2095,6 +2066,26 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // cargar unidades especificas de una unidad general
+    ///////////////////////////////////////////////////////////////////
+
+    $("#selectUnidad").change(function() {
+      let unidad_id = $(this).val();
+      let ruta = "{{ route('unidades-e.getAll', ['padre_id' => '.valor']) }}";
+
+      ruta = ruta.replace('.valor', unidad_id);
+      fetch(ruta)
+      .then(response => response.json())
+      .then(r => {
+        $("#selectUnidadEspecifica").empty();
+        $("#selectUnidadEspecifica").append('<option value="0">SELECCIONE LA U.O.E.</option>');
+        r.data.forEach(element => {
+          $("#selectUnidadEspecifica").append(`<option value="${element.id}">${element.name}</option>`);
+        });
+      });
+    });
+
+    ///////////////////////////////////////////////////////////////////
     // actualizar un empleado 
     ///////////////////////////////////////////////////////////////////
 
@@ -2105,11 +2096,7 @@
       data.append('emails', JSON.stringify(emails));
       data.append('phones', JSON.stringify(phones));
       data.append('addresses', JSON.stringify(addresses));
-      familiaresDT.column(0).data().each(parentesco_id => data.append('parentesco_id[]', parentesco_id));
-      familiaresDT.column(2).data().each(pnombre => data.append('pnombre[]', pnombre));
-      familiaresDT.column(3).data().each(snombre => data.append('snombre[]', snombre));
-      familiaresDT.column(4).data().each(papellido => data.append('papellido[]', papellido));
-      familiaresDT.column(5).data().each(sapellido => data.append('sapellido[]', sapellido));
+      data.append('family', JSON.stringify(familiares));
       data.append('estudiosDT', JSON.stringify(estudiosDT.rows().data().toArray()));
       permisosDT.column(0).data().each(desde => data.append('permisos_desde[]', desde));
       permisosDT.column(1).data().each(hasta => data.append('permisos_hasta[]', hasta));
@@ -2129,7 +2116,7 @@
       .then(response => {
         if(response.ok) {
           lib_ShowMensaje("Empleado Administrativo modificado!", 'mensaje')
-          .then(response => window.close());
+          //.then(response => window.close());
         }
         else {
           response.text().then(r => {

@@ -226,9 +226,8 @@ class EmployeeAdmController extends Controller
 
     $employees_adm->update($inputEmployee);
 
-    // actualizo los familiares
-    $employees_adm->familiares()->delete();
-    $this->_addFamiliares($employees_adm, $request);
+    // actualizo los familiares    
+    $this->_empleado->updFamily($employees_adm, json_decode($request->family));
 
     // actualizo estudio
     $this->_empleado->updEstudios($employees_adm, json_decode($request->estudiosDT));
@@ -275,29 +274,6 @@ class EmployeeAdmController extends Controller
     $this->_requestResponse->message = 'Empleado Administrativo actualizado!';
 
     return response()->json($this->_requestResponse, Response::HTTP_OK);
-  }
-
-  // agregar familiares del empleado
-  private function _addFamiliares($employee, $request)
-  {
-    if($request->parentesco_id) {
-      $parentesco_id  = $request->parentesco_id; 
-      $pnombre        = $request->pnombre;
-      $snombre        = $request->snombre;
-      $papellido      = $request->papellido;
-      $sapellido      = $request->sapellido;
-    
-      foreach($parentesco_id as $indice => $item) {
-        Familia::create([
-          'employee_id'       => $employee->id,
-          'parentesco_id'     => $item,
-          'first_name'        => $pnombre[$indice], 
-          'second_name'       => $snombre[$indice], 
-          'first_last_name'   => $papellido[$indice], 
-          'second_last_name'  => $sapellido[$indice]
-        ]);
-      }
-    }
   }
 
   //
