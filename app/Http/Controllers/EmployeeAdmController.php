@@ -81,7 +81,8 @@ class EmployeeAdmController extends Controller
   }
 
   // agregar empleado
-  public function store(EmployeeAdmStoreRequest $request)
+  //public function store(EmployeeAdmStoreRequest $request)
+  public function store(Request $request)
   {
     // agrego los datos personales
     $data_person = $request->only([
@@ -148,6 +149,9 @@ class EmployeeAdmController extends Controller
 
     // agrego la familia del empleado
     $this->_empleado->updFamily($employee, json_decode($request->family));
+
+    // agrego los datos academicos
+    $this->_empleado->updEstudios($employee, json_decode($request->estudios));
 
     //
     $this->_requestResponse->success = true;
@@ -229,8 +233,8 @@ class EmployeeAdmController extends Controller
     // actualizo los familiares    
     $this->_empleado->updFamily($employees_adm, json_decode($request->family));
 
-    // actualizo estudio
-    $this->_empleado->updEstudios($employees_adm, json_decode($request->estudiosDT));
+    // actualizo los datos academicos
+    $this->_empleado->updEstudios($employees_adm, json_decode($request->estudios));
 
     // actualizo sus permisos
     if($request->has('permisos_desde')) {

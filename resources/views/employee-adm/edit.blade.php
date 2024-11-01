@@ -11,13 +11,15 @@
 @endsection
 
 @section('content_header')
-  <div class="col-6">
-    <h4>Editar Datos de Empleado Administrativo</h4>
-  </div>
-
-  <div class="col-6 d-flex justify-content-end">
-    <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
-    <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
+  <div class="row mt-2">
+    <div class="col-6">
+      <h4>Editar Datos de Empleado Administrativo</h4>
+    </div>
+  
+    <div class="col-6 d-flex justify-content-end">
+      <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
+      <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
+    </div>
   </div>
 @endsection
 
@@ -499,7 +501,7 @@
           </div>
           <!-- fin de tab datos personales -->
   
-          <!-- tab datos administrativos -->
+          <!-- tab datos laborales -->
           <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
             <div class="row">
               <div class="col-4 form-group">
@@ -653,7 +655,7 @@
               </div>
             </div>
           </div>
-          <!-- fin de datos administrativos -->
+          <!-- fin de datos laborales -->
   
           <!-- tab datos fisionomicos -->
           <div class="tab-pane fade" id="custom-tabs-one-fisio" role="tabpanel" aria-labelledby="custom-tabs-one-fisio-tab">
@@ -779,52 +781,7 @@
           <!-- fin de datos familiares -->
   
           <!-- datos estudiantiles -->
-          <div class="tab-pane fade" id="custom-tabs-one-estudios" role="tabpanel" aria-labelledby="custom-tabs-one-estudios-tab">
-            <div class="card card-primary">
-              <div class="card-header bg-lightblue">
-                <h3 class="card-title">Estudios del Empleado</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <div class="d-flex justify-content-end">
-                  <button type="button" 
-                          class="btn btn-primary"
-                          id="btnEstudioAdd"
-                  ><i class="fas fa-plus-square"></i> Agregar estudio</button>
-                </div>
-
-                <table id="estudiosDT" class="table table-hover border border-primary text-center" width="100%">
-                  <thead>
-                    <tr>
-                      <th>id</th>
-                      <th>estudio_tipo_id</th>
-                      <th>Tipo</th>
-                      <th>Fecha</th>
-                      <th>Descripción</th>
-                      <th>status</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    @foreach ($data['employee']->estudios as $item)
-                      <tr>
-                        <td>{{ $item->id}}</td>
-                        <td>{{ $item->estudio_type_id }}</td>
-                        <td>{{ $item->tipo->tipo }}</td>
-                        <td>{{ $item->fecha }}</td>
-                        <td>{{ $item->descripcion }}</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    @endforeach
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <!-- /.card-body -->
-          </div>
-          <!-- fin de datos estudiantiles -->
+          @include('common.datos-academicos')
   
           <!-- permisos -->
           <div class="tab-pane fade" id="custom-tabs-one-permisos" role="tabpanel" aria-labelledby="custom-tabs-one-permisos-tab">
@@ -1138,41 +1095,18 @@
     // tabla de estudios
     ///////////////////////////////////////////////////////////////////
 
-    var estudiosDT = $('#estudiosDT').DataTable({
-      info        : false,
-      paging      : false,
-      searching   : false,
-      autofix     : true,
-      rowCallback : function(row, data, index) {
-                      if (data.status == 'D') {
-                        $(row).find('td').each(function() {
-                          $(this).html('<del class="bg-danger">' + $(this).html() + '</del>');
-                        });
-                      }
-                    },
-      columns: [
-        {data: 'id', visible: false},
-        {data: 'estudio_tipo_id', visible: false},
-        {data: 'tipo'},
-        {data: 'fecha'},
-        {data: 'descripcion'},
-        {data: 'status', visible:false},
-        {
-          data: null,
-          orderable: false,
-          render: function ( data, type, row, meta ) {
-            let botones = `
-                  <div class="d-flex flex-row">
-                    <button type="button" class="editar btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></button>
-                    <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar reposo"><i class="fas fa-trash-alt"></i></button>
-                  </div>
-                `;
-            
-            return botones;
-          },
-        }
-      ]
-    });
+    temp = {{ Js::from($data['employee']->estudiosFull()) }};
+
+    var estudios = temp.map(item => {
+                        return {
+                            'id'          : item.id,
+                            'tipo_id'     : item.estudio_type_id,
+                            'tipo'        : item.estudio_type.tipo,
+                            'fecha'       : item.fecha,
+                            'descripcion' : item.descripcion,
+                            'status'      : ''
+                        };
+                    });
 
     ///////////////////////////////////////////////////////////////////
     // tabla de permisos
@@ -1295,7 +1229,7 @@
     ///////////////////////////////////////////////////////////////////
 
     function initForm() {
-      let addresses = {{ Js::from($data['person']['fullAddresses']) }}; // direcciones del empleado
+      let addresses = {{ Js::from($data['person']['fullAddresses']) }};
 
       // configurar 'toastr'
       toastr.options.closeButton = true;
@@ -1313,6 +1247,9 @@
 
       // pintar familiares
       familyDraw();
+
+      // pintar estudios
+      estudiosDraw();
       
       // mascara para el nombre
       $("#inputPNombre").inputmask(lib_characterMask());
@@ -1322,10 +1259,6 @@
 
       // mascara para el numero de telefono
       $("#inputPhone").inputmask(lib_phoneMask());
-
-      // mascara la zona postal
-      // POR REVISAR, COMO ASIGNAR MASCARA A ARRAY
-      //$("#inputZonaPostal[]").inputmask(lib_digitMask());
 
       // notificacion de reposos: mascara del nombre del dr 
       $("#inputReposoNotiNombre").inputmask(lib_characterMask());
@@ -1384,15 +1317,17 @@
     ///////////////////////////////////////////////////////////////////
     
     function emailsDraw() {
+      let fila = '';
+
       $("#emailsDT tbody").empty();
       emails.forEach(item => {
         if(item.status != 'D') {
-          let fila = `<tr>
-                      <td>${item.email}</td>
-                      <td>
-                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
-                      </td>
-                    </tr>`;
+          fila = `<tr>
+                    <td>${item.email}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
       
           $('#emailsDT tbody').append(fila);
         }
@@ -1424,7 +1359,7 @@
       let fila = $(this).closest("tr");
       let correo = fila.find("td").eq(0).text();
 
-      emails = emails.map(item => {
+      emails.forEach(item => {
         if(item.email == correo) {
           item.status = 'D';
         }
@@ -1439,16 +1374,18 @@
     ///////////////////////////////////////////////////////////////////
     
     function phonesDraw() {
+      let fila = '';
+
       $("#phonesDT tbody").empty();
       phones.forEach(item => {
         if(item.status != 'D') {
-          let fila = `<tr>
-                        <td>${item.phone_type}</td>
-                        <td>${item.number}</td>
-                        <td>
-                          <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
-                        </td>
-                      </tr>`;
+          fila = `<tr>
+                      <td>${item.phone_type}</td>
+                      <td>${item.number}</td>
+                      <td>
+                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                      </td>
+                    </tr>`;
         
           $('#phonesDT tbody').append(fila);
         }
@@ -1477,8 +1414,8 @@
           'number'        : numero,
           'status'        : 'C'
         });
-        phonesDraw();
         $("#inputPhone").val("");
+        phonesDraw();
       }
     });
 
@@ -1490,12 +1427,10 @@
       let fila = $(this).closest("tr");
       let numero = fila.find("td").eq(1).text();
 
-      phones = phones.map(item => {
+      phones.forEach(item => {
         if(item.number == numero) {
           item.status = 'D';
         }
-        
-        return item;
       });
       phonesDraw();
     });
@@ -1545,19 +1480,21 @@
     ///////////////////////////////////////////////////////////////////
     
     function addressesDraw() {
+      let fila = '';
+
       $("#addressesDT tbody").empty();
       addresses.forEach(item => {
         if(item.status != 'D') {
-          let fila = `<tr>
-                        <td>${item.estado}</td>
-                        <td>${item.municipio}</td>
-                        <td>${item.parroquia}</td>
-                        <td>${item.address}</td>
-                        <td>${item.zona_postal}</td>
-                        <td>
-                          <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
-                        </td>
-                      </tr>`;
+          fila = `<tr>
+                    <td>${item.estado}</td>
+                    <td>${item.municipio}</td>
+                    <td>${item.parroquia}</td>
+                    <td>${item.address}</td>
+                    <td>${item.zona_postal}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
         
           $('#addressesDT tbody').append(fila);
         }
@@ -1601,9 +1538,9 @@
           'zona_postal'   : zp,
           'status'        : 'C'
         });
-        addressesDraw();
         $("#inputAddress").val("");
         $("#inputZonaPostal").val("5101");
+        addressesDraw();
       }
     });
 
@@ -1615,12 +1552,10 @@
       let fila = $(this).closest("tr");
       let address = fila.find("td").eq(3).text();
 
-      addresses.map(item => {
+      addresses.forEach(item => {
         if(item.address == address) {
           item.status = 'D';
         }
-        
-        return item;
       });
       addressesDraw();
     });
@@ -1630,19 +1565,21 @@
     ///////////////////////////////////////////////////////////////////
     
     function familyDraw() {
+      let fila = '';
+
       $("#familiaresDT tbody").empty();
       familiares.forEach(item => {
         if(item.status != 'D') {
-          let fila = `<tr>
-                        <td>${item.parentesco}</td>
-                        <td>${item.first_name}</td>
-                        <td>${item.second_name}</td>
-                        <td>${item.first_last_name}</td>
-                        <td>${item.second_last_name}</td>
-                        <td>
-                          <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
-                        </td>
-                      </tr>`;
+          fila = `<tr>
+                    <td>${item.parentesco}</td>
+                    <td>${item.first_name}</td>
+                    <td>${item.second_name}</td>
+                    <td>${item.first_last_name}</td>
+                    <td>${item.second_last_name}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
         
           $('#familiaresDT tbody').append(fila);
         }
@@ -1683,11 +1620,11 @@
           'second_last_name'  : sapellido,
           'status'            : 'C'
         });
-        familyDraw();
         $("#inputFPNombre").val('');
         $("#inputFSNombre").val('');
         $("#inputFPApellido").val('');
         $("#inputFSApellido").val('');
+        familyDraw();
       }
     });
 
@@ -1699,91 +1636,74 @@
       let fila = $(this).closest("tr");
       let nombre = fila.find("td").eq(1).text();
 
-      familiares.map(item => {
+      familiares.forEach(item => {
         if(item.first_name == nombre) {
           item.status = 'D';
         }
-        
-        return item;
       });
       familyDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
-    // estudio: agregar
+    // estudios: pintar
     ///////////////////////////////////////////////////////////////////
+    
+    function estudiosDraw() {
+      let fila = '';
 
-    $("#btnEstudioAdd").click(function() {
-      datatableRow = -1;
-      $("#estudioModalTitle").html("Agregar grado académico");
-      $("#selectEstudioTipo").val("0");
-      $('#inputEstudioFecha').val('');
-      $('#inputEstudioDescripcion').val('');
-      $("#estudioModal").modal("show");
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // estudio: editar
-    ///////////////////////////////////////////////////////////////////
-
-    $("#estudiosDT tbody").on("click", ".editar", function() {
-      let data = estudiosDT.row($(this).parents()).data();
-
-      datatableRow = estudiosDT.row($(this).parents('tr')).index();
-      $('#reposoModalTitle').html('Editar estudio');
-      $("#selectEstudioTipo").val(data.estudio_tipo_id);
-      $('#inputEstudioFecha').val(data.fecha);
-      $('#inputEstudioDescripcion').val(data.descripcion);
-      $('#estudioModal').modal('show');
-    });
+      $("#estudiosDT tbody").empty();
+      estudios.forEach(item => {
+        if(item.status != 'D') {
+          fila = `<tr>
+                    <td>${item.tipo}</td>
+                    <td>${item.fecha}</td>
+                    <td>${item.descripcion}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
+        
+          $('#estudiosDT tbody').append(fila);
+        }
+      });
+    };
 
     ///////////////////////////////////////////////////////////////////
-    // estudio: salvar en tabla
+    // estudios: agregar
     ///////////////////////////////////////////////////////////////////
 
-    $("#btnEstudioAceptar").click(function() {
+    $("#btnEstudiosAdd").click(function() {
       let ok = true;
-
-      if($("#selectEstudioTipo").val() == '0') {
-        ok = false;
+      let tipo = $("#selectEstudioTipo").val();
+      let fecha = $("#inputEstudioFecha").val();
+      let descripcion = $("#inputEstudioDescripcion").val();
+      
+      if(tipo == '0') {
         lib_toastr("Error: Debe seleccionar el tipo de estudio!");
-      }
-
-      if(lib_isEmpty($('#inputEstudioFecha').val())) {
         ok = false;
-        lib_toastr("Error: Debe ingresar la fecha de obtención del titulo!");
+      }
+      if(lib_isEmpty(fecha)) {
+        lib_toastr("Error: Debe ingresar la fecha del titulo!");
+        ok = false;
+      }
+      if(lib_isEmpty(descripcion)) {
+        lib_toastr("Error: Debe ingresar una descripción del titulo!");
+        ok = false;
       }
       
-      if(lib_isEmpty($('#inputEstudioDescripcion').val())) {
-        ok = false;
-        lib_toastr("Error: Debe ingresar la descripción del titulo!");
-      }
-
       if(ok) {
-        if(datatableRow == -1) {
-          estudiosDT.row.add({
-            'id'              : '0',
-            'estudio_tipo_id' : $('#selectEstudioTipo :selected').val(),
-            'tipo'            : $('#selectEstudioTipo :selected').text(),
-            'fecha'           : $('#inputEstudioFecha').val(),
-            'descripcion'     : $('#inputEstudioDescripcion').val(),
-            'status'          : 'C',
-          })
-          .draw();
-        }
-        else {
-          let id = estudiosDT.row(datatableRow).data().id;
-
-          estudiosDT.row(datatableRow).data({
-            'id'              : id,
-            'estudio_tipo_id' : $('#selectEstudioTipo :selected').val(),
-            'tipo'            : $('#selectEstudioTipo :selected').text(),
-            'fecha'           : $('#inputEstudioFecha').val(),
-            'descripcion'     : $('#inputEstudioDescripcion').val(),
-            'status'          : 'U',
-          }).draw();
-        }
-        $('#estudioModal').modal('hide');
+        estudios.push({
+          'id'          : 0,
+          'tipo_id'     : tipo,
+          'tipo'        : $("#selectEstudioTipo :selected").text(),
+          'fecha'       : fecha,
+          'descripcion' : descripcion,
+          'status'      : 'C'
+        });
+        $("#selectEstudioTipo").val('0');
+        $("#inputEstudioFecha").val('');
+        $("#inputEstudioDescripcion").val('');
+        estudiosDraw();
       }
     });
 
@@ -1791,14 +1711,19 @@
     // estudios: eliminar
     ///////////////////////////////////////////////////////////////////
 
-    $("#estudiosDT tbody").on("click",".eliminar",function() {
-      let row = estudiosDT.row($(this).parents());
-      let data = row.data();
+    $("#estudiosDT tbody").on("click", ".eliminar", function() {
+      console.log('aqui');
+      let fila = $(this).closest("tr");
+      let descripcion = fila.find("td").eq(2).text();
 
-      data.status = 'D';
-      row.data(data);
-      estudiosDT.draw();
+      estudios.forEach(item => {
+          if(item.descripcion == descripcion) {
+            item.status = 'D';
+          }
+      });
+      estudiosDraw();
     });
+
 
     ///////////////////////////////////////////////////////////////////
     // agregar permisos
@@ -2097,7 +2022,7 @@
       data.append('phones', JSON.stringify(phones));
       data.append('addresses', JSON.stringify(addresses));
       data.append('family', JSON.stringify(familiares));
-      data.append('estudiosDT', JSON.stringify(estudiosDT.rows().data().toArray()));
+      data.append('estudios', JSON.stringify(estudios));
       permisosDT.column(0).data().each(desde => data.append('permisos_desde[]', desde));
       permisosDT.column(1).data().each(hasta => data.append('permisos_hasta[]', hasta));
       permisosDT.column(2).data().each(motivo => data.append('permisos_motivo[]', motivo));

@@ -8,6 +8,7 @@ use App\Models\Person;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\EmpleadoEstudio;
 
 //
 class Employee extends Model
@@ -99,14 +100,20 @@ class Employee extends Model
     }
 
     //
-    public function permisos() : HasMany
-    {
-        return $this->hasMany(Permiso::class);
-    }
-
-    //
     public function estudios() : HasMany
     {
         return $this->hasMany(EmpleadoEstudio::class);
+    }
+
+    //
+    public function estudiosFull()
+    {
+        return EmpleadoEstudio::where('employee_id', $this->id)->with('estudioType')->get();
+    }
+
+    //
+    public function permisos() : HasMany
+    {
+        return $this->hasMany(Permiso::class);
     }
 }

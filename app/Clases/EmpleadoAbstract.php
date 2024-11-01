@@ -114,29 +114,20 @@ abstract class EmpleadoAbstract
   public function updEstudios(Employee $empleado, array $data) : bool
   {
     foreach($data as $estudio) {
-      if($estudio->id == '0' && $estudio->status != 'D') {
-        DB::table('empleado_estudios')->insert([
-                      'employee_id'     => $empleado->id,
-                      'estudio_type_id' => $estudio->estudio_tipo_id,
-                      'fecha'           => $estudio->fecha,
-                      'descripcion'     => $estudio->descripcion,
-        ]);
+      switch($estudio->status) {
+        case 'C': 
+          DB::table('empleado_estudios')->insert([
+            'employee_id'     => $empleado->id,
+            'estudio_type_id' => $estudio->tipo_id,
+            'fecha'           => $estudio->fecha,
+            'descripcion'     => $estudio->descripcion,
+          ]);
+          break;
+        case 'D' && $estudio->id > 0:
+           DB::table('empleado_estudios')->where('id', $estudio->id)->delete();
+          break;
+        }
       }
-      else if($estudio->status == 'U') {
-        DB::table('empleado_estudios')
-          ->where('id', $estudio->id)
-          ->update([
-              'employee_id'     => $empleado->id,
-              'estudio_type_id' => $estudio->estudio_tipo_id,
-              'fecha'           => $estudio->fecha,
-              'descripcion'     => $estudio->descripcion,
-          ]
-        );
-      }
-      else if($estudio->status == 'D' && $estudio->id != '0') {
-        EmpleadoEstudio::find($estudio->id)->delete();
-      }
-    }
 
     return true;
   }
