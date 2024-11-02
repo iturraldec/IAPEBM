@@ -11,7 +11,7 @@
 @endsection
 
 @section('content_header')
-  <div class="row mt-2">
+  <div class="row m-2">
     <div class="col-6">
       <h4>Editar Datos de Empleado Administrativo</h4>
     </div>
@@ -24,6 +24,7 @@
 @endsection
 
 @section('content')
+<div class="row m-2">
   <div class="col-12">
     <!-- inicio de card -->
     <div class="card card-primary card-tabs">
@@ -783,80 +784,8 @@
           <!-- datos estudiantiles -->
           @include('common.datos-academicos')
   
-          <!-- permisos -->
-          <div class="tab-pane fade" id="custom-tabs-one-permisos" role="tabpanel" aria-labelledby="custom-tabs-one-permisos-tab">
-            <div class="card card-primary">
-              <div class="card-header bg-lightblue">
-                <h3 class="card-title">Permisos del Empleado</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-2 form-group">
-                    <label for="inputPermisoDesde">Desde*</label>
-                    <input type="date" 
-                          class="form-control" 
-                          id="inputPermisoDesde" 
-                          value="{{ date('Y-m-d') }}"
-                          title="Fecha inicial del permiso"
-                    />
-                  </div>
-  
-                  <div class="col-2 form-group">
-                    <label for="inputPermisoHasta">Hasta*</label>
-                    <input type="date" 
-                          class="form-control" 
-                          id="inputPermisoHasta"
-                          value="{{ date('Y-m-d') }}"
-                          title="Fecha final del permiso"
-                    />
-                  </div>
-  
-                  <div class="col-8 form-group">
-                    <label for="inputPermisoMotivo">Motivo</label>
-                    <div class="input-group">
-                      <input type="text" 
-                            class="form-control" 
-                            id="inputPermisoMotivo"
-                            placeholder="Ingrese el motivo"
-                            onkeyup="this.value = this.value.toUpperCase();"
-                            title="Motivo del permiso"
-                      />
-  
-                      <div class="input-group-append">
-                        <div id="btnPermisoAdd" class="input-group-text" title="Agregar permiso"><i class="fas fa-plus-square"></i></div>
-                      </div>
-                    </div>
-                  </div>
-  
-                  <div class="col-12">
-                    <table id="permisosDT" class="table table-hover border border-primary" width="100%">
-                      <thead class="text-center">
-                        <tr>
-                          <th>Desde</th>
-                          <th>Hasta</th>
-                          <th>Motivo</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-        
-                      <tbody>
-                        @foreach ($data['employee']->permisos as $permiso)
-                          <tr>
-                            <td>{{ $permiso->desde }}</td>
-                            <td>{{ $permiso->hasta }}</td>
-                            <td>{{ $permiso->motivo }}</td>
-                          </tr>
-                        @endforeach
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-          </div>
-          <!-- fin de permisos -->
+          <!-- datos de los permisos -->
+          @include('common.datos-permisos')
   
           <!-- reposos -->
           <div class="tab-pane fade" id="custom-tabs-one-reposos" role="tabpanel" aria-labelledby="custom-tabs-one-reposos-tab">
@@ -1019,7 +948,7 @@
     @include('employee-adm.reposos')
 
   </div>
-
+</div>
 @endsection
 
 @section('js')
@@ -1112,30 +1041,17 @@
     // tabla de permisos
     ///////////////////////////////////////////////////////////////////
 
-    var permisosDT = $('#permisosDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'desde',
-        },
-        {
-          data: 'hasta',
-        },
-        {
-          data: 'motivo',
-          orderable: false,
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar permiso"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false,
-        }
-      ]
-    });
+    temp = {{ Js::from($data['employee']->permisos) }};
+
+    var permisos = temp.map(item => {
+                        return {
+                            'id'      : item.id,
+                            'desde'   : item.desde,
+                            'hasta'   : item.hasta,
+                            'motivo'  : item.motivo,
+                            'status'  : ''
+                        };
+                    });
 
     ///////////////////////////////////////////////////////////////////
     // tabla de reposos
@@ -1250,6 +1166,9 @@
 
       // pintar estudios
       estudiosDraw();
+
+      // pintar permisos
+      permisosDraw();
       
       // mascara para el nombre
       $("#inputPNombre").inputmask(lib_characterMask());
@@ -1712,7 +1631,6 @@
     ///////////////////////////////////////////////////////////////////
 
     $("#estudiosDT tbody").on("click", ".eliminar", function() {
-      console.log('aqui');
       let fila = $(this).closest("tr");
       let descripcion = fila.find("td").eq(2).text();
 
@@ -1724,42 +1642,82 @@
       estudiosDraw();
     });
 
+    ///////////////////////////////////////////////////////////////////
+    // permisos: pintar
+    ///////////////////////////////////////////////////////////////////
+    
+    function permisosDraw() {
+      let fila = '';
+
+      $("#permisosDT tbody").empty();
+      permisos.forEach(item => {
+        if(item.status != 'D') {
+          fila = `<tr>
+                    <td>${item.desde}</td>
+                    <td>${item.hasta}</td>
+                    <td>${item.motivo}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
+        
+          $('#permisosDT tbody').append(fila);
+        }
+      });
+    };
 
     ///////////////////////////////////////////////////////////////////
-    // agregar permisos
+    // permisos: agregar
     ///////////////////////////////////////////////////////////////////
 
     $("#btnPermisoAdd").click(function() {
-      let desde   = $("#inputPermisoDesde").val();
-      let hasta   = $("#inputPermisoHasta").val();
-      let motivo  = $("#inputPermisoMotivo").val();
+      let ok = true;
+      let desde = $("#inputPermisoDesde").val();
+      let hasta = $("#inputPermisoHasta").val();
+      let motivo = $("#inputPermisoMotivo").val();
       
       if(lib_isEmpty(desde)) {
         lib_toastr("Error: Debe ingresar la fecha de inicio del permiso!");
+        ok = false;
       }
-      else if(lib_isEmpty(hasta)) {
-        lib_toastr("Error: Debe ingresar la fecha de finalizacion del permiso!");
+      if(lib_isEmpty(hasta)) {
+        lib_toastr("Error: Debe ingresar la fecha final del permiso!");
+        ok = false;
       }
-      else if(lib_isEmpty(motivo)) {
+      if(lib_isEmpty(motivo)) {
         lib_toastr("Error: Debe ingresar el motivo del permiso!");
+        ok = false;
       }
-      else {
-        permisosDT.row.add({
-          'desde'       : desde,
-          'hasta'       : hasta,
-          'motivo'     : motivo
-        })
-        .draw();
-        $("#inputPermisoMotivo").val("");
+      
+      if(ok) {
+        permisos.push({
+          'id'      : 0,
+          'desde'   : desde,
+          'hasta'   : hasta,
+          'motivo'  : motivo,
+          'status'  : 'C'
+        });
+        $("#inputPermisoDesde").val('');
+        $("#inputPermisoHasta").val('');
+        $("#inputPermisoMotivo").val('');
+        permisosDraw();
       }
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar permisos
+    // permisos: eliminar
     ///////////////////////////////////////////////////////////////////
 
-    $("#permisosDT tbody").on("click",".eliminar",function() {
-      permisosDT.row($(this).parents()).remove().draw();
+    $("#permisosDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let motivo = fila.find("td").eq(2).text();
+
+      permisos.forEach(item => {
+          if(item.motivo == motivo) {
+            item.status = 'D';
+          }
+      });
+      permisosDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -2023,9 +1981,7 @@
       data.append('addresses', JSON.stringify(addresses));
       data.append('family', JSON.stringify(familiares));
       data.append('estudios', JSON.stringify(estudios));
-      permisosDT.column(0).data().each(desde => data.append('permisos_desde[]', desde));
-      permisosDT.column(1).data().each(hasta => data.append('permisos_hasta[]', hasta));
-      permisosDT.column(2).data().each(motivo => data.append('permisos_motivo[]', motivo));
+      data.append('permisos', JSON.stringify(permisos));
       data.append('repososDT', JSON.stringify(repososDT.rows().data().toArray()));
       vacacionesDT.column(0).data().each(desde => data.append('vacaciones_desde[]', desde));
       vacacionesDT.column(1).data().each(hasta => data.append('vacaciones_hasta[]', hasta));

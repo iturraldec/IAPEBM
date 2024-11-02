@@ -135,17 +135,23 @@ abstract class EmpleadoAbstract
   //
   public function updPermisos(Employee $empleado, array $data) : bool
   {
-    $empleado->permisos()->delete();
-    $permisos = [];
-    foreach($data['permisos_desde'] as $indice => $desde) {
-      $permisos[] = [
-        'employee_id' => $empleado->id,
-        'desde'       => $desde,
-        'hasta'       => $data['permisos_hasta'][$indice],
-        'motivo'      => $data['permisos_motivo'][$indice],
-      ];
-    }
-    return DB::table('permisos')->insert($permisos);
+    foreach($data as $permiso) {
+      switch($permiso->status) {
+        case 'C': 
+          DB::table('permisos')->insert([
+            'employee_id' => $empleado->id,
+            'desde'       => $permiso->desde,
+            'hasta'       => $permiso->hasta,
+            'motivo'      => $permiso->motivo,
+          ]);
+          break;
+        case 'D' && $permiso->id > 0:
+           DB::table('permisos')->where('id', $permiso->id)->delete();
+          break;
+        }
+      }
+
+    return true;
   }
 
   //

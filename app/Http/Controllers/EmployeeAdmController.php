@@ -236,10 +236,8 @@ class EmployeeAdmController extends Controller
     // actualizo los datos academicos
     $this->_empleado->updEstudios($employees_adm, json_decode($request->estudios));
 
-    // actualizo sus permisos
-    if($request->has('permisos_desde')) {
-      $this->_empleado->updPermisos($employees_adm, $request->only(['permisos_desde', 'permisos_hasta', 'permisos_motivo']));
-    }
+    // actualizo los datos academicos
+    $this->_empleado->updPermisos($employees_adm, json_decode($request->permisos));
 
     // actualizo reposos
     $this->_empleado->updReposos($employees_adm, json_decode($request->repososDT));
