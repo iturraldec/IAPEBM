@@ -205,6 +205,28 @@ abstract class EmpleadoAbstract
   }
 
   //
+  public function updVacaciones(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $item) {
+      switch($item->status) {
+        case 'C': 
+          DB::table('vacaciones')->insert([
+            'employee_id' => $empleado->id,
+            'desde'       => $item->desde,
+            'hasta'       => $item->hasta,
+            'periodo'     => $item->periodo,
+          ]);
+          break;
+        case 'D' && $item->id > 0:
+           DB::table('vacaciones')->where('id', $item->id)->delete();
+          break;
+        }
+      }
+
+    return true;
+  }
+
+  //
   static public function GetByCedula(string $cedula)
   {
     return Employee::with('person')->whereRelation('person', 'cedula', $cedula)->first();

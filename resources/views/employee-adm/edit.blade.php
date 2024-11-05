@@ -858,80 +858,7 @@
           <!-- fin de reposos -->
   
           <!-- datos vacaciones -->
-          <div class="tab-pane fade" id="custom-tabs-one-vacaciones" role="tabpanel" aria-labelledby="custom-tabs-one-vacaciones-tab">
-            <div class="card card-primary">
-              <div class="card-header bg-lightblue">
-                <h3 class="card-title">Vacaciones del Empleado</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-2 form-group">
-                    <label for="inputVacacionDesde">Desde*</label>
-                    <input type="date" 
-                          class="form-control" 
-                          id="inputVacacionDesde" 
-                          value="{{ date('Y-d-m') }}"
-                          title="Fecha inicial de las vacaciónes"
-                    />
-                  </div>
-  
-                  <div class="col-2 form-group">
-                    <label for="inputVacacionHasta">Hasta*</label>
-                    <input type="date" 
-                          class="form-control" 
-                          id="inputVacacionHasta"
-                          value="{{ date('Y-d-m') }}"
-                          title="Fecha final de las vacaciones"
-                    />
-                  </div>
-  
-                  <div class="col-8 form-group">
-                    <label>Periodo*</label>
-                      <div class="input-group">
-                          <input type="text" 
-                                class="form-control" 
-                                id="inputVacacionPeriodo" 
-                                placeholder="Ingrese periodo de las vacaciones"
-                                onkeyup="this.value = this.value.toUpperCase();"
-                                title="Periodo de las vacaciones"
-                          >
-  
-                          <div class="input-group-append">
-                              <div id="btnVacacionAdd" class="input-group-text" title="Agregar vacación"><i class="fas fa-plus-square"></i></div>
-                          </div>
-                      </div>
-                  </div>
-  
-                  <div class="col-12">
-                    <table id="vacacionesDT" class="table table-hover border border-primary" width="100%">
-                      <thead class="text-center">
-                        <tr>
-                          <th scope="col">Desde</th>
-                          <th scope="col">Hasta</th>
-                          <th scope="col">Periodo</th>
-                          <th scope="col"></th>
-                        </tr>
-                      </thead>
-        
-                      <tbody>
-                        @foreach ($data['employee']->vacaciones as $vacacion)
-                          <tr>
-                            <td>{{ $vacacion->desde }}</td>
-                            <td>{{ $vacacion->hasta }}</td>
-                            <td>{{ $vacacion->periodo }}</td>
-                            <td></td>
-                          </tr>
-                        @endforeach
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-          </div>
-          <!-- fin de vacaciones -->
+          @include('common.datos-vacaciones')
   
         </div>
         <!-- fin de tab -->
@@ -940,9 +867,6 @@
       <!-- fin de card-body -->  
     </div>
     <!-- fin de card -->
-
-    <!-- modal de estudios -->
-    @include('common.modal-estudio')
 
     <!-- modal de reposos -->
     @include('employee-adm.reposos')
@@ -1108,34 +1032,17 @@
     // tabla de vacaciones
     ///////////////////////////////////////////////////////////////////
 
-    var vacacionesDT = $('#vacacionesDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'desde',
-          width: '10%'
-        },
-        {
-          data: 'hasta',
-          width: '10%'
-        },
-        {
-          data: 'periodo',
-          width: '70%',
-          orderable: false,
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar vacación"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false,
-          width: '10%'
-        }
-      ]
-    });
+    temp = {{ Js::from($data['employee']->vacaciones) }};
+
+    var vacaciones = temp.map(item => {
+                        return {
+                            'id'      : item.id,
+                            'desde'   : item.desde,
+                            'hasta'   : item.hasta,
+                            'periodo' : item.periodo,
+                            'status'  : ''
+                        };
+                    });
 
     // iniciamos el formulario
     initForm();
@@ -1166,6 +1073,9 @@
 
       // pintar estudios
       estudiosDraw();
+
+      // pintar vacaciones
+      vacacionesDraw();
 
       // pintar permisos
       permisosDraw();
@@ -1911,41 +1821,82 @@
       repososDT.draw();
     });
 
+    ////////////////////////////////////////////////////////////////////
+    // vacaciones: pintar
     ///////////////////////////////////////////////////////////////////
-    // agregar vacaciones
+    
+    function vacacionesDraw() {
+      let fila = '';
+
+      $("#vacacionesDT tbody").empty();
+        vacaciones.forEach(item => {
+        if(item.status != 'D') {
+          fila = `<tr>
+                    <td>${item.desde}</td>
+                    <td>${item.hasta}</td>
+                    <td>${item.periodo}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
+        
+          $('#vacacionesDT tbody').append(fila);
+        }
+      });
+    };
+
+    ///////////////////////////////////////////////////////////////////
+    // vacaciones: agregar
     ///////////////////////////////////////////////////////////////////
 
-    $("#btnVacacionAdd").click(function() {
-      let desde   = $("#inputVacacionDesde").val();
-      let hasta   = $("#inputVacacionHasta").val();
-      let periodo  = $("#inputVacacionPeriodo").val();
+    $("#btnVacacionesAdd").click(function() {
+      let ok = true;
+      let desde = $("#inputVacacionDesde").val();
+      let hasta = $("#inputVacacionHasta").val();
+      let periodo = $("#inputVacacionPeriodo").val();
       
       if(lib_isEmpty(desde)) {
-        lib_toastr("Error: Debe ingresar la fecha de inicio de las vacaciones!");
+        lib_toastr("Error: Debe ingresar la fecha de inicio del permiso!");
+        ok = false;
       }
-      else if(lib_isEmpty(hasta)) {
-        lib_toastr("Error: Debe ingresar la fecha de finalizacion de las vacaciones!");
+      if(lib_isEmpty(hasta)) {
+        lib_toastr("Error: Debe ingresar la fecha final del permiso!");
+        ok = false;
       }
-      else if(lib_isEmpty(periodo)) {
+      if(lib_isEmpty(periodo)) {
         lib_toastr("Error: Debe ingresar el periodo de las vacaciones!");
+        ok = false;
       }
-      else {
-        vacacionesDT.row.add({
+      
+      if(ok) {
+        vacaciones.push({
+          'id'      : 0,
           'desde'   : desde,
           'hasta'   : hasta,
-          'periodo'  : periodo
-        })
-        .draw();
-        $("#inputVacacionPeriodo").val("");
+          'periodo'  : periodo,
+          'status'  : 'C'
+        });
+        $("#inputVacacionDesde").val('');
+        $("#inputVacacionHasta").val('');
+        $("#inputVacacionPeriodo").val('');
+        vacacionesDraw();
       }
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar vacaciones
+    // vacaciones: eliminar
     ///////////////////////////////////////////////////////////////////
 
-    $("#vacacionesDT tbody").on("click",".eliminar",function() {
-      vacacionesDT.row($(this).parents()).remove().draw();
+    $("#vacacionesDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let periodo = fila.find("td").eq(2).text();
+
+      vacaciones.forEach(item => {
+          if(item.periodo == periodo) {
+            item.status = 'D';
+          }
+      });
+      vacacionesDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -1983,9 +1934,7 @@
       data.append('estudios', JSON.stringify(estudios));
       data.append('permisos', JSON.stringify(permisos));
       data.append('repososDT', JSON.stringify(repososDT.rows().data().toArray()));
-      vacacionesDT.column(0).data().each(desde => data.append('vacaciones_desde[]', desde));
-      vacacionesDT.column(1).data().each(hasta => data.append('vacaciones_hasta[]', hasta));
-      vacacionesDT.column(2).data().each(periodo => data.append('vacaciones_periodo[]', periodo));
+      data.append('vacaciones', JSON.stringify(vacaciones));
       
       fetch(ruta, {
         headers: {
@@ -1997,7 +1946,7 @@
       .then(response => {
         if(response.ok) {
           lib_ShowMensaje("Empleado Administrativo modificado!", 'mensaje')
-          //.then(response => window.close());
+          .then(response => window.close());
         }
         else {
           response.text().then(r => {

@@ -242,20 +242,8 @@ class EmployeeAdmController extends Controller
     // actualizo reposos
     $this->_empleado->updReposos($employees_adm, json_decode($request->repososDT));
 
-    // actualizo sus vacaciones
-    $employees_adm->vacaciones()->delete();
-    if($request->has('vacaciones_desde')) {
-      $vacaciones = [];
-      foreach($request->vacaciones_desde as $indice => $desde) {
-        $vacaciones[] = new Vacacione([
-                            'employee_id' => $employees_adm->id,
-                            'desde'       => $desde,
-                            'hasta'       => $request->vacaciones_hasta[$indice],
-                            'periodo'     => $request->vacaciones_periodo[$indice],
-                        ]);
-      };
-      $employees_adm->vacaciones()->saveMany($vacaciones);
-    };
+    // actualizo las vacaciones
+    $this->_empleado->updVacaciones($employees_adm, json_decode($request->vacaciones));
 
     // actualizo los datos fisionomicos
     $fisionomia_id = $request->fisionomia_id;
