@@ -17,13 +17,13 @@ class Familia extends Model
   protected $fillable = ['employee_id', 'parentesco_id', 'first_name', 'second_name', 'first_last_name', 'second_last_name'];
 
   // empleado
-  public function empleado() : BelongsTo
+  public function employee() : BelongsTo
   {
     return $this->belongsTo(Employee::class);
   }
 
   //
-  protected function Parentesco() : Attribute
+  protected function parentesco() : Attribute
   {
       return new Attribute(
           get: fn () => ParentescoEnum::from($this->parentesco_id)->label(),

@@ -11,17 +11,20 @@
 @endsection
 
 @section('content_header')
-  <div class="col-6">
-    <h4>Editar Datos de Empleado Administrativo</h4>
-  </div>
-
-  <div class="col-6 d-flex justify-content-end">
-    <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
-    <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
+  <div class="row m-2">
+    <div class="col-6">
+      <h4>Editar Datos de Empleado Administrativo</h4>
+    </div>
+  
+    <div class="col-6 d-flex justify-content-end">
+      <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
+      <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
+    </div>
   </div>
 @endsection
 
 @section('content')
+<div class="row m-2">
   <div class="col-12">
     <!-- inicio de card -->
     <div class="card card-primary card-tabs">
@@ -414,7 +417,7 @@
                           <select id="selectParroquias" class="form-control" title="Ubicación del empleado: Parroquia"></select>
                         </div>
   
-                        <div class="col-6">
+                        <div class="col-4">
                           <div class="input-group">
                             <input type="text"
                                 class="form-control"
@@ -422,6 +425,19 @@
                                 placeholder="Ingresa la dirección"
                                 onkeyup="this.value = this.value.toUpperCase();"
                                 title="Ubicación del empleado: Dirección"
+                            />
+                          </div>
+                        </div>
+
+                        <div class="col-2">
+                          <div class="input-group">
+                            <input type="text"
+                                class="form-control"
+                                id="inputZonaPostal"
+                                value="5101"
+                                maxlength="4"
+                                placeholder="Z.P."
+                                title="Ubicación del empleado: Zona Postal"
                             />
       
                             <div class="input-group-append">
@@ -436,13 +452,12 @@
                           </div>
                         </div>
       
-                        <div class="col-12">
+                        <div class="col-12 mt-1">
                           <table id="addressesDT" class="table table-hover border border-primary">
                             <thead>
                               <tr>
                                 <th scope="col">Estado</th>
                                 <th scope="col">Municipio</th>
-                                <th scope="col">ParroquiaID</th>
                                 <th scope="col">Parroquia</th>
                                 <th scope="col">Dirección</th>
                                 <th scope="col">Z. P.</th>
@@ -487,7 +502,7 @@
           </div>
           <!-- fin de tab datos personales -->
   
-          <!-- tab datos administrativos -->
+          <!-- tab datos laborales -->
           <div class="tab-pane fade" id="custom-tabs-one-admin" role="tabpanel" aria-labelledby="custom-tabs-one-admin-tab">
             <div class="row">
               <div class="col-4 form-group">
@@ -641,7 +656,7 @@
               </div>
             </div>
           </div>
-          <!-- fin de datos administrativos -->
+          <!-- fin de datos laborales -->
   
           <!-- tab datos fisionomicos -->
           <div class="tab-pane fade" id="custom-tabs-one-fisio" role="tabpanel" aria-labelledby="custom-tabs-one-fisio-tab">
@@ -746,7 +761,6 @@
                     <table id="familiaresDT" class="table table-hover border border-primary" width="100%">
                       <thead class="text-center">
                         <tr>
-                          <th>parentescoId</th>
                           <th>Parentesco</th>
                           <th>Primer Nombre</th>
                           <th>Segundo Nombre</th>
@@ -757,17 +771,6 @@
                       </thead>
         
                       <tbody>
-                        @foreach($data['employee']->familiares as $item)
-                          <tr>
-                            <td>{{ $item->parentesco_id }}</td>
-                            <td>{{ $item->parentesco }}</td>
-                            <td>{{ $item->first_name }}</td>
-                            <td>{{ $item->second_name }}</td>
-                            <td>{{ $item->first_last_name }}</td>
-                            <td>{{ $item->second_last_name }}</td>
-                            <td></td>
-                          </tr>                        
-                        @endforeach
                       </tbody>
                     </table>
                   </div>
@@ -779,127 +782,10 @@
           <!-- fin de datos familiares -->
   
           <!-- datos estudiantiles -->
-          <div class="tab-pane fade" id="custom-tabs-one-estudios" role="tabpanel" aria-labelledby="custom-tabs-one-estudios-tab">
-            <div class="card card-primary">
-              <div class="card-header bg-lightblue">
-                <h3 class="card-title">Estudios del Empleado</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <div class="d-flex justify-content-end">
-                  <button type="button" 
-                          class="btn btn-primary"
-                          id="btnEstudioAdd"
-                  ><i class="fas fa-plus-square"></i> Agregar estudio</button>
-                </div>
-
-                <table id="estudiosDT" class="table table-hover border border-primary text-center" width="100%">
-                  <thead>
-                    <tr>
-                      <th>id</th>
-                      <th>estudio_tipo_id</th>
-                      <th>Tipo</th>
-                      <th>Fecha</th>
-                      <th>Descripción</th>
-                      <th>status</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    @foreach ($data['employee']->estudios as $item)
-                      <tr>
-                        <td>{{ $item->id}}</td>
-                        <td>{{ $item->estudio_type_id }}</td>
-                        <td>{{ $item->tipo->tipo }}</td>
-                        <td>{{ $item->fecha }}</td>
-                        <td>{{ $item->descripcion }}</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    @endforeach
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <!-- /.card-body -->
-          </div>
-          <!-- fin de datos estudiantiles -->
+          @include('common.datos-academicos')
   
-          <!-- permisos -->
-          <div class="tab-pane fade" id="custom-tabs-one-permisos" role="tabpanel" aria-labelledby="custom-tabs-one-permisos-tab">
-            <div class="card card-primary">
-              <div class="card-header bg-lightblue">
-                <h3 class="card-title">Permisos del Empleado</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-2 form-group">
-                    <label for="inputPermisoDesde">Desde*</label>
-                    <input type="date" 
-                          class="form-control" 
-                          id="inputPermisoDesde" 
-                          value="{{ date('Y-m-d') }}"
-                          title="Fecha inicial del permiso"
-                    />
-                  </div>
-  
-                  <div class="col-2 form-group">
-                    <label for="inputPermisoHasta">Hasta*</label>
-                    <input type="date" 
-                          class="form-control" 
-                          id="inputPermisoHasta"
-                          value="{{ date('Y-m-d') }}"
-                          title="Fecha final del permiso"
-                    />
-                  </div>
-  
-                  <div class="col-8 form-group">
-                    <label for="inputPermisoMotivo">Motivo</label>
-                    <div class="input-group">
-                      <input type="text" 
-                            class="form-control" 
-                            id="inputPermisoMotivo"
-                            placeholder="Ingrese el motivo"
-                            onkeyup="this.value = this.value.toUpperCase();"
-                            title="Motivo del permiso"
-                      />
-  
-                      <div class="input-group-append">
-                        <div id="btnPermisoAdd" class="input-group-text" title="Agregar permiso"><i class="fas fa-plus-square"></i></div>
-                      </div>
-                    </div>
-                  </div>
-  
-                  <div class="col-12">
-                    <table id="permisosDT" class="table table-hover border border-primary" width="100%">
-                      <thead class="text-center">
-                        <tr>
-                          <th>Desde</th>
-                          <th>Hasta</th>
-                          <th>Motivo</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-        
-                      <tbody>
-                        @foreach ($data['employee']->permisos as $permiso)
-                          <tr>
-                            <td>{{ $permiso->desde }}</td>
-                            <td>{{ $permiso->hasta }}</td>
-                            <td>{{ $permiso->motivo }}</td>
-                          </tr>
-                        @endforeach
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-          </div>
-          <!-- fin de permisos -->
+          <!-- datos de los permisos -->
+          @include('common.datos-permisos')
   
           <!-- reposos -->
           <div class="tab-pane fade" id="custom-tabs-one-reposos" role="tabpanel" aria-labelledby="custom-tabs-one-reposos-tab">
@@ -972,80 +858,7 @@
           <!-- fin de reposos -->
   
           <!-- datos vacaciones -->
-          <div class="tab-pane fade" id="custom-tabs-one-vacaciones" role="tabpanel" aria-labelledby="custom-tabs-one-vacaciones-tab">
-            <div class="card card-primary">
-              <div class="card-header bg-lightblue">
-                <h3 class="card-title">Vacaciones del Empleado</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-2 form-group">
-                    <label for="inputVacacionDesde">Desde*</label>
-                    <input type="date" 
-                          class="form-control" 
-                          id="inputVacacionDesde" 
-                          value="{{ date('Y-d-m') }}"
-                          title="Fecha inicial de las vacaciónes"
-                    />
-                  </div>
-  
-                  <div class="col-2 form-group">
-                    <label for="inputVacacionHasta">Hasta*</label>
-                    <input type="date" 
-                          class="form-control" 
-                          id="inputVacacionHasta"
-                          value="{{ date('Y-d-m') }}"
-                          title="Fecha final de las vacaciones"
-                    />
-                  </div>
-  
-                  <div class="col-8 form-group">
-                    <label>Periodo*</label>
-                      <div class="input-group">
-                          <input type="text" 
-                                class="form-control" 
-                                id="inputVacacionPeriodo" 
-                                placeholder="Ingrese periodo de las vacaciones"
-                                onkeyup="this.value = this.value.toUpperCase();"
-                                title="Periodo de las vacaciones"
-                          >
-  
-                          <div class="input-group-append">
-                              <div id="btnVacacionAdd" class="input-group-text" title="Agregar vacación"><i class="fas fa-plus-square"></i></div>
-                          </div>
-                      </div>
-                  </div>
-  
-                  <div class="col-12">
-                    <table id="vacacionesDT" class="table table-hover border border-primary" width="100%">
-                      <thead class="text-center">
-                        <tr>
-                          <th scope="col">Desde</th>
-                          <th scope="col">Hasta</th>
-                          <th scope="col">Periodo</th>
-                          <th scope="col"></th>
-                        </tr>
-                      </thead>
-        
-                      <tbody>
-                        @foreach ($data['employee']->vacaciones as $vacacion)
-                          <tr>
-                            <td>{{ $vacacion->desde }}</td>
-                            <td>{{ $vacacion->hasta }}</td>
-                            <td>{{ $vacacion->periodo }}</td>
-                            <td></td>
-                          </tr>
-                        @endforeach
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-          </div>
-          <!-- fin de vacaciones -->
+          @include('common.datos-vacaciones')
   
         </div>
         <!-- fin de tab -->
@@ -1055,14 +868,11 @@
     </div>
     <!-- fin de card -->
 
-    <!-- modal de estudios -->
-    @include('common.modal-estudio')
-
     <!-- modal de reposos -->
     @include('employee-adm.reposos')
 
   </div>
-
+</div>
 @endsection
 
 @section('js')
@@ -1102,166 +912,70 @@
                   });
 
     ///////////////////////////////////////////////////////////////////
+    // tabla de direcciones
+    ///////////////////////////////////////////////////////////////////
+
+    temp = {{ Js::from($data['person']['fullAddresses']) }};
+
+    var addresses = temp.map(item => {
+                      return {
+                        id            : item.id,
+                        estado        : item.estado,
+                        municipio     : item.municipio,
+                        parroquia_id  : item.parroquia_id,
+                        parroquia     : item.parroquia,
+                        address       : item.address,
+                        zona_postal   : item.zona_postal,
+                        status        : ''
+                      }                
+                    });
+
+    ///////////////////////////////////////////////////////////////////
+    // tabla de familiares
+    ///////////////////////////////////////////////////////////////////
+
+    temp = {{ Js::from($data['employee']->familiaresFull()) }};
+    
+    var familiares = temp.map(item => ({...item, status: ''}));
+
+    ///////////////////////////////////////////////////////////////////
     // index de fila de tabla al agregar/modificar
     ///////////////////////////////////////////////////////////////////
 
     var datatableRow = -1;
 
     ///////////////////////////////////////////////////////////////////
-    // tabla de direcciones
-    ///////////////////////////////////////////////////////////////////
-
-    var addressesDT = $('#addressesDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'estado',
-          orderable: false
-        },
-        {
-          data: 'municipio',
-          orderable: false
-        },
-        {
-          data: 'parroquiaId',
-          visible: false
-        },
-        {
-          data: 'parroquia',
-          orderable: false
-        },
-        {
-          data: 'direccion',
-          orderable: false
-        },
-        {
-          data: 'zona_postal',
-          orderable: false,
-          width: "5%"
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // tabla de familiares
-    ///////////////////////////////////////////////////////////////////
-
-    var familiaresDT = $('#familiaresDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'parentescoId',
-          visible: false
-        },
-        {
-          data: 'parentesco',
-          orderable: false
-        },
-        {
-          data: 'pnombre',
-          orderable: false
-        },
-        {
-          data: 'snombre',
-          orderable: false
-        },
-        {
-          data: 'papellido',
-          orderable: false
-        },
-        {
-          data: 'sapellido',
-          orderable: false
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar familiar"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
-
-    ///////////////////////////////////////////////////////////////////
     // tabla de estudios
     ///////////////////////////////////////////////////////////////////
 
-    var estudiosDT = $('#estudiosDT').DataTable({
-      info        : false,
-      paging      : false,
-      searching   : false,
-      autofix     : true,
-      rowCallback : function(row, data, index) {
-                      if (data.status == 'D') {
-                        $(row).find('td').each(function() {
-                          $(this).html('<del class="bg-danger">' + $(this).html() + '</del>');
-                        });
-                      }
-                    },
-      columns: [
-        {data: 'id', visible: false},
-        {data: 'estudio_tipo_id', visible: false},
-        {data: 'tipo'},
-        {data: 'fecha'},
-        {data: 'descripcion'},
-        {data: 'status', visible:false},
-        {
-          data: null,
-          orderable: false,
-          render: function ( data, type, row, meta ) {
-            let botones = `
-                  <div class="d-flex flex-row">
-                    <button type="button" class="editar btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></button>
-                    <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar reposo"><i class="fas fa-trash-alt"></i></button>
-                  </div>
-                `;
-            
-            return botones;
-          },
-        }
-      ]
-    });
+    temp = {{ Js::from($data['employee']->estudiosFull()) }};
+
+    var estudios = temp.map(item => {
+                        return {
+                            'id'          : item.id,
+                            'tipo_id'     : item.estudio_type_id,
+                            'tipo'        : item.estudio_type.tipo,
+                            'fecha'       : item.fecha,
+                            'descripcion' : item.descripcion,
+                            'status'      : ''
+                        };
+                    });
 
     ///////////////////////////////////////////////////////////////////
     // tabla de permisos
     ///////////////////////////////////////////////////////////////////
 
-    var permisosDT = $('#permisosDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'desde',
-        },
-        {
-          data: 'hasta',
-        },
-        {
-          data: 'motivo',
-          orderable: false,
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar permiso"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false,
-        }
-      ]
-    });
+    temp = {{ Js::from($data['employee']->permisos) }};
+
+    var permisos = temp.map(item => {
+                        return {
+                            'id'      : item.id,
+                            'desde'   : item.desde,
+                            'hasta'   : item.hasta,
+                            'motivo'  : item.motivo,
+                            'status'  : ''
+                        };
+                    });
 
     ///////////////////////////////////////////////////////////////////
     // tabla de reposos
@@ -1318,34 +1032,17 @@
     // tabla de vacaciones
     ///////////////////////////////////////////////////////////////////
 
-    var vacacionesDT = $('#vacacionesDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'desde',
-          width: '10%'
-        },
-        {
-          data: 'hasta',
-          width: '10%'
-        },
-        {
-          data: 'periodo',
-          width: '70%',
-          orderable: false,
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar vacación"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false,
-          width: '10%'
-        }
-      ]
-    });
+    temp = {{ Js::from($data['employee']->vacaciones) }};
+
+    var vacaciones = temp.map(item => {
+                        return {
+                            'id'      : item.id,
+                            'desde'   : item.desde,
+                            'hasta'   : item.hasta,
+                            'periodo' : item.periodo,
+                            'status'  : ''
+                        };
+                    });
 
     // iniciamos el formulario
     initForm();
@@ -1355,7 +1052,7 @@
     ///////////////////////////////////////////////////////////////////
 
     function initForm() {
-      let addresses = {{ Js::from($data['person']['fullAddresses']) }}; // direcciones del empleado
+      let addresses = {{ Js::from($data['person']['fullAddresses']) }};
 
       // configurar 'toastr'
       toastr.options.closeButton = true;
@@ -1368,19 +1065,21 @@
       // pintar telefonos
       phonesDraw();
 
-      // direcciones
-      if(addresses.length > 0) {
-        addresses.forEach(item => addressesDT.row.add({
-                                    'estado'      : item.estado,
-                                    'municipio'   : item.municipio,
-                                    'parroquiaId' : item.parroquia_id,
-                                    'parroquia'   : item.parroquia,
-                                    'direccion'   : item.address,
-                                    'zona_postal' : `<input type="text" name="zona_postal[]" value="${item.zona_postal}" maxlength="4" size="4" />`
-                                  }));
-        addressesDT.draw();
-      }
+      // pintar direcciones
+      addressesDraw();
 
+      // pintar familiares
+      familyDraw();
+
+      // pintar estudios
+      estudiosDraw();
+
+      // pintar vacaciones
+      vacacionesDraw();
+
+      // pintar permisos
+      permisosDraw();
+      
       // mascara para el nombre
       $("#inputPNombre").inputmask(lib_characterMask());
       $("#inputSNombre").inputmask(lib_characterMask());
@@ -1389,10 +1088,6 @@
 
       // mascara para el numero de telefono
       $("#inputPhone").inputmask(lib_phoneMask());
-
-      // mascara la zona postal
-      // POR REVISAR, COMO ASIGNAR MASCARA A ARRAY
-      //$("#inputZonaPostal[]").inputmask(lib_digitMask());
 
       // notificacion de reposos: mascara del nombre del dr 
       $("#inputReposoNotiNombre").inputmask(lib_characterMask());
@@ -1447,19 +1142,21 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // pintar la tabla de emails
+    // emails: pintar
     ///////////////////////////////////////////////////////////////////
     
     function emailsDraw() {
+      let fila = '';
+
       $("#emailsDT tbody").empty();
       emails.forEach(item => {
         if(item.status != 'D') {
-          let fila = `<tr>
-                      <td>${item.email}</td>
-                      <td>
-                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
-                      </td>
-                    </tr>`;
+          fila = `<tr>
+                    <td>${item.email}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
       
           $('#emailsDT tbody').append(fila);
         }
@@ -1467,7 +1164,7 @@
     }
 
     ///////////////////////////////////////////////////////////////////
-    // agregar un email
+    // emails: agregar
     ///////////////////////////////////////////////////////////////////
 
     $("#btnEmailAdd").click(function () {
@@ -1484,14 +1181,14 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar un email
+    // emails: eliminar
     ///////////////////////////////////////////////////////////////////
 
     $("#emailsDT tbody").on("click", ".eliminar", function() {
       let fila = $(this).closest("tr");
       let correo = fila.find("td").eq(0).text();
 
-      emails = emails.map(item => {
+      emails.forEach(item => {
         if(item.email == correo) {
           item.status = 'D';
         }
@@ -1502,20 +1199,22 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // pintar la tabla de telefonos
+    // telefonos: pintar
     ///////////////////////////////////////////////////////////////////
     
     function phonesDraw() {
+      let fila = '';
+
       $("#phonesDT tbody").empty();
       phones.forEach(item => {
         if(item.status != 'D') {
-          let fila = `<tr>
-                        <td>${item.phone_type}</td>
-                        <td>${item.number}</td>
-                        <td>
-                          <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
-                        </td>
-                      </tr>`;
+          fila = `<tr>
+                      <td>${item.phone_type}</td>
+                      <td>${item.number}</td>
+                      <td>
+                        <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                      </td>
+                    </tr>`;
         
           $('#phonesDT tbody').append(fila);
         }
@@ -1523,7 +1222,7 @@
     };
 
     ///////////////////////////////////////////////////////////////////
-    // agregar telefonos
+    // telefonos: agregar
     ///////////////////////////////////////////////////////////////////
 
     $("#btnPhoneAdd").click(function() {
@@ -1544,25 +1243,23 @@
           'number'        : numero,
           'status'        : 'C'
         });
-        phonesDraw();
         $("#inputPhone").val("");
+        phonesDraw();
       }
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar un telefono
+    // telefonos: eliminar
     ///////////////////////////////////////////////////////////////////
 
     $("#phonesDT tbody").on("click", ".eliminar", function() {
       let fila = $(this).closest("tr");
       let numero = fila.find("td").eq(1).text();
 
-      phones = phones.map(item => {
+      phones.forEach(item => {
         if(item.number == numero) {
           item.status = 'D';
         }
-        
-        return item;
       });
       phonesDraw();
     });
@@ -1608,61 +1305,118 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // agregar direccion
+    // direcciones: pintar
+    ///////////////////////////////////////////////////////////////////
+    
+    function addressesDraw() {
+      let fila = '';
+
+      $("#addressesDT tbody").empty();
+      addresses.forEach(item => {
+        if(item.status != 'D') {
+          fila = `<tr>
+                    <td>${item.estado}</td>
+                    <td>${item.municipio}</td>
+                    <td>${item.parroquia}</td>
+                    <td>${item.address}</td>
+                    <td>${item.zona_postal}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
+        
+          $('#addressesDT tbody').append(fila);
+        }
+      });
+    };
+
+    ///////////////////////////////////////////////////////////////////
+    // direcciones: agregar
     ///////////////////////////////////////////////////////////////////
 
     $("#btnAddressAdd").click(function() {
-      let address = $("#inputAddress").val();
+      let estado    = $("#selectEstados :selected").val();
+      let municipio = $("#selectMunicipios :selected").val();
+      let parroquia = $("#selectParroquias :selected").val();
+      let address   = $("#inputAddress").val();
+      let zp        = $("#inputZonaPostal").val();
       
-      if(lib_isEmpty(address)) {
+      if(estado == '0') {
+        lib_toastr("Error: Debe seleccionar un Estado!");
+      }
+      else if(municipio == '0') {
+        lib_toastr("Error: Debe seleccionar un Municipio!");
+      }
+      else if(parroquia == '0') {
+        lib_toastr("Error: Debe seleccionar una Parroquia!");
+      }
+      else if(lib_isEmpty(address)) {
         lib_toastr("Error: Debe ingresar una dirección!");
       }
+      else if(lib_isEmpty(zp)) {
+        lib_toastr("Error: Debe ingresar la zona postal de la dirección!");
+      }
       else {
-        addressesDT.row.add({
-          'estado'      : $("#selectEstados :selected").text(),
-          'municipio'   : $("#selectMunicipios :selected").text(),
-          'parroquiaId' : $("#selectParroquias :selected").val(),
-          'parroquia'   : $("#selectParroquias :selected").text(),
-          'direccion'   : address,
-          'zona_postal' : '<input type="text" name="zona_postal[]" value="0000" maxlength="4" size="4" />'
-        })
-        .draw();
+        addresses.push({
+          'id'            : 0,
+          'estado'        : $("#selectEstados :selected").text(),
+          'municipio'     : $("#selectMunicipios :selected").text(),
+          'parroquia_id'  : $("#selectParroquias :selected").val(),
+          'parroquia'     : $("#selectParroquias :selected").text(),
+          'address'       : address,
+          'zona_postal'   : zp,
+          'status'        : 'C'
+        });
         $("#inputAddress").val("");
+        $("#inputZonaPostal").val("5101");
+        addressesDraw();
       }
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar direccion
+    // direcciones: eliminar
     ///////////////////////////////////////////////////////////////////
 
-    $("#addressesDT tbody").on("click",".eliminar",function() {
-      addressesDT.row($(this).parents())
-              .remove()
-              .draw();
-    });
+    $("#addressesDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let address = fila.find("td").eq(3).text();
 
-    ///////////////////////////////////////////////////////////////////
-    // cargar unidades especificas de una unidad general
-    ///////////////////////////////////////////////////////////////////
-
-    $("#selectUnidad").change(function() {
-      let unidad_id = $(this).val();
-      let ruta = "{{ route('unidades-e.getAll', ['padre_id' => '.valor']) }}";
-
-      ruta = ruta.replace('.valor', unidad_id);
-      fetch(ruta)
-      .then(response => response.json())
-      .then(r => {
-        $("#selectUnidadEspecifica").empty();
-        $("#selectUnidadEspecifica").append('<option value="0">SELECCIONE LA U.O.E.</option>');
-        r.data.forEach(element => {
-          $("#selectUnidadEspecifica").append(`<option value="${element.id}">${element.name}</option>`);
-        });
+      addresses.forEach(item => {
+        if(item.address == address) {
+          item.status = 'D';
+        }
       });
+      addressesDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
-    // agregar familiar
+    // familiares: pintar
+    ///////////////////////////////////////////////////////////////////
+    
+    function familyDraw() {
+      let fila = '';
+
+      $("#familiaresDT tbody").empty();
+      familiares.forEach(item => {
+        if(item.status != 'D') {
+          fila = `<tr>
+                    <td>${item.parentesco}</td>
+                    <td>${item.first_name}</td>
+                    <td>${item.second_name}</td>
+                    <td>${item.first_last_name}</td>
+                    <td>${item.second_last_name}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
+        
+          $('#familiaresDT tbody').append(fila);
+        }
+      });
+    };
+
+    ///////////////////////////////////////////////////////////////////
+    // familiares: agregar
     ///////////////////////////////////////////////////////////////////
 
     $("#btnFamiliarAdd").click(function() {
@@ -1686,105 +1440,99 @@
         ok = false;
       }
       if(ok) {
-        familiaresDT.row.add({
-          'parentescoId'  : parentesco,
-          'parentesco'    : $("#selectParentesco :selected").text(),
-          'pnombre'       : pnombre,
-          'snombre'       : snombre,
-          'papellido'     : papellido,
-          'sapellido'     : sapellido
-        })
-        .draw();
+        familiares.push({
+          'parentesco_id'     : parentesco,
+          'parentesco'        : $("#selectParentesco :selected").text(),
+          'first_name'        : pnombre,
+          'second_name'       : snombre,
+          'first_last_name'   : papellido,
+          'second_last_name'  : sapellido,
+          'status'            : 'C'
+        });
         $("#inputFPNombre").val('');
         $("#inputFSNombre").val('');
         $("#inputFPApellido").val('');
         $("#inputFSApellido").val('');
+        familyDraw();
       }
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar familiar
+    // familiares: eliminar
     ///////////////////////////////////////////////////////////////////
 
-    $("#familiaresDT tbody").on("click",".eliminar",function() {
-      familiaresDT.row($(this).parents()).remove().draw();
+    $("#familiaresDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let nombre = fila.find("td").eq(1).text();
+
+      familiares.forEach(item => {
+        if(item.first_name == nombre) {
+          item.status = 'D';
+        }
+      });
+      familyDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
-    // estudio: agregar
+    // estudios: pintar
     ///////////////////////////////////////////////////////////////////
+    
+    function estudiosDraw() {
+      let fila = '';
 
-    $("#btnEstudioAdd").click(function() {
-      datatableRow = -1;
-      $("#estudioModalTitle").html("Agregar grado académico");
-      $("#selectEstudioTipo").val("0");
-      $('#inputEstudioFecha').val('');
-      $('#inputEstudioDescripcion').val('');
-      $("#estudioModal").modal("show");
-    });
-
-    ///////////////////////////////////////////////////////////////////
-    // estudio: editar
-    ///////////////////////////////////////////////////////////////////
-
-    $("#estudiosDT tbody").on("click", ".editar", function() {
-      let data = estudiosDT.row($(this).parents()).data();
-
-      datatableRow = estudiosDT.row($(this).parents('tr')).index();
-      $('#reposoModalTitle').html('Editar estudio');
-      $("#selectEstudioTipo").val(data.estudio_tipo_id);
-      $('#inputEstudioFecha').val(data.fecha);
-      $('#inputEstudioDescripcion').val(data.descripcion);
-      $('#estudioModal').modal('show');
-    });
+      $("#estudiosDT tbody").empty();
+      estudios.forEach(item => {
+        if(item.status != 'D') {
+          fila = `<tr>
+                    <td>${item.tipo}</td>
+                    <td>${item.fecha}</td>
+                    <td>${item.descripcion}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
+        
+          $('#estudiosDT tbody').append(fila);
+        }
+      });
+    };
 
     ///////////////////////////////////////////////////////////////////
-    // estudio: salvar en tabla
+    // estudios: agregar
     ///////////////////////////////////////////////////////////////////
 
-    $("#btnEstudioAceptar").click(function() {
+    $("#btnEstudiosAdd").click(function() {
       let ok = true;
-
-      if($("#selectEstudioTipo").val() == '0') {
-        ok = false;
+      let tipo = $("#selectEstudioTipo").val();
+      let fecha = $("#inputEstudioFecha").val();
+      let descripcion = $("#inputEstudioDescripcion").val();
+      
+      if(tipo == '0') {
         lib_toastr("Error: Debe seleccionar el tipo de estudio!");
-      }
-
-      if(lib_isEmpty($('#inputEstudioFecha').val())) {
         ok = false;
-        lib_toastr("Error: Debe ingresar la fecha de obtención del titulo!");
+      }
+      if(lib_isEmpty(fecha)) {
+        lib_toastr("Error: Debe ingresar la fecha del titulo!");
+        ok = false;
+      }
+      if(lib_isEmpty(descripcion)) {
+        lib_toastr("Error: Debe ingresar una descripción del titulo!");
+        ok = false;
       }
       
-      if(lib_isEmpty($('#inputEstudioDescripcion').val())) {
-        ok = false;
-        lib_toastr("Error: Debe ingresar la descripción del titulo!");
-      }
-
       if(ok) {
-        if(datatableRow == -1) {
-          estudiosDT.row.add({
-            'id'              : '0',
-            'estudio_tipo_id' : $('#selectEstudioTipo :selected').val(),
-            'tipo'            : $('#selectEstudioTipo :selected').text(),
-            'fecha'           : $('#inputEstudioFecha').val(),
-            'descripcion'     : $('#inputEstudioDescripcion').val(),
-            'status'          : 'C',
-          })
-          .draw();
-        }
-        else {
-          let id = estudiosDT.row(datatableRow).data().id;
-
-          estudiosDT.row(datatableRow).data({
-            'id'              : id,
-            'estudio_tipo_id' : $('#selectEstudioTipo :selected').val(),
-            'tipo'            : $('#selectEstudioTipo :selected').text(),
-            'fecha'           : $('#inputEstudioFecha').val(),
-            'descripcion'     : $('#inputEstudioDescripcion').val(),
-            'status'          : 'U',
-          }).draw();
-        }
-        $('#estudioModal').modal('hide');
+        estudios.push({
+          'id'          : 0,
+          'tipo_id'     : tipo,
+          'tipo'        : $("#selectEstudioTipo :selected").text(),
+          'fecha'       : fecha,
+          'descripcion' : descripcion,
+          'status'      : 'C'
+        });
+        $("#selectEstudioTipo").val('0');
+        $("#inputEstudioFecha").val('');
+        $("#inputEstudioDescripcion").val('');
+        estudiosDraw();
       }
     });
 
@@ -1792,50 +1540,94 @@
     // estudios: eliminar
     ///////////////////////////////////////////////////////////////////
 
-    $("#estudiosDT tbody").on("click",".eliminar",function() {
-      let row = estudiosDT.row($(this).parents());
-      let data = row.data();
+    $("#estudiosDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let descripcion = fila.find("td").eq(2).text();
 
-      data.status = 'D';
-      row.data(data);
-      estudiosDT.draw();
+      estudios.forEach(item => {
+          if(item.descripcion == descripcion) {
+            item.status = 'D';
+          }
+      });
+      estudiosDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
-    // agregar permisos
+    // permisos: pintar
+    ///////////////////////////////////////////////////////////////////
+    
+    function permisosDraw() {
+      let fila = '';
+
+      $("#permisosDT tbody").empty();
+      permisos.forEach(item => {
+        if(item.status != 'D') {
+          fila = `<tr>
+                    <td>${item.desde}</td>
+                    <td>${item.hasta}</td>
+                    <td>${item.motivo}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
+        
+          $('#permisosDT tbody').append(fila);
+        }
+      });
+    };
+
+    ///////////////////////////////////////////////////////////////////
+    // permisos: agregar
     ///////////////////////////////////////////////////////////////////
 
     $("#btnPermisoAdd").click(function() {
-      let desde   = $("#inputPermisoDesde").val();
-      let hasta   = $("#inputPermisoHasta").val();
-      let motivo  = $("#inputPermisoMotivo").val();
+      let ok = true;
+      let desde = $("#inputPermisoDesde").val();
+      let hasta = $("#inputPermisoHasta").val();
+      let motivo = $("#inputPermisoMotivo").val();
       
       if(lib_isEmpty(desde)) {
         lib_toastr("Error: Debe ingresar la fecha de inicio del permiso!");
+        ok = false;
       }
-      else if(lib_isEmpty(hasta)) {
-        lib_toastr("Error: Debe ingresar la fecha de finalizacion del permiso!");
+      if(lib_isEmpty(hasta)) {
+        lib_toastr("Error: Debe ingresar la fecha final del permiso!");
+        ok = false;
       }
-      else if(lib_isEmpty(motivo)) {
+      if(lib_isEmpty(motivo)) {
         lib_toastr("Error: Debe ingresar el motivo del permiso!");
+        ok = false;
       }
-      else {
-        permisosDT.row.add({
-          'desde'       : desde,
-          'hasta'       : hasta,
-          'motivo'     : motivo
-        })
-        .draw();
-        $("#inputPermisoMotivo").val("");
+      
+      if(ok) {
+        permisos.push({
+          'id'      : 0,
+          'desde'   : desde,
+          'hasta'   : hasta,
+          'motivo'  : motivo,
+          'status'  : 'C'
+        });
+        $("#inputPermisoDesde").val('');
+        $("#inputPermisoHasta").val('');
+        $("#inputPermisoMotivo").val('');
+        permisosDraw();
       }
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar permisos
+    // permisos: eliminar
     ///////////////////////////////////////////////////////////////////
 
-    $("#permisosDT tbody").on("click",".eliminar",function() {
-      permisosDT.row($(this).parents()).remove().draw();
+    $("#permisosDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let motivo = fila.find("td").eq(2).text();
+
+      permisos.forEach(item => {
+          if(item.motivo == motivo) {
+            item.status = 'D';
+          }
+      });
+      permisosDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -2029,41 +1821,102 @@
       repososDT.draw();
     });
 
+    ////////////////////////////////////////////////////////////////////
+    // vacaciones: pintar
     ///////////////////////////////////////////////////////////////////
-    // agregar vacaciones
+    
+    function vacacionesDraw() {
+      let fila = '';
+
+      $("#vacacionesDT tbody").empty();
+        vacaciones.forEach(item => {
+        if(item.status != 'D') {
+          fila = `<tr>
+                    <td>${item.desde}</td>
+                    <td>${item.hasta}</td>
+                    <td>${item.periodo}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
+        
+          $('#vacacionesDT tbody').append(fila);
+        }
+      });
+    };
+
+    ///////////////////////////////////////////////////////////////////
+    // vacaciones: agregar
     ///////////////////////////////////////////////////////////////////
 
-    $("#btnVacacionAdd").click(function() {
-      let desde   = $("#inputVacacionDesde").val();
-      let hasta   = $("#inputVacacionHasta").val();
-      let periodo  = $("#inputVacacionPeriodo").val();
+    $("#btnVacacionesAdd").click(function() {
+      let ok = true;
+      let desde = $("#inputVacacionDesde").val();
+      let hasta = $("#inputVacacionHasta").val();
+      let periodo = $("#inputVacacionPeriodo").val();
       
       if(lib_isEmpty(desde)) {
-        lib_toastr("Error: Debe ingresar la fecha de inicio de las vacaciones!");
+        lib_toastr("Error: Debe ingresar la fecha de inicio del permiso!");
+        ok = false;
       }
-      else if(lib_isEmpty(hasta)) {
-        lib_toastr("Error: Debe ingresar la fecha de finalizacion de las vacaciones!");
+      if(lib_isEmpty(hasta)) {
+        lib_toastr("Error: Debe ingresar la fecha final del permiso!");
+        ok = false;
       }
-      else if(lib_isEmpty(periodo)) {
+      if(lib_isEmpty(periodo)) {
         lib_toastr("Error: Debe ingresar el periodo de las vacaciones!");
+        ok = false;
       }
-      else {
-        vacacionesDT.row.add({
+      
+      if(ok) {
+        vacaciones.push({
+          'id'      : 0,
           'desde'   : desde,
           'hasta'   : hasta,
-          'periodo'  : periodo
-        })
-        .draw();
-        $("#inputVacacionPeriodo").val("");
+          'periodo'  : periodo,
+          'status'  : 'C'
+        });
+        $("#inputVacacionDesde").val('');
+        $("#inputVacacionHasta").val('');
+        $("#inputVacacionPeriodo").val('');
+        vacacionesDraw();
       }
     });
 
     ///////////////////////////////////////////////////////////////////
-    // eliminar vacaciones
+    // vacaciones: eliminar
     ///////////////////////////////////////////////////////////////////
 
-    $("#vacacionesDT tbody").on("click",".eliminar",function() {
-      vacacionesDT.row($(this).parents()).remove().draw();
+    $("#vacacionesDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let periodo = fila.find("td").eq(2).text();
+
+      vacaciones.forEach(item => {
+          if(item.periodo == periodo) {
+            item.status = 'D';
+          }
+      });
+      vacacionesDraw();
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    // cargar unidades especificas de una unidad general
+    ///////////////////////////////////////////////////////////////////
+
+    $("#selectUnidad").change(function() {
+      let unidad_id = $(this).val();
+      let ruta = "{{ route('unidades-e.getAll', ['padre_id' => '.valor']) }}";
+
+      ruta = ruta.replace('.valor', unidad_id);
+      fetch(ruta)
+      .then(response => response.json())
+      .then(r => {
+        $("#selectUnidadEspecifica").empty();
+        $("#selectUnidadEspecifica").append('<option value="0">SELECCIONE LA U.O.E.</option>');
+        r.data.forEach(element => {
+          $("#selectUnidadEspecifica").append(`<option value="${element.id}">${element.name}</option>`);
+        });
+      });
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -2076,21 +1929,12 @@
 
       data.append('emails', JSON.stringify(emails));
       data.append('phones', JSON.stringify(phones));
-      addressesDT.column(2).data().each(parroquia_id => data.append('parroquias_id[]', parroquia_id));
-      addressesDT.column(4).data().each(address => data.append('addresses[]', address));
-      familiaresDT.column(0).data().each(parentesco_id => data.append('parentesco_id[]', parentesco_id));
-      familiaresDT.column(2).data().each(pnombre => data.append('pnombre[]', pnombre));
-      familiaresDT.column(3).data().each(snombre => data.append('snombre[]', snombre));
-      familiaresDT.column(4).data().each(papellido => data.append('papellido[]', papellido));
-      familiaresDT.column(5).data().each(sapellido => data.append('sapellido[]', sapellido));
-      data.append('estudiosDT', JSON.stringify(estudiosDT.rows().data().toArray()));
-      permisosDT.column(0).data().each(desde => data.append('permisos_desde[]', desde));
-      permisosDT.column(1).data().each(hasta => data.append('permisos_hasta[]', hasta));
-      permisosDT.column(2).data().each(motivo => data.append('permisos_motivo[]', motivo));
+      data.append('addresses', JSON.stringify(addresses));
+      data.append('family', JSON.stringify(familiares));
+      data.append('estudios', JSON.stringify(estudios));
+      data.append('permisos', JSON.stringify(permisos));
       data.append('repososDT', JSON.stringify(repososDT.rows().data().toArray()));
-      vacacionesDT.column(0).data().each(desde => data.append('vacaciones_desde[]', desde));
-      vacacionesDT.column(1).data().each(hasta => data.append('vacaciones_hasta[]', hasta));
-      vacacionesDT.column(2).data().each(periodo => data.append('vacaciones_periodo[]', periodo));
+      data.append('vacaciones', JSON.stringify(vacaciones));
       
       fetch(ruta, {
         headers: {

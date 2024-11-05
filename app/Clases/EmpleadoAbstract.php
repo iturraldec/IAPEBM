@@ -84,34 +84,50 @@ abstract class EmpleadoAbstract
     }
     return true;
   }
-  
+
+  // actualizacion de los familiares del empleado
+  public function updFamily(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $item) {
+      switch($item->status) {
+        // crear
+        case 'C': 
+          DB::table('familiares')->insert([
+                                'employee_id'       => $empleado->id, 
+                                'parentesco_id'     => $item->parentesco_id,
+                                'first_name'        => $item->first_name,
+                                'second_name'       => $item->second_name,
+                                'first_last_name'   => $item->first_last_name,
+                                'second_last_name'  => $item->second_last_name,
+                              ]);
+          break;
+        // eliminar
+        case 'D' && $item->id > 0:
+          DB::table('familiares')->where('id', $item->id)->delete();
+          break;
+      }
+    }
+    return true;
+  }
+
   //
   public function updEstudios(Employee $empleado, array $data) : bool
   {
     foreach($data as $estudio) {
-      if($estudio->id == '0' && $estudio->status != 'D') {
-        DB::table('empleado_estudios')->insert([
-                      'employee_id'     => $empleado->id,
-                      'estudio_type_id' => $estudio->estudio_tipo_id,
-                      'fecha'           => $estudio->fecha,
-                      'descripcion'     => $estudio->descripcion,
-        ]);
+      switch($estudio->status) {
+        case 'C': 
+          DB::table('empleado_estudios')->insert([
+            'employee_id'     => $empleado->id,
+            'estudio_type_id' => $estudio->tipo_id,
+            'fecha'           => $estudio->fecha,
+            'descripcion'     => $estudio->descripcion,
+          ]);
+          break;
+        case 'D' && $estudio->id > 0:
+           DB::table('empleado_estudios')->where('id', $estudio->id)->delete();
+          break;
+        }
       }
-      else if($estudio->status == 'U') {
-        DB::table('empleado_estudios')
-          ->where('id', $estudio->id)
-          ->update([
-              'employee_id'     => $empleado->id,
-              'estudio_type_id' => $estudio->estudio_tipo_id,
-              'fecha'           => $estudio->fecha,
-              'descripcion'     => $estudio->descripcion,
-          ]
-        );
-      }
-      else if($estudio->status == 'D' && $estudio->id != '0') {
-        EmpleadoEstudio::find($estudio->id)->delete();
-      }
-    }
 
     return true;
   }
@@ -119,17 +135,23 @@ abstract class EmpleadoAbstract
   //
   public function updPermisos(Employee $empleado, array $data) : bool
   {
-    $empleado->permisos()->delete();
-    $permisos = [];
-    foreach($data['permisos_desde'] as $indice => $desde) {
-      $permisos[] = [
-        'employee_id' => $empleado->id,
-        'desde'       => $desde,
-        'hasta'       => $data['permisos_hasta'][$indice],
-        'motivo'      => $data['permisos_motivo'][$indice],
-      ];
-    }
-    return DB::table('permisos')->insert($permisos);
+    foreach($data as $permiso) {
+      switch($permiso->status) {
+        case 'C': 
+          DB::table('permisos')->insert([
+            'employee_id' => $empleado->id,
+            'desde'       => $permiso->desde,
+            'hasta'       => $permiso->hasta,
+            'motivo'      => $permiso->motivo,
+          ]);
+          break;
+        case 'D' && $permiso->id > 0:
+           DB::table('permisos')->where('id', $permiso->id)->delete();
+          break;
+        }
+      }
+
+    return true;
   }
 
   //
@@ -178,6 +200,28 @@ abstract class EmpleadoAbstract
         EmpleadoReposo::find($reposo->id)->delete();
       }
     }
+
+    return true;
+  }
+
+  //
+  public function updVacaciones(Employee $empleado, array $data) : bool
+  {
+    foreach($data as $item) {
+      switch($item->status) {
+        case 'C': 
+          DB::table('vacaciones')->insert([
+            'employee_id' => $empleado->id,
+            'desde'       => $item->desde,
+            'hasta'       => $item->hasta,
+            'periodo'     => $item->periodo,
+          ]);
+          break;
+        case 'D' && $item->id > 0:
+           DB::table('vacaciones')->where('id', $item->id)->delete();
+          break;
+        }
+      }
 
     return true;
   }

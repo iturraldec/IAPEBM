@@ -81,7 +81,8 @@ class EmployeeAdmController extends Controller
   }
 
   // agregar empleado
-  public function store(EmployeeAdmStoreRequest $request)
+  //public function store(EmployeeAdmStoreRequest $request)
+  public function store(Request $request)
   {
     // agrego los datos personales
     $data_person = $request->only([
@@ -146,8 +147,11 @@ class EmployeeAdmController extends Controller
       };
     }
 
-    // agrego los datos familiares
-    $this->_addFamiliares($employee, $request);
+    // agrego la familia del empleado
+    $this->_empleado->updFamily($employee, json_decode($request->family));
+
+    // agrego los datos academicos
+    $this->_empleado->updEstudios($employee, json_decode($request->estudios));
 
     //
     $this->_requestResponse->success = true;
@@ -216,8 +220,8 @@ class EmployeeAdmController extends Controller
     // actualizo los telefonos del empleado
     $this->_empleado->updPhones($employees_adm, json_decode($request->phones));
 
-    // actualizo sus direcciones
-    $this->_addAddresses($dataPerson, $request->parroquias_id, $request->addresses, $request->zona_postal);
+    // actualizo las direcciones del empleado
+    $this->_empleado->updAddresses($employees_adm, json_decode($request->addresses));
 
     // actualizo los datos del administrativos
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id',
@@ -226,35 +230,20 @@ class EmployeeAdmController extends Controller
 
     $employees_adm->update($inputEmployee);
 
-    // actualizo los familiares
-    $employees_adm->familiares()->delete();
-    $this->_addFamiliares($employees_adm, $request);
+    // actualizo los familiares    
+    $this->_empleado->updFamily($employees_adm, json_decode($request->family));
 
-    // actualizo estudio
-    $this->_empleado->updEstudios($employees_adm, json_decode($request->estudiosDT));
+    // actualizo los datos academicos
+    $this->_empleado->updEstudios($employees_adm, json_decode($request->estudios));
 
-    // actualizo sus permisos
-    if($request->has('permisos_desde')) {
-      $this->_empleado->updPermisos($employees_adm, $request->only(['permisos_desde', 'permisos_hasta', 'permisos_motivo']));
-    }
+    // actualizo los datos academicos
+    $this->_empleado->updPermisos($employees_adm, json_decode($request->permisos));
 
     // actualizo reposos
     $this->_empleado->updReposos($employees_adm, json_decode($request->repososDT));
 
-    // actualizo sus vacaciones
-    $employees_adm->vacaciones()->delete();
-    if($request->has('vacaciones_desde')) {
-      $vacaciones = [];
-      foreach($request->vacaciones_desde as $indice => $desde) {
-        $vacaciones[] = new Vacacione([
-                            'employee_id' => $employees_adm->id,
-                            'desde'       => $desde,
-                            'hasta'       => $request->vacaciones_hasta[$indice],
-                            'periodo'     => $request->vacaciones_periodo[$indice],
-                        ]);
-      };
-      $employees_adm->vacaciones()->saveMany($vacaciones);
-    };
+    // actualizo las vacaciones
+    $this->_empleado->updVacaciones($employees_adm, json_decode($request->vacaciones));
 
     // actualizo los datos fisionomicos
     $fisionomia_id = $request->fisionomia_id;
@@ -275,44 +264,6 @@ class EmployeeAdmController extends Controller
     $this->_requestResponse->message = 'Empleado Administrativo actualizado!';
 
     return response()->json($this->_requestResponse, Response::HTTP_OK);
-  }
-
-  // agregar las direcciones del empleado
-  private function _addAddresses($person, $parroquias_id, $addresses, $zona_postal)
-  {
-    $_addresses = [];
-    foreach($addresses as $indice => $address) {
-      $_addresses[] = new Address([
-                        'parroquia_id'  => $parroquias_id[$indice],
-                        'address'       => $address,
-                        'zona_postal'   => $zona_postal[$indice]
-                      ]);
-    };
-    $person->addresses()->delete();
-    $person->addresses()->saveMany($_addresses);
-  }
-
-  // agregar familiares del empleado
-  private function _addFamiliares($employee, $request)
-  {
-    if($request->parentesco_id) {
-      $parentesco_id  = $request->parentesco_id; 
-      $pnombre        = $request->pnombre;
-      $snombre        = $request->snombre;
-      $papellido      = $request->papellido;
-      $sapellido      = $request->sapellido;
-    
-      foreach($parentesco_id as $indice => $item) {
-        Familia::create([
-          'employee_id'       => $employee->id,
-          'parentesco_id'     => $item,
-          'first_name'        => $pnombre[$indice], 
-          'second_name'       => $snombre[$indice], 
-          'first_last_name'   => $papellido[$indice], 
-          'second_last_name'  => $sapellido[$indice]
-        ]);
-      }
-    }
   }
 
   //

@@ -23,7 +23,7 @@ class Phone extends Model
     }
 
     //
-    protected function PhoneType() : Attribute
+    protected function phoneType() : Attribute
     {
         return new Attribute(
             get: fn () => PhoneTypeEnum::from($this->phone_type_id)->label(),
