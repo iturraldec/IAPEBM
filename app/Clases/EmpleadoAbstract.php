@@ -2,7 +2,6 @@
 
 namespace App\Clases;
 
-use App\Models\EmpleadoEstudio;
 use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\EmpleadoReposo;

@@ -83,4 +83,8 @@ Route::get('pdf/employee/constancia-laboral-check/{cedula}', [EmployeeQryControl
 Route::get('pdf/employee/constancia-laboral/{cedula}/{motivo}', [EmployeeQryController::class, 'constanciaLaboral'])->name('pdf.employee.constancia-laboral');
 
 // registro de entrada/salida de personal
-Route::get('horario/registro', [HorarioController::class, 'index'])->name('horario.registro');
+Route::get('horario/registro', [HorarioController::class, 'index'])->name('horario.index');
+Route::get('horario/{cedula}/buscar', [HorarioController::class, 'buscar'])->name('horario.buscar');
+Route::post('horario/registrar', [HorarioController::class, 'registrar'])->name('horario.registrar');
+Route::get('horario/listado', [HorarioController::class, 'listado'])->name('horario.listado');
+//Route::get('horario/{desde}/{hasta}/listar', [HorarioController::class, 'listar'])->name('horario.listar');

@@ -3,16 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Clases\EmpleadoAdm;
-use App\Http\Requests\EmployeeAdmStoreRequest;
 use App\Http\Requests\EmployeeAdmUpdateRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
 use App\Clases\Image;
 use App\Clases\RequestResponse;
 
-use App\Models\Address;
-use App\Models\Email;
-use App\Models\Phone;
 use App\Models\Cargo;
 use App\Models\Condicion;
 use App\Models\Tipo;
@@ -21,8 +17,6 @@ use App\Models\Person;
 use App\Models\Employee;
 use App\Models\Fisionomia;
 use App\Models\EmpleadoFisionomia;
-use App\Models\Familia;
-use App\Models\Vacacione;
 use Illuminate\Http\Request;
 
 //

@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('registro_entradas_salidas', function (Blueprint $table) {
+        Schema::create('asistencias', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
             $table->unsignedInteger('employee_id');
-            $table->timestamp('income')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('exit')->nullable();
+            $table->dateTime('fecha');
+            $table->boolean('entrada')->default(true);
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('registro_entradas_salidas');
+        Schema::dropIfExists('asistencias');
     }
 };

@@ -392,22 +392,22 @@ return [
                     'route'   => 'employees-police.index',
                     'can'     => 'Personal Uniformado'
                 ],
+                [
+                    'text'  => 'Entradas/Salidas',
+                    'icon'  => 'fas fa-user-clock',
+                    'submenu'   => [
+                        [
+                            'text'  => 'Registro de E/S',
+                            'route' => 'horario.index'
+                        ],
+                        [
+                            'text'  => 'Listado de E/S',
+                            'route'   => 'horario.listado'
+                        ],
+                    ]
+                ],
             ]
         ],
-        /* [
-            'text'  => 'Horario E/S',
-            'icon'  => 'fas fa-user-clock',
-            'submenu'   => [
-                [
-                    'text'  => 'Registro de E/S',
-                    'route' => 'horario.registro'
-                ],
-                [
-                    'text'  => 'Listado de E/S',
-                    'url'   => '#'
-                ],
-            ]
-        ], */
         [
             'text'  => 'Consultas',
             'icon'  => 'fas fa-search',
