@@ -7,7 +7,10 @@ use App\Clases\RequestResponse;
 use Symfony\Component\HttpFoundation\Response;
 use App\Clases\EmpleadoAbstract;
 use App\Models\Asistencia;
+use App\Helpers\DateHelper;
+use Barryvdh\DomPDF\Facade\Pdf;
 
+//
 class HorarioController extends Controller
 {
 
@@ -17,6 +20,7 @@ class HorarioController extends Controller
   //
   public function __construct(RequestResponse $requestResponse)
   {
+    date_default_timezone_set('America/Caracas');
     $this->_requestResponse = $requestResponse;
   }
   //
@@ -50,7 +54,6 @@ class HorarioController extends Controller
       $this->_requestResponse->message = 'Error: El número de cédula no existe!';
     }
     else {
-      date_default_timezone_set('America/Caracas');
       $date = new \DateTimeImmutable();
       $fecha = $date->format('Y-m-d');
       $registro = Asistencia::orderBy('id', 'desc')
@@ -77,5 +80,14 @@ class HorarioController extends Controller
   public function listado()
   {
     return view('horario.listado');
+  }
+
+  //
+  public function listadoToPdf(string $desde, string $hasta)
+  {
+    $hoy = DateHelper::fechaCadena(now());
+    $pdf = Pdf::loadView('horario.listado-pdf', compact('hoy'));
+    
+    return $pdf->stream('horario.pdf');
   }
 }

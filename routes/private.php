@@ -87,4 +87,4 @@ Route::get('horario/registro', [HorarioController::class, 'index'])->name('horar
 Route::get('horario/{cedula}/buscar', [HorarioController::class, 'buscar'])->name('horario.buscar');
 Route::post('horario/registrar', [HorarioController::class, 'registrar'])->name('horario.registrar');
 Route::get('horario/listado', [HorarioController::class, 'listado'])->name('horario.listado');
-//Route::get('horario/{desde}/{hasta}/listar', [HorarioController::class, 'listar'])->name('horario.listar');
+Route::get('horario/{desde}/{hasta}/listar', [HorarioController::class, 'listadoToPdf'])->name('horario.listar');
