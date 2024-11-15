@@ -92,19 +92,19 @@ class EmployeeAdmController extends Controller
     // cambio de avatar frontal?
     if($request->hasFile('imagef')) {
       $imageName = $this->_imagen->store($request->file('imagef'), $employeeFolder);
-      $data_person['imagef'] = "images/{$data_person['cedula']}/$imageName";
+      $data_person['imagef'] = "employees/{$data_person['cedula']}/$imageName";
     }
 
     // cambio de avatar lado izquierdo?
     if($request->hasFile('imageli')) {
       $imageName = $this->_imagen->store($request->file('imageli'), $employeeFolder);
-      $data_person['imageli'] = "images/{$data_person['cedula']}/$imageName";
+      $data_person['imageli'] = "employees/{$data_person['cedula']}/$imageName";
     }
 
     // cambio de avatar lado derecho?
     if($request->hasFile('imageld')) {
       $imageName = $this->_imagen->store($request->file('imageld'), $employeeFolder);
-      $data_person['imageld'] = "images/{$data_person['cedula']}/$imageName";
+      $data_person['imageld'] = "employees/{$data_person['cedula']}/$imageName";
     }
 
     // agrego la persona
@@ -187,7 +187,7 @@ class EmployeeAdmController extends Controller
         $image = $employeeFolderPath . basename($dataPerson->imagef);
         if(file_exists($image)) unlink($image);
       }
-      $inputPerson['imagef'] = "images/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imagef'), $employeeFolderPath);
+      $inputPerson['imagef'] = "employees/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imagef'), $employeeFolderPath);
     }
 
     if ($request->hasfile('imageli')) {
@@ -195,7 +195,7 @@ class EmployeeAdmController extends Controller
         $image = $employeeFolderPath . basename($dataPerson->imageli);
         if(file_exists($image)) unlink($image);
       }
-      $inputPerson['imageli'] = "images/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageli'), $employeeFolderPath);
+      $inputPerson['imageli'] = "employees/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageli'), $employeeFolderPath);
     }
 
     if ($request->hasfile('imageld')) {
@@ -203,7 +203,7 @@ class EmployeeAdmController extends Controller
         $image = $employeeFolderPath . basename($dataPerson->imageld);
         if(file_exists($image)) unlink($image);
       }
-      $inputPerson['imageld'] = "images/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageld'), $employeeFolderPath);
+      $inputPerson['imageld'] = "employees/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageld'), $employeeFolderPath);
     }
 
     $dataPerson->update($inputPerson);

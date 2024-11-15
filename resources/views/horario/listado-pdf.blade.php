@@ -5,29 +5,27 @@
 @section('encabezado', 'Listado de Entradas/Salidas de Empleados')
 
 @section('content')
-  {{-- <font size="1">
+  <font size="1">
     <table style="width: 100%" border="1">
       <tr>
-        <th>Unidad Operativa</th>
-        <th>Unidad Operativa Específica</th>
-        <th>Cédula</th>
-        <th>Apellidos</th>
-        <th>Nombres</th>
-        <th>Imagen</th>
+        <th>Nro.</th>
+        <th>Ubicación</th>
+        <th>Apellidos y Nombres</th>
+        <th>Entrada</th>
+        <th>Salida</th>
       </tr>
 
       <tbody>
-        @foreach($empleados as $empleado)
+        @foreach($listado as $index => $item)
           <tr>
-            <td>{{ $empleado->unidad }}</td>
-            <td>{{ $empleado->unidad_especifica }}</td>
-            <td>{{ $empleado->cedula }}</td>
-            <td>{{ $empleado->apellidos }}</td>
-            <td>{{ $empleado->nombres }}</td>
-            <td><img src="{{ public_path($empleado->imagef) }}" width="120" height="auto"></td>
+            <td>{{ $index + 1 }}</td>
+            <td>{{ $item->unidad }}</td>
+            <td>{{ $item->first_last_name }} {{ $item->second_last_name }}, {{ $item->first_name }} {{ $item->second_name }}</td>
+            <td>{{ $item->entrada }}</td>
+            <td>{{ $item->salida }}</td>
           </tr>
         @endforeach
       </tbody>
     </table>
-  </font> --}}
+  </font>
 @endsection

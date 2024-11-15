@@ -9,6 +9,7 @@ use App\Clases\EmpleadoAbstract;
 use App\Models\Asistencia;
 use App\Helpers\DateHelper;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 //
 class HorarioController extends Controller
@@ -54,23 +55,25 @@ class HorarioController extends Controller
       $this->_requestResponse->message = 'Error: El número de cédula no existe!';
     }
     else {
-      $date = new \DateTimeImmutable();
-      $fecha = $date->format('Y-m-d');
+      $this->_requestResponse->success = true;
+      $hoy = date('Y-m-d H:i');
       $registro = Asistencia::orderBy('id', 'desc')
                               ->where('employee_id', $empleado->id)
-                              ->whereDate('fecha', $fecha)
+                              ->whereDate('entrada', $hoy)
                               ->first();
-      $data['employee_id'] = $empleado->id;
-      $data['fecha'] = $date->format('Y-m-d H:i');
-      $data['entrada'] = true;
-      $mensaje = 'Se registro la entrada: ';
-      if(! is_null($registro) && $registro->entrada) {
-        $data['entrada'] = false;
-        $mensaje = 'Se registro la salida: ';
+
+      // entrada
+      if(is_null($registro) || ! is_null($registro->salida)) {
+        $data['employee_id'] = $empleado->id;
+        $data['entrada'] = $hoy;
+        Asistencia::Create($data);
+        $this->_requestResponse->message = 'Se registro la entrada: ' . $data['entrada'];
       }
-      Asistencia::Create($data);
-      $this->_requestResponse->success = true;
-      $this->_requestResponse->message = $mensaje . $data['fecha'];
+      else {
+      // salida
+        $registro->update(['salida' => $hoy]);
+        $this->_requestResponse->message = 'Se registro la salida: ' . $hoy;
+      }
     }
 
     return response()->json($this->_requestResponse, Response::HTTP_OK);
@@ -86,7 +89,20 @@ class HorarioController extends Controller
   public function listadoToPdf(string $desde, string $hasta)
   {
     $hoy = DateHelper::fechaCadena(now());
-    $pdf = Pdf::loadView('horario.listado-pdf', compact('hoy'));
+    
+    $listado = DB::table('asistencias')
+                  ->join('employees', 'asistencias.employee_id', '=', 'employees.id')
+                  ->join('unidades', 'employees.unidad_id', '=', 'unidades.id')
+                  ->join('people', 'employees.person_id', '=', 'people.id')
+                  ->orderBy('asistencias.entrada')
+                  ->select('asistencias.*', 
+                            'people.first_name', 
+                            'people.second_name',
+                            'people.first_last_name',
+                            'people.second_last_name',
+                            'unidades.name as unidad')
+                  ->get();
+    $pdf = Pdf::loadView('horario.listado-pdf', compact('listado'));
     
     return $pdf->stream('horario.pdf');
   }

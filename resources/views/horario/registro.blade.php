@@ -100,6 +100,7 @@
         .then(r => r.json())
         .then(resp => {
           if(resp.success) {
+            ok = false;
             $("#inputCedula").val('');
             $("#inputNombre").val('');
             $("#inputUbicacion").val('');

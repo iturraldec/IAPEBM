@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('asistencias', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('employee_id');
-            $table->dateTime('fecha');
-            $table->boolean('entrada')->default(true);
+            $table->dateTime('entrada');
+            $table->dateTime('salida')->nullable();
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
