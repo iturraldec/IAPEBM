@@ -9,6 +9,21 @@ use App\Models\EmpleadoReposo;
 //
 abstract class EmpleadoAbstract
 {
+  //
+  protected $_type_id;
+
+  //
+  public function __construct()
+  {
+    $this->_type_id = null;
+  }
+
+  //
+  public function getType()
+  {
+    return $this->_type_id;
+  }
+
   /*
     parametros:
       string $cedula

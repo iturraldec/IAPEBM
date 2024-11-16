@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Clases\EmpleadoAdm;
+use App\Http\Requests\EmployeeAdmStoreRequest;
 use App\Http\Requests\EmployeeAdmUpdateRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
@@ -17,7 +18,6 @@ use App\Models\Person;
 use App\Models\Employee;
 use App\Models\Fisionomia;
 use App\Models\EmpleadoFisionomia;
-use Illuminate\Http\Request;
 
 //
 class EmployeeAdmController extends Controller
@@ -27,13 +27,10 @@ class EmployeeAdmController extends Controller
   private $_imagen;
 
   //
-  private $_type_id = 1;
+  private $_empleado;
 
   //
   private $_requestResponse;
-
-  //
-  private $_empleado;
 
   //
   public function __construct(EmpleadoAdm $empleado,  Image $imagen, RequestResponse $requestResponse)
@@ -56,7 +53,7 @@ class EmployeeAdmController extends Controller
    */
   public function index()
   {
-    return request()->ajax() ? datatables()->of(Employee::where('type_id', $this->_type_id)->with('person')->with('cargo'))->toJson()
+    return request()->ajax() ? datatables()->of(Employee::where('type_id', $this->_empleado->getType())->with('person')->with('cargo'))->toJson()
                              : view('employee-adm.index');              
   }
 
@@ -75,8 +72,7 @@ class EmployeeAdmController extends Controller
   }
 
   // agregar empleado
-  //public function store(EmployeeAdmStoreRequest $request)
-  public function store(Request $request)
+  public function store(EmployeeAdmStoreRequest $request)
   {
     // agrego los datos personales
     $data_person = $request->only([
@@ -115,7 +111,7 @@ class EmployeeAdmController extends Controller
                                     'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
                                     'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro');
     $inputEmployee['person_id'] = $person->id;
-    $inputEmployee['type_id'] = $this->_type_id;
+    $inputEmployee['type_id'] = $this->_empleado->getType();
     $employee = Employee::create($inputEmployee);
 
     // agrego los correos del empleado
@@ -256,7 +252,6 @@ class EmployeeAdmController extends Controller
     //
     $this->_requestResponse->success = true;
     $this->_requestResponse->message = 'Empleado Administrativo actualizado!';
-
     return response()->json($this->_requestResponse, Response::HTTP_OK);
   }
 
