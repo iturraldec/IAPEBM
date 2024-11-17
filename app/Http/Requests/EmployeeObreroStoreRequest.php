@@ -44,8 +44,8 @@ class EmployeeObreroStoreRequest extends FormRequest
             'cta_bancaria_nro'      => 'required|max:30',
             'emails'                => 'required',
             'phones'                => 'required',
-            'parroquias_id'         => 'required',
             'addresses'             => 'required',
+            'family'                => 'required',
         ];
     }
 }
