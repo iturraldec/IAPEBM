@@ -10,23 +10,17 @@ use Barryvdh\DomPDF\Facade;
 use App\Clases\Image;
 use App\Clases\RequestResponse;
 
-use App\Models\Address;
-use App\Models\Email;
-use App\Models\Phone;
 use App\Models\Cargo;
 use App\Models\Condicion;
 use App\Models\Tipo;
 use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
-use App\Models\Police;
-use App\Models\PoliceRango;
-use App\Models\Rango;
-use App\Models\EmpleadoReposo;
-use App\Models\Vacacione;
 use App\Models\Fisionomia;
 use App\Models\EmpleadoFisionomia;
-use App\Models\Familia;
+use App\Models\Police;
+use App\Models\Rango;
+use App\Models\PoliceRango;
 
 //
 class EmployeePoliceController extends Controller
@@ -36,13 +30,10 @@ class EmployeePoliceController extends Controller
   private $_imagen;
 
   //
-  private $_type_id = 3;
+  private $_empleado;
 
   //
   private $_requestResponse;
-
-  //
-  private $_empleado;
 
   //
   public function __construct(EmpleadoPolicial $empleado, Image $imagen, RequestResponse $requestResponse)
@@ -65,7 +56,7 @@ class EmployeePoliceController extends Controller
    */
   public function index()
   {
-    return request()->ajax() ? datatables()->of(Employee::where('type_id', $this->_type_id)->with('person')->with('cargo'))->toJson()
+    return request()->ajax() ? datatables()->of(Employee::where('type_id', $this->_empleado->getType())->with('person')->with('cargo'))->toJson()
                              : view('employee-police.index');
   }
 
@@ -101,54 +92,60 @@ class EmployeePoliceController extends Controller
     // cambio de avatar frontal?
     if($request->hasFile('imagef')) {
       $imageName = $this->_imagen->store($request->file('imagef'), $employeeFolder);
-      $data_person['imagef'] = "images/{$data_person['cedula']}/$imageName";
+      $data_person['imagef'] = "employees/{$data_person['cedula']}/$imageName";
     }
 
     // cambio de avatar lado izquierdo?
     if($request->hasFile('imageli')) {
       $imageName = $this->_imagen->store($request->file('imageli'), $employeeFolder);
-      $data_person['imageli'] = "images/{$data_person['cedula']}/$imageName";
+      $data_person['imageli'] = "employees/{$data_person['cedula']}/$imageName";
     }
 
     // cambio de avatar lado derecho?
     if($request->hasFile('imageld')) {
       $imageName = $this->_imagen->store($request->file('imageld'), $employeeFolder);
-      $data_person['imageld'] = "images/{$data_person['cedula']}/$imageName";
+      $data_person['imageld'] = "employees/{$data_person['cedula']}/$imageName";
     }
 
     // agrego la persona
     $person = Person::create($data_person);
-
-    // agrego los correos del empleado
-    $this->_addEmails($person, $request->emails);
-
-    // agrego los telefonos del empleado
-    $this->_addPhones($person, $request->phones_type_id, $request->phones);
-
-    // agrego las direcciones del empleado
-    $this->_addAddresses($person, $request->parroquias_id, $request->addresses, $request->zona_postal);
 
     // agrego los datos administrativos
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
                                     'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
                                     'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro');
     $inputEmployee['person_id'] = $person->id;
-    $inputEmployee['type_id'] = $this->_type_id;
+    $inputEmployee['type_id'] = $this->_empleado->getType();
     $employee = Employee::create($inputEmployee);
 
-    // agrego los datos fisionomicos
-    $fisionomia_id = $request->fisionomia_id;
-    $fisionomia = $request->fisionomia;
-    foreach($fisionomia_id as $indice => $item) {
-      EmpleadoFisionomia::create([
-        'employee_id'   => $employee->id, 
-        'fisionomia_id' => $item, 
-        'info'          => $fisionomia[$indice]
-      ]);
-    };
+    // agrego los correos del empleado
+    $this->_empleado->updEmails($employee, json_decode($request->emails));
 
-    // agrego los datos familiares
-    $this->_addFamiliares($employee, $request);
+    // agrego los telefonos del empleado
+    $this->_empleado->updPhones($employee, json_decode($request->phones));
+
+    // agrego las direcciones del empleado
+    $this->_empleado->updAddresses($employee, json_decode($request->addresses));
+
+    // agrego los datos fisionomicos
+    if($request->has('fisionomia_id')) {
+      $fisionomia_id = $request->fisionomia_id;
+      $fisionomia = $request->fisionomia;
+      
+      foreach($fisionomia_id as $indice => $item) {
+        EmpleadoFisionomia::create([
+          'employee_id'   => $employee->id, 
+          'fisionomia_id' => $item, 
+          'info'          => $fisionomia[$indice]
+        ]);
+      };
+    }
+
+    // agrego la familia del empleado
+    $this->_empleado->updFamily($employee, json_decode($request->family));
+
+    // agrego los datos academicos
+    $this->_empleado->updEstudios($employee, json_decode($request->estudios));
 
     // agrego los datos policiales
     $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
@@ -294,71 +291,6 @@ class EmployeePoliceController extends Controller
     $this->_requestResponse->message = 'Uniformado actualizado!';
 
     return response()->json($this->_requestResponse, Response::HTTP_OK);
-  }
-
-  // agregar los correos del empleado
-  private function _addEmails($person, $emails)
-  {
-    $_emails = [];
-    foreach($emails as $email) {
-      $_emails[] = new Email(['email' => $email]);
-    };
-
-    $person->emails()->delete();
-    $person->emails()->saveMany($_emails);
-  }
-
-  // agregar los telefonos del empleado
-  private function _addPhones($person, $phonesTypeId, $phonesNumbers)
-  {
-    $phones = [];
-    foreach($phonesTypeId as $indice => $phoneTypeId) {
-      $phones[] = new Phone([
-                      'phone_type_id' => $phoneTypeId,
-                      'number'        => $phonesNumbers[$indice]
-                    ]);
-    };
-
-    $person->phones()->delete();
-    $person->phones()->saveMany($phones);
-  }
-
-  // agregar las direcciones del empleado
-  private function _addAddresses($person, $parroquias_id, $addresses, $zona_postal)
-  {
-    $_addresses = [];
-    foreach($addresses as $indice => $address) {
-      $_addresses[] = new Address([
-                        'parroquia_id'  => $parroquias_id[$indice],
-                        'address'       => $address,
-                        'zona_postal'   => $zona_postal[$indice]
-                      ]);
-    };
-    $person->addresses()->delete();
-    $person->addresses()->saveMany($_addresses);
-  }
-
-  // agregar familiares del empleado
-  private function _addFamiliares($employee, $request)
-  {
-    if($request->parentesco_id) {
-      $parentesco_id  = $request->parentesco_id; 
-      $pnombre        = $request->pnombre;
-      $snombre        = $request->snombre;
-      $papellido      = $request->papellido;
-      $sapellido      = $request->sapellido;
-    
-      foreach($parentesco_id as $indice => $item) {
-        Familia::create([
-          'employee_id'       => $employee->id,
-          'parentesco_id'     => $item,
-          'first_name'        => $pnombre[$indice], 
-          'second_name'       => $snombre[$indice], 
-          'first_last_name'   => $papellido[$indice], 
-          'second_last_name'  => $sapellido[$indice]
-        ]);
-      }
-    }
   }
 
   // agregar los rangos

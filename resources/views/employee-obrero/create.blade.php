@@ -1,9 +1,9 @@
-@extends('adminlte::page')
+@extends('layouts.edit-page')
 
 @section('title', 'Empleado Obrero')
 
 @section('content_header')
-  <div class="row m-2 ">
+  <div class="row m-2">
     <div class="col-6">
       <h4>Agregar Datos del Empleado Obrero</h4>
     </div>

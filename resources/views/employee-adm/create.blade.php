@@ -16,7 +16,7 @@
 @endsection
 
 @section('content')
-  <div class="row mt-1">
+  <div class="row m-2">
     <div class="col-12">
       <div class="card card-primary card-tabs">
         <!-- card-header -->
