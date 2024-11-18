@@ -226,10 +226,10 @@ class EmployeeAdmController extends Controller
     // actualizo los datos academicos
     $this->_empleado->updEstudios($employees_adm, json_decode($request->estudios));
 
-    // actualizo los datos academicos
+    // actualizo sus permisos
     $this->_empleado->updPermisos($employees_adm, json_decode($request->permisos));
 
-    // actualizo reposos
+    // actualizo sus reposos
     $this->_empleado->updReposos($employees_adm, json_decode($request->repososDT));
 
     // actualizo las vacaciones
@@ -252,6 +252,7 @@ class EmployeeAdmController extends Controller
     //
     $this->_requestResponse->success = true;
     $this->_requestResponse->message = 'Empleado Administrativo actualizado!';
+
     return response()->json($this->_requestResponse, Response::HTTP_OK);
   }
 

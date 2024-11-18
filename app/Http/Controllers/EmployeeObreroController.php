@@ -183,7 +183,7 @@ class EmployeeObreroController extends Controller
         $image = $employeeFolderPath . basename($dataPerson->imagef);
         if(file_exists($image)) unlink($image);
       }
-      $inputPerson['imagef'] = "images/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imagef'), $employeeFolderPath);
+      $inputPerson['imagef'] = "employees/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imagef'), $employeeFolderPath);
     }
 
     if ($request->hasfile('imageli')) {
@@ -191,7 +191,7 @@ class EmployeeObreroController extends Controller
         $image = $employeeFolderPath . basename($dataPerson->imageli);
         if(file_exists($image)) unlink($image);
       }
-      $inputPerson['imageli'] = "images/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageli'), $employeeFolderPath);
+      $inputPerson['imageli'] = "employees/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageli'), $employeeFolderPath);
     }
 
     if ($request->hasfile('imageld')) {
@@ -199,19 +199,19 @@ class EmployeeObreroController extends Controller
         $image = $employeeFolderPath . basename($dataPerson->imageld);
         if(file_exists($image)) unlink($image);
       }
-      $inputPerson['imageld'] = "images/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageld'), $employeeFolderPath);
+      $inputPerson['imageld'] = "employees/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageld'), $employeeFolderPath);
     }
 
     $dataPerson->update($inputPerson);
 
-    // actualizo sus correos
-    $this->_addEmails($dataPerson, $request->emails);
+    // actualizo los correos del empleado
+    $this->_empleado->updEmails($employees_obrero, json_decode($request->emails));
 
-    // actualizo sus telefonos
-    $this->_addPhones($dataPerson, $request->phones_type_id, $request->phones);
+    // actualizo los telefonos del empleado
+    $this->_empleado->updPhones($employees_obrero, json_decode($request->phones));
 
-    // actualizo sus direcciones
-    $this->_addAddresses($dataPerson, $request->parroquias_id, $request->addresses, $request->zona_postal);
+    // actualizo las direcciones del empleado
+    $this->_empleado->updAddresses($employees_obrero, json_decode($request->addresses));
 
     // actualizo los datos del administrativos
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id',
@@ -220,35 +220,20 @@ class EmployeeObreroController extends Controller
 
     $employees_obrero->update($inputEmployee);
 
-    // actualizo los familiares
-    $employees_obrero->familiares()->delete();
-    $this->_addFamiliares($employees_obrero, $request);
+    // actualizo los familiares    
+    $this->_empleado->updFamily($employees_obrero, json_decode($request->family));
 
-    // actualizo estudio
-    $this->_empleado->updEstudios($employees_obrero, json_decode($request->estudiosDT));
+    // actualizo los datos academicos
+    $this->_empleado->updEstudios($employees_obrero, json_decode($request->estudios));
 
     // actualizo sus permisos
-    if($request->has('permisos_desde')) {
-      $this->_empleado->updPermisos($employees_obrero, $request->only(['permisos_desde', 'permisos_hasta', 'permisos_motivo']));
-    }
+    $this->_empleado->updPermisos($employees_obrero, json_decode($request->permisos));
 
-    // actualizo reposos
+    // actualizo sus reposos
     $this->_empleado->updReposos($employees_obrero, json_decode($request->repososDT));
 
-    // actualizo sus vacaciones
-    $employees_obrero->vacaciones()->delete();
-    if($request->has('vacaciones_desde')) {
-      $vacaciones = [];
-      foreach($request->vacaciones_desde as $indice => $desde) {
-        $vacaciones[] = new Vacacione([
-                        'employee_id' => $employees_obrero->id,
-                        'desde'       => $desde,
-                        'hasta'       => $request->vacaciones_hasta[$indice],
-                        'periodo'     => $request->vacaciones_periodo[$indice],
-                    ]);
-      };
-      $employees_obrero->vacaciones()->saveMany($vacaciones);
-    };
+    // actualizo las vacaciones
+    $this->_empleado->updVacaciones($employees_obrero, json_decode($request->vacaciones));
 
     // actualizo los datos fisionomicos
     $fisionomia_id = $request->fisionomia_id;
