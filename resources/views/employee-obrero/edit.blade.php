@@ -869,7 +869,7 @@
       <!-- fin de card -->
 
       <!-- modal de reposos -->
-      @include('employee-adm.reposos')
+      @include('common.datos-reposos')
 
     </div>
   </div>
