@@ -371,6 +371,10 @@ return [
                     'text'    => 'Estudios',
                     'route'   => 'estudio-types.index'
                 ],
+                [
+                    'text'    => 'CT: Motivos',
+                    'route'   => 'ct.motivos.index'
+                ],
             ]
         ],
         [

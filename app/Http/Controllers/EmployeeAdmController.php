@@ -54,7 +54,7 @@ class EmployeeAdmController extends Controller
   public function index()
   {
     return request()->ajax() ? datatables()->of(Employee::where('type_id', $this->_empleado->getType())->with('person')->with('cargo'))->toJson()
-                             : view('employee-adm.index');              
+                             : view('employee-adm.index');
   }
 
   // vista para crear empleado

@@ -17,6 +17,7 @@ use App\Http\Controllers\UbicacionController;
 use App\Http\Controllers\ReposoController;
 use App\Http\Controllers\EstudioTypeController;
 use App\Http\Controllers\HorarioController;
+use App\Http\Controllers\ConstanciaTrabajoMotivoController;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -65,6 +66,11 @@ Route::get('ubicacion/parroquias/{municipio_id}', [UbicacionController::class, '
 Route::resource('estudios', EstudioTypeController::class)
   ->only(['index', 'store', 'update', 'destroy'])
   ->names('estudio-types');
+
+// rutas de las motivos de las constancias de trabajo
+Route::resource('ct-motivos', ConstanciaTrabajoMotivoController::class)
+  ->only(['index', 'store', 'update', 'destroy'])
+  ->names('ct.motivos');
 
 // empleados administrativos
 Route::resource('employees-adm', EmployeeAdmController::class)->names('employees-adm');
