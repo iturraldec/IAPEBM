@@ -9,6 +9,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Clases\EmpleadoAbstract;
 use App\Clases\RequestResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
+
+use App\Models\ConstanciaTrabajoMotivo;
 
 //
 class EmployeeQryController extends Controller
@@ -82,31 +85,12 @@ class EmployeeQryController extends Controller
   }
 
   //
-  function constanciaLaboralCheck(string $cedula)
+  function constanciaLaboral(ConstanciaTrabajoMotivo $motivo)
   {
-    $empleado = EmpleadoAbstract::GetByCedula($cedula);
-    if(!$empleado) {
-      $this->_requestResponse->success = false;
-      $this->_requestResponse->message = 'Número de cédula no registrado!';
-    }
-    else if(in_array($empleado->condicion_id, [1,16,18,30])) {
-      $this->_requestResponse->success = true;
-    }
-    else {
-      $this->_requestResponse->success = false;
-      $this->_requestResponse->message = 'Empleado no cumple las condiciones!';
-    }
-
-    return response()->json($this->_requestResponse, Response::HTTP_OK);
-  }
-
-  //
-  function constanciaLaboral(string $cedula, string $motivo)
-  {
-    $empleado = EmpleadoAbstract::GetByCedula($cedula);
+    $empleado = EmpleadoAbstract::GetByCedula("13098112");
     $hoy = DateHelper::fechaCadena(now());
-    $pdf = Pdf::loadView('pdf.employee.pdfs.constancia-laboral', compact('empleado', 'motivo', 'hoy'));
+    $pdf = Pdf::loadView('consultas.web.ct.ct-pdf', compact('empleado', 'motivo', 'hoy'));
     
-    return $pdf->stream('constancia-laboral.pdf');
+    return $pdf->stream('constancia-trabajo.pdf');
   }
 }

@@ -417,8 +417,8 @@ return [
             'icon'  => 'fas fa-search',
             'submenu'   => [
                 [
-                    'text'    => 'Empleados',
-                    'route'   => 'pdf.employee'
+                    'text'    => 'Constancias de Trabajo',
+                    'route'   => 'cw.ct'
                 ],
             ]
         ],

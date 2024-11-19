@@ -18,6 +18,7 @@ use App\Http\Controllers\ReposoController;
 use App\Http\Controllers\EstudioTypeController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\ConstanciaTrabajoMotivoController;
+use App\Http\Controllers\ConstanciaTrabajoController;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -80,6 +81,22 @@ Route::resource('employees-obrero', EmployeeObreroController::class)->names('emp
 
 // empleados policiales
 Route::resource('employees-police', EmployeePoliceController::class)->names('employees-police');
+
+//////////////////////////////////////////////////////////////////////
+//                CONSULTAS WEB
+//////////////////////////////////////////////////////////////////////
+
+Route::prefix('consultas-web')->group(function() {
+  // constancia de trabajo (vista)
+  Route::get('ct', [ConstanciaTrabajoController::class, 'index'])->name('cw.ct');
+
+  // generacion de constancia de trabajo (pdf)
+  Route::get('ct/{motivo}', [ConstanciaTrabajoController::class, 'execute'])->name('cw.ct.pdf');
+});
+
+//////////////////////////////////////////////////////////////////////
+//                FIN DE CONSULTAS WEB
+//////////////////////////////////////////////////////////////////////
 
 // reportes de empleados
 Route::get('pdf/employee', [EmployeeQryController::class, 'index'])->name('pdf.employee');
