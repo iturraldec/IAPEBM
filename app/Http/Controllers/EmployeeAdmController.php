@@ -18,6 +18,7 @@ use App\Models\Person;
 use App\Models\Employee;
 use App\Models\Fisionomia;
 use App\Models\EmpleadoFisionomia;
+use Illuminate\Support\Facades\Auth;
 
 //
 class EmployeeAdmController extends Controller
@@ -53,6 +54,9 @@ class EmployeeAdmController extends Controller
    */
   public function index()
   {
+/*     $user = Auth::user();
+    echo $user['code'];
+    die(); */
     return request()->ajax() ? datatables()->of(Employee::where('type_id', $this->_empleado->getType())->with('person')->with('cargo'))->toJson()
                              : view('employee-adm.index');
   }

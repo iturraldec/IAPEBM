@@ -52,6 +52,12 @@ class Employee extends Model
     }
 
     // unidad especifica
+    public function unidad() : HasOne
+    {
+        return $this->hasOne(Unidad::class, 'id', 'unidad_id');
+    }
+
+    // unidad especifica
     protected function unidadEspecifica() : Attribute
     {
         return new Attribute(

@@ -33,18 +33,19 @@ class HorarioController extends Controller
   //
   public function buscar(string $cedula)
   {
-    $empleado = EmpleadoAbstract::GetByCedula($cedula);
+    $empleado = EmpleadoAbstract::GetInPlanta($cedula);
     if(!$empleado) {
       $this->_requestResponse->message = 'Error: El número de cédula no existe!';
+
+      return response()->json($this->_requestResponse, Response::HTTP_NOT_FOUND);
     }
     else {
-      $empleado->unidad = $empleado->unidadEspecifica;
       $this->_requestResponse->success = true;
       $this->_requestResponse->message = 'ok';
       $this->_requestResponse->data = $empleado;
-    }
 
-    return response()->json($this->_requestResponse, Response::HTTP_OK);
+      return response()->json($this->_requestResponse, Response::HTTP_OK);
+    }
   }
 
   //

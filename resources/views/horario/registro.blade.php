@@ -15,6 +15,9 @@
     <div class="col-6 mx-auto">
       <div class="card">
         <div class="card-body">
+          <h6 class="text-center font-weight-bold text-monospace bg-info font-italic">
+            * La busqueda del empleado estara restringida a los trabajadores de planta.
+          </h6>
 
           <label for="inputCedula">Cédula de Identidad</label>
           <div class="input-group">
