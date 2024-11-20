@@ -86,7 +86,7 @@ class ObreroImport implements ToCollection, WithHeadingRow
 
                 // busco su unidad operativa
                 $unidad = DB::select("SELECT id FROM unidades WHERE code = '{$row['codigo_ub']}';");
-                $unidad_id = (empty($unidad)) ? 1 : $unidad[0]->id;
+                $unidad_id = (empty($unidad)) ? 134 : $unidad[0]->id;
 
                 // empleado obrero
                 $record = [
