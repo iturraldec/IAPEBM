@@ -10,41 +10,42 @@ use App\Models\Asistencia;
 use App\Helpers\DateHelper;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use App\Clases\Horario;
+use Svg\Tag\Rect;
 
 //
 class HorarioController extends Controller
 {
 
   //
+  private $_horario;
+
+  //
   private $_requestResponse;
 
   //
-  public function __construct(RequestResponse $requestResponse)
+  public function __construct(Horario $horario, RequestResponse $requestResponse)
   {
     date_default_timezone_set('America/Caracas');
+    $this->_horario = $horario;
     $this->_requestResponse = $requestResponse;
   }
-  //
-  public function index()
-  {
-    return view('horario.registro');
-  }
 
   //
-  public function buscar(string $cedula)
+  public function aperturar(Request $request)
   {
-    $empleado = EmpleadoAbstract::GetInPlanta($cedula);
-    if(!$empleado) {
-      $this->_requestResponse->message = 'Error: El número de cédula no existe!';
+    if($request->ajax()) {
+      if(! $this->_horario->is_generated(date('Y-m-d'))) {
+        $this->_horario->generate();
+      }
 
-      return response()->json($this->_requestResponse, Response::HTTP_NOT_FOUND);
+      $this->_requestResponse->success = true;
+      $this->_requestResponse->message = 'Horario aperturado!';
+
+      return response()->json($this->_requestResponse);
     }
     else {
-      $this->_requestResponse->success = true;
-      $this->_requestResponse->message = 'ok';
-      $this->_requestResponse->data = $empleado;
-
-      return response()->json($this->_requestResponse, Response::HTTP_OK);
+      return view('horario.apertura');
     }
   }
 
@@ -52,32 +53,20 @@ class HorarioController extends Controller
   public function registrar(Request $request)
   {
     $empleado = EmpleadoAbstract::GetByCedula($request->cedula);
-    if(!$empleado) {
+    if(! $empleado) {
+      $this->_requestResponse->success = false;
       $this->_requestResponse->message = 'Error: El número de cédula no existe!';
+
+      return response()->json($this->_requestResponse, Response::HTTP_NOT_FOUND);
     }
     else {
+      $empleado->unidad;
       $this->_requestResponse->success = true;
-      $hoy = date('Y-m-d H:i');
-      $registro = Asistencia::orderBy('id', 'desc')
-                              ->where('employee_id', $empleado->id)
-                              ->whereDate('entrada', $hoy)
-                              ->first();
+      $this->_requestResponse->message = $this->_horario->generateIO($empleado->id);
+      $this->_requestResponse->data = $empleado;
 
-      // entrada
-      if(is_null($registro) || ! is_null($registro->salida)) {
-        $data['employee_id'] = $empleado->id;
-        $data['entrada'] = $hoy;
-        Asistencia::Create($data);
-        $this->_requestResponse->message = 'Se registro la entrada: ' . $data['entrada'];
+      return response()->json($this->_requestResponse);
       }
-      else {
-      // salida
-        $registro->update(['salida' => $hoy]);
-        $this->_requestResponse->message = 'Se registro la salida: ' . $hoy;
-      }
-    }
-
-    return response()->json($this->_requestResponse, Response::HTTP_OK);
   }
 
   //

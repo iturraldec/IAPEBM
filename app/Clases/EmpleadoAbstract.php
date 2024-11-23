@@ -246,14 +246,13 @@ abstract class EmpleadoAbstract
     return Employee::with('person')->whereRelation('person', 'cedula', $cedula)->first();
   }
 
-  // buscar empleado de planta por su numero de cedula (para horario)
-  static public function GetInPlanta(string $cedula)
+  // listado de empleados de planta
+  static public function GetInPlanta()
   {
-    return Employee::select('id', 'person_id', 'unidad_id')
-                      ->with('person')
-                      ->whereRelation('person', 'cedula', $cedula)
-                      ->with('unidad')
+    return Employee::select('employees.id', 
+                            'employees.unidad_id')
+                      ->where('condicion_id', 1)
                       ->whereRelation('unidad', 'padre_id', 15)
-                      ->first();
+                      ->get();
   }
 }

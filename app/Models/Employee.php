@@ -122,4 +122,10 @@ class Employee extends Model
     {
         return $this->hasMany(Permiso::class);
     }
+
+    // condicion del empleado
+    public function condicion() : HasOne
+    {
+        return $this->hasOne(Condicion::class, 'id', 'condicion_id');
+    }
 }

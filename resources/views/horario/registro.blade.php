@@ -20,25 +20,16 @@
           </h6>
 
           <label for="inputCedula">Cédula de Identidad</label>
-          <div class="input-group">
-            <input type="text" id="inputCedula" class="form-control">
-
-            <div class="input-group-append">
-              <button type="button"
-                      id="btnSearch"
-                      class="input-group-text btn btn-primary btn-sm"
-                      title="Agregar ubicación del empleado"
-              >
-                <i class="fas fa-search"></i>
-              </button>
-            </div>
-          </div>
+          <input type="text" id="inputCedula" class="form-control">
           
           <label for="inputCedula">Nombre(s) y Apellido(s)</label>
           <input type="text" id="inputNombre" class="form-control" readonly>
 
           <label for="inputUbicacion">Ubicación laboral</label>
           <input type="text" id="inputUbicacion" class="form-control" readonly>
+
+          <label for="inputUbicacion">Fecha y Hora</label>
+          <input type="text" id="inputFecha" class="form-control" readonly>
 
         </div>
 
@@ -54,65 +45,33 @@
 @section('js')
 <script>
   $(document).ready(function () {
-    ///////////////////////////////////////////////////////////////////
-    // ruta
-    ///////////////////////////////////////////////////////////////////
-
-    var rutaBuscar =  "{{ route('horario.buscar', ['cedula' => '.valor']) }}";
-    var ok = false;
-
-    //
-    $("#btnSearch").on('click', function() {
-      let cedula = $("#inputCedula").val();
-      let _ruta = rutaBuscar.replace('.valor', cedula);
-
-      $("#inputNombre").val('');
-      $("#inputUbicacion").val('');
-      fetch(_ruta)
-      .then(r => r.json())
-      .then(resp => {
-        if(resp.success) {
-          $("#inputNombre").val(resp.data.person.first_last_name + " " + resp.data.person.second_last_name + ", " + resp.data.person.first_name + " " + resp.data.person.second_name);
-          $("#inputUbicacion").val(resp.data.unidad.name);
-          ok = true;
-        }
-        else {
-          lib_ShowMensaje(resp.message, 'error');
-          ok = false;
-        }
-      });
-    });
-
-    //
     $("#btnRegistrar").on('click', function() {
-      if(! ok) {
-        lib_ShowMensaje('Error: Debe buscar al empleado.', 'error');
+      let cedula = $("#inputCedula").val();
+
+      if(lib_isEmpty(cedula)) {
+        lib_ShowMensaje('Error: Debe ingresar un número de cédula!', 'error');
       }
       else {
-        let cedula = $("#inputCedula").val();
-
         fetch("{{ route('horario.registrar') }}", {
-          headers: {
-            'Content-Type' : 'application/json',
-            'Accept' : 'application/json',
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-          },
-          method: 'POST',
-          body: JSON.stringify({'cedula': cedula})
-        })
-        .then(r => r.json())
-        .then(resp => {
-          if(resp.success) {
-            ok = false;
-            $("#inputCedula").val('');
-            $("#inputNombre").val('');
-            $("#inputUbicacion").val('');
-            lib_ShowMensaje(resp.message, 'mensaje');
-          }
-          else {
-            lib_ShowMensaje(resp.message, 'error');
-          }
-        });
+            headers: {
+              'Content-Type' : 'application/json',
+              'Accept' : 'application/json',
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            method: 'POST',
+            body: JSON.stringify({'cedula': cedula})
+          })
+          .then(r => r.json())
+          .then(resp => {
+            if(resp.success) {
+              $("#inputNombre").val(resp.data.person.first_name);
+              $("#inputUbicacion").val(resp.data.unidad.name);
+              $("#inputFecha").val('Se realizo el registro a las: ' + resp.message);
+            }
+            else {
+              lib_ShowMensaje(resp.message, 'error');
+            }
+          });
       }
     });
 
@@ -121,6 +80,7 @@
       $("#inputCedula").val('');
       $("#inputNombre").val('');
       $("#inputUbicacion").val('');
+      $("#inputFecha").val('');
     });
   });
 </script>

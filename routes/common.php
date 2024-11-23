@@ -36,7 +36,7 @@ Route::get('loadFromExcel', function() {
     Excel::import(new App\Imports\AdminImport, $dataPath . 'adm-obreros/administrativos-copia.csv');
  
     echo 'obreros...<br>';
-    Excel::import(new App\Imports\ObreroImport, $dataPath . 'adm-obreros/administrativos-copia.csv');
+    Excel::import(new App\Imports\ObreroImport, $dataPath . 'adm-obreros/obreros-copia.csv');
 
     echo 'uniformados...<br>';
     Excel::import(new App\Imports\PoliceImport, $dataPath . 'uniformados/uniformados-copia.csv');

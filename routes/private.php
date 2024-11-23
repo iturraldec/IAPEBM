@@ -105,9 +105,18 @@ Route::get('pdf/employee/listado/por-unidad/{tipo}/{unidad}', [EmployeeQryContro
 Route::get('pdf/employee/constancia-laboral-check/{cedula}', [EmployeeQryController::class, 'constanciaLaboralCheck'])->name('pdf.employee.constancia-laboral-check');
 Route::get('pdf/employee/constancia-laboral/{cedula}/{motivo}', [EmployeeQryController::class, 'constanciaLaboral'])->name('pdf.employee.constancia-laboral');
 
-// registro de entrada/salida de personal
-Route::get('horario/registro', [HorarioController::class, 'index'])->name('horario.index');
-Route::get('horario/{cedula}/buscar', [HorarioController::class, 'buscar'])->name('horario.buscar');
-Route::post('horario/registrar', [HorarioController::class, 'registrar'])->name('horario.registrar');
-Route::get('horario/listado', [HorarioController::class, 'listado'])->name('horario.listado');
-Route::get('horario/{desde}/{hasta}/listar', [HorarioController::class, 'listadoToPdf'])->name('horario.listar');
+//////////////////////////////////////////////////////////////////////
+//                HORARIO DE E/S
+//////////////////////////////////////////////////////////////////////
+
+Route::prefix('horario')->group(function() {
+  Route::get('aperturar', [HorarioController::class, 'aperturar'])->name('horario.aperturar');
+  Route::get('registrar', [HorarioController::class, 'registrar'])->name('horario.registrar');
+  Route::post('registrar', [HorarioController::class, 'registrar'])->name('horario.registrar');
+  Route::get('listado', [HorarioController::class, 'listado'])->name('horario.listado');
+  Route::get('{desde}/{hasta}/listar', [HorarioController::class, 'listadoToPdf'])->name('horario.listado-pdf');
+});
+
+//////////////////////////////////////////////////////////////////////
+//                FIN DE HORARIO DE E/S
+//////////////////////////////////////////////////////////////////////

@@ -8,11 +8,5 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 //
 class Asistencia extends Model
 {
-    protected $fillable = ['employee_id', 'entrada', 'salida'];
-
-    //
-    public function employee() : BelongsToMany
-    {
-        return $this->belongsToMany(Employee::class);
-    }
+    protected $fillable = ['employee_id', 'unidad_id', 'entrada', 'salida', 'observacion'];
 }

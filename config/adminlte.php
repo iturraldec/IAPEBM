@@ -306,18 +306,18 @@ return [
                 [
                     'text'    => 'Permisos',
                     'route'   => 'admin.permissions.index',
-                    'can'     => 'Usuarios'
+                    //'can'     => 'Admin.Usuarios'
                 ],
                 [
                     'text'    => 'Roles',
                     'route'   => 'admin.roles.index',
-                    'can'     => 'Usuarios'
+                    //'can'     => 'Admin.Usuarios'
                 ],
                 [
                     'text'  => 'Listado de Usuarios',
                     'route' => 'admin.users.index',
                     'icon'  => 'fas fa-table',
-                    'can'     => 'Usuarios'
+                    //'can'   => 'Admin.Usuarios'
                 ],
                 [
                     'text'   => 'Cambio de clave',
@@ -327,7 +327,7 @@ return [
                 [
                     'text'   => 'Resetear clave',
                     'route'  => 'admin.users.password.reset',
-                    'can'     => 'Usuarios'
+                    //'can'    => 'Admin.Usuarios'
                 ],
             ],
         ],
@@ -384,28 +384,32 @@ return [
                 [
                     'text'    => 'Administrativos',
                     'route'   => 'employees-adm.index',
-                    'can'     => 'Personal Administrativo'
+                    //'can'     => 'Personal Administrativo'
                 ],
                 [
                     'text'    => 'Obreros',
                     'route'     => 'employees-obrero.index',
-                    'can'     => 'Personal Obrero'
+                    //'can'     => 'Personal Obrero'
                 ],
                 [
                     'text'    => 'Uniformados',
                     'route'   => 'employees-police.index',
-                    'can'     => 'Personal Uniformado'
+                    //'can'     => 'Personal Uniformado'
                 ],
                 [
                     'text'  => 'Entradas/Salidas',
                     'icon'  => 'fas fa-user-clock',
                     'submenu'   => [
                         [
-                            'text'  => 'Registro de E/S',
-                            'route' => 'horario.index'
+                            'text'  => 'Aperturar horario',
+                            'route' => 'horario.aperturar'
                         ],
                         [
-                            'text'  => 'Listado de E/S',
+                            'text'  => 'Registrar',
+                            'route' => 'horario.registrar'
+                        ],
+                        [
+                            'text'  => 'Listado',
                             'route'   => 'horario.listado'
                         ],
                     ]
@@ -426,7 +430,7 @@ return [
             'text'    => 'Mantenimiento',
             'icon'    => 'fas fa-tools',
             'url'   => '/',
-            'can'     => 'Sistema',
+            //'can'     => 'Sistema',
         ],
     ],
 

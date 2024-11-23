@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('asistencias', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('employee_id');
-            $table->dateTime('entrada');
+            $table->unsignedSmallInteger('unidad_id');
+            $table->dateTime('entrada')->nullable();
             $table->dateTime('salida')->nullable();
+            $table->string('observacion', 100)->nullable();
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

@@ -157,7 +157,7 @@ class ObreroImport implements ToCollection, WithHeadingRow
                                  break;
                         case 16 : $record['info'] = $row['senales_part_usr'];
                                  break;
-                        case 17 : $record['info'] = $row['lentes_usr'];
+                        /* case 17 : $record['info'] = $row['lentes_usr'];
                                  break;
                         case 18 : $record['info'] = $row['talla_camisa_usr'];
                                  break;
@@ -166,7 +166,7 @@ class ObreroImport implements ToCollection, WithHeadingRow
                         case 20 : $record['info'] = $row['talla_calzado_usr'];
                                  break;
                         case 21 : $record['info'] = $row['talla_gorra_usr'];
-                                 break;
+                                 break; */
                         default: $record['info'] = '?';
                                  break;
                     }
