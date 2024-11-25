@@ -3,6 +3,10 @@
 namespace App\Clases;
 
 use App\Models\Asistencia;
+use App\Models\Permiso;
+use App\Models\EmpleadoReposo;
+use App\Models\Vacacione;
+
 
 //
 class Horario
@@ -15,39 +19,64 @@ class Horario
     return ! is_null($resp);
   }
 
-  // genera el horario para la fecha actual
+  // genera el horario para la fecha actual (hoy)
   public function generate() : void
   {
     $empleados = EmpleadoAbstract::GetInPlanta();
+    $hoy = date('Y-m-d');
     foreach($empleados as $item) {
-      Asistencia::create(['employee_id' => $item->id, 'unidad_id'   => $item->unidad_id]);
+      $data = ['employee_id' => $item->id, 
+               'unidad_id'   => $item->unidad_id
+              ];
+        
+      // verifico si tiene permisos para el dia de hoy
+
+      $permiso = Permiso::where('employee_id', $item->id)
+                          ->whereDate('hasta', '>=', $hoy)
+                          ->first();
+      if($permiso) {
+        $data['observacion'] = 'DE PERMISO DEL '.$permiso->desde.' AL '.$permiso->hasta;
+      }
+      else {
+        // verifico si tiene reposos para el dia de hoy
+
+        $reposo = EmpleadoReposo::where('employee_id', $item->id)
+                                  ->whereDate('hasta', '>=', $hoy)
+                                  ->first();
+        if($reposo) {
+          $data['observacion'] = 'DE REPOSO DEL '.$reposo->desde.' AL '.$reposo->hasta;
+        }
+        else {
+          // verifico si tiene vacaciones para el dia de hoy
+
+          $vacacion = Vacacione::where('employee_id', $item->id)
+                                ->whereDate('hasta', '>=', $hoy)
+                                ->first();
+
+          if($vacacion) {
+            $data['observacion'] = 'DE VACACIONES DEL '.$vacacion->desde.' AL '.$vacacion->hasta;
+          }
+        }
+      }
+
+      Asistencia::create($data);
     };
   }
 
-  // genera la entrada/salida de un trabajador, retorna la fecha y hora
-  public function generateIO(int $employee_id) : string
+  // actualiza la entrada/salida de un trabajador
+  public function generateIO($registro, $hoy) : string
   {
-    $hoy = date('Y-m-d H:i');
-    if(! $this->is_generated($hoy)) {
-      $this->generate();
-    }
-
-    $registro = Asistencia::orderBy('id', 'desc')
-                            ->where('employee_id', $employee_id)
-                            ->whereDate('entrada', $hoy)
-                            ->first();
-
     // entrada
-    if(is_null($registro) || ! is_null($registro->salida)) {
-      $data['employee_id'] = $employee_id;
-      $data['entrada'] = $hoy;
-      Asistencia::Create($data);
+    if(is_null($registro->entrada)) {
+      $registro->update(['entrada' => $hoy]);
+
+      return "Entrada: $hoy";
     }
     else {
-    // salida
+      // salida
       $registro->update(['salida' => $hoy]);
-    }
 
-    return $hoy;
+      return "Salida: $hoy";
+    }
   }
 }

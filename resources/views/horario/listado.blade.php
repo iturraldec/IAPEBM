@@ -13,15 +13,10 @@
 @section('content')
   <div class="row">
     <div class="col-4 mx-auto card">
-      <div class="card-body">
+      <div class="card-body">        
         <div class="form-group">
-          <label for="inputDesde">Fecha inicial</label>
-          <input type="date" class="form-control" id="inputDesde" value="{{ date('Y-m-d') }}">
-        </div>
-        
-        <div class="form-group">
-          <label for="inputHasta">Fecha final</label>
-          <input type="date" class="form-control" id="inputHasta" value="{{ date('Y-m-d') }}">
+          <label for="inputFecha">Fecha</label>
+          <input type="date" class="form-control" id="inputFecha" value="{{ date('Y-m-d') }}">
         </div>
       </div>
 
@@ -35,11 +30,10 @@
 @section('js')
 <script>
   $(document).ready(function () {
-    var ruta = "{{ route('horario.listar', ['desde' => '.desde', 'hasta' => '.hasta']) }}";
+    var ruta = "{{ route('horario.listado-pdf', ['fecha' => '.valor']) }}";
 
     $("#btnConsultar").on("click", function() {
-      let _ruta = ruta.replace('.desde', $("#inputDesde").val());
-      _ruta = _ruta.replace('.hasta', $("#inputHasta").val());
+      let _ruta = ruta.replace('.valor', $("#inputFecha").val());
 
       window.open(_ruta, '_blank');
     })

@@ -110,11 +110,12 @@ Route::get('pdf/employee/constancia-laboral/{cedula}/{motivo}', [EmployeeQryCont
 //////////////////////////////////////////////////////////////////////
 
 Route::prefix('horario')->group(function() {
+  Route::get('apertura', [HorarioController::class, 'index'])->name('horario.apertura');
   Route::get('aperturar', [HorarioController::class, 'aperturar'])->name('horario.aperturar');
   Route::get('registrar', [HorarioController::class, 'registrar'])->name('horario.registrar');
-  Route::post('registrar', [HorarioController::class, 'registrar'])->name('horario.registrar');
+  Route::get('{cedula}/registrar', [HorarioController::class, 'registra'])->name('horario.registra');
   Route::get('listado', [HorarioController::class, 'listado'])->name('horario.listado');
-  Route::get('{desde}/{hasta}/listar', [HorarioController::class, 'listadoToPdf'])->name('horario.listado-pdf');
+  Route::get('{fecha}/listar', [HorarioController::class, 'listadoToPdf'])->name('horario.listado-pdf');
 });
 
 //////////////////////////////////////////////////////////////////////

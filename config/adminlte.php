@@ -402,7 +402,7 @@ return [
                     'submenu'   => [
                         [
                             'text'  => 'Aperturar horario',
-                            'route' => 'horario.aperturar'
+                            'route' => 'horario.apertura'
                         ],
                         [
                             'text'  => 'Registrar',

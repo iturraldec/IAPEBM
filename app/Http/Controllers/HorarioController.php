@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Clases\RequestResponse;
 use Symfony\Component\HttpFoundation\Response;
-use App\Clases\EmpleadoAbstract;
-use App\Models\Asistencia;
-use App\Helpers\DateHelper;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use App\Clases\EmpleadoAbstract;
 use App\Clases\Horario;
-use Svg\Tag\Rect;
+use App\Models\Asistencia;
 
 //
 class HorarioController extends Controller
@@ -32,41 +30,66 @@ class HorarioController extends Controller
   }
 
   //
-  public function aperturar(Request $request)
+  public function index()
   {
-    if($request->ajax()) {
-      if(! $this->_horario->is_generated(date('Y-m-d'))) {
-        $this->_horario->generate();
-      }
-
-      $this->_requestResponse->success = true;
-      $this->_requestResponse->message = 'Horario aperturado!';
-
-      return response()->json($this->_requestResponse);
-    }
-    else {
-      return view('horario.apertura');
-    }
+    return view('horario.apertura');
   }
 
   //
-  public function registrar(Request $request)
+  public function aperturar(Request $request)
   {
-    $empleado = EmpleadoAbstract::GetByCedula($request->cedula);
-    if(! $empleado) {
-      $this->_requestResponse->success = false;
-      $this->_requestResponse->message = 'Error: El número de cédula no existe!';
+    if(! $this->_horario->is_generated(date('Y-m-d'))) {
+      $this->_horario->generate();
+    }
 
-      return response()->json($this->_requestResponse, Response::HTTP_NOT_FOUND);
+    $this->_requestResponse->success = true;
+    $this->_requestResponse->message = 'Horario aperturado!';
+
+    return response()->json($this->_requestResponse);
+  }
+
+  //
+  public function registrar()
+  {
+    return view('horario.registro');
+  }
+
+  //
+  public function registra(string $cedula)
+  {
+    $hoy = date('Y-m-d');
+    if(! $this->_horario->is_generated($hoy)) {
+      $this->_requestResponse->message = "Error: No se ha aperurado el dia: $hoy";
+
+      return response()->json($this->_requestResponse, Response::HTTP_BAD_REQUEST);
     }
     else {
-      $empleado->unidad;
-      $this->_requestResponse->success = true;
-      $this->_requestResponse->message = $this->_horario->generateIO($empleado->id);
-      $this->_requestResponse->data = $empleado;
+      $empleado = EmpleadoAbstract::GetByCedula($cedula);
+      if(! $empleado) {
+        $this->_requestResponse->message = 'Error: El número de cédula no existe!';
 
-      return response()->json($this->_requestResponse);
+        return response()->json($this->_requestResponse, Response::HTTP_NOT_FOUND);
       }
+      else {
+        $registro = Asistencia::orderBy('id', 'desc')
+                                ->where('employee_id', $empleado->id)
+                                ->whereDate('created_at', $hoy)
+                                ->first();
+        if(! $registro) {
+          $this->_requestResponse->message = 'Error: El número de cédula no existexxx!';
+
+          return response()->json($this->_requestResponse, Response::HTTP_NOT_FOUND);
+        }
+        else {
+          $this->_requestResponse->success = true;
+          $this->_requestResponse->message = $this->_horario->generateIO($registro, date('Y-m-d H:i:s'));
+          $empleado->unidad;
+          $this->_requestResponse->data = $empleado;
+    
+          return response()->json($this->_requestResponse);
+        }
+      }
+    }
   }
 
   //
@@ -76,24 +99,24 @@ class HorarioController extends Controller
   }
 
   //
-  public function listadoToPdf(string $desde, string $hasta)
-  {
-    $hoy = DateHelper::fechaCadena(now());
-    
+  public function listadoToPdf(string $fecha)
+  { 
     $listado = DB::table('asistencias')
                   ->join('employees', 'asistencias.employee_id', '=', 'employees.id')
                   ->join('unidades', 'employees.unidad_id', '=', 'unidades.id')
                   ->join('people', 'employees.person_id', '=', 'people.id')
-                  ->orderBy('asistencias.entrada')
+                  ->orderBy('unidades.name')
+                  ->whereDate('asistencias.created_at', $fecha)
                   ->select('asistencias.*', 
+                            'people.cedula', 
                             'people.first_name', 
                             'people.second_name',
                             'people.first_last_name',
                             'people.second_last_name',
                             'unidades.name as unidad')
                   ->get();
-    $pdf = Pdf::loadView('horario.listado-pdf', compact('listado'));
-    
+    $pdf = Pdf::setPaper('a4', 'landscape')->loadView('horario.listado-pdf', compact('fecha', 'listado'));
+
     return $pdf->stream('horario.pdf');
   }
 }

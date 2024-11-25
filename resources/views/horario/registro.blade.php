@@ -47,31 +47,29 @@
   $(document).ready(function () {
     $("#btnRegistrar").on('click', function() {
       let cedula = $("#inputCedula").val();
+      let ruta = "{{ route('horario.registra', ['cedula' => '.valor']) }}";
 
       if(lib_isEmpty(cedula)) {
         lib_ShowMensaje('Error: Debe ingresar un número de cédula!', 'error');
       }
       else {
-        fetch("{{ route('horario.registrar') }}", {
+        fetch(ruta.replace('.valor', cedula), {
             headers: {
               'Content-Type' : 'application/json',
               'Accept' : 'application/json',
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            },
-            method: 'POST',
-            body: JSON.stringify({'cedula': cedula})
-          })
-          .then(r => r.json())
-          .then(resp => {
-            if(resp.success) {
-              $("#inputNombre").val(resp.data.person.first_name);
-              $("#inputUbicacion").val(resp.data.unidad.name);
-              $("#inputFecha").val('Se realizo el registro a las: ' + resp.message);
             }
-            else {
-              lib_ShowMensaje(resp.message, 'error');
-            }
-          });
+        })
+        .then(r => r.json())
+        .then(resp => {
+          if(resp.success) {
+            $("#inputNombre").val(resp.data.person.first_name);
+            $("#inputUbicacion").val(resp.data.unidad.name);
+            $("#inputFecha").val(resp.message);
+          }
+          else {
+            lib_ShowMensaje(resp.message, 'error');
+          }
+        });
       }
     });
 
