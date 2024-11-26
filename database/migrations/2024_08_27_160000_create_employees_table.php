@@ -22,7 +22,6 @@ return new class extends Migration
             $table->unsignedSmallInteger('condicion_id');
             $table->unsignedSmallInteger('tipo_id');
             $table->unsignedSmallInteger('unidad_id');
-            //$table->string('rif', 20);
             $table->string('rif', 20)->nullable();
             $table->string('codigo_patria', 20);
             $table->string('serial_patria', 20);
