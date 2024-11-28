@@ -282,187 +282,13 @@
               <div class="row">
                 
                 <!-- correos del empleado -->
-                <div class="col-6">
-                  <div class="card card-primary">
-                    <div class="card-header bg-lightblue">
-                      <h3 class="card-title">Correo(s) del Empleado*</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="input-group">
-                            <input type="email"
-                                class="form-control"
-                                id="inputEmail"
-                                placeholder="Ingresa el correo electrónico"
-                                onkeyup="this.value = this.value.toLowerCase();"
-                                title="Correo del empleado"
-                            />
-  
-                            <div class="input-group-append">
-                              <button type="button" 
-                                      id="btnEmailAdd" 
-                                      class="input-group-text btn btn-primary btn-sm"
-                                      title="Agregar correo del empleado"
-                              >
-                                <i class="fas fa-plus-square"></i>
-                              </button>    
-                            </div>
-                          </div>
-                        </div>
-  
-                        <div class="col-12">
-                          <table id="emailsDT" class="table table-hover border border-primary">
-                            <thead class="text-center">
-                              <tr>
-                                <th scope="col">Correo</th>
-                                <th scope="col"></th>
-                              </tr>
-                            </thead>
-              
-                            <tbody></tbody>
-                          </table>
-                        </div>
-                      </div> 
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                </div>
-                <!-- fin de correos del empleado-->
+                @include('common.datos-correos')
   
                 <!-- telefonos del empleado -->
-                <div class="col-6">
-                  <div class="card bg-light ">
-                    <div class="card-header bg-lightblue">
-                      <h3 class="card-title">Teléfono(s) del Empleado*</h3>
-                    </div>
-                    <!-- /.card-header -->
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col-6">
-                            <select id="selectPhoneType" class="form-control" title="Tipo de número">
-                              <option value="0" selected>SELECCIONE TIPO DE NÚMERO</option>
-                              @foreach (\App\Enums\PhoneTypeEnum::cases() as $case)
-                                <option value="{{ $case->value }}">{{ $case->label() }}</option>
-                              @endforeach
-                              </select>
-                          </div>
-  
-                          <div class="col-6">
-                            <div class="input-group">
-                              <input type="text"
-                                  class="form-control"
-                                  id="inputPhone"
-                                  placeholder="Ingresa el número de teléfono"
-                                  title="Teléfono del empleado"
-                              />
-        
-                              <div class="input-group-append">
-                                <button type="button" 
-                                        id="btnPhoneAdd" 
-                                        class="input-group-text btn btn-primary btn-sm"
-                                        title="Agregar número de teléfono del empleado"
-                                >
-                                  <i class="fas fa-plus-square"></i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-        
-                          <div class="col-12">
-                            <table id="phonesDT" class="table table-hover border border-primary">
-                              <thead>
-                                <tr>
-                                  <th scope="col">TipoID</th>
-                                  <th scope="col">Tipo</th>
-                                  <th scope="col">Número</th>
-                                  <th scope="col"></th>
-                                </tr>
-                              </thead>
-                
-                              <tbody></tbody>
-                            </table>
-                          </div>
-                        </div>  
-                      </div>
-                      <!-- /.card-body -->
-                  </div>
-                </div>
-                <!-- fin de telefonos del empleado-->
+                @include('common.datos-tlfs')
   
                 <!-- direcciones del empleado -->
-                <div class="col-12">
-                  <div class="card bg-light">
-                    <div class="card-header bg-lightblue">
-                      <h3 class="card-title">Dirección(es) de ubicación del Empleado*</h3>
-                    </div>
-                    <!-- /.card-header -->
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col-6 mb-1">
-                            <select id="selectEstados" class="form-control" title="Ubicación del empleado: Estado">
-                              <option value="0" selected>SELECCIONE EL ESTADO</option>
-                              @foreach ($estados as $estado)
-                                <option value="{{ $estado->id_estado }}">{{ $estado->estado }}</option>
-                              @endforeach
-                              </select>
-                            </select>
-                          </div>
-  
-                          <div class="col-6">
-                            <select id="selectMunicipios" class="form-control" title="Ubicación del empleado: Municipio"></select>
-                          </div>
-  
-                          <div class="col-6 mb-1">
-                            <select id="selectParroquias" class="form-control" title="Ubicación del empleado: Parroquia"></select>
-                          </div>
-  
-                          <div class="col-6">
-                            <div class="input-group">
-                              <input type="text"
-                                  class="form-control"
-                                  id="inputAddress"
-                                  placeholder="Ingresa la dirección"
-                                  onkeyup="this.value = this.value.toUpperCase();"
-                                  title="Ubicación del empleado: Dirección"
-                              />
-        
-                              <div class="input-group-append">
-                                <button type="button"
-                                        id="btnAddressAdd"
-                                        class="input-group-text btn btn-primary btn-sm"
-                                        title="Agregar ubicación del empleado"
-                                >
-                                  <i class="fas fa-plus-square"></i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-        
-                          <div class="col-12">
-                            <table id="addressesDT" class="table table-hover border border-primary">
-                              <thead>
-                                <tr>
-                                  <th scope="col">Estado</th>
-                                  <th scope="col">Municipio</th>
-                                  <th scope="col">ParroquiaID</th>
-                                  <th scope="col">Parroquia</th>
-                                  <th scope="col">Dirección</th>
-                                  <th scope="col">Z. P.</th>
-                                  <th scope="col"></th>
-                                </tr>
-                              </thead>
-                
-                              <tbody></tbody>
-                            </table>
-                          </div>
-                        </div>  
-                      </div>
-                      <!-- /.card-body -->
-                  </div>
-                </div>
-                <!-- fin de direcciones del empleado-->
+                @include('common.datos-addresses')
   
                 <!-- observaciones -->
                 <div class="col">
@@ -732,14 +558,7 @@
                                   placeholder="Ingresa la fecha"
                                   title="Fecha de asignación del rango"
                               />
-                            </div>
-                          </div>
-  
-                          <div class="col-4">
-                            <div class="input-group mb-2">
-                              <label for="inputRangoFile" class="form-control btn border"  title="Documento de designación de rango">Archivo</label>
-                              <input type="file" id="inputRangoFile" style="display: none;" />
-        
+
                               <div class="input-group-append">
                                 <button type="button"
                                         id="btnAddRango"
@@ -749,6 +568,7 @@
                                   <i class="fas fa-plus-square"></i>
                                 </button>
                               </div>
+
                             </div>
                           </div>
         
@@ -997,11 +817,6 @@
 @section('js')
 <script>
   $(document).ready(function () {
-    ///////////////////////////////////////////////////////////////////
-    // ruta de la entidad a actualizar
-    ///////////////////////////////////////////////////////////////////
-
-    var ruta =  "{{ route('employees-police.update', ['employees_polouse' => $data['employee']]) }}";
 
     ///////////////////////////////////////////////////////////////////
     // index de fila de tabla al agregar/modificar reposos
@@ -1055,46 +870,28 @@
                     });
 
     ///////////////////////////////////////////////////////////////////
+    // tabla de rangos
+    /////////////////////////////////////////////////////////////////// 11216456
+
+    temp = {{ Js::from($data['police']['rangos']) }};
+
+    var rangos = temp.map(item => {
+                    return {
+                      id        : item.id,
+                      rango     : item.rango.name,
+                      fecha     : item.documento_fecha,
+                      documento : '*',
+                      status    : ''
+                    }                
+                  });
+
+    ///////////////////////////////////////////////////////////////////
     // tabla de familiares
     ///////////////////////////////////////////////////////////////////
 
     temp = {{ Js::from($data['employee']->familiaresFull()) }};
     
     var familiares = temp.map(item => ({...item, status: ''}));
-
-    ///////////////////////////////////////////////////////////////////
-    // tabla de rangos
-    ///////////////////////////////////////////////////////////////////
-
-    var rangosDT = $('#rangosDT').DataTable({
-      info: false,
-      paging: false,
-      searching: false,
-      columns: [
-        {
-          data: 'id',
-          visible: false
-        },
-        {
-          data: 'rango',
-          orderable: false
-        },
-        {
-          data: 'fecha'
-        },
-        {
-          data: 'documento',
-          orderable: false
-        },
-        {
-          data: null,
-          render: function ( data, type, row, meta ) {
-            return '<button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar rango"><i class="fas fa-trash-alt"></i></button>';
-          },
-          orderable: false
-        }
-      ]
-    });
 
     ///////////////////////////////////////////////////////////////////
     // tabla de estudios
@@ -1204,8 +1001,6 @@
     ///////////////////////////////////////////////////////////////////
 
     function initForm() {
-      let addresses = {{ Js::from($data['person']['fullAddresses']) }};
-
       // configurar 'toastr'
       toastr.options.closeButton = true;
       toastr.options.timeOut = 0;
@@ -1219,6 +1014,9 @@
 
       // pintar direcciones
       addressesDraw();
+
+      // pintar rangos
+      rangosDraw();
 
       // pintar familiares
       familyDraw();
@@ -1417,7 +1215,7 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // cargar municipios
+    // cargar municipios, segun un estado
     ///////////////////////////////////////////////////////////////////
 
     $("#selectEstados").change(function() {
@@ -1437,7 +1235,7 @@
     });
 
     ///////////////////////////////////////////////////////////////////
-    // cargar parroquias
+    // cargar parroquias, segun un municipio
     ///////////////////////////////////////////////////////////////////
 
     $("#selectMunicipios").change(function() {
@@ -1542,23 +1340,51 @@
     });
 
     ///////////////////////////////////////////////////////////////////
+    // rangos: pintar
+    ///////////////////////////////////////////////////////////////////
+    
+    function rangosDraw() {
+      let fila = '';
+
+      $("#rangosDT tbody").empty();
+      rangos.forEach(item => {
+        if(item.status != 'D') {
+          fila = `<tr>
+                    <td>${item.rango}</td>
+                    <td>${item.fecha}</td>
+                    <td>${item.documento}</td>
+                    <td>
+                      <button type="button" class="eliminar btn btn-danger btn-sm" title="Eliminar correo"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>`;
+        
+          $('#rangosDT tbody').append(fila);
+        }
+      });
+    };
+
+    ///////////////////////////////////////////////////////////////////
     // agregar rango
     ///////////////////////////////////////////////////////////////////
 
     $("#btnAddRango").click(function() {
       let fecha = $("#inputRangoFecha").val();
       
-      if(lib_isEmpty(fecha)) {
+      if($("#selectRangos :selected").val() == '0') {
+        lib_toastr("Error: Debe seleccionar el rango!");
+      }
+      else if(lib_isEmpty(fecha)) {
         lib_toastr("Error: Debe ingresar fecha de designación del Rango!");
       }
       else {
-        rangosDT.row.add({
-          'id'        : $("#selectRangos :selected").val(),
-          'rango'     : $("#selectRangos :selected").text(),
-          'fecha'     : fecha,
-          'documento' : 'archivo'
-        })
-        .draw();
+        rangos.push({
+          id: 0,
+          rango   : $("#selectRangos :selected").text(),
+          fecha   : fecha,
+          documento : '*',
+          status  : 'C'
+        });
+        rangosDraw();
         $("#inputRangoFecha").val("");
       }
     });
@@ -1567,8 +1393,16 @@
     // eliminar rango
     ///////////////////////////////////////////////////////////////////
 
-    $("#rangosDT tbody").on("click",".eliminar",function() {
-      rangosDT.row($(this).parents()).remove().draw();
+    $("#rangosDT tbody").on("click", ".eliminar", function() {
+      let fila = $(this).closest("tr");
+      let rango = fila.find("td").eq(0).text();
+
+      rangos.forEach(item => {
+        if(item.rango == rango) {
+          item.status = 'D';
+        }
+      });
+      rangosDraw();
     });
 
     ///////////////////////////////////////////////////////////////////
@@ -2118,7 +1952,7 @@
       data.append('repososDT', JSON.stringify(repososDT.rows().data().toArray()));
       data.append('vacaciones', JSON.stringify(vacaciones));
 
-      fetch(ruta, {
+      fetch("{{ route('employees-police.update', ['employees_polouse' => $data['employee']]) }}", {
         headers: {
           'Accept' : 'application/json'
         },

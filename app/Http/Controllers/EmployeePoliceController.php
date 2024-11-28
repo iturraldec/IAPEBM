@@ -163,7 +163,7 @@ class EmployeePoliceController extends Controller
     return response()->json($this->_requestResponse, Response::HTTP_CREATED);
   }
 
-  // edicion de emplado
+  // edicion de empleado 11216456
   public function edit(Employee $employees_polouse)
   {
     $_estados         = new UbicacionController();
@@ -175,7 +175,7 @@ class EmployeePoliceController extends Controller
     $rangos           = Rango::orderBy('name')->get();
     $data['person']   = Person::getById($employees_polouse->person_id);
     $data['employee'] = $employees_polouse;
-    $data['police']   = Police::where('employee_id', $employees_polouse->id)->first();
+    $data['police']   = Police::where('employee_id', $employees_polouse->id)->with('rangos.rango')->first();
     
     return view('employee-police.edit', compact('estados', 'unidades', 'cargos', 'condiciones', 'tipos', 'rangos', 'data'));
   }

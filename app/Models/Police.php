@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
+//
 class Police extends Model
 {
   //
@@ -21,12 +23,18 @@ class Police extends Model
   //
   public function employee() : BelongsTo
   {
-    return $this->belongsTo(Police::class);
+    return $this->belongsTo(Employee::class, 'employee_id');
   }
 
   //
-  public function rangos() : HasMany 
+  public function rangos() : HasMany
   {
-    return $this->hasMany(PoliceRango::class);
+    return $this->hasMany(PoliceRango::class, 'police_id', 'employee_id');
+  }
+
+  //
+  public function ultimoRango() : HasOne
+  {
+    return $this->hasOne(PoliceRango::class, 'police_id', 'employee_id')->latest();
   }
 }

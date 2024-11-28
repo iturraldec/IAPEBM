@@ -1052,8 +1052,6 @@
     ///////////////////////////////////////////////////////////////////
 
     function initForm() {
-      let addresses = {{ Js::from($data['person']['fullAddresses']) }};
-
       // configurar 'toastr'
       toastr.options.closeButton = true;
       toastr.options.timeOut = 0;

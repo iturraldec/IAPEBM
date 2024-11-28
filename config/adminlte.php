@@ -333,7 +333,7 @@ return [
         ],
         [
             'text'    => 'Definiciones',
-            'can'     => 'Sistema',
+            //'can'     => 'Sistema',
             'submenu'   => [
                 [
                     'text'    => 'Unidades Operativas',
