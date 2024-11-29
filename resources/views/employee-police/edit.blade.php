@@ -617,108 +617,7 @@
             <!-- fin de datos fisionomicos -->
   
             <!-- datos familiaries -->
-            <div class="tab-pane fade" id="custom-tabs-one-familia" role="tabpanel" aria-labelledby="custom-tabs-one-familia-tab">
-              <div class="card card-primary">
-                <div class="card-header bg-lightblue">
-                  <h3 class="card-title">Familiares</h3>
-                </div>
-                <!-- /.card-header -->
-    
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-3 form-group">
-                      <label for="inputFPNombre">Primer Nombre*</label>
-                      <input type="text" 
-                            class="form-control" 
-                            id="inputFPNombre"
-                            minlength="3"
-                            maxlength="50"
-                            placeholder="Ingresa su primer nombre"
-                            onkeyup="this.value = this.value.toUpperCase();"
-                            title="Primer nombre del familiar"
-                      />
-                    </div>
-    
-                    <div class="col-3 form-group">
-                      <label for="inputFSNombre">Segundo Nombre</label>
-                      <input type="text" 
-                            class="form-control" 
-                            id="inputFSNombre"
-                            minlength="3"
-                            maxlength="50"
-                            placeholder="Ingresa su segundo nombre"
-                            onkeyup="this.value = this.value.toUpperCase();"
-                            title="Segundo nombre del familiar"
-                      />
-                    </div>
-    
-                    <div class="col-3 form-group">
-                      <label for="inputFPApellido">Primer Apellido*</label>
-                      <input type="text" 
-                            class="form-control" 
-                            id="inputFPApellido"
-                            minlength="3"
-                            maxlength="50"
-                            placeholder="Ingresa su primer apellido"
-                            onkeyup="this.value = this.value.toUpperCase();"
-                            title="Primer apellido del familiar"
-                      />
-                    </div>
-    
-                    <div class="col-3 form-group">
-                      <label for="inputFSApellido">Segundo Apellido</label>
-                      <input type="text" 
-                            class="form-control" 
-                            id="inputFSApellido"
-                            minlength="3"
-                            maxlength="50"
-                            placeholder="Ingresa su segundo apellido"
-                            onkeyup="this.value = this.value.toUpperCase();"
-                            title="Segundo apellido del familiar"
-                      />
-                    </div>
-    
-                    <div class="col-3 form-group">
-                      <label for="selectParentesco">Parentesco</label>
-                      <select id="selectParentesco" class="form-control" name="parentesco_id" title="Parentesco">
-                        <option value="0" selected>SELECCIONE</option>
-                        @foreach (App\Enums\ParentescoEnum::cases() as $case)
-                          <option value="{{ $case->value }}">{{ $case->label() }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-    
-                    <div class="col-3 form-group d-flex">
-                      <button type="button"
-                              id="btnFamiliarAdd"
-                              class="form-control btn btn-primary mt-auto" 
-                              title="Agregar familiar"
-                      >Agregar familiar</button>
-                    </div>
-    
-                    <div class="col-12">
-                      <table id="familiaresDT" class="table table-hover border border-primary" width="100%">
-                        <thead class="text-center">
-                          <tr>
-                            <th>Parentesco</th>
-                            <th>Primer Nombre</th>
-                            <th>Segundo Nombre</th>
-                            <th>Primer Apellido</th>
-                            <th>Segundo Apellido</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-          
-                        <tbody>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.card-body -->
-              </div>
-            </div>
-            <!-- fin de datos familiares -->
+            @include('common.datos-familiares')
   
             <!-- datos estudiantiles -->
             @include('common.datos-academicos')
@@ -727,74 +626,10 @@
             @include('common.datos-permisos')
   
             <!-- reposos -->
-            <div class="tab-pane fade" id="custom-tabs-one-reposos" role="tabpanel" aria-labelledby="custom-tabs-one-reposos-tab">
-              <div class="card card-primary">
-                <div class="card-header bg-lightblue">
-                  <h3 class="card-title">Reposos del Empleado</h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                  <div class="d-flex justify-content-end">
-                    <button type="button" 
-                            class="btn btn-primary"
-                            id="btnReposoAdd"
-                    ><i class="fas fa-plus-square"></i> Agregar reposo</button>
-                  </div>
-  
-                  <table id="repososDT" class="table table-hover border border-primary min-table text-center reposos-table" width="100%">
-                    <thead>
-                      <tr>
-                        <th>id</th>
-                        <th>Desde</th>
-                        <th>Hasta</th>
-                        <th>Fecha Notificación</th>
-                        <th>Dr CI</th>
-                        <th>Dr Nombre</th>
-                        <th>Dr MPPS</th>
-                        <th>Dr CMS</th>
-                        <th>reposo_id</th>
-                        <th>reposo_codigo</th>
-                        <th>reposo</th>
-                        <th>Fecha Convalidación</th>
-                        <th>Dr CI</th>
-                        <th>Dr Nombre</th>
-                        <th>Dr MPPS</th>
-                        <th>Dr CMS</th>
-                        <th>status</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-  
-                    <tbody>
-                      @foreach ($data['employee']->reposos as $reposo)
-                        <tr>
-                          <td>{{ $reposo->id}}</td>
-                          <td>{{ $reposo->desde }}</td>
-                          <td>{{ $reposo->hasta }}</td>
-                          <td>{{ $reposo->noti_fecha }}</td>
-                          <td>{{ $reposo->noti_dr_ci }}</td>
-                          <td>{{ $reposo->noti_dr_nombre }}</td>
-                          <td>{{ $reposo->noti_dr_mpps }}</td>
-                          <td>{{ $reposo->noti_dr_cms }}</td>
-                          <td>{{ $reposo->reposo_id }}</td>
-                          <td>{{ is_null($reposo->reposo_id) ? '' : $reposo->reposo->codigo }}</td>
-                          <td>{{ is_null($reposo->reposo_id) ? '' : $reposo->reposo->diagnostico }}</td>
-                          <td>{{ $reposo->conva_fecha }}</td>
-                          <td>{{ $reposo->conva_dr_ci }}</td>
-                          <td>{{ $reposo->conva_dr_nombre }}</td>
-                          <td>{{ $reposo->conva_dr_mpps }}</td>
-                          <td>{{ $reposo->conva_dr_cms }}</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      @endforeach
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- fin de reposos -->
+            @include('common.datos-reposos')
+
+            <!-- modal de reposos -->
+            @include('common.datos-modal-reposos')
   
             <!-- datos vacaciones -->
             @include('common.datos-vacaciones')

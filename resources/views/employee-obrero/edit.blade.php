@@ -856,7 +856,10 @@
               <!-- /.card-body -->
             </div>
             <!-- fin de reposos -->
-    
+            
+            <!-- modal de reposos -->
+            @include('common.datos-modal-reposos')
+
             <!-- datos vacaciones -->
             @include('common.datos-vacaciones')
     
@@ -867,9 +870,6 @@
         <!-- fin de card-body -->  
       </div>
       <!-- fin de card -->
-
-      <!-- modal de reposos -->
-      @include('common.datos-reposos')
 
     </div>
   </div>

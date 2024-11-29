@@ -153,7 +153,11 @@ class EmployeePoliceController extends Controller
     $police = Police::create($inputPolice);
 
     // agrego el rango
-    $this->_addRangos($police, $request->rango_id, $request->rango_fecha);
+    PoliceRango::create([
+                    'police_id'       => $police->id,
+                    'rango_id'        => $request->rango_id,
+                    'documento_fecha' => $request->rango_fecha,
+                  ]);
 
     //
     $this->_requestResponse->success = true;
@@ -163,7 +167,7 @@ class EmployeePoliceController extends Controller
     return response()->json($this->_requestResponse, Response::HTTP_CREATED);
   }
 
-  // edicion de empleado 11216456
+  // edicion de empleado
   public function edit(Employee $employees_polouse)
   {
     $_estados         = new UbicacionController();
@@ -218,14 +222,14 @@ class EmployeePoliceController extends Controller
 
     $dataPerson->update($inputPerson);
 
-    // actualizo sus correos
-    $this->_addEmails($dataPerson, $request->emails);
+    // actualizo los correos del empleado
+    $this->_empleado->updEmails($employees_polouse, json_decode($request->emails));
 
-    // actualizo sus telefonos
-    $this->_addPhones($dataPerson, $request->phones_type_id, $request->phones);
+    // actualizo los telefonos del empleado
+    $this->_empleado->updPhones($employees_polouse, json_decode($request->phones));
 
-    // actualizo sus direcciones
-    $this->_addAddresses($dataPerson, $request->parroquias_id, $request->addresses, $request->zona_postal);
+    // actualizo las direcciones del empleado
+    $this->_empleado->updAddresses($employees_polouse, json_decode($request->addresses));
 
     // actualizo los datos del administrativos
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id',
@@ -296,6 +300,24 @@ class EmployeePoliceController extends Controller
   // agregar los rangos
   private function _addRangos(Police $police, $rango_id, $rango_fecha)
   {
+    /*
+    foreach($data as $item) {
+      switch($item->status) {
+        case 'C': 
+          DB::table('vacaciones')->insert([
+            'employee_id' => $empleado->id,
+            'desde'       => $item->desde,
+            'hasta'       => $item->hasta,
+            'periodo'     => $item->periodo,
+          ]);
+          break;
+        case 'D' && $item->id > 0:
+           DB::table('vacaciones')->where('id', $item->id)->delete();
+          break;
+        }
+      }
+    */
+
     $rangos = [];
     foreach($rango_id as $indice => $rango) {
       $rangos[] = new PoliceRango([
