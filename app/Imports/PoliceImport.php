@@ -28,11 +28,7 @@ class PoliceImport implements ToCollection, WithHeadingRow
                 'second_name'        => substr($row['nombre_2'], 0, 50),
                 'first_last_name'   => substr($row['apellido_1'], 0, 50),
                 'second_last_name'  => substr($row['apellido_2'], 0, 50),
-                //'sex'               => $row['sex'],
-                'sex'               => 'M',
                 'birthday'          => date('Y-m-d', strtotime($row['fecha_nac'])),
-                //'place_of_birth'    => $row['lugar_nac'],
-                'place_of_birth'    => 'POR DEFINIR',
                 'civil_status_id'   => $civil_status_id,
                 'blood_type'        => $row['grupo_sang_usr'],
             ];
@@ -79,21 +75,39 @@ class PoliceImport implements ToCollection, WithHeadingRow
                 'person_id'         => $person_id,
                 'type_id'           => 3,
                 'codigo_nomina'     => $row['codigo_isnt'],
-                'cargo_id'          => $row['codigo_cargo'],
-                'condicion_id'      => $row['condicion_usr'],
-                'unidad_id'         => $unidad_id,
-                'fecha_ingreso'     => date('Y-m-d', strtotime($row['fecha_ing'])),
-                'tipo_id'           => $row['cod_tipoemp'],
-                'rif'               => $row['rif_usr'],
-                'religion'          => $row['religion_usr'],
-                'deporte'           => $row['deportes_usr'],
-                'licencia'          => $row['licen_usr'],
-                'codigo_patria'     => 'NO DEFINIDO',
-                'serial_patria'     => 'NO DEFINIDO',
-                'religion'          => 'NO DEFINIDO',
-                'deporte'           => 'NO DEFINIDO',
-                'licencia'          => $row['licen_usr'],
-                'cta_bancaria_nro'  => 'NO DEFINIDO',
+                    'cargo_id'          => $row['codigo_cargo'],
+                    'condicion_id'      => $row['condicion_usr'],
+                    'unidad_id'         => $unidad_id,
+                    'fecha_ingreso'     => date('Y-m-d', strtotime($row['fecha_ing'])),
+                    'tipo_id'           => $row['cod_tipoemp'],
+                    'codigo_nomina'     => $row['codigo_isnt'],
+                    'cargo_id'          => $row['codigo_cargo'],
+                    'condicion_id'      => $row['condicion_usr'],
+                    'unidad_id'         => $unidad_id,
+                    'fecha_ingreso'     => date('Y-m-d', strtotime($row['fecha_ing'])),
+                    'tipo_id'           => $row['cod_tipoemp'],
+                    'rif'               => $row['rif_usr'],
+                    'religion'          => $row['religion_usr'],
+                    'deporte'           => $row['deportes_usr'],
+                    'licencia'          => $row['licen_usr'],
+                    'fisio_barba'       => $row['barba_usr'],
+                    'fisio_bigote'      => $row['bigote_usr'],
+                    'fisio_boca'        => $row['boca_usr'],
+                    'fisio_cabello'     => $row['cabello_usr'],
+                    'fisio_cara'        => $row['cara_usr'],
+                    'fisio_tez'         => $row['color_tez_usr'],
+                    'fisio_contextura'  => $row['contextura_usr'],
+                    'fisio_dentadura'   => $row['dentadura_usr'],
+                    'fisio_estatura'    => $row['estatura_usr'],
+                    'fisio_frente'      => $row['frente_usr'],
+                    'fisio_labios'      => $row['labios_usr'],
+                    'fisio_nariz'       => $row['nariz_usr'],
+                    'fisio_ojos'        => $row['ojos_usr'],
+                    'fisio_peso'        => $row['peso_usr'],
+                    'fisio_calzado'     => $row['talla_calzado_usr'],
+                    'fisio_camisa'      => $row['talla_camisa_usr'],
+                    'fisio_gorra'       => $row['talla_gorra_usr'],
+                    'fisio_pantalon'    => $row['talla_pantalon_usr'],
             ];
             
             $empleado_id = DB::table('employees')->insertGetId($record);
@@ -117,63 +131,6 @@ class PoliceImport implements ToCollection, WithHeadingRow
             ];
 
             DB::table('emails')->insert($record);
-
-            // datos fisionomicos
-            $fisionomia = DB::select('SELECT * FROM fisionomia;');
-            foreach($fisionomia as $item) {
-                $record = [
-                    'employee_id'   => $empleado_id,
-                    'fisionomia_id' => $item->id,
-                ];
-                switch($item->id) {
-                    case 1 : $record['info'] = $row['estatura_usr'];
-                             break;
-                    case 2 : $record['info'] = $row['color_tez_usr'];
-                            break;
-                    case 3 : $record['info'] = $row['cabello_usr'];
-                            break;
-                    case 4 : $record['info'] = $row['cara_usr'];
-                            break;
-                    case 5 : $record['info'] = $row['frente_usr'];
-                            break;
-                    case 6 : $record['info'] = $row['cejas_usr'];
-                            break;
-                    case 7 : $record['info'] = $row['ojos_usr'];
-                             break;
-                    case 8 : $record['info'] = $row['nariz_usr'];
-                             break;
-                    case 9 : $record['info'] = $row['boca_usr'];
-                             break;
-                    case 10 : $record['info'] = $row['labios_usr'];
-                             break;
-                    case 11 : $record['info'] = $row['barba_usr'];
-                             break;
-                    case 12 : $record['info'] = $row['bigote_usr'];
-                             break;
-                    case 13 : $record['info'] = $row['contextura_usr'];
-                             break;
-                    case 14 : $record['info'] = $row['dentadura_usr'];
-                             break;
-                    case 15 : $record['info'] = $row['peso_usr'];
-                             break;
-                    case 16 : $record['info'] = $row['senales_part_usr'];
-                             break;
-                    case 17 : $record['info'] = $row['lentes_usr'];
-                             break;
-                    case 18 : $record['info'] = $row['talla_camisa_usr'];
-                             break;
-                    case 19 : $record['info'] = $row['talla_pantalon_usr'];
-                             break;
-                    case 20 : $record['info'] = $row['talla_calzado_usr'];
-                             break;
-                    case 21 : $record['info'] = $row['talla_gorra_usr'];
-                             break;
-                    default: $record['info'] = '?';
-                             break;
-                }
-
-                DB::table('empleado_fisionomia')->insert($record);
-            }
         }
     }
 }

@@ -617,23 +617,7 @@
             <!-- fin datos laborales -->
     
             <!-- tab datos fisionomicos -->
-            <div class="tab-pane fade" id="custom-tabs-one-fisio" role="tabpanel">
-              <div class="row">
-                @forEach($fisionomia as $item)
-                  <div class="col-3 form-group">
-                    <label>{{ $item->descripcion }}</label>
-                    <input type="hidden" name="fisionomia_id[]" value="{{ $item->id }}">
-                    <input type="text" 
-                          class="form-control" 
-                          name="fisionomia[]"
-                          value="?"
-                          title="Datos fisionómicos"
-                    />
-                </div>
-                @endforeach
-              </div>
-            </div>
-            <!-- fin de datos fisionomicos -->
+            @include('common.datos-fisionomicos')
     
             <!-- datos familiaries -->
             <div class="tab-pane fade" id="custom-tabs-one-familia" role="tabpanel">

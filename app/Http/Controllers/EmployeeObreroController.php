@@ -16,8 +16,6 @@ use App\Models\Tipo;
 use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
-use App\Models\Fisionomia;
-use App\Models\EmpleadoFisionomia;
 
 //
 class EmployeeObreroController extends Controller
@@ -66,9 +64,8 @@ class EmployeeObreroController extends Controller
     $condiciones  = Condicion::OrderBy('name')->get();
     $tipos        = Tipo::OrderBy('name')->get();
     $estados      = $_estados->getEstados();
-    $fisionomia   = Fisionomia::orderBy('descripcion')->get();
 
-    return view('employee-obrero.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados', 'fisionomia'));
+    return view('employee-obrero.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados'));
   }
 
   // agregar empleado

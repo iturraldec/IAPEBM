@@ -15,22 +15,10 @@ class Employee extends Model
 {
     //
     protected $fillable = [
-        'person_id',
-        'type_id',
-        'codigo_nomina',
-        'fecha_ingreso',
-        'cargo_id',
-        'condicion_id',
-        'tipo_id',
-        'unidad_id',
-        'rif',
-        'codigo_patria',
-        'serial_patria',
-        'religion',
-        'deporte',
-        'licencia',
-        'cta_bancaria_nro',
-        'passport_nro'
+        'person_id', 'type_id', 'codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id', 'unidad_id', 'rif', 'codigo_patria',
+        'serial_patria', 'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro', 'fisio_barba', 'fisio_bigote', 'fisio_boca',
+        'fisio_cabello','fisio_cara', 'fisio_frente', 'fisio_tez', 'fisio_contextura', 'fisio_dentadura', 'fisio_estatura', 'fisio_labios', 'fisio_lentes', 
+        'fisio_nariz', 'fisio_ojos', 'fisio_peso', 'fisio_calzado', 'fisio_camisa', 'fisio_gorra', 'fisio_pantalon', 'fisio_otros'
     ];
 
     // datos personales

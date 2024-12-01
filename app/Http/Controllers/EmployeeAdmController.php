@@ -16,9 +16,6 @@ use App\Models\Tipo;
 use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
-use App\Models\Fisionomia;
-use App\Models\EmpleadoFisionomia;
-use Illuminate\Support\Facades\Auth;
 
 //
 class EmployeeAdmController extends Controller
@@ -70,9 +67,8 @@ class EmployeeAdmController extends Controller
     $condiciones  = Condicion::OrderBy('name')->get();
     $tipos        = Tipo::OrderBy('name')->get();
     $estados      = $_estados->getEstados();
-    $fisionomia   = Fisionomia::orderBy('descripcion')->get();
 
-    return view('employee-adm.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados', 'fisionomia'));
+    return view('employee-adm.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados'));
   }
 
   // agregar empleado
@@ -113,7 +109,11 @@ class EmployeeAdmController extends Controller
     // agrego el empleado
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
                                     'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
-                                    'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro');
+                                    'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro',
+                                    'fisio_barba', 'fisio_bigote', 'fisio_boca', 'fisio_cabello','fisio_cara', 'fisio_frente', 'fisio_tez', 
+                                    'fisio_contextura', 'fisio_dentadura', 'fisio_estatura', 'fisio_labios', 'fisio_lentes', 
+                                    'fisio_nariz', 'fisio_ojos', 'fisio_peso', 'fisio_calzado', 'fisio_camisa', 'fisio_gorra',
+                                    'fisio_pantalon', 'fisio_otros');
     $inputEmployee['person_id'] = $person->id;
     $inputEmployee['type_id'] = $this->_empleado->getType();
     $employee = Employee::create($inputEmployee);
@@ -126,20 +126,6 @@ class EmployeeAdmController extends Controller
 
     // agrego las direcciones del empleado
     $this->_empleado->updAddresses($employee, json_decode($request->addresses));
-
-    // agrego los datos fisionomicos
-    if($request->has('fisionomia_id')) {
-      $fisionomia_id = $request->fisionomia_id;
-      $fisionomia = $request->fisionomia;
-      
-      foreach($fisionomia_id as $indice => $item) {
-        EmpleadoFisionomia::create([
-          'employee_id'   => $employee->id, 
-          'fisionomia_id' => $item, 
-          'info'          => $fisionomia[$indice]
-        ]);
-      };
-    }
 
     // agrego la familia del empleado
     $this->_empleado->updFamily($employee, json_decode($request->family));
@@ -220,7 +206,11 @@ class EmployeeAdmController extends Controller
     // actualizo los datos del administrativos
     $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id',
                                     'unidad_id', 'rif', 'codigo_patria', 'serial_patria', 'religion', 'deporte',
-                                    'licencia', 'cta_bancaria_nro', 'passport_nro');
+                                    'licencia', 'cta_bancaria_nro', 'passport_nro', 'fisio_barba', 'fisio_bigote', 'fisio_boca', 
+                                    'fisio_cabello','fisio_cara', 'fisio_frente', 'fisio_tez', 
+                                    'fisio_contextura', 'fisio_dentadura', 'fisio_estatura', 'fisio_labios', 'fisio_lentes', 
+                                    'fisio_nariz', 'fisio_ojos', 'fisio_peso', 'fisio_calzado', 'fisio_camisa', 'fisio_gorra',
+                                    'fisio_pantalon', 'fisio_otros');
 
     $employees_adm->update($inputEmployee);
 
@@ -238,20 +228,6 @@ class EmployeeAdmController extends Controller
 
     // actualizo las vacaciones
     $this->_empleado->updVacaciones($employees_adm, json_decode($request->vacaciones));
-
-    // actualizo los datos fisionomicos
-    $fisionomia_id = $request->fisionomia_id;
-    $fisionomia = $request->fisionomia;
-    $employees_adm->fisionomia()->delete();
-    $_fisionomia = [];
-    foreach($fisionomia_id as $indice => $item) {
-      $_fisionomia[] = new EmpleadoFisionomia([
-                        'employee_id'   => $employees_adm->id, 
-                        'fisionomia_id' => $item, 
-                        'info'          => $fisionomia[$indice]
-                      ]);
-    };
-    $employees_adm->fisionomia()->saveMany($_fisionomia);
 
     //
     $this->_requestResponse->success = true;

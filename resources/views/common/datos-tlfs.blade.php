@@ -42,7 +42,6 @@
             <table id="phonesDT" class="table table-hover border border-primary">
               <thead>
                 <tr>
-                  <th scope="col">TipoID</th>
                   <th scope="col">Tipo</th>
                   <th scope="col">Número</th>
                   <th scope="col"></th>

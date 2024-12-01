@@ -12,12 +12,6 @@ use Illuminate\Support\Facades\DB;
     1. reemplazo de caracter especial por 'Ñ'
     2. reemplazo de los tipos sanguineos por: 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'
     3. aceptar 'cod_tipoemp': 2, 5, 8, 9, 11
-    4. eliminar columna 'zona_postal_usr
-    5. eliminar columna 'cod_car_pol'
-    6. eliminar columna 'cod_car_patr'
-    7. eliminar columna 'gradolicen_usr'
-    8. eliminar columna 'ausente'
-    9. eliminar columnas de los datos fisicos
 */
 
 //
@@ -36,18 +30,15 @@ class AdminImport implements ToCollection, WithHeadingRow
                 else if(strpos($civil_status, 'Viudo') !== false) $civil_status_id = 4;
                 else if(strpos($civil_status, 'Union') !== false) $civil_status_id = 5;
 
-                //
+                // datos de la persona
                 $record = [
                     'cedula'            => $row['cedula_id'],
                     'first_name'        => substr($row['nombre_1'], 0, 50),
-                    'second_name'        => substr($row['nombre_2'], 0, 50),
+                    'second_name'       => substr($row['nombre_2'], 0, 50),
                     'first_last_name'   => substr($row['apellido_1'], 0, 50),
                     'second_last_name'  => substr($row['apellido_2'], 0, 50),
-                    //'sex'               => $row['sex'],
                     'sex'               => 'M',
                     'birthday'          => date('Y-m-d', strtotime($row['fecha_nac'])),
-                    //'place_of_birth'    => $row['lugar_nac'],
-                    'place_of_birth'    => 'POR DEFINIR',
                     'civil_status_id'   => $civil_status_id,
                     'blood_type'        => $row['grupo_sang_usr'],
                 ];
@@ -102,9 +93,25 @@ class AdminImport implements ToCollection, WithHeadingRow
                     'religion'          => $row['religion_usr'],
                     'deporte'           => $row['deportes_usr'],
                     'licencia'          => $row['licen_usr'],
-                    'codigo_patria'     => 'NO DEFINIDO',
-                    'serial_patria'     => 'NO DEFINIDO',
-                    'cta_bancaria_nro'  => 'NO DEFINIDO',
+                    'fisio_barba'       => $row['barba_usr'],
+                    'fisio_bigote'      => $row['bigote_usr'],
+                    'fisio_boca'        => $row['boca_usr'],
+                    'fisio_cabello'     => $row['cabello_usr'],
+                    'fisio_cara'        => $row['cara_usr'],
+                    'fisio_tez'         => $row['color_tez_usr'],
+                    'fisio_contextura'  => $row['contextura_usr'],
+                    'fisio_dentadura'   => $row['dentadura_usr'],
+                    'fisio_estatura'    => $row['estatura_usr'],
+                    'fisio_frente'      => $row['frente_usr'],
+                    'fisio_labios'      => $row['labios_usr'],
+                    'fisio_lentes'      => $row['lentes_usr'],
+                    'fisio_nariz'       => $row['nariz_usr'],
+                    'fisio_ojos'        => $row['ojos_usr'],
+                    'fisio_peso'        => $row['peso_usr'],
+                    'fisio_calzado'     => $row['talla_calzado_usr'],
+                    'fisio_camisa'      => $row['talla_camisa_usr'],
+                    'fisio_gorra'       => $row['talla_gorra_usr'],
+                    'fisio_pantalon'    => $row['talla_pantalon_usr'],
                 ];
                 
                 $empleado_id = DB::table('employees')->insertGetId($record);
@@ -116,63 +123,6 @@ class AdminImport implements ToCollection, WithHeadingRow
                 ];
 
                 DB::table('emails')->insert($record);
-
-                // datos fisionomicos
-                $fisionomia = DB::select('SELECT * FROM fisionomia;');
-                foreach($fisionomia as $item) {
-                    $record = [
-                        'employee_id'   => $empleado_id,
-                        'fisionomia_id' => $item->id,
-                    ];
-                    switch($item->id) {
-                        case 1 : $record['info'] = $row['estatura_usr'];
-                                 break;
-                        case 2 : $record['info'] = $row['color_tez_usr'];
-                                break;
-                        case 3 : $record['info'] = $row['cabello_usr'];
-                                break;
-                        case 4 : $record['info'] = $row['cara_usr'];
-                                break;
-                        case 5 : $record['info'] = $row['frente_usr'];
-                                break;
-                        case 6 : $record['info'] = $row['cejas_usr'];
-                                break;
-                        case 7 : $record['info'] = $row['ojos_usr'];
-                                 break;
-                        case 8 : $record['info'] = $row['nariz_usr'];
-                                 break;
-                        case 9 : $record['info'] = $row['boca_usr'];
-                                 break;
-                        case 10 : $record['info'] = $row['labios_usr'];
-                                 break;
-                        case 11 : $record['info'] = $row['barba_usr'];
-                                 break;
-                        case 12 : $record['info'] = $row['bigote_usr'];
-                                 break;
-                        case 13 : $record['info'] = $row['contextura_usr'];
-                                 break;
-                        case 14 : $record['info'] = $row['dentadura_usr'];
-                                 break;
-                        case 15 : $record['info'] = $row['peso_usr'];
-                                 break;
-                        case 16 : $record['info'] = $row['senales_part_usr'];
-                                 break;
-                        case 17 : $record['info'] = $row['lentes_usr'];
-                                 break;
-                        case 18 : $record['info'] = $row['talla_camisa_usr'];
-                                 break;
-                        case 19 : $record['info'] = $row['talla_pantalon_usr'];
-                                 break;
-                        case 20 : $record['info'] = $row['talla_calzado_usr'];
-                                 break;
-                        case 21 : $record['info'] = $row['talla_gorra_usr'];
-                                 break;
-                        default: $record['info'] = '?';
-                                 break;
-                    }
-
-                    DB::table('empleado_fisionomia')->insert($record);
-                }
             }
         }
     }

@@ -73,28 +73,5 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $user->assignRole('Administrador');
-
-        // creo los datos fisionomicos
-        Fisionomia::create(['descripcion' => 'ESTATURA']);
-        Fisionomia::create(['descripcion' => 'COLOR DE TEZ']);
-        Fisionomia::create(['descripcion' => 'CABELLO']);
-        Fisionomia::create(['descripcion' => 'CARA']);
-        Fisionomia::create(['descripcion' => 'FRENTE']);
-        Fisionomia::create(['descripcion' => 'CEJAS']);
-        Fisionomia::create(['descripcion' => 'OJOS']);
-        Fisionomia::create(['descripcion' => 'NARIZ']);
-        Fisionomia::create(['descripcion' => 'BOCA']);
-        Fisionomia::create(['descripcion' => 'LABIOS']);
-        Fisionomia::create(['descripcion' => 'BARBA']);
-        Fisionomia::create(['descripcion' => 'BIGOTE']);
-        Fisionomia::create(['descripcion' => 'CONTEXTURA']);
-        Fisionomia::create(['descripcion' => 'DENTADURA']);
-        Fisionomia::create(['descripcion' => 'PESO']);
-        Fisionomia::create(['descripcion' => 'SEÑALES PARTICULARES']);
-        Fisionomia::create(['descripcion' => 'LENTES']);
-        Fisionomia::create(['descripcion' => 'TALLA DE CAMISA']);
-        Fisionomia::create(['descripcion' => 'TALLA DE PANTALON']);
-        Fisionomia::create(['descripcion' => 'TALLA DE CALZADO']);
-        Fisionomia::create(['descripcion' => 'TALLA DE GORRA']);
     }
 }
