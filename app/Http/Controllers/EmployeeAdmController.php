@@ -41,7 +41,7 @@ class EmployeeAdmController extends Controller
   //
   private function _makeEmployeeFolder(string $cedula, bool $crear = FALSE) {
     $path = storage_path("app/public/employees/$cedula/");
-    if ($crear) mkdir($path);
+    if ($crear && ! file_exists($path)) mkdir($path);
 
     return $path;
   }
@@ -51,9 +51,6 @@ class EmployeeAdmController extends Controller
    */
   public function index()
   {
-/*     $user = Auth::user();
-    echo $user['code'];
-    die(); */
     return request()->ajax() ? datatables()->of(Employee::where('type_id', $this->_empleado->getType())->with('person')->with('cargo'))->toJson()
                              : view('employee-adm.index');
   }
@@ -76,8 +73,9 @@ class EmployeeAdmController extends Controller
   {
     // agrego los datos personales
     $data_person = $request->only([
-      'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 
-      'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes']);
+                                    'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 
+                                    'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes'
+                                  ]);
     $data_person['imagef'] = 'assets/images/avatar.png';
     $data_person['imageli'] = 'assets/images/avatar.png';
     $data_person['imageld'] = 'assets/images/avatar.png';
@@ -107,13 +105,15 @@ class EmployeeAdmController extends Controller
     $person = Person::create($data_person);
 
     // agrego el empleado
-    $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
-                                    'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
-                                    'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro',
-                                    'fisio_barba', 'fisio_bigote', 'fisio_boca', 'fisio_cabello','fisio_cara', 'fisio_frente', 'fisio_tez', 
-                                    'fisio_contextura', 'fisio_dentadura', 'fisio_estatura', 'fisio_labios', 'fisio_lentes', 
-                                    'fisio_nariz', 'fisio_ojos', 'fisio_peso', 'fisio_calzado', 'fisio_camisa', 'fisio_gorra',
-                                    'fisio_pantalon', 'fisio_otros');
+    $inputEmployee = $request->only([
+                                      'codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
+                                      'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
+                                      'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro',
+                                      'fisio_barba', 'fisio_bigote', 'fisio_boca', 'fisio_cabello','fisio_cara', 'fisio_frente', 'fisio_tez', 
+                                      'fisio_contextura', 'fisio_dentadura', 'fisio_estatura', 'fisio_labios', 'fisio_lentes', 
+                                      'fisio_nariz', 'fisio_ojos', 'fisio_peso', 'fisio_calzado', 'fisio_camisa', 'fisio_gorra',
+                                      'fisio_pantalon', 'fisio_otros'
+                                    ]);
     $inputEmployee['person_id'] = $person->id;
     $inputEmployee['type_id'] = $this->_empleado->getType();
     $employee = Employee::create($inputEmployee);
