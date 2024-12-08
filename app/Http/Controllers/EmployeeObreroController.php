@@ -41,7 +41,7 @@ class EmployeeObreroController extends Controller
   //
   private function _makeEmployeeFolder(string $cedula, bool $crear = FALSE) {
     $path = storage_path("app/public/employees/$cedula/");
-    if ($crear) mkdir($path);
+    if ($crear && ! file_exists($path)) mkdir($path);
 
     return $path;
   }
@@ -73,8 +73,9 @@ class EmployeeObreroController extends Controller
   {
     // agrego los datos personales
     $data_person = $request->only([
-      'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 
-      'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes']);
+                                    'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 
+                                    'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes'
+                                  ]);
     $data_person['imagef']  = 'assets/images/avatar.png';
     $data_person['imageli'] = 'assets/images/avatar.png';
     $data_person['imageld'] = 'assets/images/avatar.png';
@@ -104,9 +105,15 @@ class EmployeeObreroController extends Controller
     $person = Person::create($data_person);
 
     // agrego el empleado
-    $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
-                                    'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
-                                    'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro');
+    $inputEmployee = $request->only([
+                                      'codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
+                                      'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
+                                      'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro',
+                                      'fisio_barba', 'fisio_bigote', 'fisio_boca', 'fisio_cabello','fisio_cara', 'fisio_frente', 'fisio_tez', 
+                                      'fisio_contextura', 'fisio_dentadura', 'fisio_estatura', 'fisio_labios', 'fisio_lentes', 
+                                      'fisio_nariz', 'fisio_ojos', 'fisio_peso', 'fisio_calzado', 'fisio_camisa', 'fisio_gorra',
+                                      'fisio_pantalon', 'fisio_otros'
+                                    ]);
     $inputEmployee['person_id'] = $person->id;
     $inputEmployee['type_id']   = $this->_empleado->getType();
     $employee                   = Employee::create($inputEmployee);
@@ -119,20 +126,6 @@ class EmployeeObreroController extends Controller
 
     // agrego las direcciones del empleado
     $this->_empleado->updAddresses($employee, json_decode($request->addresses));
-
-    // agrego los datos fisionomicos
-    if($request->has('fisionomia_id')) {
-      $fisionomia_id = $request->fisionomia_id;
-      $fisionomia = $request->fisionomia;
-      
-      foreach($fisionomia_id as $indice => $item) {
-        EmpleadoFisionomia::create([
-          'employee_id'   => $employee->id, 
-          'fisionomia_id' => $item, 
-          'info'          => $fisionomia[$indice]
-        ]);
-      };
-    }
 
     // agrego la familia del empleado
     $this->_empleado->updFamily($employee, json_decode($request->family));
@@ -211,9 +204,15 @@ class EmployeeObreroController extends Controller
     $this->_empleado->updAddresses($employees_obrero, json_decode($request->addresses));
 
     // actualizo los datos del administrativos
-    $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id',
-                                    'unidad_id', 'rif', 'codigo_patria', 'serial_patria', 'religion', 'deporte',
-                                    'licencia', 'cta_bancaria_nro', 'passport_nro');
+    $inputEmployee = $request->only([
+                                      'codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id',
+                                      'unidad_id', 'rif', 'codigo_patria', 'serial_patria', 'religion', 'deporte',
+                                      'licencia', 'cta_bancaria_nro', 'passport_nro', 'fisio_barba', 'fisio_bigote', 'fisio_boca', 
+                                      'fisio_cabello','fisio_cara', 'fisio_frente', 'fisio_tez', 
+                                      'fisio_contextura', 'fisio_dentadura', 'fisio_estatura', 'fisio_labios', 'fisio_lentes', 
+                                      'fisio_nariz', 'fisio_ojos', 'fisio_peso', 'fisio_calzado', 'fisio_camisa', 'fisio_gorra',
+                                      'fisio_pantalon', 'fisio_otros'
+                                    ]);
 
     $employees_obrero->update($inputEmployee);
 
@@ -231,20 +230,6 @@ class EmployeeObreroController extends Controller
 
     // actualizo las vacaciones
     $this->_empleado->updVacaciones($employees_obrero, json_decode($request->vacaciones));
-
-    // actualizo los datos fisionomicos
-    $fisionomia_id = $request->fisionomia_id;
-    $fisionomia = $request->fisionomia;
-    $employees_obrero->fisionomia()->delete();
-    $_fisionomia = [];
-    foreach($fisionomia_id as $indice => $item) {
-      $_fisionomia[] = new EmpleadoFisionomia([
-                        'employee_id'   => $employees_obrero->id, 
-                        'fisionomia_id' => $item, 
-                        'info'          => $fisionomia[$indice]
-                      ]);
-    };
-    $employees_obrero->fisionomia()->saveMany($_fisionomia);
 
     //
     $this->_requestResponse->success = true;

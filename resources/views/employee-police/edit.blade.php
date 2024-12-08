@@ -3,11 +3,11 @@
 @section('title', 'Empleados Uniformados')
 
 @section('css')
-<style>
-  .reposos-table {
-    font-size: 12px
-  }
-</style>
+  <style>
+    .min-table {
+      font-size: 12px
+    }
+  </style>
 @endsection
 
 @section('content_header')
@@ -598,23 +598,7 @@
             <!-- fin de datos laborales -->
   
             <!-- tab datos fisionomicos -->
-            <div class="tab-pane fade" id="custom-tabs-one-fisio" role="tabpanel" aria-labelledby="custom-tabs-one-fisio-tab">
-              <div class="row">
-                @forEach($data['employee']->fisionomia as $item)
-                  <div class="col-3 form-group">
-                    <label>{{ $item->fisionomia->descripcion }}</label>
-                    <input type="hidden" name="fisionomia_id[]" value="{{ $item->fisionomia_id }}">
-                    <input type="text" 
-                          class="form-control" 
-                          name="fisionomia[]"
-                          value="{{ $item->info }}"
-                          title="Datos fisionómicos"
-                    />
-                </div>
-                @endforeach
-              </div>
-            </div>
-            <!-- fin de datos fisionomicos -->
+            @include('common.datos-fisionomicos')
   
             <!-- datos familiaries -->
             @include('common.datos-familiares')
@@ -641,10 +625,6 @@
         <!-- fin de card-body -->  
       </div>
       <!-- fin de card -->
-
-      <!-- modal de reposos -->
-      @include('common.datos-reposos')
-
     </div>
   </div>
 @endsection
@@ -1786,6 +1766,7 @@
       data.append('permisos', JSON.stringify(permisos));
       data.append('repososDT', JSON.stringify(repososDT.rows().data().toArray()));
       data.append('vacaciones', JSON.stringify(vacaciones));
+      data.append('rangos', JSON.stringify(rangos));
 
       fetch("{{ route('employees-police.update', ['employees_polouse' => $data['employee']]) }}", {
         headers: {

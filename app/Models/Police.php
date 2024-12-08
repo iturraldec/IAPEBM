@@ -21,20 +21,14 @@ class Police extends Model
   ];
 
   //
-  public function employee() : BelongsTo
-  {
-    return $this->belongsTo(Employee::class, 'employee_id');
-  }
-
-  //
   public function rangos() : HasMany
   {
-    return $this->hasMany(PoliceRango::class, 'police_id', 'employee_id');
+    return $this->hasMany(PoliceRango::class, 'police_id');
   }
 
   //
   public function ultimoRango() : HasOne
   {
-    return $this->hasOne(PoliceRango::class, 'police_id', 'employee_id')->latest();
+    return $this->hasOne(PoliceRango::class, 'police_id')->latest();
   }
 }

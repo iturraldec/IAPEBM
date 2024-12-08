@@ -3,11 +3,11 @@
 @section('title', 'Empleado Obrero')
 
 @section('content_header')
-  <div class="row m-2">
+  <div class="row m-2 ">
     <div class="col-6">
       <h4>Agregar Datos del Empleado Obrero</h4>
     </div>
-
+  
     <div class="col-6 d-flex justify-content-end">
       <button type="button" id="btnSalir" class="btn btn-secondary mr-2"><i class="fas fa-arrow-left"></i> Retornar</button>
       <button type="button" id="btnGrabar" class="btn btn-danger"><i class="fas fa-save"></i> Grabar Datos</button>
@@ -16,7 +16,7 @@
 @endsection
 
 @section('content')
-  <div class="row mt-1">
+  <div class="row m-2">
     <div class="col-12">
       <div class="card card-primary card-tabs">
         <!-- card-header -->
@@ -252,199 +252,13 @@
               <div class="row">
                 
                 <!-- correos del empleado -->
-                <div class="col-6">
-                  <div class="card card-primary">
-                    <div class="card-header bg-lightblue">
-                      <h3 class="card-title">Correo(s) del Empleado*</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="input-group">
-                            <input type="email"
-                                class="form-control"
-                                id="inputEmail"
-                                placeholder="Ingresa el correo electrónico"
-                                onkeyup="this.value = this.value.toLowerCase();"
-                                title="Correo del empleado"
-                            />
-    
-                            <div class="input-group-append">
-                              <button type="button" 
-                                      id="btnEmailAdd" 
-                                      class="input-group-text btn btn-primary btn-sm"
-                                      title="Agregar correo del empleado"
-                              >
-                                <i class="fas fa-plus-square"></i>
-                              </button>    
-                            </div>
-                          </div>
-                        </div>
-    
-                        <div class="col-12 mt-1">
-                          <table id="emailsDT" class="table table-hover border border-primary">
-                            <thead class="text-center">
-                              <tr>
-                                <th scope="col">Correo</th>
-                                <th scope="col"></th>
-                              </tr>
-                            </thead>
-              
-                            <tbody></tbody>
-                          </table>
-                        </div>
-                      </div> 
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                </div>
-                <!-- fin de correos del empleado-->
+                @include('common.datos-correos')
     
                 <!-- telefonos del empleado -->
-                <div class="col-6">
-                  <div class="card bg-light ">
-                    <div class="card-header bg-lightblue">
-                      <h3 class="card-title">Teléfono(s) del Empleado*</h3>
-                    </div>
-    
-                    <!-- /.card-header -->
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col-6">
-                            <select id="selectPhoneType" class="form-control" title="Tipo de número">
-                              <option value="0" selected>SELECCIONE TIPO DE NÚMERO</option>
-                              @foreach (App\Enums\PhoneTypeEnum::cases() as $case)
-                                <option value="{{ $case->value }}">{{ $case->label() }}</option>
-                              @endforeach
-                              </select>
-                          </div>
-    
-                          <div class="col-6">
-                            <div class="input-group">
-                              <input type="text"
-                                  class="form-control"
-                                  id="inputPhone"
-                                  placeholder="Ingresa el número de teléfono"
-                                  title="Teléfono del empleado"
-                              />
-        
-                              <div class="input-group-append">
-                                <button type="button" 
-                                        id="btnPhoneAdd" 
-                                        class="input-group-text btn btn-primary btn-sm"
-                                        title="Agregar número de teléfono del empleado"
-                                >
-                                  <i class="fas fa-plus-square"></i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-        
-                          <div class="col-12 mt-1">
-                            <table id="phonesDT" class="table table-hover border border-primary">
-                              <thead>
-                                <tr>
-                                  <th scope="col">Tipo</th>
-                                  <th scope="col">Número</th>
-                                  <th scope="col"></th>
-                                </tr>
-                              </thead>
-                
-                              <tbody></tbody>
-                            </table>
-                          </div>
-                        </div>  
-                      </div>
-                      <!-- /.card-body -->
-                  </div>
-                </div>
-                <!-- fin de telefonos del empleado-->
+                @include('common.datos-tlfs')
     
                 <!-- direcciones del empleado -->
-                <div class="col-12">
-                  <div class="card bg-light">
-                    <div class="card-header bg-lightblue">
-                      <h3 class="card-title">Dirección(es) de ubicación del Empleado*</h3>
-                    </div>
-                    <!-- /.card-header -->
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col-6 mb-1">
-                            <select id="selectEstados" class="form-control" title="Ubicación del empleado: Estado">
-                              <option value="0" selected>SELECCIONE EL ESTADO</option>
-                              @foreach ($estados as $estado)
-                                <option value="{{ $estado->id_estado }}">{{ $estado->estado }}</option>
-                              @endforeach
-                              </select>
-                            </select>
-                          </div>
-    
-                          <div class="col-6">
-                            <select id="selectMunicipios" class="form-control" title="Ubicación del empleado: Municipio"></select>
-                          </div>
-    
-                          <div class="col-6 mb-1">
-                            <select id="selectParroquias" class="form-control" title="Ubicación del empleado: Parroquia"></select>
-                          </div>
-    
-                          <div class="col-4">
-                            <div class="input-group">
-                              <input type="text"
-                                  class="form-control"
-                                  id="inputAddress"
-                                  placeholder="Ingresa la dirección"
-                                  onkeyup="this.value = this.value.toUpperCase();"
-                                  title="Ubicación del empleado: Dirección"
-                              />
-                            </div>
-                          </div>
-    
-                          <div class="col-2">
-                            <div class="input-group">
-                              <input type="text"
-                                  class="form-control"
-                                  id="inputZonaPostal"
-                                  value="5101"
-                                  maxlength="4"
-                                  placeholder="Z.P."
-                                  title="Ubicación del empleado: Zona Postal"
-                              />
-        
-                              <div class="input-group-append">
-                                <button type="button"
-                                        id="btnAddressAdd"
-                                        class="input-group-text btn btn-primary btn-sm"
-                                        title="Agregar ubicación del empleado"
-                                >
-                                  <i class="fas fa-plus-square"></i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-        
-                          <div class="col-12 mt-1">
-                            <table id="addressesDT" class="table table-hover border border-primary">
-                              <thead>
-                                <tr>
-                                  <th scope="col">Estado</th>
-                                  <th scope="col">Municipio</th>
-                                  <th scope="col">Parroquia</th>
-                                  <th scope="col">Dirección</th>
-                                  <th scope="col">Z. P.</th>
-                                  <th scope="col"></th>
-                                </tr>
-                              </thead>
-                
-                              <tbody></tbody>
-                            </table>
-                          </div>
-                        </div>  
-                      </div>
-                      <!-- /.card-body -->
-                  </div>
-                </div>
-                <!-- fin de direcciones del empleado-->
+                @include('common.datos-addresses')
     
                 <!-- observaciones -->
                 <div class="col">
@@ -620,111 +434,7 @@
             @include('common.datos-fisionomicos')
     
             <!-- datos familiaries -->
-            <div class="tab-pane fade" id="custom-tabs-one-familia" role="tabpanel">
-              <div class="row">
-                <div class="col-12">
-                  <div class="card card-primary">
-                    <div class="card-header bg-lightblue">
-                      <h3 class="card-title">Familiares</h3>
-                    </div>
-                    <!-- /.card-header -->
-    
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-3 form-group">
-                          <label for="inputFPNombre">Primer Nombre*</label>
-                          <input type="text" 
-                                class="form-control" 
-                                id="inputFPNombre"
-                                minlength="3"
-                                maxlength="50"
-                                placeholder="Ingresa su primer nombre"
-                                onkeyup="this.value = this.value.toUpperCase();"
-                                title="Primer nombre del familiar"
-                          />
-                        </div>
-    
-                        <div class="col-3 form-group">
-                          <label for="inputFSNombre">Segundo Nombre</label>
-                          <input type="text" 
-                                class="form-control" 
-                                id="inputFSNombre"
-                                minlength="3"
-                                maxlength="50"
-                                placeholder="Ingresa su segundo nombre"
-                                onkeyup="this.value = this.value.toUpperCase();"
-                                title="Segundo nombre del familiar"
-                          />
-                        </div>
-    
-                        <div class="col-3 form-group">
-                          <label for="inputFPApellido">Primer Apellido*</label>
-                          <input type="text" 
-                                class="form-control" 
-                                id="inputFPApellido"
-                                minlength="3"
-                                maxlength="50"
-                                placeholder="Ingresa su primer apellido"
-                                onkeyup="this.value = this.value.toUpperCase();"
-                                title="Primer apellido del familiar"
-                          />
-                        </div>
-    
-                        <div class="col-3 form-group">
-                          <label for="inputFSApellido">Segundo Apellido</label>
-                          <input type="text" 
-                                class="form-control" 
-                                id="inputFSApellido"
-                                minlength="3"
-                                maxlength="50"
-                                placeholder="Ingresa su segundo apellido"
-                                onkeyup="this.value = this.value.toUpperCase();"
-                                title="Segundo apellido del familiar"
-                          />
-                        </div>
-    
-                        <div class="col-3 form-group">
-                          <label for="selectParentesco">Parentesco</label>
-                          <select id="selectParentesco" class="form-control" title="Parentesco">
-                            <option value="0" selected>SELECCIONE</option>
-                            @foreach (App\Enums\ParentescoEnum::cases() as $case)
-                              <option value="{{ $case->value }}">{{ $case->label() }}</option>
-                            @endforeach
-                          </select>
-                        </div>
-    
-                        <div class="col-3 form-group d-flex">
-                          <button type="button"
-                                  id="btnFamiliarAdd"
-                                  class="form-control btn btn-primary mt-auto" 
-                                  title="Agregar familiar"
-                          >Agregar familiar</button>
-                        </div>
-    
-                        <div class="col-12">
-                          <table id="familiaresDT" class="table table-hover border border-primary" width="100%">
-                            <thead class="text-center">
-                              <tr>
-                                <th>Parentesco</th>
-                                <th>Primer Nombre</th>
-                                <th>Segundo Nombre</th>
-                                <th>Primer Apellido</th>
-                                <th>Segundo Apellido</th>
-                                <th></th>
-                              </tr>
-                            </thead>
-              
-                            <tbody></tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- fin de datos familiares -->
+            @include('common.datos-familiares')
     
             <!-- datos academicos -->
             @include('common.datos-academicos')
@@ -1236,9 +946,8 @@
       estudiosDraw();
     });
 
-
     ///////////////////////////////////////////////////////////////////
-    // agregar empleado obrero
+    // agregar empleado administrativo
     ///////////////////////////////////////////////////////////////////
 
     $("#btnGrabar").click(function() {

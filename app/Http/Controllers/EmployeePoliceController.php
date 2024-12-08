@@ -16,8 +16,6 @@ use App\Models\Tipo;
 use App\Models\Unidad;
 use App\Models\Person;
 use App\Models\Employee;
-use App\Models\Fisionomia;
-use App\Models\EmpleadoFisionomia;
 use App\Models\Police;
 use App\Models\Rango;
 use App\Models\PoliceRango;
@@ -46,7 +44,7 @@ class EmployeePoliceController extends Controller
   //
   private function _makeEmployeeFolder(string $cedula, bool $crear = FALSE) {
     $path = storage_path("app/public/employees/$cedula/");
-    if ($crear) mkdir($path);
+    if ($crear && ! file_exists($path)) mkdir($path);
 
     return $path;
   }
@@ -70,9 +68,8 @@ class EmployeePoliceController extends Controller
     $tipos        = Tipo::OrderBy('name')->get();
     $estados      = $_estados->getEstados();
     $rangos       = Rango::orderBy('name')->get();
-    $fisionomia   = Fisionomia::orderBy('descripcion')->get();
 
-    return view('employee-police.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados', 'rangos', 'fisionomia'));
+    return view('employee-police.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados', 'rangos'));
   }
 
   // agregar empleado
@@ -80,8 +77,9 @@ class EmployeePoliceController extends Controller
   {
     // agrego los datos personales
     $data_person = $request->only([
-      'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 
-      'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes']);
+                                    'cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 
+                                    'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes'
+                                  ]);
     $data_person['imagef'] = 'assets/images/avatar.png';
     $data_person['imageli'] = 'assets/images/avatar.png';
     $data_person['imageld'] = 'assets/images/avatar.png';
@@ -111,9 +109,15 @@ class EmployeePoliceController extends Controller
     $person = Person::create($data_person);
 
     // agrego los datos administrativos
-    $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
-                                    'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
-                                    'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro');
+    $inputEmployee = $request->only([
+                                      'codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
+                                      'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
+                                      'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro',
+                                      'fisio_barba', 'fisio_bigote', 'fisio_boca', 'fisio_cabello','fisio_cara', 'fisio_frente', 'fisio_tez', 
+                                      'fisio_contextura', 'fisio_dentadura', 'fisio_estatura', 'fisio_labios', 'fisio_lentes', 
+                                      'fisio_nariz', 'fisio_ojos', 'fisio_peso', 'fisio_calzado', 'fisio_camisa', 'fisio_gorra',
+                                      'fisio_pantalon', 'fisio_otros'
+                                    ]);
     $inputEmployee['person_id'] = $person->id;
     $inputEmployee['type_id'] = $this->_empleado->getType();
     $employee = Employee::create($inputEmployee);
@@ -127,20 +131,6 @@ class EmployeePoliceController extends Controller
     // agrego las direcciones del empleado
     $this->_empleado->updAddresses($employee, json_decode($request->addresses));
 
-    // agrego los datos fisionomicos
-    if($request->has('fisionomia_id')) {
-      $fisionomia_id = $request->fisionomia_id;
-      $fisionomia = $request->fisionomia;
-      
-      foreach($fisionomia_id as $indice => $item) {
-        EmpleadoFisionomia::create([
-          'employee_id'   => $employee->id, 
-          'fisionomia_id' => $item, 
-          'info'          => $fisionomia[$indice]
-        ]);
-      };
-    }
-
     // agrego la familia del empleado
     $this->_empleado->updFamily($employee, json_decode($request->family));
 
@@ -148,7 +138,9 @@ class EmployeePoliceController extends Controller
     $this->_empleado->updEstudios($employee, json_decode($request->estudios));
 
     // agrego los datos policiales
-    $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
+    $inputPolice = $request->only([
+                                    'escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup'
+                                  ]);
     $inputPolice['employee_id'] = $employee->id;
     $police = Police::create($inputPolice);
 
@@ -254,34 +246,8 @@ class EmployeePoliceController extends Controller
     $this->_empleado->updReposos($employees_polouse, json_decode($request->repososDT));
 
     // actualizo sus vacaciones
-    $employees_polouse->vacaciones()->delete();
-    if($request->has('vacaciones_desde')) {
-      $vacaciones = [];
-      foreach($request->vacaciones_desde as $indice => $desde) {
-        $vacaciones[] = new Vacacione([
-                        'employee_id' => $employees_polouse->id,
-                        'desde'       => $desde,
-                        'hasta'       => $request->vacaciones_hasta[$indice],
-                        'periodo'     => $request->vacaciones_periodo[$indice],
-                    ]);
-      };
-      $employees_polouse->vacaciones()->saveMany($vacaciones);
-    };
-
-    // actualizo los datos fisionomicos
-    $fisionomia_id = $request->fisionomia_id;
-    $fisionomia = $request->fisionomia;
-    $employees_polouse->fisionomia()->delete();
-    $_fisionomia = [];
-    foreach($fisionomia_id as $indice => $item) {
-      $_fisionomia[] = new EmpleadoFisionomia([
-                        'employee_id'   => $employees_polouse->id, 
-                        'fisionomia_id' => $item, 
-                        'info'          => $fisionomia[$indice]
-                      ]);
-    };
-    $employees_polouse->fisionomia()->saveMany($_fisionomia);
-
+    
+    
     // actualizo los datos policiales
     $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
     $police = Police::where('employee_id', $employees_polouse->id)->first();

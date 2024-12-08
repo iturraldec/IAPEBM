@@ -15,12 +15,6 @@ class PoliceRango extends Model
   protected $fillable = ['police_id', 'rango_id', 'documento_fecha', 'documento_file'];
 
   //
-  public function police() : BelongsTo 
-  {
-    return $this->belongsTo(Police::class, 'police_id', 'employee_id');
-  }
-
-  //
   public function rango() : BelongsTo 
   {
     return $this->belongsTo(Rango::class);

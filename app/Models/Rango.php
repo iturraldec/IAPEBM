@@ -15,6 +15,6 @@ class Rango extends Model
     //
     public function policeRangos() : HasMany
     {
-        return $this->hasMany(PoliceRango::class);
+        return $this->hasMany(PoliceRango::class, 'rango_id');
     }
 }
