@@ -5,6 +5,8 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 /*
     MODIFICACIONES AL ARCHIVO 'administrativos-cops.csv'
@@ -115,6 +117,17 @@ class AdminImport implements ToCollection, WithHeadingRow
                 ];
                 
                 $empleado_id = DB::table('employees')->insertGetId($record);
+
+                // creo su usuario web
+                $fullName = substr($row['nombre_1'], 0, 50) . ' ' . substr($row['nombre_2'], 0, 50) . ' ' . substr($row['apellido_1'], 0, 50) . ' ' . substr($row['apellido_2'], 0, 50);
+                $user = User::create([
+                    'code'      => $row['cedula_id'],
+                    'name'      => $fullName,
+                    //'email'     => $row['correo_usr'],
+                    'password'  => Hash::make(config('app_config.users_init_password')),
+                ]);
+
+                $user->assignRole('Usuario Web');
 
                 // correo electronico
                 $record = [

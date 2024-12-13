@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\DateHelper;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Clases\EmpleadoAbstract;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\ConstanciaTrabajoMotivo;
 
@@ -23,7 +24,8 @@ class ConstanciaTrabajoController extends Controller
   //
   function execute(ConstanciaTrabajoMotivo $motivo)
   {
-    $empleado = EmpleadoAbstract::GetByCedula("13098112");
+    $user = Auth::user();
+    $empleado = EmpleadoAbstract::GetByCedula($user->code);
     $hoy = DateHelper::fechaCadena(now());
     $pdf = Pdf::loadView('consultas.web.ct.ct-pdf', compact('empleado', 'motivo', 'hoy'));
     

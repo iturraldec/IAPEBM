@@ -424,6 +424,10 @@ return [
                     'text'    => 'Constancias de Trabajo',
                     'route'   => 'cw.ct'
                 ],
+                [
+                    'text'    => 'Recibos de pago',
+                    'url'   => '#'
+                ],
             ]
         ],
         [
