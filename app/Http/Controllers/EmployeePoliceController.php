@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade;
 use App\Clases\Image;
 use App\Clases\RequestResponse;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Cargo;
 use App\Models\Condicion;
@@ -186,8 +187,10 @@ class EmployeePoliceController extends Controller
     $inputPerson = $request->only(['cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name',
                                   'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes']);
 
+    // creo su carpeta
     $employeeFolderPath = $this->_makeEmployeeFolder($inputPerson['cedula']);
 
+    // guardo sus imagenes
     if ($request->hasfile('imagef')) {
       if(! str_contains($dataPerson->imagef, 'avatar.png')) {
         $image = $employeeFolderPath . basename($dataPerson->imagef);
@@ -212,6 +215,7 @@ class EmployeePoliceController extends Controller
       $inputPerson['imageld'] = "images/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageld'), $employeeFolderPath);
     }
 
+    // actualizo los datos personales
     $dataPerson->update($inputPerson);
 
     // actualizo los correos del empleado
@@ -224,29 +228,32 @@ class EmployeePoliceController extends Controller
     $this->_empleado->updAddresses($employees_polouse, json_decode($request->addresses));
 
     // actualizo los datos del administrativos
-    $inputEmployee = $request->only('codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id',
-                                    'unidad_id', 'rif', 'codigo_patria', 'serial_patria', 'religion', 'deporte',
-                                    'licencia', 'cta_bancaria_nro', 'passport_nro');
+    $inputEmployee = $request->only([
+                                      'codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id', 'tipo_id',
+                                      'unidad_id', 'rif', 'codigo_patria', 'serial_patria', 'religion', 'deporte',
+                                      'licencia', 'cta_bancaria_nro', 'passport_nro', 'fisio_barba', 'fisio_bigote', 'fisio_boca', 
+                                      'fisio_cabello','fisio_cara', 'fisio_frente', 'fisio_tez', 
+                                      'fisio_contextura', 'fisio_dentadura', 'fisio_estatura', 'fisio_labios', 'fisio_lentes', 
+                                      'fisio_nariz', 'fisio_ojos', 'fisio_peso', 'fisio_calzado', 'fisio_camisa', 'fisio_gorra',
+                                      'fisio_pantalon', 'fisio_otros'
+                                    ]);
 
     $employees_polouse->update($inputEmployee);
 
     // actualizo los familiares
-    $employees_polouse->familiares()->delete();
-    $this->_addFamiliares($employees_polouse, $request);
-
-    // actualizo estudio
-    $this->_empleado->updEstudios($employees_polouse, json_decode($request->estudiosDT));
+    $this->_empleado->updFamily($employees_polouse, json_decode($request->family));
+    
+    // actualizo los datos academicos
+    $this->_empleado->updEstudios($employees_polouse, json_decode($request->estudios));
 
     // actualizo sus permisos
-    if($request->has('permisos_desde')) {
-      $this->_empleado->updPermisos($employees_polouse, $request->only(['permisos_desde', 'permisos_hasta', 'permisos_motivo']));
-    }
+    $this->_empleado->updPermisos($employees_polouse, json_decode($request->permisos));
 
     // actualizo reposos
-    $this->_empleado->updReposos($employees_polouse, json_decode($request->repososDT));
+    $this->_empleado->updReposos($employees_polouse, json_decode($request->reposos));
 
     // actualizo sus vacaciones
-    
+    $this->_empleado->updVacaciones($employees_polouse, json_decode($request->vacaciones));
     
     // actualizo los datos policiales
     $inputPolice = $request->only('escuela', 'fecha_graduacion', 'curso', 'curso_duracion', 'cup');
@@ -254,46 +261,27 @@ class EmployeePoliceController extends Controller
     $police->update($inputPolice);
 
     // actualizo el rango
-    $this->_addRangos($police, $request->rangos_id, $request->rangos_fecha);
+    foreach(json_decode($request->rangos) as $item) {
+      switch($item->status) {
+        case 'C': 
+          DB::table('police_rangos')->insert([
+            'police_id'       => $police->id,
+            'rango_id'        => $item->rango_id,
+            'documento_fecha' => $item->fecha,
+            'created_at'      => date('Y-m-d H:i:s'),
+          ]);
+          break;
+        case 'D' && $item->id > 0:
+           DB::table('police_rangos')->where('id', $item->id)->delete();
+          break;
+      }
+    }
 
-    //
+    // finalizo actualizacion de uniformados
     $this->_requestResponse->success = true;
     $this->_requestResponse->message = 'Uniformado actualizado!';
 
     return response()->json($this->_requestResponse, Response::HTTP_OK);
-  }
-
-  // agregar los rangos
-  private function _addRangos(Police $police, $rango_id, $rango_fecha)
-  {
-    /*
-    foreach($data as $item) {
-      switch($item->status) {
-        case 'C': 
-          DB::table('vacaciones')->insert([
-            'employee_id' => $empleado->id,
-            'desde'       => $item->desde,
-            'hasta'       => $item->hasta,
-            'periodo'     => $item->periodo,
-          ]);
-          break;
-        case 'D' && $item->id > 0:
-           DB::table('vacaciones')->where('id', $item->id)->delete();
-          break;
-        }
-      }
-    */
-
-    $rangos = [];
-    foreach($rango_id as $indice => $rango) {
-      $rangos[] = new PoliceRango([
-                        'police_id'       => $police->id,
-                        'rango_id'        => $rango,
-                        'documento_fecha' => $rango_fecha[$indice],
-                      ]);
-    };
-    $police->rangos()->delete();
-    $police->rangos()->saveMany($rangos);
   }
 
   //

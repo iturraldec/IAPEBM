@@ -165,9 +165,11 @@ class EmployeeAdmController extends Controller
     $dataPerson = Person::select('id', 'imagef', 'imageli', 'imageld')->find($employees_adm->person_id);
     $inputPerson = $request->only(['cedula', 'first_name', 'second_name', 'first_last_name', 'second_last_name',
                                   'sex', 'birthday', 'place_of_birth', 'civil_status_id', 'blood_type', 'notes']);
-
+    
+    // creo su carpeta
     $employeeFolderPath = $this->_makeEmployeeFolder($inputPerson['cedula']);
 
+    // guardo sus imagenes
     if ($request->hasfile('imagef')) {
       if(! str_contains($dataPerson->imagef, 'avatar.png')) {
         $image = $employeeFolderPath . basename($dataPerson->imagef);
@@ -192,6 +194,7 @@ class EmployeeAdmController extends Controller
       $inputPerson['imageld'] = "employees/{$inputPerson['cedula']}/" . $this->_imagen->store($request->file('imageld'), $employeeFolderPath);
     }
 
+    // actualizo los datos personales
     $dataPerson->update($inputPerson);
 
     // actualizo los correos del empleado

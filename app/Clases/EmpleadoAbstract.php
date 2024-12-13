@@ -234,8 +234,8 @@ abstract class EmpleadoAbstract
         case 'D' && $item->id > 0:
            DB::table('vacaciones')->where('id', $item->id)->delete();
           break;
-        }
       }
+    }
 
     return true;
   }

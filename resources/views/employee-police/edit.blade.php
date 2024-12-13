@@ -844,6 +844,28 @@
 
       // pintar permisos
       permisosDraw();
+
+      // fisionomia
+      $("#fisio_barba").val("{{ $data['employee']['fisio_barba']}}");
+      $("#fisio_bigote").val("{{ $data['employee']['fisio_bigote']}}");
+      $("#fisio_boca").val("{{ $data['employee']['fisio_boca']}}");
+      $("#fisio_cabello").val("{{ $data['employee']['fisio_cabello']}}");
+      $("#fisio_cara").val("{{ $data['employee']['fisio_cara']}}");
+      $("#fisio_frente").val("{{ $data['employee']['fisio_frente']}}");
+      $("#fisio_tez").val("{{ $data['employee']['fisio_tez']}}");
+      $("#fisio_contextura").val("{{ $data['employee']['fisio_contextura']}}");
+      $("#fisio_dentadura").val("{{ $data['employee']['fisio_dentadura']}}");
+      $("#fisio_estatura").val("{{ $data['employee']['fisio_estatura']}}");
+      $("#fisio_labios").val("{{ $data['employee']['fisio_labios']}}");
+      $("#fisio_lentes").val("{{ $data['employee']['fisio_lentes']}}");
+      $("#fisio_nariz").val("{{ $data['employee']['fisio_nariz']}}");
+      $("#fisio_ojos").val("{{ $data['employee']['fisio_ojos']}}");
+      $("#fisio_peso").val("{{ $data['employee']['fisio_peso']}}");
+      $("#fisio_calzado").val("{{ $data['employee']['fisio_calzado']}}");
+      $("#fisio_camisa").val("{{ $data['employee']['fisio_camisa']}}");
+      $("#fisio_gorra").val("{{ $data['employee']['fisio_gorra']}}");
+      $("#fisio_pantalon").val("{{ $data['employee']['fisio_pantalon']}}");
+      $("#fisio_otros").val("{{ $data['employee']['fisio_otros']}}");
       
       // mascara para el nombre
       $("#inputPNombre").inputmask(lib_characterMask());
@@ -1194,6 +1216,7 @@
       else {
         rangos.push({
           id: 0,
+          rango_id: $("#selectRangos :selected").val(),
           rango   : $("#selectRangos :selected").text(),
           fecha   : fecha,
           documento : '*',
@@ -1764,7 +1787,7 @@
       data.append('family', JSON.stringify(familiares));
       data.append('estudios', JSON.stringify(estudios));
       data.append('permisos', JSON.stringify(permisos));
-      data.append('repososDT', JSON.stringify(repososDT.rows().data().toArray()));
+      data.append('reposos', JSON.stringify(repososDT.rows().data().toArray()));
       data.append('vacaciones', JSON.stringify(vacaciones));
       data.append('rangos', JSON.stringify(rangos));
 
