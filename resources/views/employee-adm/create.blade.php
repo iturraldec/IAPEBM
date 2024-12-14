@@ -323,12 +323,12 @@
                 </div>
     
                 <div class="col-4 form-group">
-                  <label for="selectCondicion">Condición</label>
+                  <label>Condición</label>
                   <input type="text" class="form-control" value="ACTIVO" readonly>
                 </div>
     
                 <div class="col-4 form-group">
-                  <label for="selectTipo">Tipo</label>
+                  <label>Tipo</label>
                   <input type="text" class="form-control" value="ADMINISTRATIVO" readonly>
                 </div>
     

@@ -159,7 +159,7 @@ abstract class EmpleadoAbstract
     return true;
   }
 
-  //
+  // actualizacion de los datos academicos del empleado
   public function updEstudios(Employee $empleado, array $data) : bool
   {
     foreach($data as $estudio) {
@@ -181,7 +181,7 @@ abstract class EmpleadoAbstract
     return true;
   }
 
-  //
+  // actualizacion de los permisos del empleado
   public function updPermisos(Employee $empleado, array $data) : bool
   {
     foreach($data as $permiso) {
@@ -203,7 +203,7 @@ abstract class EmpleadoAbstract
     return true;
   }
 
-  //
+  // actualizacion de los reposos del empleado
   public function updReposos(Employee $empleado, array $data) : bool
   {
     foreach($data as $reposo) {
@@ -253,7 +253,7 @@ abstract class EmpleadoAbstract
     return true;
   }
 
-  //
+  // actualizacion de las vacaciones del empleado
   public function updVacaciones(Employee $empleado, array $data) : bool
   {
     foreach($data as $item) {
@@ -275,7 +275,7 @@ abstract class EmpleadoAbstract
     return true;
   }
 
-  //
+  // retorna en empleado por su cedula
   static public function GetByCedula(string $cedula)
   {
     return Employee::with('person')->whereRelation('person', 'cedula', $cedula)->first();

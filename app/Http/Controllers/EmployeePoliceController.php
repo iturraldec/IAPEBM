@@ -65,12 +65,10 @@ class EmployeePoliceController extends Controller
     $_estados     = new UbicacionController();
     $unidades     = Unidad::unidades();
     $cargos       = Cargo::OrderBy('name')->where('activo', TRUE)->get();
-    $condiciones  = Condicion::OrderBy('name')->get();
-    $tipos        = Tipo::OrderBy('name')->get();
     $estados      = $_estados->getEstados();
     $rangos       = Rango::orderBy('name')->get();
 
-    return view('employee-police.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados', 'rangos'));
+    return view('employee-police.create', compact('cargos', 'unidades', 'estados', 'rangos'));
   }
 
   // agregar empleado
@@ -111,17 +109,26 @@ class EmployeePoliceController extends Controller
 
     // agrego los datos administrativos
     $inputEmployee = $request->only([
-                                      'codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
-                                      'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
+                                      'codigo_nomina', 'fecha_ingreso', 'cargo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
                                       'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro',
                                       'fisio_barba', 'fisio_bigote', 'fisio_boca', 'fisio_cabello','fisio_cara', 'fisio_frente', 'fisio_tez', 
                                       'fisio_contextura', 'fisio_dentadura', 'fisio_estatura', 'fisio_labios', 'fisio_lentes', 
                                       'fisio_nariz', 'fisio_ojos', 'fisio_peso', 'fisio_calzado', 'fisio_camisa', 'fisio_gorra',
                                       'fisio_pantalon', 'fisio_otros'
                                     ]);
-    $inputEmployee['person_id'] = $person->id;
-    $inputEmployee['type_id'] = $this->_empleado->getType();
+    $inputEmployee['person_id']     = $person->id;
+    $inputEmployee['type_id']       = $this->_empleado->getType();
+    $inputEmployee['condicion_id']  = 1; //ACTIVO
+    $inputEmployee['tipo_id']       = 1; //FUNCIONARIO POLICIAL
     $employee = Employee::create($inputEmployee);
+
+    // crear el usuario del empleado
+    $this->_empleado->cedula = $data_person['cedula'];
+    $this->_empleado->first_name = $data_person['first_name'];
+    $this->_empleado->second_name = $data_person['second_name'];
+    $this->_empleado->first_last_name = $data_person['first_last_name'];
+    $this->_empleado->second_last_name = $data_person['second_last_name'];
+    $this->_empleado->createUser();
 
     // agrego los correos del empleado
     $this->_empleado->updEmails($employee, json_decode($request->emails));
