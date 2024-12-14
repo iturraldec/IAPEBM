@@ -4,6 +4,7 @@ namespace App\Clases;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Employee;
 use App\Models\EmpleadoReposo;
 use App\Models\User;
@@ -276,7 +277,7 @@ abstract class EmpleadoAbstract
   }
 
   // retorna en empleado por su cedula
-  static public function GetByCedula(string $cedula)
+  static public function GetByCedula(string $cedula) : Employee
   {
     return Employee::with('person')->whereRelation('person', 'cedula', $cedula)->first();
   }
@@ -289,5 +290,11 @@ abstract class EmpleadoAbstract
                       ->where('condicion_id', 1)
                       ->whereRelation('unidad', 'padre_id', 15)
                       ->get();
+  }
+
+  // retorna los datos del empleado actualmente logueado
+  static public function getEmpleadoLogueado() : Employee
+  {
+    return EmpleadoAbstract::GetByCedula(Auth::user()->code);
   }
 }
