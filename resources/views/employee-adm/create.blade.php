@@ -323,23 +323,13 @@
                 </div>
     
                 <div class="col-4 form-group">
-                  <label for="selectCondicion">Condición*</label>
-                  <select id="selectCondicion" class="form-control" name="condicion_id" title="Condición actual del empleado">
-                    <option value="0" selected>SELECCIONE LA CONDICIÓN</option>
-                    @foreach($condiciones as $condicion)
-                      <option value="{{ $condicion->id }}">{{ $condicion->name }}</option>
-                    @endforeach
-                  </select>
+                  <label for="selectCondicion">Condición</label>
+                  <input type="text" class="form-control" value="ACTIVO" readonly>
                 </div>
     
                 <div class="col-4 form-group">
-                  <label for="selectTipo">Tipo*</label>
-                  <select id="selectTipo" class="form-control" name="tipo_id" title="Tipo de empleado">
-                    <option value="0" selected>SELECCIONE EL TIPO</option>
-                    @foreach($tipos as $tipo)
-                      <option value="{{ $tipo->id }}">{{ $tipo->name }}</option>
-                    @endforeach
-                  </select>
+                  <label for="selectTipo">Tipo</label>
+                  <input type="text" class="form-control" value="ADMINISTRATIVO" readonly>
                 </div>
     
                 <div class="col-4 form-group">

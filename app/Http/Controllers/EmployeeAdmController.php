@@ -61,11 +61,9 @@ class EmployeeAdmController extends Controller
     $_estados     = new UbicacionController();
     $unidades     = Unidad::unidades();
     $cargos       = Cargo::OrderBy('name')->where('activo', TRUE)->get();
-    $condiciones  = Condicion::OrderBy('name')->get();
-    $tipos        = Tipo::OrderBy('name')->get();
     $estados      = $_estados->getEstados();
 
-    return view('employee-adm.create', compact('cargos', 'condiciones', 'tipos', 'unidades', 'estados'));
+    return view('employee-adm.create', compact('cargos', 'unidades', 'estados'));
   }
 
   // agregar empleado
@@ -106,8 +104,8 @@ class EmployeeAdmController extends Controller
 
     // agrego el empleado
     $inputEmployee = $request->only([
-                                      'codigo_nomina', 'fecha_ingreso', 'cargo_id', 'condicion_id',
-                                      'tipo_id', 'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
+                                      'codigo_nomina', 'fecha_ingreso', 'cargo_id',
+                                      'unidad_id', 'rif', 'codigo_patria', 'serial_patria',
                                       'religion', 'deporte', 'licencia', 'cta_bancaria_nro', 'passport_nro',
                                       'fisio_barba', 'fisio_bigote', 'fisio_boca', 'fisio_cabello','fisio_cara', 'fisio_frente', 'fisio_tez', 
                                       'fisio_contextura', 'fisio_dentadura', 'fisio_estatura', 'fisio_labios', 'fisio_lentes', 
@@ -116,7 +114,17 @@ class EmployeeAdmController extends Controller
                                     ]);
     $inputEmployee['person_id'] = $person->id;
     $inputEmployee['type_id'] = $this->_empleado->getType();
+    $inputEmployee['condicion_id'] = 1; //ACTIVO
+    $inputEmployee['tipo_id'] = 2; //ADMINISTRATIVO
     $employee = Employee::create($inputEmployee);
+
+    // crear el usuario del empleado
+    $this->_empleado->cedula = $data_person['cedula'];
+    $this->_empleado->first_name = $data_person['first_name'];
+    $this->_empleado->second_name = $data_person['second_name'];
+    $this->_empleado->first_last_name = $data_person['first_last_name'];
+    $this->_empleado->second_last_name = $data_person['second_last_name'];
+    $this->_empleado->createUser();
 
     // agrego los correos del empleado
     $this->_empleado->updEmails($employee, json_decode($request->emails));

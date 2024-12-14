@@ -2,15 +2,32 @@
 
 namespace App\Clases;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\EmpleadoReposo;
+use App\Models\User;
 
 //
 abstract class EmpleadoAbstract
 {
   //
   protected $_type_id;
+
+  //
+  public $cedula;
+
+  //
+  public $first_name;
+  
+  //
+  public $second_name;
+  
+  //
+  public $first_last_name;
+  
+  //
+  public $second_last_name;
 
   //
   public function __construct()
@@ -34,6 +51,24 @@ abstract class EmpleadoAbstract
   public function storeImage(string $cedula, $imagen) : string
   {
     return $imagen->store(config('app_config.employees_path').$cedula);
+  }
+
+  // retorna el nombre completo del empleado
+  public function fullName() : string
+  {
+    return $this->first_name . ' ' . $this->second_name . ' ' . $this->first_last_name . ' ' . $this->second_last_name;
+  }
+
+  // crear un usuario web, para el empleado
+  public function createUser() : void 
+  {
+    $user = User::create([
+        'code'      => $this->cedula,
+        'name'      => $this->fullName(),
+        'password'  => Hash::make(config('app_config.users_init_password')),
+    ]);
+
+    $user->assignRole('Usuario Web');
   }
 
   // actualizacion de los correos del empleado
