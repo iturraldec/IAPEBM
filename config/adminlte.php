@@ -426,15 +426,19 @@ return [
                 ],
                 [
                     'text'    => 'Recibos de pago',
-                    'url'   => '#'
+                    'route'   => 'cw.rp'
                 ],
             ]
         ],
         [
             'text'    => 'Mantenimiento',
             'icon'    => 'fas fa-tools',
-            'url'   => '/',
-            //'can'     => 'Sistema',
+            'submenu'   => [
+                [
+                    'text'    => 'Cargar Recibos de Pago',
+                    'route'   => 'rp.cargar'
+                ],
+            ]
         ],
     ],
 

@@ -19,6 +19,7 @@ use App\Http\Controllers\EstudioTypeController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\ConstanciaTrabajoMotivoController;
 use App\Http\Controllers\ConstanciaTrabajoController;
+use App\Http\Controllers\ReciboPagoController;
 
 //
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -92,6 +93,12 @@ Route::prefix('consultas-web')->group(function() {
 
   // generacion de constancia de trabajo (pdf)
   Route::get('ct/{motivo}', [ConstanciaTrabajoController::class, 'execute'])->name('cw.ct.pdf');
+
+  // generacion de recibos de pago (vista)
+  Route::get('rp', [ReciboPagoController::class, 'index'])->name('cw.rp');
+
+  // generacion de recibos de pago (pdf)
+  Route::get('rp/{mes}', [ReciboPagoController::class, 'execute'])->name('cw.rp.pdf');
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -120,4 +127,17 @@ Route::prefix('horario')->group(function() {
 
 //////////////////////////////////////////////////////////////////////
 //                FIN DE HORARIO DE E/S
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+//                RECIBOS DE PAGO
+//////////////////////////////////////////////////////////////////////
+
+Route::prefix('recibo-pago')->group(function() {
+  Route::get('cargar',[ReciboPagoController::class, 'index'])->name('rp.cargar');
+  Route::post('subir',[ReciboPagoController::class, 'cargar'])->name('rp.subir');
+});
+
+//////////////////////////////////////////////////////////////////////
+//                FIN DE RECIBOS DE PAGO
 //////////////////////////////////////////////////////////////////////
