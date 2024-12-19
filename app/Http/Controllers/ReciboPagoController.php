@@ -7,6 +7,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Clases\EmpleadoAbstract;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\RecibosPagosChkImport;
 use App\Imports\RecibosPagosImport;
 
 //
@@ -21,7 +22,13 @@ class ReciboPagoController extends Controller
   //
   public function cargar(Request $request)
   {
-    Excel::import(new RecibosPagosImport, $request->file('archivo'));
+    $importacion = new RecibosPagosChkImport;
+
+    Excel::import($importacion, $request->file('archivo'));
+
+    $resultado = $importacion->getResultado();
+
+    return view('recibos.resultado', compact('resultado'));
   }
 
   //

@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use App\Clases\EmpleadoAbstract;
 
 //
-class RecibosPagosImport implements ToCollection, WithHeadingRow, WithChunkReading
+class RecibosPagosChkImport implements ToCollection, WithHeadingRow, WithChunkReading
 {
   //
   private $filas = [];
@@ -19,12 +19,7 @@ class RecibosPagosImport implements ToCollection, WithHeadingRow, WithChunkReadi
     foreach ($rows as $row) 
     {   
       $empleado = EmpleadoAbstract::GetByCedula($row['cedula']);
-      $this->filas[] = [
-        'cedula'        => $row['cedula'],
-        'asignacion'    => $row['asignaciones'],
-        'deduccion'     => $row['deducciones'],
-        'ok'            => ! empty($empleado)
-      ];
+      if (! $empleado) $this->filas[] = $row['cedula'];
     }
   }
 

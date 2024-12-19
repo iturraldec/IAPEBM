@@ -277,7 +277,7 @@ abstract class EmpleadoAbstract
   }
 
   // retorna en empleado por su cedula
-  static public function GetByCedula(string $cedula) : Employee
+  static public function GetByCedula(string $cedula) : ?Employee
   {
     return Employee::with('person')->whereRelation('person', 'cedula', $cedula)->first();
   }

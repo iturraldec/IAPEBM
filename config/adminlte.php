@@ -436,7 +436,8 @@ return [
             'submenu'   => [
                 [
                     'text'    => 'Cargar Recibos de Pago',
-                    'route'   => 'rp.cargar'
+                    'route'   => 'rp.cargar',
+                    'can'     => 'Admin.Sistema'
                 ],
             ]
         ],
