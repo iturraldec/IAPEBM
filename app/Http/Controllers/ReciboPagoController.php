@@ -28,6 +28,11 @@ class ReciboPagoController extends Controller
 
     $resultado = $importacion->getResultado();
 
+    if(empty($resultado)) {
+      $importacion = new RecibosPagosImport($request->mes, $request->desde, $request->hasta);
+      Excel::import($importacion, $request->file('archivo'));
+    }
+
     return view('recibos.resultado', compact('resultado'));
   }
 

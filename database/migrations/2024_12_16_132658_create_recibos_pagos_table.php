@@ -24,8 +24,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('employee_id');
             $table->unsignedSmallInteger('recibo_id');
-            $table->float('ingreso');
-            $table->float('egreso');
+            $table->float('asignacion');
+            $table->float('deduccion');
             $table->timestamps();
         });
     }
