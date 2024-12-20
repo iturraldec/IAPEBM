@@ -426,7 +426,7 @@ return [
                 ],
                 [
                     'text'    => 'Recibos de pago',
-                    'route'   => 'cw.rp'
+                    'route'   => 'rp.descargar'
                 ],
             ]
         ],

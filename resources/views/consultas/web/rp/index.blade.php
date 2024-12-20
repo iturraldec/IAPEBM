@@ -13,7 +13,9 @@
       <label>Seleccione el mes del pago</label>
 
       <select id="selectMes" class="form-control" title="Mes">
-        <option value="2024-11" selected>2024-11</option>
+        @foreach ($meses as $item)
+          <option value="{{ $item->id }}">{{ $item->mes }}</option>
+        @endforeach
       </select>
     </div>
         
@@ -26,8 +28,8 @@
 <script>
   $(document).ready(function () {
     $("#btnGenerar").click(function () {
-      let mes = $("#selectMes").val();
-      let ruta = "{{ route('cw.rp.pdf', ['mes' => '.value']) }}";
+        let mes = $("#selectMes").val();
+        let ruta = "{{ route('rp.descargar-pdf', ['reciboPago' => '.value']) }}";
 
         window.open(ruta.replace('.value', mes), '_blank');
       }

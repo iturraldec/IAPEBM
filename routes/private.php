@@ -93,12 +93,6 @@ Route::prefix('consultas-web')->group(function() {
 
   // generacion de constancia de trabajo (pdf)
   Route::get('ct/{motivo}', [ConstanciaTrabajoController::class, 'execute'])->name('cw.ct.pdf');
-
-  // generacion de recibos de pago (vista)
-  Route::get('rp', [ReciboPagoController::class, 'index'])->name('cw.rp');
-
-  // generacion de recibos de pago (pdf)
-  Route::get('rp/{mes}', [ReciboPagoController::class, 'execute'])->name('cw.rp.pdf');
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -136,6 +130,8 @@ Route::prefix('horario')->group(function() {
 Route::prefix('recibo-pago')->group(function() {
   Route::get('cargar',[ReciboPagoController::class, 'index'])->name('rp.cargar');
   Route::post('subir',[ReciboPagoController::class, 'cargar'])->name('rp.subir');
+  Route::get('descargar',[ReciboPagoController::class, 'descargar'])->name('rp.descargar');
+  Route::get('pdf/{reciboPago}',[ReciboPagoController::class, 'pdf'])->name('rp.descargar-pdf');
 });
 
 //////////////////////////////////////////////////////////////////////

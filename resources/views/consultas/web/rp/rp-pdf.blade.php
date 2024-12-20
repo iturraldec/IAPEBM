@@ -2,23 +2,23 @@
 
 @section('title', 'Recibo de Pago')
 
-@section('encabezado', "MES: $mes")
+@section('encabezado', "MES: $reciboPago->mes")
 
 @section('content')  
 <font size="1">
   <table style="width: 100%" border="1">
     <tr>
       <th>CONCEPTOS</th>
-      <th>INGRESOS</th>
-      <th>EGRESOS</th>
+      <th>ASIGNACIONES</th>
+      <th>DEDUCCIONES</th>
     </tr>
 
     <tbody>
       @foreach($data as $item)
         <tr>
           <td>{{ $item['concepto'] }}</td>
-          <td>{{ ($item['ingreso'] > 0) ? $item['ingreso'] : '' }}</td>
-          <td>{{ ($item['egreso'] > 0) ? $item['egreso'] : '' }}</td>
+          <td>{{ $item['asignacion'] }}</td>
+          <td>{{ $item['deduccion'] }}</td>
         </tr>
       @endforeach
     </tbody>

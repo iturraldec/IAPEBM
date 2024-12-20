@@ -52,6 +52,7 @@ class RecibosPagosImport implements ToCollection, WithHeadingRow, WithChunkReadi
       EmpleadoRecibo::create([
           'employee_id'   => $empleado->id,
           'recibo_id'     => $recibo_enc->id,
+          'concepto'      => $row['conceptos'],
           'asignacion'    => $row['asignaciones'],
           'deduccion'     => $row['deducciones'],
       ]);

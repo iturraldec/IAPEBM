@@ -24,6 +24,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('employee_id');
             $table->unsignedSmallInteger('recibo_id');
+            $table->string('concepto', 200);
             $table->float('asignacion');
             $table->float('deduccion');
             $table->timestamps();

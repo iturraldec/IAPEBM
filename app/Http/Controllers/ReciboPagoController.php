@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\RecibosPagosChkImport;
 use App\Imports\RecibosPagosImport;
+use App\Models\ReciboPago;
+use App\Models\EmpleadoRecibo;
 
 //
 class ReciboPagoController extends Controller
@@ -37,21 +39,23 @@ class ReciboPagoController extends Controller
   }
 
   //
-  function execute(string $mes)
+  public function descargar()
+  {
+    $meses = ReciboPago::orderBy('mes', 'desc')->get();
+
+    return view('consultas.web.rp.index', compact('meses'));
+  }
+
+  //
+  public function pdf(ReciboPago $reciboPago)
   {
     $empleado = EmpleadoAbstract::getEmpleadoLogueado();
     $hoy = DateHelper::fechaCadena(now());
-    $data = array(
-      array('concepto' => 'AAAAAAAAA', 'ingreso' => 12.5, 'egreso' => 0.00),
-      array('concepto' => 'BBBBBBBBB', 'ingreso' => 12.5, 'egreso' => 0.00),
-      array('concepto' => 'CCCCCCCCC', 'ingreso' => 12.5, 'egreso' => 0.00),
-      array('concepto' => 'DDDDDDDDD', 'ingreso' => 12.5, 'egreso' => 0.00),
-      array('concepto' => 'EEEEEEEEE', 'ingreso' => 0.00, 'egreso' => 12.5),
-      array('concepto' => 'FFFFFFFFF', 'ingreso' => 0.00, 'egreso' => 12.5),
-      array('concepto' => 'GGGGGGGGG', 'ingreso' => 0.00, 'egreso' => 12.5),
-    );
-    $pdf = Pdf::loadView('consultas.web.rp.rp-pdf', compact('empleado', 'mes', 'hoy', 'data'));
-    
+    $data = EmpleadoRecibo::where('employee_id', $empleado->id)
+                            ->where('recibo_id', $reciboPago->id)
+                            ->get();
+    $pdf = Pdf::loadView('consultas.web.rp.rp-pdf', compact('empleado', 'reciboPago', 'hoy', 'data'));
+
     return $pdf->stream('recibo-pago.pdf');
   }
 }
