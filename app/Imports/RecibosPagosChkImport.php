@@ -3,24 +3,40 @@ namespace App\Imports;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
-use App\Clases\EmpleadoAbstract;
+use Illuminate\Support\Facades\DB;
 
 //
-class RecibosPagosChkImport implements ToCollection, WithHeadingRow, WithChunkReading
+class RecibosPagosChkImport implements ToCollection, WithStartRow, WithChunkReading
 {
   //
   private $filas = [];
 
   //
-  public function collection(Collection $rows)
+  /* public function collection(Collection $rows)
   {
     foreach ($rows as $row) 
     {   
       $empleado = EmpleadoAbstract::GetByCedula($row['cedula']);
       if (! $empleado) $this->filas[] = $row['cedula'];
     }
+  } */
+
+  public function collection(Collection $rows)
+  {
+    foreach ($rows as $row) 
+    {
+      if (DB::table('people')->where('cedula', $row[0])->doesntExist()) {
+        $this->filas[] = $row[0];
+      }
+    }
+  }
+
+  //
+  public function startRow(): int
+  {
+    return 2;
   }
 
   //

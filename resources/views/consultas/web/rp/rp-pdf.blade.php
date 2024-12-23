@@ -8,7 +8,7 @@
 <font size="1">
   <table style="width: 100%" border="1">
     <tr>
-      <th>CONCEPTOS</th>
+      <th>CONCEPTO</th>
       <th>ASIGNACIONES</th>
       <th>DEDUCCIONES</th>
     </tr>
