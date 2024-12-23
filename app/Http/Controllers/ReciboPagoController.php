@@ -53,8 +53,16 @@ class ReciboPagoController extends Controller
     $hoy = DateHelper::fechaCadena(now());
     $data = EmpleadoRecibo::where('employee_id', $empleado->id)
                             ->where('recibo_id', $reciboPago->id)
-                            ->get();
-    $pdf = Pdf::loadView('consultas.web.rp.rp-pdf', compact('empleado', 'reciboPago', 'hoy', 'data'));
+                           ->get();
+
+    $totales = array('asignacion' => 0.00, 'deduccion' => 0.00);
+
+    foreach ($data as $d) {
+      $totales['asignacion'] += $d->asignacion;
+      $totales['deduccion'] += $d->deduccion;
+    }
+
+    $pdf = Pdf::loadView('consultas.web.rp.rp-pdf', compact('empleado', 'reciboPago', 'hoy', 'data', 'totales'));
 
     return $pdf->stream('recibo-pago.pdf');
   }

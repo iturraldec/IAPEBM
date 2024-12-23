@@ -23,5 +23,9 @@
       @endforeach
     </tbody>
   </table>
+
+  Asignaciones: {{ $totales['asignacion'] }} <br>
+  Deducciones: {{ $totales['deduccion'] }} <br>
+  Total a Pagar: {{ $totales['asignacion'] - $totales['deduccion'] }} <br>
 </font>
 @endsection

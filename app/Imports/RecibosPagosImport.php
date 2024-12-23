@@ -56,7 +56,18 @@ class RecibosPagosImport implements ToCollection, WithStartRow, WithChunkReading
       $this->_crearRecibo($empleado->id, $recibo_enc->id, 'BONO VACACIONAL', $row[10], 0.00);
 
       // deducicones
-
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'S.S.O.', 0.00, $row[11]);
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'R.P.E.', 0.00, $row[12]);
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'F.A.O.V.', 0.00, $row[13]);
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'F.I.P.', 0.00, $row[14]);
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'APORTE CAP-POLIMER', 0.00, $row[15]);
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'CUOTA PREST. CAP-POLIMER', 0.00, $row[16]);
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'MONTE PIO CAP-POLIMER', 0.00, $row[17]);
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'MUTUO AUX. CAP-POLIMER', 0.00, $row[18]);
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'APORTE CATEEM', 0.00, $row[19]);
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'CUOTA PREST.CATEEM', 0.00, $row[20]);
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'APORTE AL SINDICATO SUSFUPGOMER', 0.00, $row[21]);
+      $this->_crearRecibo($empleado->id, $recibo_enc->id, 'APORTE AL SINDICATO SUEPGOMER', 0.00, $row[22]);
     }
   }
 
