@@ -24,6 +24,7 @@ class ReciboPagoController extends Controller
   //
   public function cargar(Request $request)
   {
+    die('cargar');
     $importacion = new RecibosPagosChkImport;
 
     Excel::import($importacion, $request->file('archivo'));
