@@ -14,15 +14,6 @@ class RecibosPagosChkImport implements ToCollection, WithStartRow, WithChunkRead
   private $filas = [];
 
   //
-  /* public function collection(Collection $rows)
-  {
-    foreach ($rows as $row) 
-    {   
-      $empleado = EmpleadoAbstract::GetByCedula($row['cedula']);
-      if (! $empleado) $this->filas[] = $row['cedula'];
-    }
-  } */
-
   public function collection(Collection $rows)
   {
     foreach ($rows as $row) 

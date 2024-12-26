@@ -65,12 +65,6 @@ class Employee extends Model
         return $this->hasMany(Vacacione::class);
     }
 
-    // datos fisionomicos
-    public function fisionomia() : HasMany
-    {
-        return $this->hasMany(EmpleadoFisionomia::class);
-    }
-
     //
     public function familiares() : HasMany
     {
