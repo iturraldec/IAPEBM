@@ -2,14 +2,28 @@
 
 @section('title', 'Recibo de Pago')
 
-@section('encabezado', "MES DEL RECIBO DE PAGO: $reciboPago->mes")
+{{-- @section('encabezado', "MES DEL RECIBO DE PAGO: $reciboPago->mes") --}}
+@section('encabezado', 'Departamento de Nómina')
 
 @section('content')
 <font size="1">
-  <p>Cédula: {{ $empleado->person->cedula }}</p>
-  <p>Apellidos y Nombres: {{ $empleado->person->first_last_name }} {{ $empleado->person->second_last_name }} {{ $empleado->person->first_name }} {{ $empleado->person->second_name }}</p>
-  <p>Código: {{ $empleado->codigo_nomina }}</p>
-  <p>Ingreso: {{ $empleado->fecha_ingreso }}</p>
+  <table style="width: 100%" border="1">
+    <tr>
+      <th>NÓMINA: {{ $empleado->condicion->name }}</th>
+      <th>PERIODO: {{ $reciboPago->desde }} / {{ $reciboPago->hasta }}</th>
+    </tr>
+
+    <tr>
+      <th>TRABAJADOR: {{ $empleado->codigo_nomina }} {{ $empleado->person->first_last_name }} {{ $empleado->person->second_last_name }} {{ $empleado->person->first_name }} {{ $empleado->person->second_name }}</th>
+      <th>FECHA DE INGRESO: {{ $empleado->fecha_ingreso }}</th>
+    </tr>
+
+    <tr>
+      <th>CÉDULA: {{ $empleado->person->cedula }}</th>
+      <th>CARGO: {{ $empleado->cargo->name }}</th>
+    </tr>
+  </table>
+
   <table style="width: 100%" border="1">
     <tr>
       <th>CONCEPTO</th>
