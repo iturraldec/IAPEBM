@@ -9,18 +9,24 @@
 <font size="1">
   <table style="width: 100%" border="1">
     <tr>
-      <th>NÓMINA: {{ $empleado->condicion->name }}</th>
-      <th>PERIODO: {{ $reciboPago->desde }} / {{ $reciboPago->hasta }}</th>
+      <td><b>NÓMINA</b></td>
+      <td>{{ $empleado->condicion->name }}</td>
+      <td><b>PERIODO</b></td>
+      <td>{{ $reciboPago->desde }} / {{ $reciboPago->hasta }}</td>
     </tr>
 
     <tr>
-      <th>TRABAJADOR: {{ $empleado->codigo_nomina }} {{ $empleado->person->first_last_name }} {{ $empleado->person->second_last_name }} {{ $empleado->person->first_name }} {{ $empleado->person->second_name }}</th>
-      <th>FECHA DE INGRESO: {{ $empleado->fecha_ingreso }}</th>
+      <td><b>TRABAJADOR</b></td>
+      <td>({{ $empleado->codigo_nomina }}) {{ $empleado->person->first_last_name }} {{ $empleado->person->second_last_name }} {{ $empleado->person->first_name }} {{ $empleado->person->second_name }}</td>
+      <td><b>FECHA DE INGRESO</b></td>
+      <td>{{ $empleado->fecha_ingreso }}</td>
     </tr>
 
     <tr>
-      <th>CÉDULA: {{ $empleado->person->cedula }}</th>
-      <th>CARGO: {{ $empleado->cargo->name }}</th>
+      <td><b>CÉDULA</b></td>
+      <td>{{ $empleado->person->cedula }}</td>
+      <td><b>CARGO</b></td>
+      <td>{{ $empleado->cargo->name }}</td>
     </tr>
   </table>
 
