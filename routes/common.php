@@ -7,44 +7,48 @@ use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
+//
+const ADM_OBRERO_DATA_PATH = '/home/iturraldec/Documentos/iapebm/';
+const ADM_OBRERO_DATA_FILE = 'adm-obreros/202501-adm-obrero.xlsx';
+const ADM_OBRERO_ROW_INIT = 2;
+const ADM_OBRERO_ROW_END = 224;
+
+//
 Route::get('loadFromExcel', function() {
   set_time_limit(3000);
   DB::beginTransaction();
-  $dataPath = '/home/iturraldec/Documentos/informatica/iapebm/';
 
   try {
     echo 'cargos...<br>';
-    Excel::import(new App\Imports\CargosImport, $dataPath . 'cargos.csv');
-
-    echo 'condiciones...<br>';
-    Excel::import(new App\Imports\CondicionesImport, $dataPath . 'condiciones.csv');
-
-    echo 'rangos...<br>';
-    Excel::import(new App\Imports\RangosImport, $dataPath . 'rangos.csv');
-
-    echo 'tipos...<br>';
-    Excel::import(new App\Imports\TiposImport, $dataPath . 'tipos_empleados.csv');
-
-    echo 'unidades operativas...<br>';
-    Excel::import(new App\Imports\UnidadesGImport, $dataPath . 'uo_g.csv');
-    Excel::import(new App\Imports\UnidadesEImport, $dataPath . 'uo_e.csv');
+    Excel::import(new App\Imports\CargosImport, ADM_OBRERO_DATA_PATH . 'cargos.csv');
 
     echo 'cargar reposos...<br>';
-    Excel::import(new App\Imports\RepososImport, $dataPath . 'codigo-ivss.csv');
+    Excel::import(new App\Imports\RepososImport, ADM_OBRERO_DATA_PATH . 'codigo-ivss.csv');
 
-    echo 'administrativos...<br>';
-    Excel::import(new App\Imports\AdminImport, $dataPath . 'adm-obreros/administrativos-copia.csv');
+    echo 'condiciones...<br>';
+    Excel::import(new App\Imports\CondicionesImport, ADM_OBRERO_DATA_PATH . 'condiciones.csv');
+
+    echo 'rangos...<br>';
+    Excel::import(new App\Imports\RangosImport, ADM_OBRERO_DATA_PATH . 'rangos.csv');
+
+    echo 'tipos...<br>';
+    Excel::import(new App\Imports\TiposImport, ADM_OBRERO_DATA_PATH . 'tipos_empleados.csv');
+
+    echo 'unidades operativas...<br>';
+    Excel::import(new App\Imports\UnidadesGImport, ADM_OBRERO_DATA_PATH . 'uo_g.csv');
+    Excel::import(new App\Imports\UnidadesEImport, ADM_OBRERO_DATA_PATH . 'uo_e.csv');
  
-    echo 'obreros...<br>';
-    Excel::import(new App\Imports\ObreroImport, $dataPath . 'adm-obreros/obreros-copia.csv');
+    echo 'administrativos/obreros...<br>';
+    Excel::import(new App\Imports\AdminObrerosImport, ADM_OBRERO_DATA_PATH . ADM_OBRERO_DATA_FILE);
 
-    echo 'uniformados...<br>';
-    Excel::import(new App\Imports\PoliceImport, $dataPath . 'uniformados/uniformados-copia.csv');
+    /*echo 'uniformados...<br>';
+    Excel::import(new App\Imports\PoliceImport, $dataPath . 'uniformados/uniformados-copia.csv'); */
  
     //
     DB::commit();
 
-    getPhotos();
+    // fotos de empleados administrativos/obreros
+    getPhotosAdmObreros();
 
     echo 'carga de datos finalizada!';
   } 
@@ -59,6 +63,97 @@ Route::get('loadFromExcel', function() {
 Route::view('/', 'auth.login');
 Route::post('login', [AuthController::class, 'login'])->name('login');
 //
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// cargar fotos
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+function getPhotosAdmObreros()
+{
+  $archivoExcel = ADM_OBRERO_DATA_PATH . ADM_OBRERO_DATA_FILE;
+  $spreadsheet = IOFactory::load($archivoExcel);
+
+  // cargar hoja activa
+  $hoja = $spreadsheet->getActiveSheet();
+
+  // coleccion de filas
+  $rows = $hoja->getRowDimensions();
+
+  // coleccion de imagenes
+  $drawingCollection = $hoja->getDrawingCollection();
+
+  // Recorrer las filas y obtener los datos de las columnas B y L
+  for ($row = ADM_OBRERO_ROW_INIT; $row <= ADM_OBRERO_ROW_END; $row++) {
+    // leemos la celda de la cedula
+    $cedula = $hoja->getCell('B' . $row)->getValue();
+    $storePath = public_path("employees/$cedula");
+    $extension = 'png';
+
+    // buscamos el empleado en la bd
+    $r = DB::select("SELECT count(*) as total FROM people WHERE cedula = '$cedula';");
+
+    // si existe el empleado, actualizamos su foto
+    if ($r[0]->total == 1) {
+      if ($drawingCollection) {
+        foreach ($drawingCollection as $dibujo) {      
+          // foto de frente
+          if ($dibujo instanceof Drawing && $dibujo->getCoordinates() === 'U' . $row) {
+            $xlsImagePath = $dibujo->getPath(); // Ruta de la imagen en excel
+            $imageContent = file_get_contents($xlsImagePath);
+
+            // Obtener información de la imagen   
+            $imageInfo = getimagesizefromstring($imageContent);
+            if ($imageInfo !== false) {
+                $extension = image_type_to_extension($imageInfo[2]); // Obtener la extensión
+            }
+
+            $imagen = uniqid() . $extension;
+            file_put_contents($storePath . '/' . $imagen, $imageContent);
+
+            DB::update("update people set imagef = 'employees/$cedula/$imagen' where cedula = ?", [$cedula]);
+          }
+
+          // foto del lado izquierdo
+          if ($dibujo instanceof Drawing && $dibujo->getCoordinates() === 'V' . $row) {
+            $xlsImagePath = $dibujo->getPath(); // Ruta de la imagen en excel
+            $imageContent = file_get_contents($xlsImagePath);
+
+            // Obtener información de la imagen   
+            $imageInfo = getimagesizefromstring($imageContent);
+            if ($imageInfo !== false) {
+                $extension = image_type_to_extension($imageInfo[2]); // Obtener la extensión
+            }
+
+            $imagen = uniqid() . $extension;
+            file_put_contents($storePath . '/' . $imagen, $imageContent);
+
+            DB::update("update people set imageli = 'employees/$cedula/$imagen' where cedula = ?", [$cedula]);
+          }
+
+          // foto del lado derecho
+          if ($dibujo instanceof Drawing && $dibujo->getCoordinates() === 'W' . $row) {
+            $xlsImagePath = $dibujo->getPath(); // Ruta de la imagen en excel
+            $imageContent = file_get_contents($xlsImagePath);
+
+            // Obtener información de la imagen   
+            $imageInfo = getimagesizefromstring($imageContent);
+            if ($imageInfo !== false) {
+                $extension = image_type_to_extension($imageInfo[2]); // Obtener la extensión
+            }
+
+            $imagen = uniqid() . $extension;
+            file_put_contents($storePath . '/' . $imagen, $imageContent);
+
+            DB::update("update people set imageld = 'employees/$cedula/$imagen' where cedula = ?", [$cedula]);
+          }
+        }
+
+        echo "foto de $cedula...actualizada...<br>";
+      }
+    }
+  }
+}
+
 
 // cargar fotos
 function getPhotos()
@@ -115,50 +210,3 @@ function getPhotos()
         }
     }
 }
-
-///////////////////////////////////////////////////////////////////////////////////
-
-/*
-    // cargar archivo
-$archivoExcel = '/home/iturraldec/Documentos/iapebm/uniformados-fotos.xlsx';
-$spreadsheet = IOFactory::load($archivoExcel);
-
-// cargar hoja activa
-$hoja = $spreadsheet->getActiveSheet();
-
-// imágenes
-$drawingCollection = $hoja->getDrawingCollection(); // Obtener la colección de dibujos
-
-// Obtener el iterador de filas
-$rowIterator = $hoja->getRowIterator();
-
-// Recorrer las filas y obtener los datos de las columnas B y L
-foreach ($rowIterator as $row) {
-    $rowIndex = $row->getRowIndex(); // Obtener el índice de la fila actual
-    if ($rowIndex >= 2 && $rowIndex <= 10) { // Limitar el rango de filas
-        echo $hoja->getCell('B' . $rowIndex)->getValue() . '<br>';
-        if ($drawingCollection) {
-            foreach ($drawingCollection as $dibujo) {
-                if ($dibujo instanceof Drawing && $dibujo->getCoordinates() === 'L' . $rowIndex) {
-                    $imgPath = $dibujo->getPath(); // Ruta de la imagen
-                    $imageContent = file_get_contents($imgPath);
-                    
-                    // Obtener información de la imagen
-                    $imageInfo = getimagesizefromstring($imageContent);
-                    if ($imageInfo !== false) {
-                        $extension = image_type_to_extension($imageInfo[2]); // Obtener la extensión
-                        echo "La extensión de la imagen es: " . $extension . '<br>';
-                    } else {
-                        echo "No se pudo determinar el tipo de imagen.<br>";
-                    }
-
-                    $imagen = '/tmp/fotos/' . uniqid() . $extension; // Usar la extensión para el nombre del archivo
-                    file_put_contents($imagen, $imageContent);
-                    echo "<img src='$imagen' width='200' height='auto'><br>";
-                }
-            }
-        }
-    }
-}
-
-    */
