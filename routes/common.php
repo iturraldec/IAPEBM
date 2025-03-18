@@ -104,13 +104,11 @@ function getPhotosAdmObreros()
             // Obtener información de la imagen   
             $imageInfo = getimagesizefromstring($imageContent);
             if ($imageInfo !== false) {
-                $extension = image_type_to_extension($imageInfo[2]); // Obtener la extensión
+              $extension = image_type_to_extension($imageInfo[2]); // Obtener la extensión
+              $imagen = uniqid() . $extension;
+              file_put_contents($storePath . '/' . $imagen, $imageContent);
+              DB::update("update people set imagef = 'employees/$cedula/$imagen' where cedula = ?", [$cedula]);
             }
-
-            $imagen = uniqid() . $extension;
-            file_put_contents($storePath . '/' . $imagen, $imageContent);
-
-            DB::update("update people set imagef = 'employees/$cedula/$imagen' where cedula = ?", [$cedula]);
           }
 
           // foto del lado izquierdo
@@ -121,13 +119,11 @@ function getPhotosAdmObreros()
             // Obtener información de la imagen   
             $imageInfo = getimagesizefromstring($imageContent);
             if ($imageInfo !== false) {
-                $extension = image_type_to_extension($imageInfo[2]); // Obtener la extensión
+              $extension = image_type_to_extension($imageInfo[2]); // Obtener la extensión
+              $imagen = uniqid() . $extension;
+              file_put_contents($storePath . '/' . $imagen, $imageContent);
+              DB::update("update people set imageli = 'employees/$cedula/$imagen' where cedula = ?", [$cedula]);
             }
-
-            $imagen = uniqid() . $extension;
-            file_put_contents($storePath . '/' . $imagen, $imageContent);
-
-            DB::update("update people set imageli = 'employees/$cedula/$imagen' where cedula = ?", [$cedula]);
           }
 
           // foto del lado derecho
@@ -138,13 +134,11 @@ function getPhotosAdmObreros()
             // Obtener información de la imagen   
             $imageInfo = getimagesizefromstring($imageContent);
             if ($imageInfo !== false) {
-                $extension = image_type_to_extension($imageInfo[2]); // Obtener la extensión
+              $extension = image_type_to_extension($imageInfo[2]); // Obtener la extensión
+              $imagen = uniqid() . $extension;
+              file_put_contents($storePath . '/' . $imagen, $imageContent);
+              DB::update("update people set imageld = 'employees/$cedula/$imagen' where cedula = ?", [$cedula]);
             }
-
-            $imagen = uniqid() . $extension;
-            file_put_contents($storePath . '/' . $imagen, $imageContent);
-
-            DB::update("update people set imageld = 'employees/$cedula/$imagen' where cedula = ?", [$cedula]);
           }
         }
 

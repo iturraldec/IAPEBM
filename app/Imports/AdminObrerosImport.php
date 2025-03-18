@@ -82,10 +82,13 @@ class AdminObrerosImport implements ToCollection, WithStartRow
       }
 
       // direccion
+        // busco su parroquia
+        $parroquia = DB::select("SELECT id_parroquia FROM parroquias WHERE POSITION('{$row[13]}' IN parroquia) > 0;");
+
       if(trim($row[11]) != '') {
           DB::table('addresses')->insert([
             'person_id'     => $person_id,
-            'parroquia_id'  => 556,
+            'parroquia_id'  => (empty($parroquia)) ? 554 : $parroquia[0]->id_parroquia,
             'address'       => trim($row[11]),
           ]);
       }
@@ -110,18 +113,18 @@ class AdminObrerosImport implements ToCollection, WithStartRow
         DB::table('emails')->insert($record);
       }
 
-      // busco su unidad operativa
-      /* $unidad = DB::select("SELECT id FROM unidades WHERE code = '{$row[6]}';");
-      $unidad_id = (empty($unidad)) ? 134 : $unidad[0]->id;
- */
+      // busco su cargo
+      $cargo = DB::select("SELECT id FROM cargos WHERE POSITION('{$row[4]}' IN name) > 0 AND activo;");
+      $cargo_id = (empty($cargo)) ? 1 : $cargo[0]->id;
+
       // empleado
       $record = [
           'person_id'         => $person_id,
           'type_id'           => (str_contains($row[5], 'OBRERO')) ? 2 : 1,
           'codigo_nomina'     => $row[0],
-          'cargo_id'          => 1,
+          'cargo_id'          => $cargo_id,
           'condicion_id'      => 1, // ACTIVO
-          'unidad_id'         => 1,
+          'unidad_id'         => 134,
           'fecha_ingreso'     => date('Y-m-d', ($row[6] - 25569) * 86400),
           'tipo_id'           => (str_contains($row[5], 'OBRERO')) ? 4 : 3,
           'fisio_contextura'  => $row[17],
